@@ -1,26 +1,26 @@
 'use strict';
 
-var moment = require('moment-timezone');
+const moment = require('moment-timezone');
 
-var request = require('supertest');
-var sinon = require('sinon').sandbox.create();
-var expect = require('must-dist');
+const request = require('supertest');
+const sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
 
-var beans = require('../../testutil/configureForTestWithDB').get('beans');
-var activitystore = beans.get('activitystore');
-var persistence = beans.get('activitiesPersistence');
-var Activity = beans.get('activity');
+const beans = require('../../testutil/configureForTestWithDB').get('beans');
+const activitystore = beans.get('activitystore');
+const persistence = beans.get('activitiesPersistence');
+const Activity = beans.get('activity');
 
-var createApp = require('../../testutil/testHelper')('activitiesApp', beans).createApp;
+const createApp = require('../../testutil/testHelper')('activitiesApp', beans).createApp;
 
-describe('Activity application with DB - shows activities -', function () {
+describe('Activity application with DB - shows activities -', () => {
 
-  var tomorrow = moment().add(1, 'days');
-  var dayAfterTomorrow = moment().add(2, 'days');
-  var yesterday = moment().subtract(1, 'days');
-  var dayBeforeYesterday = moment().subtract(2, 'days');
+  const tomorrow = moment().add(1, 'days');
+  const dayAfterTomorrow = moment().add(2, 'days');
+  const yesterday = moment().subtract(1, 'days');
+  const dayBeforeYesterday = moment().subtract(2, 'days');
 
-  var futureActivity = new Activity({
+  const futureActivity = new Activity({
     id: 'futureActivity',
     title: 'Future Activity',
     description: 'description1',
@@ -34,7 +34,7 @@ describe('Activity application with DB - shows activities -', function () {
     resources: {Veranstaltung: {_registeredMembers: [], _registrationOpen: true}},
     version: 1
   });
-  var currentActivity = new Activity({
+  const currentActivity = new Activity({
     id: 'currentActivity',
     title: 'Current Activity',
     description: 'description1',
@@ -48,7 +48,7 @@ describe('Activity application with DB - shows activities -', function () {
     resources: {Veranstaltung: {_registeredMembers: [], _registrationOpen: true}},
     version: 1
   });
-  var pastActivity = new Activity({
+  const pastActivity = new Activity({
     id: 'pastActivity',
     title: 'Past Activity',
     description: 'description1',
@@ -63,14 +63,14 @@ describe('Activity application with DB - shows activities -', function () {
     version: 1
   });
 
-  beforeEach(function (done) { // if this fails, you need to start your mongo DB
+  beforeEach(done => { // if this fails, you need to start your mongo DB
 
-    persistence.drop(function () {
-      activitystore.saveActivity(futureActivity, function (err) {
+    persistence.drop(() => {
+      activitystore.saveActivity(futureActivity, err => {
         if (err) { done(err); }
-        activitystore.saveActivity(currentActivity, function (err1) {
+        activitystore.saveActivity(currentActivity, err1 => {
           if (err1) { done(err1); }
-          activitystore.saveActivity(pastActivity, function (err2) {
+          activitystore.saveActivity(pastActivity, err2 => {
             done(err2);
           });
         });
@@ -78,29 +78,29 @@ describe('Activity application with DB - shows activities -', function () {
     });
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  it('shows only current and future activities as upcoming', function (done) {
+  it('shows only current and future activities as upcoming', done => {
 
     request(createApp())
       .get('/upcoming')
       .expect(200)
       .expect(/Current Activity/)
-      .expect(/Future Activity/, function (err, res) {
+      .expect(/Future Activity/, (err, res) => {
         expect(res.text).to.not.contain('Past Activity');
         done(err);
       });
   });
 
-  it('shows only current and past activities as past', function (done) {
+  it('shows only current and past activities as past', done => {
 
     request(createApp())
       .get('/past')
       .expect(200)
       .expect(/Current Activity/)
-      .expect(/Past Activity/, function (err, res) {
+      .expect(/Past Activity/, (err, res) => {
         expect(res.text).to.not.contain('Future Activity');
         done(err);
       });

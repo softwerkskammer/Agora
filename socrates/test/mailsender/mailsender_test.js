@@ -1,91 +1,91 @@
 'use strict';
 
-var request = require('supertest');
-var sinon = require('sinon').sandbox.create();
-var expect = require('must-dist');
+const request = require('supertest');
+const sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
 
-var conf = require('../../testutil/configureForTest');
-var beans = conf.get('beans');
-var userWithoutMember = require('../../testutil/userWithoutMember');
+const conf = require('../../testutil/configureForTest');
+const beans = conf.get('beans');
+const userWithoutMember = require('../../testutil/userWithoutMember');
 
-var eventstore = beans.get('eventstore');
-var GlobalEventStore = beans.get('GlobalEventStore');
-var groupstore = beans.get('groupstore');
-var memberstore = beans.get('memberstore');
-var subscriberstore = beans.get('subscriberstore');
+const eventstore = beans.get('eventstore');
+const GlobalEventStore = beans.get('GlobalEventStore');
+const groupstore = beans.get('groupstore');
+const memberstore = beans.get('memberstore');
+const subscriberstore = beans.get('subscriberstore');
 
-var Member = beans.get('member');
-var createApp = require('../../testutil/testHelper')('socratesMailsenderApp').createApp;
-var secureByLogin = beans.get('secureByLogin');
-var secureSuperuserOnly = beans.get('secureSuperuserOnly');
-var secureSoCraTesAdminOnly = beans.get('secureSoCraTesAdminOnly');
+const Member = beans.get('member');
+const createApp = require('../../testutil/testHelper')('socratesMailsenderApp').createApp;
+const secureByLogin = beans.get('secureByLogin');
+const secureSuperuserOnly = beans.get('secureSuperuserOnly');
+const secureSoCraTesAdminOnly = beans.get('secureSoCraTesAdminOnly');
 
-describe('SoCraTes mailsender application', function () {
+describe('SoCraTes mailsender application', () => {
   /* eslint camelcase: 0 */
 
-  var socratesMember = new Member({id: 'memberId'});
-  var socratesAdmin = new Member({id: 'socratesAdminID'});
-  var superuser = new Member({id: 'superuserID'});
+  const socratesMember = new Member({id: 'memberId'});
+  const socratesAdmin = new Member({id: 'socratesAdminID'});
+  const superuser = new Member({id: 'superuserID'});
 
-  var appWithoutMember = request(createApp({
+  const appWithoutMember = request(createApp({
     middlewares: [userWithoutMember],
     baseurl: '/mailsender',
     secureByMiddlewares: [secureByLogin, secureSuperuserOnly, secureSoCraTesAdminOnly]
   }));
-  var appWithSocratesMember = request(createApp({
+  const appWithSocratesMember = request(createApp({
     member: socratesMember,
     baseurl: '/mailsender',
     secureByMiddlewares: [secureByLogin, secureSuperuserOnly, secureSoCraTesAdminOnly]
   }));
-  var appWithSocratesAdmin = request(createApp({
+  const appWithSocratesAdmin = request(createApp({
     member: socratesAdmin,
     baseurl: '/mailsender',
     secureByMiddlewares: [secureByLogin, secureSuperuserOnly, secureSoCraTesAdminOnly]
   }));
-  var appWithSuperuser = request(createApp({
+  const appWithSuperuser = request(createApp({
     member: superuser,
     baseurl: '/mailsender',
     secureByMiddlewares: [secureByLogin, secureSuperuserOnly, secureSoCraTesAdminOnly]
   }));
 
-  beforeEach(function () {
-    sinon.stub(eventstore, 'getEventStore', function (url, callback) { callback(null, new GlobalEventStore()); });
+  beforeEach(() => {
+    sinon.stub(eventstore, 'getEventStore', (url, callback) => callback(null, new GlobalEventStore()));
 
-    sinon.stub(groupstore, 'getGroup', function (group, callback) { callback(); });
-    sinon.stub(memberstore, 'getMembersForIds', function (members, callback) { callback(null, []); });
-    sinon.stub(memberstore, 'getMemberForId', function (memberId, callback) { callback(null, socratesMember); });
-    sinon.stub(memberstore, 'getMember', function (member, callback) { callback(null, socratesMember); });
-    sinon.stub(subscriberstore, 'allSubscribers', function (callback) { callback(null, []); });
+    sinon.stub(groupstore, 'getGroup', (group, callback) => callback());
+    sinon.stub(memberstore, 'getMembersForIds', (members, callback) => callback(null, []));
+    sinon.stub(memberstore, 'getMemberForId', (memberId, callback) => callback(null, socratesMember));
+    sinon.stub(memberstore, 'getMember', (member, callback) => callback(null, socratesMember));
+    sinon.stub(subscriberstore, 'allSubscribers', callback => callback(null, []));
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  describe('mass-mailings form', function () {
+  describe('mass-mailings form', () => {
 
-    it('can be opened as superuser', function (done) {
+    it('can be opened as superuser', done => {
       appWithSuperuser
         .get('/mailsender/massMailing')
         .expect(200, done);
     });
 
-    it('can be opened as socrates admin', function (done) {
+    it('can be opened as socrates admin', done => {
       appWithSocratesAdmin
         .get('/mailsender/massMailing')
         .expect(200, done);
     });
 
-    it('can not be opened as regular member', function (done) {
+    it('can not be opened as regular member', done => {
       appWithSocratesMember
         .get('/mailsender/massMailing')
-        .expect(302, function (err, res) {
+        .expect(302, (err, res) => {
           expect(res.header.location).to.contain('/mustBeSoCraTesAdmin'); // TODO: startWith (from 0.13.0)
           done(err);
         });
     });
 
-    it('can not be opened when nobody is logged in', function (done) {
+    it('can not be opened when nobody is logged in', done => {
       appWithoutMember
         .get('/mailsender/massMailing')
         .expect(302)
@@ -93,9 +93,9 @@ describe('SoCraTes mailsender application', function () {
     });
   });
 
-  describe('mail form for mass mailing', function () {
+  describe('mail form for mass mailing', () => {
 
-    it('can be submitted as superuser', function (done) {
+    it('can be submitted as superuser', done => {
       appWithSuperuser
         .post('/mailsender/send')
         .send('nickname=ABC&subject=Hello&markdown=MailBody&sendCopyToSelf=true')
@@ -105,7 +105,7 @@ describe('SoCraTes mailsender application', function () {
         .expect('location', '/redirectToHereIfSuccessful', done);
     });
 
-    it('can be submitted as socrates admin', function (done) {
+    it('can be submitted as socrates admin', done => {
       appWithSocratesAdmin
         .post('/mailsender/send')
         .send('nickname=ABC&subject=Hello&markdown=MailBody&sendCopyToSelf=true')
@@ -115,7 +115,7 @@ describe('SoCraTes mailsender application', function () {
         .expect('location', '/redirectToHereIfSuccessful', done);
     });
 
-    it('can not be submitted as regular member', function (done) {
+    it('can not be submitted as regular member', done => {
       appWithSocratesMember
         .post('/mailsender/send')
         .send('nickname=ABC&subject=Hello&markdown=MailBody&sendCopyToSelf=true')
@@ -125,7 +125,7 @@ describe('SoCraTes mailsender application', function () {
         .expect('location', '/registration', done);
     });
 
-    it('can not be submitted when nobody is logged in', function (done) {
+    it('can not be submitted when nobody is logged in', done => {
       appWithoutMember
         .post('/mailsender/send')
         .send('nickname=ABC&subject=Hello&markdown=MailBody&sendCopyToSelf=true')
@@ -136,9 +136,9 @@ describe('SoCraTes mailsender application', function () {
     });
   });
 
-  describe('mail form for mail to another member', function () {
+  describe('mail form for mail to another member', () => {
 
-    it('can be submitted as superuser', function (done) {
+    it('can be submitted as superuser', done => {
       appWithSuperuser
         .post('/mailsender/send')
         .send('nickname=ABC&subject=Hello&markdown=MailBody&sendCopyToSelf=true')
@@ -147,7 +147,7 @@ describe('SoCraTes mailsender application', function () {
         .expect('location', '/redirectToHereIfSuccessful', done);
     });
 
-    it('can be submitted as socrates admin', function (done) {
+    it('can be submitted as socrates admin', done => {
       appWithSocratesAdmin
         .post('/mailsender/send')
         .send('nickname=ABC&subject=Hello&markdown=MailBody&sendCopyToSelf=true')
@@ -156,7 +156,7 @@ describe('SoCraTes mailsender application', function () {
         .expect('location', '/redirectToHereIfSuccessful', done);
     });
 
-    it('can be submitted as regular member', function (done) {
+    it('can be submitted as regular member', done => {
       appWithSocratesMember
         .post('/mailsender/send')
         .send('nickname=ABC&subject=Hello&markdown=MailBody&sendCopyToSelf=true')
@@ -165,7 +165,7 @@ describe('SoCraTes mailsender application', function () {
         .expect('location', '/redirectToHereIfSuccessful', done);
     });
 
-    it('can not be submitted when nobody is logged in', function (done) {
+    it('can not be submitted when nobody is logged in', done => {
       appWithoutMember
         .post('/mailsender/send')
         .send('nickname=ABC&subject=Hello&markdown=MailBody&sendCopyToSelf=true')

@@ -1,9 +1,7 @@
 'use strict';
 
-var _ = require('lodash');
+const R = require('ramda');
 
-function groupAndSortAddonlines(addonLines) {
-  return _(addonLines).sortBy(line => line.member.lastname()).groupBy(line => line.member.lastname()[0].toUpperCase()).value();
-}
-
-module.exports = {groupAndSortAddonlines: groupAndSortAddonlines};
+module.exports = {
+  groupAndSortAddonlines: addonLines => R.groupBy(line => line.member.lastname()[0].toUpperCase(), R.sortBy(line => line.member.lastname(), addonLines))
+};

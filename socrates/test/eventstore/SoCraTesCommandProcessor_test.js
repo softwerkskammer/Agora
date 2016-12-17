@@ -1,17 +1,17 @@
 /*eslint no-underscore-dangle: 0*/
 'use strict';
 
-var expect = require('must-dist');
-var R = require('ramda');
+const expect = require('must-dist');
+const R = require('ramda');
 
-var beans = require('../../testutil/configureForTest').get('beans');
-var e = beans.get('eventConstants');
+const beans = require('../../testutil/configureForTest').get('beans');
+const e = beans.get('eventConstants');
 
-var SoCraTesCommandProcessor = beans.get('SoCraTesCommandProcessor');
+const SoCraTesCommandProcessor = beans.get('SoCraTesCommandProcessor');
 
 function stripTimestamps(someEvents) {
   return someEvents.map(event => {
-    var newEvent = R.clone(event);
+    const newEvent = R.clone(event);
     delete newEvent.timestamp;
     return newEvent;
   });
@@ -20,7 +20,7 @@ function stripTimestamps(someEvents) {
 const url = 'socrates-url';
 
 describe('The SoCraTes command processor', () => {
-  var commandHandler;
+  let commandHandler;
 
   beforeEach(() => {
     commandHandler = new SoCraTesCommandProcessor(url);

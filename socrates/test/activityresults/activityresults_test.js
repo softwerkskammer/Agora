@@ -1,32 +1,32 @@
 'use strict';
-var request = require('supertest');
-var sinon = require('sinon').sandbox.create();
-var expect = require('must-dist');
+const request = require('supertest');
+const sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
 
-var beans = require('../../testutil/configureForTest').get('beans');
-var activityresultsService = beans.get('activityresultsService');
-var activityresultsPersistence = beans.get('activityresultsPersistence');
+const beans = require('../../testutil/configureForTest').get('beans');
+const activityresultsService = beans.get('activityresultsService');
+const activityresultsPersistence = beans.get('activityresultsPersistence');
 
-var createApp = require('../../testutil/testHelper')('socratesActivityresultsApp').createApp;
+const createApp = require('../../testutil/testHelper')('socratesActivityresultsApp').createApp;
 
-var ActivityResult = beans.get('activityresult');
+const ActivityResult = beans.get('activityresult');
 
-var MEMBER_ID = 'memberID';
+const MEMBER_ID = 'memberID';
 
-describe('SoCraTes activityresults application', function () {
-  afterEach(function () {
+describe('SoCraTes activityresults application', () => {
+  afterEach(() => {
     sinon.restore();
   });
 
-  describe('for retrieval', function () {
-    it('should return a 404 for non given result\'s name', function (done) {
+  describe('for retrieval', () => {
+    it('should return a 404 for non given result\'s name', done => {
       request(createApp())
         .get('/')
         .expect(404, done);
     });
 
-    it('should allow to create a new one with the name if not existing yet', function (done) {
-      sinon.stub(activityresultsService, 'getActivityResultByName', function (activityResultName, callback) {
+    it('should allow to create a new one with the name if not existing yet', done => {
+      sinon.stub(activityresultsService, 'getActivityResultByName', (activityResultName, callback) => {
         callback();
       });
 
@@ -35,8 +35,8 @@ describe('SoCraTes activityresults application', function () {
         .expect(/<h2>New Session Snap Collection<\/h2>/, done);
     });
 
-    it('should render the results if the activity result is known', function (done) {
-      sinon.stub(activityresultsService, 'getActivityResultByName', function (activityResultName, callback) {
+    it('should render the results if the activity result is known', done => {
+      sinon.stub(activityresultsService, 'getActivityResultByName', (activityResultName, callback) => {
         callback(null, new ActivityResult({
           id: activityResultName,
           title: 'TITLE for ' + activityResultName,
@@ -56,10 +56,10 @@ describe('SoCraTes activityresults application', function () {
     });
   });
 
-  describe('for creation and uploading', function () {
-    it('should create a new activity result with tags', function (done) {
-      var theResult;
-      sinon.stub(activityresultsPersistence, 'save', function (activityResult, callback) {
+  describe('for creation and uploading', () => {
+    it('should create a new activity result with tags', done => {
+      let theResult;
+      sinon.stub(activityresultsPersistence, 'save', (activityResult, callback) => {
         theResult = activityResult;
         callback(null, activityResult);
       });
@@ -69,20 +69,20 @@ describe('SoCraTes activityresults application', function () {
         .type('form')
         .send({activityResultName: 'MyActivityResult', tags: 'myFirstTag,mySecondTag'})
         .expect(302)
-        .end(function (err) {
+        .end(err => {
           expect(theResult.tags).to.eql(['myFirstTag', 'mySecondTag']);
           done(err);
         });
     });
 
-    it('should reject request without activityResultName parameter', function (done) {
+    it('should reject request without activityResultName parameter', done => {
       request(createApp())
         .post('/')
         .type('form')
         .expect(500, done);
     });
 
-    it('should reject request with empty activityResultName parameter', function (done) {
+    it('should reject request with empty activityResultName parameter', done => {
       request(createApp())
         .post('/')
         .type('form')
@@ -90,8 +90,8 @@ describe('SoCraTes activityresults application', function () {
         .expect(500, done);
     });
 
-    it('should store an image and redirect to edit', function (done) {
-      sinon.stub(activityresultsService, 'addPhotoToActivityResult', function (activity, photo, user, callback) {
+    it('should store an image and redirect to edit', done => {
+      sinon.stub(activityresultsService, 'addPhotoToActivityResult', (activity, photo, user, callback) => {
         callback(null, 'my-custom-image-id');
       });
 
@@ -104,10 +104,10 @@ describe('SoCraTes activityresults application', function () {
     });
   });
 
-  describe('editing photos', function () {
-    var photoId = 'photo_id';
-    beforeEach(function () {
-      sinon.stub(activityresultsService, 'getActivityResultByName', function (activityResultName, callback) {
+  describe('editing photos', () => {
+    const photoId = 'photo_id';
+    beforeEach(() => {
+      sinon.stub(activityresultsService, 'getActivityResultByName', (activityResultName, callback) => {
         /* eslint camelcase: 0 */
 
         callback(null, new ActivityResult({
@@ -118,10 +118,10 @@ describe('SoCraTes activityresults application', function () {
       });
     });
 
-    it('should have old values set', function (done) {
+    it('should have old values set', done => {
       request(createApp({id: MEMBER_ID}))
         .get('/foo/photo/' + photoId + '/edit')
-        .expect(function (res) {
+        .expect(res => {
           if (res.text.indexOf('mishka') === -1) {
             return 'Title not found';
           }
@@ -129,14 +129,14 @@ describe('SoCraTes activityresults application', function () {
         .end(done);
     });
 
-    it('should not let me edit a photo I didn\'t upload', function (done) {
+    it('should not let me edit a photo I didn\'t upload', done => {
       request(createApp())
         .get('/foo/photo/' + photoId + '/edit')
         .expect(302, done);
     });
 
-    it('should save a photos time, tags and title', function (done) {
-      sinon.stub(activityresultsService, 'updatePhotoOfActivityResult', function (activityResultName, photoID, data, accessrights, callback) {
+    it('should save a photos time, tags and title', done => {
+      sinon.stub(activityresultsService, 'updatePhotoOfActivityResult', (activityResultName, photoID, data, accessrights, callback) => {
         expect(data.title).to.eql('My adventures with the softwerkskammer');
         expect(data.tags).to.eql(['a', 'b']);
         callback();
@@ -156,8 +156,8 @@ describe('SoCraTes activityresults application', function () {
         .end(done);
     });
 
-    it('should not let me save changes to a photo if I didn\'t upload it', function (done) {
-      sinon.stub(activityresultsService, 'updatePhotoOfActivityResult', function (activityResultName, photoID, data, accessrights, callback) {
+    it('should not let me save changes to a photo if I didn\'t upload it', done => {
+      sinon.stub(activityresultsService, 'updatePhotoOfActivityResult', (activityResultName, photoID, data, accessrights, callback) => {
         expect(data.title).to.eql('My adventures with the softwerkskammer');
         expect(data.tags).to.eql(['a', 'b']);
         callback();

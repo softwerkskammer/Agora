@@ -1,35 +1,35 @@
 'use strict';
 
-var request = require('supertest');
-var sinon = require('sinon').sandbox.create();
-var expect = require('must-dist');
+const request = require('supertest');
+const sinon = require('sinon').sandbox.create();
+const expect = require('must-dist');
 
-var conf = require('../../testutil/configureForTest');
-var beans = conf.get('beans');
+const conf = require('../../testutil/configureForTest');
+const beans = conf.get('beans');
 
-var activityParticipantService = beans.get('activityParticipantService');
-var Member = beans.get('member');
-var Participation = beans.get('socratesParticipation');
+const activityParticipantService = beans.get('activityParticipantService');
+const Member = beans.get('member');
+const Participation = beans.get('socratesParticipation');
 
-var createApp = require('../../testutil/testHelper')('socratesWikiApp').createApp;
+const createApp = require('../../testutil/testHelper')('socratesWikiApp').createApp;
 
-describe('SoCraTes wiki application', function () {
+describe('SoCraTes wiki application', () => {
 
-  beforeEach(function () {
+  beforeEach(() => {
 
-    sinon.stub(activityParticipantService, 'getParticipantsFor', function (year, callback) {
-      var member = new Member({id: 'userid', nickname: 'nick', firstname: 'first', lastname: 'last'});
+    sinon.stub(activityParticipantService, 'getParticipantsFor', (year, callback) => {
+      const member = new Member({id: 'userid', nickname: 'nick', firstname: 'first', lastname: 'last'});
       member.participation = new Participation({question1: 'Relation to SC'});
       callback(null, [member]);
     });
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  describe('lists the participants', function () {
-    it('and shows no editing option for anybody but shows the questions in 2015', function (done) {
+  describe('lists the participants', () => {
+    it('and shows no editing option for anybody but shows the questions in 2015', done => {
       request(createApp({id: 'anybody'}))
         .get('/2015/participantsOverview')
         .expect(/<h4><a href="\/members\/nick">first last/)
@@ -37,16 +37,16 @@ describe('SoCraTes wiki application', function () {
         .expect(/<p>Relation to SC/)
         .expect(200, done);
     });
-    it('and shows no editing option for anybody and does not show the questions in 2016', function (done) {
+    it('and shows no editing option for anybody and does not show the questions in 2016', done => {
       request(createApp({id: 'anybody'}))
         .get('/2016/participantsOverview')
         .expect(/<h4><a href="\/members\/nick">first last/)
-        .expect(200, function (err, res) {
+        .expect(200, (err, res) => {
           expect(res.text).to.not.contain('What is your relation to Software Craftsmanship?');
           done(err);
         });
     });
-    it('and shows an editing option for the current user', function (done) {
+    it('and shows an editing option for the current user', done => {
       request(createApp({id: 'userid'}))
         .get('/2016/participantsOverview')
         .expect(/<h4><div class="btn-group"><a class="btn btn-primary" href="\/members\/editForParticipantListing" title="Edit"><i class="fa fa-edit fa-fw"><\/i> first last/)

@@ -1,86 +1,86 @@
 'use strict';
 
-var expect = require('must-dist');
+const expect = require('must-dist');
 
-var beans = require('../../testutil/configureForTestWithDB').get('beans');
-var memberstore = beans.get('memberstore');
-var persistence = beans.get('membersPersistence');
-var Member = beans.get('member');
+const beans = require('../../testutil/configureForTestWithDB').get('beans');
+const memberstore = beans.get('memberstore');
+const persistence = beans.get('membersPersistence');
+const Member = beans.get('member');
 
-describe('Members application with DB', function () {
-  describe('getMembersWithInterest', function () {
+describe('Members application with DB', () => {
+  describe('getMembersWithInterest', () => {
 
-    var member = new Member({id: 'id', interests: 'a, bb, c d e,f g h ,ü+p'});
+    const member = new Member({id: 'id', interests: 'a, bb, c d e,f g h ,ü+p'});
 
-    beforeEach(function (done) { // if this fails, you need to start your mongo DB
-      persistence.drop(function () {
-        memberstore.saveMember(member, function (err) {
+    beforeEach(done => { // if this fails, you need to start your mongo DB
+      persistence.drop(() => {
+        memberstore.saveMember(member, err => {
           done(err);
         });
       });
     });
 
-    it('finds a member by simple interest', function (done) {
-      memberstore.getMembersWithInterest('a', 'i', function (err, members) {
+    it('finds a member by simple interest', done => {
+      memberstore.getMembersWithInterest('a', 'i', (err, members) => {
         expect(members).to.have.length(1);
         expect(members[0].id()).to.be('id');
         done(err);
       });
     });
 
-    it('finds a member by interest with umlaut and "+"', function (done) {
-      memberstore.getMembersWithInterest('ü+p', 'i', function (err, members) {
+    it('finds a member by interest with umlaut and "+"', done => {
+      memberstore.getMembersWithInterest('ü+p', 'i', (err, members) => {
         expect(members).to.have.length(1);
         expect(members[0].id()).to.be('id');
         done(err);
       });
     });
 
-    it('finds a member by interest with spaces (case 1)', function (done) {
-      memberstore.getMembersWithInterest('c d e', 'i', function (err, members) {
+    it('finds a member by interest with spaces (case 1)', done => {
+      memberstore.getMembersWithInterest('c d e', 'i', (err, members) => {
         expect(members).to.have.length(1);
         expect(members[0].id()).to.be('id');
         done(err);
       });
     });
 
-    it('finds a member by interest with spaces (case 2)', function (done) {
-      memberstore.getMembersWithInterest('f g h', 'i', function (err, members) {
+    it('finds a member by interest with spaces (case 2)', done => {
+      memberstore.getMembersWithInterest('f g h', 'i', (err, members) => {
         expect(members).to.have.length(1);
         expect(members[0].id()).to.be('id');
         done(err);
       });
     });
 
-    it('does not find a member by partial matches of an interest', function (done) {
-      memberstore.getMembersWithInterest('b', 'i', function (err, members) {
+    it('does not find a member by partial matches of an interest', done => {
+      memberstore.getMembersWithInterest('b', 'i', (err, members) => {
         expect(members).to.have.length(0);
         done(err);
       });
     });
 
-    it('does not find a member when searching case sensitive', function (done) {
-      memberstore.getMembersWithInterest('Bb', '', function (err, members) {
+    it('does not find a member when searching case sensitive', done => {
+      memberstore.getMembersWithInterest('Bb', '', (err, members) => {
         expect(members).to.have.length(0);
         done(err);
       });
     });
   });
 
-  describe('allMembers', function () {
-    var swkMember = new Member({id: 'id1', socratesOnly: false});
-    var socMember = new Member({id: 'id2', socratesOnly: true});
-    beforeEach(function (done) { // if this fails, you need to start your mongo DB
-      persistence.drop(function () {
-        memberstore.saveMember(swkMember, function (err) {
+  describe('allMembers', () => {
+    const swkMember = new Member({id: 'id1', socratesOnly: false});
+    const socMember = new Member({id: 'id2', socratesOnly: true});
+    beforeEach(done => { // if this fails, you need to start your mongo DB
+      persistence.drop(() => {
+        memberstore.saveMember(swkMember, err => {
           if (err) { done(err); }
-          memberstore.saveMember(socMember, function (err1) { done(err1); });
+          memberstore.saveMember(socMember, err1 => { done(err1); });
         });
       });
     });
 
-    it('finds only members that are not "socratesOnly"', function (done) {
-      memberstore.allMembers(function (err, members) {
+    it('finds only members that are not "socratesOnly"', done => {
+      memberstore.allMembers((err, members) => {
         expect(members).to.have.length(1);
         expect(members[0].id()).is('id1');
         done(err);

@@ -1,30 +1,28 @@
 'use strict';
 
-var express = require('express');
-var http = require('http');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var favicon = require('serve-favicon');
-var morgan = require('morgan');
-var bodyparser = require('body-parser');
-var compress = require('compression');
-var csurf = require('csurf');
+const express = require('express');
+const http = require('http');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const favicon = require('serve-favicon');
+const morgan = require('morgan');
+const bodyparser = require('body-parser');
+const compress = require('compression');
+const csurf = require('csurf');
 
-var conf = require('simple-configure');
-var beans = conf.get('beans');
+const conf = require('simple-configure');
+const beans = conf.get('beans');
 
 // initialize winston and two concrete loggers
 /*eslint no-sync: 0 */
-var winston = require('winston-config').fromFileSync(path.join(__dirname, '../config/winston-config.json'));
+const winston = require('winston-config').fromFileSync(path.join(__dirname, '../config/winston-config.json'));
 
-var appLogger = winston.loggers.get('socrates');
-var httpLogger = winston.loggers.get('socrates-http');
+const appLogger = winston.loggers.get('socrates');
+const httpLogger = winston.loggers.get('socrates-http');
 
 // stream the log messages of express to winston, remove line breaks on message
-var winstonStream = {
-  write: function (message) {
-    httpLogger.info(message.replace(/(\r\n|\n|\r)/gm, ''));
-  }
+const winstonStream = {
+  write: message => httpLogger.info(message.replace(/(\r\n|\n|\r)/gm, ''))
 };
 
 function useApp(parent, url, child) {
@@ -35,11 +33,9 @@ function useApp(parent, url, child) {
   return child;
 }
 
-
-
 module.exports = {
-  create: function () {
-    var app = express();
+  create: function create() {
+    const app = express();
     app.set('view engine', 'pug');
     app.set('views', path.join(__dirname, 'views'));
     app.use(favicon(path.join(__dirname, 'public/img/favicon.ico')));
@@ -80,19 +76,19 @@ module.exports = {
     return app;
   },
 
-  start: function (done) {
-    var port = conf.get('port');
-    var app = this.create();
+  start: function start(done) {
+    const port = conf.get('port');
+    const app = this.create();
 
     this.server = http.createServer(app);
-    this.server.listen(port, function () {
+    this.server.listen(port, () => {
       appLogger.info('Server running at port ' + port + ' in ' + process.env.NODE_ENV + ' MODE');
       if (done) { done(); }
     });
   },
 
   stop: function (done) {
-    this.server.close(function () {
+    this.server.close(() => {
       appLogger.info('Server stopped');
       if (done) { done(); }
     });

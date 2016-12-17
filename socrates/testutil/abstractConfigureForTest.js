@@ -2,9 +2,8 @@
 
 module.exports = function (firstTestBeansFilename, secondTestBeansFilename) {
 
-  var conf = require('simple-configure');
-  var _ = require('lodash');
-  var Beans = require('CoolBeans');
+  const conf = require('simple-configure');
+  const Beans = require('CoolBeans');
   require('../../softwerkskammer/testutil/shutupWinston')();
 
   // first, set the normal configuration (important e.g. for mongoDB)
@@ -13,11 +12,11 @@ module.exports = function (firstTestBeansFilename, secondTestBeansFilename) {
   // then, overwrite what needs to be changed:
 
   // beans:
-  var productionBeans = require('../../config/beans.json');
-  var secondProductionBeans = require('../../config/beans-socrates.json');
-  var firstTestBeans = require('../../config/' + firstTestBeansFilename);
-  var secondTestBeans = require('../../config/' + secondTestBeansFilename);
-  _.assign(productionBeans, secondProductionBeans, firstTestBeans, secondTestBeans);
+  const productionBeans = require('../../config/beans.json');
+  const secondProductionBeans = require('../../config/beans-socrates.json');
+  const firstTestBeans = require('../../config/' + firstTestBeansFilename);
+  const secondTestBeans = require('../../config/' + secondTestBeansFilename);
+  Object.assign(productionBeans, secondProductionBeans, firstTestBeans, secondTestBeans);
 
   conf.addProperties({
     port: '17225',

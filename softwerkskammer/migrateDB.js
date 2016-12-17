@@ -3,13 +3,13 @@
 'use strict';
 
 require('../socrates/configure'); // initializing parameters
-var R = require('ramda');
-var beans = require('simple-configure').get('beans');
+const R = require('ramda');
+const beans = require('simple-configure').get('beans');
 
-var persistence = beans.get('eventstorePersistence');
+const persistence = beans.get('eventstorePersistence');
 
-var really = process.argv[2];
-var doSave = process.argv[3] === 'doSave';
+const really = process.argv[2];
+const doSave = process.argv[3] === 'doSave';
 if (!really || really !== 'really') {
   console.log('If you want to test the migration, append "really" to the command line.');
   console.log('If you really want to save, append "doSave" after "really" to the command line.');
@@ -17,7 +17,7 @@ if (!really || really !== 'really') {
 }
 
 // merge event streams.
-persistence.getByField({url: 'socrates-2016'}, function (err, eventstore) {
+persistence.getByField({url: 'socrates-2016'}, (err, eventstore) => {
   if (err) {
     console.log(err);
     process.exit();
@@ -31,7 +31,7 @@ persistence.getByField({url: 'socrates-2016'}, function (err, eventstore) {
   console.log(eventstore.events.length + ' events.');
 
   if (doSave) {
-    return persistence.save(eventstore, function (err1) {
+    return persistence.save(eventstore, err1 => {
       if (err1) { console.log(err1); }
       process.exit();
     });

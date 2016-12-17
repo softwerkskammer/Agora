@@ -1,36 +1,36 @@
 'use strict';
 
-var request = require('supertest');
-var expect = require('must-dist');
-var sinon = require('sinon').sandbox.create();
-var moment = require('moment-timezone');
-var R = require('ramda');
+const request = require('supertest');
+const expect = require('must-dist');
+const sinon = require('sinon').sandbox.create();
+const moment = require('moment-timezone');
+const R = require('ramda');
 
-var conf = require('../../testutil/configureForTest');
-var beans = conf.get('beans');
+const conf = require('../../testutil/configureForTest');
+const beans = conf.get('beans');
 const cache = conf.get('cache');
-var userWithoutMember = require('../../testutil/userWithoutMember');
+const userWithoutMember = require('../../testutil/userWithoutMember');
 
-var groupsAndMembersService = beans.get('groupsAndMembersService');
-var subscriberstore = beans.get('subscriberstore');
-var notifications = beans.get('socratesNotifications');
-var registrationService = beans.get('registrationService');
+const groupsAndMembersService = beans.get('groupsAndMembersService');
+const subscriberstore = beans.get('subscriberstore');
+const notifications = beans.get('socratesNotifications');
+const registrationService = beans.get('registrationService');
 
-var Member = beans.get('member');
-var Subscriber = beans.get('subscriber');
+const Member = beans.get('member');
+const Subscriber = beans.get('subscriber');
 
-var events = beans.get('events');
-var e = beans.get('eventConstants');
-var GlobalEventStore = beans.get('GlobalEventStore');
-var eventstore = beans.get('eventstore');
+const events = beans.get('events');
+const e = beans.get('eventConstants');
+const GlobalEventStore = beans.get('GlobalEventStore');
+const eventstore = beans.get('eventstore');
 
-var createApp = require('../../testutil/testHelper')('socratesRegistrationApp').createApp;
+const createApp = require('../../testutil/testHelper')('socratesRegistrationApp').createApp;
 
-var aShortTimeAgo = moment.tz().subtract(10, 'minutes');
+const aShortTimeAgo = moment.tz().subtract(10, 'minutes');
 
 function stripTimestampsAndJoins(someEvents) {
   return someEvents.map(event => {
-    var newEvent = R.clone(event);
+    const newEvent = R.clone(event);
     delete newEvent.timestamp;
     delete newEvent.joinedSoCraTes;
     delete newEvent.joinedWaitinglist;
@@ -38,11 +38,11 @@ function stripTimestampsAndJoins(someEvents) {
   });
 }
 
-describe('SoCraTes registration application', function () {
+describe('SoCraTes registration application', () => {
   /* eslint camelcase: 0 */
-  var appWithoutMember = request(createApp({middlewares: [userWithoutMember]}));
+  const appWithoutMember = request(createApp({middlewares: [userWithoutMember]}));
 
-  var socratesMember = new Member({
+  const socratesMember = new Member({
     id: 'memberId2',
     nickname: 'nini',
     email: 'x@y.com',
@@ -53,14 +53,14 @@ describe('SoCraTes registration application', function () {
     socratesOnly: true
   });
 
-  var appWithSocratesMember = request(createApp({member: socratesMember}));
-  var appWithSocratesMemberAndFixedSessionId = request(createApp({member: socratesMember, sessionID: 'session-id'}));
+  const appWithSocratesMember = request(createApp({member: socratesMember}));
+  const appWithSocratesMemberAndFixedSessionId = request(createApp({member: socratesMember, sessionID: 'session-id'}));
 
-  var eventStoreSave;
+  let eventStoreSave;
 
   let listOfEvents;
 
-  beforeEach(function () {
+  beforeEach(() => {
     cache.flushAll();
 
     listOfEvents = [
@@ -72,12 +72,12 @@ describe('SoCraTes registration application', function () {
 
     conf.addProperties({registrationOpensAt: moment().subtract(10, 'days').format()}); // already opened
     sinon.stub(groupsAndMembersService, 'updateAndSaveSubmittedMemberWithoutSubscriptions',
-      function (sessionUser, memberformData, accessrights, notifyNewMemberRegistration, callback) { callback(); });
-    eventStoreSave = sinon.stub(eventstore, 'saveEventStore', function (store, callback) { callback(); });
-    sinon.stub(subscriberstore, 'getSubscriber', function (memberId, callback) { callback(null, new Subscriber({})); });
-    sinon.stub(subscriberstore, 'saveSubscriber', function (subscriber, callback) { callback(); });
+      (sessionUser, memberformData, accessrights, notifyNewMemberRegistration, callback) => { callback(); });
+    eventStoreSave = sinon.stub(eventstore, 'saveEventStore', (store, callback) => { callback(); });
+    sinon.stub(subscriberstore, 'getSubscriber', (memberId, callback) => { callback(null, new Subscriber({})); });
+    sinon.stub(subscriberstore, 'saveSubscriber', (subscriber, callback) => { callback(); });
 
-    sinon.stub(eventstore, 'getEventStore', function (url, callback) {
+    sinon.stub(eventstore, 'getEventStore', (url, callback) => {
       callback(null, new GlobalEventStore({
         url: url,
         events: listOfEvents
@@ -88,17 +88,17 @@ describe('SoCraTes registration application', function () {
     sinon.stub(notifications, 'newWaitinglistEntry');
   });
 
-  afterEach(function () {
+  afterEach(() => {
     sinon.restore();
   });
 
-  describe('before registration is opened', function () {
-    beforeEach(function () {
+  describe('before registration is opened', () => {
+    beforeEach(() => {
       conf.addProperties({registrationOpensAt: moment().add(10, 'days').format()}); // not opened yet
       conf.addProperties({registrationParam: 'secretCode'}); // allows for pre-registration
     });
 
-    it('shows a disabled registration table and the "registration date button"', function (done) {
+    it('shows a disabled registration table and the "registration date button"', done => {
       appWithoutMember
         .get('/')
         .expect(/<form class="relaxed" id="participationinfoform" action="\/registration\/startRegistration" method="post"><fieldset class="disabled-text" disabled="disabled"/)
@@ -106,7 +106,7 @@ describe('SoCraTes registration application', function () {
         .expect(200, done);
     });
 
-    it('shows different room options', function (done) {
+    it('shows different room options', done => {
       appWithoutMember
         .get('/')
         .expect(/<th><div class="radio-inline"><label><input type="checkbox" name="roomsOptions" value="single"\/><b>&nbsp; Single<\/b><\/label><\/div><\/th>/)
@@ -114,7 +114,7 @@ describe('SoCraTes registration application', function () {
         .expect(/<th><div class="radio-inline"><label><input type="checkbox" name="roomsOptions" value="junior"\/><b>&nbsp; Junior \(exclusively\)<\/b><\/label><\/div><\/th>/, done);
     });
 
-    it('shows an enabled registration table with initially disabled register button if the registration param is passed along', function (done) {
+    it('shows an enabled registration table with initially disabled register button if the registration param is passed along', done => {
       appWithoutMember
         .get('/?registration=secretCode')
         .expect(/<form class="relaxed" id="participationinfoform" action="\/registration\/startRegistration" method="post"><fieldset>/)
@@ -124,9 +124,9 @@ describe('SoCraTes registration application', function () {
 
   });
 
-  describe('when registration is opened', function () {
+  describe('when registration is opened', () => {
 
-    it('shows an enabled registration table with initially disabled register button if the registration is open and nobody is logged in', function (done) {
+    it('shows an enabled registration table with initially disabled register button if the registration is open and nobody is logged in', done => {
       appWithoutMember
         .get('/')
         .expect(/<form class="relaxed" id="participationinfoform" action="\/registration\/startRegistration" method="post"><fieldset>/)
@@ -135,7 +135,7 @@ describe('SoCraTes registration application', function () {
         .expect(200, done);
     });
 
-    it('displays the options (but disabled) if the user is registered', function (done) {
+    it('displays the options (but disabled) if the user is registered', done => {
       /* eslint no-underscore-dangle: 0 */
 
       listOfEvents = listOfEvents.concat([
@@ -152,75 +152,75 @@ describe('SoCraTes registration application', function () {
 
   });
 
-  describe('to support the search for a roommate', function () {
+  describe('to support the search for a roommate', () => {
 
-    it('does not display the roommate banner on the registration page when the user is not logged in', function (done) {
+    it('does not display the roommate banner on the registration page when the user is not logged in', done => {
       appWithoutMember
         .get('/')
-        .end(function (err, res) {
+        .end((err, res) => {
           expect(res.text).to.not.contain('Still looking for a roommate?');
           done(err);
         });
     });
 
-    it('does not display the roommate banner on the registration page when the user is not subscribed to SoCraTes', function (done) {
+    it('does not display the roommate banner on the registration page when the user is not subscribed to SoCraTes', done => {
       appWithSocratesMember
         .get('/')
-        .end(function (err, res) {
+        .end((err, res) => {
           expect(res.text).to.not.contain('Still looking for a roommate?');
           done(err);
         });
     });
 
-    it('does not display the roommate banner on the registration page when the user is subscribed in a single-bed room', function (done) {
+    it('does not display the roommate banner on the registration page when the user is subscribed in a single-bed room', done => {
       listOfEvents = listOfEvents.concat([
         events.registeredParticipantFromWaitinglist('single', 'some-duration', 'memberId2', aShortTimeAgo)]);
 
       appWithSocratesMember
         .get('/')
-        .end(function (err, res) {
+        .end((err, res) => {
           expect(res.text).to.not.contain('Still looking for a roommate?');
           done(err);
         });
     });
 
-    it('does not display the roommate banner on the registration page when the user is subscribed in a junior room', function (done) {
+    it('does not display the roommate banner on the registration page when the user is subscribed in a junior room', done => {
       listOfEvents = listOfEvents.concat([
         events.registeredParticipantFromWaitinglist('junior', 'some-duration', 'memberId2', aShortTimeAgo)]);
 
       appWithSocratesMember
         .get('/')
-        .end(function (err, res) {
+        .end((err, res) => {
           expect(res.text).to.not.contain('Still looking for a roommate?');
           done(err);
         });
     });
 
-    it('does not display the roommate banner on the registration page when the user is on the waitinglist for a double-bed room', function (done) {
+    it('does not display the roommate banner on the registration page when the user is on the waitinglist for a double-bed room', done => {
       listOfEvents = listOfEvents.concat([
         events.waitinglistParticipantWasRegistered(['bed_in_double'], 2, 'some-session-id', 'memberId2', aShortTimeAgo)]);
 
       appWithSocratesMember
         .get('/')
-        .end(function (err, res) {
+        .end((err, res) => {
           expect(res.text).to.not.contain('Still looking for a roommate?');
           done(err);
         });
     });
 
-    it('does not display the roommate banner on the registration page when the user is on the waitinglist for a shared junior room', function (done) {
+    it('does not display the roommate banner on the registration page when the user is on the waitinglist for a shared junior room', done => {
       listOfEvents = listOfEvents.concat([
         events.waitinglistParticipantWasRegistered(['bed_in_junior'], 2, 'some-session-id', 'memberId2', aShortTimeAgo)]);
 
       appWithSocratesMember
         .get('/')
-        .end(function (err, res) {
+        .end((err, res) => {
           expect(res.text).to.not.contain('Still looking for a roommate?');
           done(err);
         });
     });
 
-    it('displays the roommate banner on the registration page when the user is subscribed for a double-bed room', function (done) {
+    it('displays the roommate banner on the registration page when the user is subscribed for a double-bed room', done => {
       listOfEvents = listOfEvents.concat([
         events.registeredParticipantFromWaitinglist('bed_in_double', 'some-duration', 'memberId2', aShortTimeAgo)]);
 
@@ -229,7 +229,7 @@ describe('SoCraTes registration application', function () {
         .expect(/Still looking for a roommate?/, done);
     });
 
-    it('displays the roommate banner on the registration page when the user is subscribed for a shared junior room', function (done) {
+    it('displays the roommate banner on the registration page when the user is subscribed for a shared junior room', done => {
       listOfEvents = listOfEvents.concat([
         events.registeredParticipantFromWaitinglist('bed_in_junior', 'some-duration', 'memberId2', aShortTimeAgo)]);
 
@@ -238,7 +238,7 @@ describe('SoCraTes registration application', function () {
         .expect(/Still looking for a roommate?/, done);
     });
 
-    it('does not display the roommate banner on the registration page when the user is subscribed for a double-bed room and already has a roommate', function (done) {
+    it('does not display the roommate banner on the registration page when the user is subscribed for a double-bed room and already has a roommate', done => {
       listOfEvents = listOfEvents.concat([
         events.registeredParticipantFromWaitinglist('bed_in_double', 'some-duration', 'other-member-id', aShortTimeAgo),
         events.registeredParticipantFromWaitinglist('bed_in_double', 'some-duration', 'memberId2', aShortTimeAgo),
@@ -246,13 +246,13 @@ describe('SoCraTes registration application', function () {
 
       appWithSocratesMember
         .get('/')
-        .end(function (err, res) {
+        .end((err, res) => {
           expect(res.text).to.not.contain('Still looking for a roommate?');
           done(err);
         });
     });
 
-    it('does not display the roommate banner on the registration page when the user is subscribed for a shared junior room and already has a roommate', function (done) {
+    it('does not display the roommate banner on the registration page when the user is subscribed for a shared junior room and already has a roommate', done => {
       listOfEvents = listOfEvents.concat([
         events.registeredParticipantFromWaitinglist('bed_in_junior', 'some-duration', 'other-member-id', aShortTimeAgo),
         events.registeredParticipantFromWaitinglist('bed_in_junior', 'some-duration', 'memberId2', aShortTimeAgo),
@@ -260,59 +260,59 @@ describe('SoCraTes registration application', function () {
 
       appWithSocratesMember
         .get('/')
-        .end(function (err, res) {
+        .end((err, res) => {
           expect(res.text).to.not.contain('Still looking for a roommate?');
           done(err);
         });
     });
   });
 
-  describe('pressing the registration button on the registration page', function () {
+  describe('pressing the registration button on the registration page', () => {
 
-    it('redirects to the registration page when no room is selected', function (done) {
+    it('redirects to the registration page when no room is selected', done => {
       appWithSocratesMember
         .post('/startRegistration')
         .expect(302)
-        .expect('location', '/registration', function (err) {
+        .expect('location', '/registration', err => {
           expect(eventStoreSave.called).to.be(false);
           done(err);
         });
     });
 
-    it('redirects to the participate form page when a room is selected (full or not)', function (done) {
+    it('redirects to the participate form page when a room is selected (full or not)', done => {
       appWithSocratesMember
         .post('/startRegistration')
         .send('roomsOptions=single&nightsOption=3')
         .expect(302)
-        .expect('location', '/registration/participate', function (err) {
+        .expect('location', '/registration/participate', err => {
           expect(eventStoreSave.called).to.be(true);
           done(err);
         });
     });
   });
 
-  describe('startRegistration', function () {
-    it('passes null as memberId if nobody is logged in', function (done) {
+  describe('startRegistration', () => {
+    it('passes null as memberId if nobody is logged in', done => {
       const startRegistration = sinon.spy(registrationService, 'startRegistration');
 
       appWithoutMember
         .post('/startRegistration')
         .send('roomsOptions=single&nightsOption=3')
         .expect(302)
-        .expect('location', '/registration/participate', function (err) {
+        .expect('location', '/registration/participate', err => {
           expect(startRegistration.firstCall.args[1]).to.be(null);
           done(err);
         });
     });
 
-    it('passes the memberId of the logged-in user', function (done) {
+    it('passes the memberId of the logged-in user', done => {
       const startRegistration = sinon.spy(registrationService, 'startRegistration');
 
       appWithSocratesMember
         .post('/startRegistration')
         .send('roomsOptions=single&nightsOption=3')
         .expect(302)
-        .expect('location', '/registration/participate', function (err) {
+        .expect('location', '/registration/participate', err => {
           expect(startRegistration.firstCall.args[1]).to.be('memberId2');
           done(err);
         });
@@ -320,16 +320,16 @@ describe('SoCraTes registration application', function () {
 
   });
 
-  describe('startRegistration splits up the form params', function () {
+  describe('startRegistration splits up the form params', () => {
 
-    it('for a single waitinglist registration', function (done) {
+    it('for a single waitinglist registration', done => {
       const startRegistration = sinon.spy(registrationService, 'startRegistration');
 
       appWithSocratesMember
         .post('/startRegistration')
         .send('roomsOptions=single&nightsOption=3')
         .expect(302)
-        .expect('location', '/registration/participate', function (err) {
+        .expect('location', '/registration/participate', err => {
 
           const registrationTuple = startRegistration.firstCall.args[0];
           expect(registrationTuple.roomType).to.eql(undefined);
@@ -339,14 +339,14 @@ describe('SoCraTes registration application', function () {
         });
     });
 
-    it('for multiple waitinglist registrations', function (done) {
+    it('for multiple waitinglist registrations', done => {
       const startRegistration = sinon.spy(registrationService, 'startRegistration');
 
       appWithSocratesMember
         .post('/startRegistration')
         .send('roomsOptions=single&roomsOptions=bed_in_double&roomsOptions=junior&nightsOption=3')
         .expect(302)
-        .expect('location', '/registration/participate', function (err) {
+        .expect('location', '/registration/participate', err => {
 
           const registrationTuple = startRegistration.firstCall.args[0];
           expect(registrationTuple.roomType).to.eql(undefined);
@@ -357,8 +357,8 @@ describe('SoCraTes registration application', function () {
     });
   });
 
-  describe('submission of the participate form to become a waitinglist participant', function () {
-    it('is accepted when a waitinglist option is selected', function (done) {
+  describe('submission of the participate form to become a waitinglist participant', () => {
+    it('is accepted when a waitinglist option is selected', done => {
       listOfEvents = listOfEvents.concat([
         events.waitinglistReservationWasIssued(['single'], 2, 'session-id', 'memberId', aShortTimeAgo)
       ]);
@@ -379,7 +379,7 @@ describe('SoCraTes registration application', function () {
         .send('previousEmail=me@you.com&email=me@you.com')
         .send('firstname=Peter&lastname=Miller')
         .expect(302)
-        .expect('location', '/registration', function (err) {
+        .expect('location', '/registration', err => {
           expect(eventStoreSave.called).to.be(true);
           expect(stripTimestampsAndJoins(eventStoreSave.firstCall.args[0].state.events)).to.eql([
             {event: e.ROOM_QUOTA_WAS_SET, roomType: 'single', quota: 0},
@@ -394,8 +394,8 @@ describe('SoCraTes registration application', function () {
     });
   });
 
-  describe('submission of the participate form to book a room and to become a waitinglist participant', function () {
-    it('is accepted when a room and at least a waitinglist option is selected', function (done) {
+  describe('submission of the participate form to book a room and to become a waitinglist participant', () => {
+    it('is accepted when a room and at least a waitinglist option is selected', done => {
       listOfEvents = listOfEvents.concat([
         events.waitinglistReservationWasIssued(['single', 'junior'], 2, 'session-id', 'memberId', aShortTimeAgo)
       ]);
@@ -416,7 +416,7 @@ describe('SoCraTes registration application', function () {
         .send('previousEmail=me@you.com&email=me@you.com')
         .send('firstname=Peter&lastname=Miller')
         .expect(302)
-        .expect('location', '/registration', function (err) {
+        .expect('location', '/registration', err => {
           expect(eventStoreSave.called).to.be(true);
           expect(stripTimestampsAndJoins(eventStoreSave.firstCall.args[0].state.events)).to.eql([
             {event: e.ROOM_QUOTA_WAS_SET, roomType: 'single', quota: 0},
