@@ -35,9 +35,8 @@ function registrationOpening() {
   return moment(conf.get('registrationOpensAt'));
 }
 
-function isRegistrationOpen(registrationParam) {
-  return registrationOpening().isBefore(moment())
-    || (registrationParam && registrationParam === conf.get('registrationParam'));
+function isRegistrationOpen() {
+  return registrationOpening().isBefore(moment());
 }
 
 function registrationOpensIn() {
@@ -59,8 +58,7 @@ app.get('/', (req, res, next) => {
       if (err2 || !roomsReadModel) { return next(err2); }
       const memberId = res.locals.accessrights.memberId();
       const registration = {
-        isPossible: isRegistrationOpen(req.query.registration),
-        queryParam: req.query.registration,
+        isPossible: isRegistrationOpen(),
         alreadyRegistered: registrationReadModel.isAlreadyRegistered(memberId),
         selectedOptions: registrationReadModel.selectedOptionsFor(memberId),
         roommate: roomsReadModel.roommateFor('bed_in_double', memberId) || roomsReadModel.roommateFor('bed_in_junior', memberId),
@@ -103,7 +101,7 @@ app.get('/interested', (req, res) => {
 
 app.post('/startRegistration', (req, res, next) => {
 
-  if (!isRegistrationOpen(req.body.registrationParam) || !req.body.nightsOption || !req.body.roomsOptions) {
+  if (!isRegistrationOpen() || !req.body.nightsOption || !req.body.roomsOptions) {
     return res.redirect('/registration');
   }
   const registrationTuple = {

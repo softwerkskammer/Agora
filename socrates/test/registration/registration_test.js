@@ -95,7 +95,6 @@ describe('SoCraTes registration application', () => {
   describe('before registration is opened', () => {
     beforeEach(() => {
       conf.addProperties({registrationOpensAt: moment().add(10, 'days').format()}); // not opened yet
-      conf.addProperties({registrationParam: 'secretCode'}); // allows for pre-registration
     });
 
     it('shows a disabled registration table and the "registration date button"', done => {
@@ -112,14 +111,6 @@ describe('SoCraTes registration application', () => {
         .expect(/<th><div class="radio-inline"><label><input type="checkbox" name="roomsOptions" value="single"\/><b>&nbsp; Single<\/b><\/label><\/div><\/th>/)
         .expect(/<th><div class="radio-inline"><label><input type="checkbox" name="roomsOptions" value="bed_in_double"\/><b>&nbsp; Double shared<\/b><\/label><\/div><\/th>/)
         .expect(/<th><div class="radio-inline"><label><input type="checkbox" name="roomsOptions" value="junior"\/><b>&nbsp; Junior \(exclusively\)<\/b><\/label><\/div><\/th>/, done);
-    });
-
-    it('shows an enabled registration table with initially disabled register button if the registration param is passed along', done => {
-      appWithoutMember
-        .get('/?registration=secretCode')
-        .expect(/<form class="relaxed" id="participationinfoform" action="\/registration\/startRegistration" method="post"><fieldset>/)
-        .expect(/<button class="pull-right btn btn-primary" type="submit" disabled="disabled">I really do want to participate!/)
-        .expect(200, done);
     });
 
   });
