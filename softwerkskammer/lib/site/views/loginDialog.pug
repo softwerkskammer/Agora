@@ -7,7 +7,8 @@ html
     .row
       .col-md-12
         p #{t('authentication.authentication_text')}
-        p.bg-success #{t('authentication.authentication_text_green')}  
+        if (loginChoice.oidc || loginChoice.gh || loginChoice.se || loginChoice.provider)
+          p.bg-success #{t('authentication.authentication_text_green')}  
     .row
       .col-md-4
         a.btn.btn-block(class=(loginChoice.oidc ? 'btn-success' : 'btn-default'), href='/auth/openidconnect?returnTo=' + encodeURIComponent(returnUrl))
