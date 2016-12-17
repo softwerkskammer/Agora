@@ -90,7 +90,6 @@ mixin participationinfoform(roomOptions, registration)
           .col-xs-12
             small * including participation in Sunday Coderetreat or Workshop
               +csrf
-        +hidden('registrationParam', registration.queryParam)
         if registration.alreadyRegistered
           .btn.pull-right.btn.btn-success You are already registered.
         else if registration.alreadyOnWaitinglist
