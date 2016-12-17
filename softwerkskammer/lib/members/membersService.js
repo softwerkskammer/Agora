@@ -100,7 +100,7 @@ module.exports = {
     updateImage(member, callback);
   },
 
-  updateImage: updateImage,
+  updateImage,
 
   toWordList: function toWordList(members) {
     return wordList(members, each => each.toUpperCase());
@@ -150,6 +150,6 @@ module.exports = {
     store.superUsers((err, members) => callback(err, members.map(member => member.email())));
   },
 
-  isReserved: isReserved
+  isReserved
 };
 

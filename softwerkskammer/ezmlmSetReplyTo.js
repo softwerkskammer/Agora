@@ -28,7 +28,7 @@ if (doSave) {
     console.log(dodo);
     callback();
   };
-  ezmlm = proxyquire('ezmlm-node', {'./ezmlmExec': {perform: perform}})(homeDir);
+  ezmlm = proxyquire('ezmlm-node', {'./ezmlmExec': {perform}})(homeDir);
 }
 
 function handle(err) {

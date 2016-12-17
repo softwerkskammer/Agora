@@ -131,7 +131,7 @@ module.exports = {
 
   combineSubscribedAndAvailableGroups: function combineSubscribedAndAvailableGroups(subscribedGroups, availableGroups) {
     return availableGroups.map(group => {
-      return {group: group, selected: subscribedGroups.some(subG => subG.id === group.id)};
+      return {group, selected: subscribedGroups.some(subG => subG.id === group.id)};
     });
   },
 
@@ -149,5 +149,5 @@ module.exports = {
     groupstore.groupsByLists(misc.toArray(groupnames), callback);
   },
 
-  isReserved: isReserved
+  isReserved
 };

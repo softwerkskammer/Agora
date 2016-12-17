@@ -74,7 +74,7 @@ app.get('/', (req, res, next) => {
           fullyQualifiedUrl: conf.get('socratesURL')
         },
         roomOptions: roomOptions.allRoomOptions(),
-        registration: registration
+        registration
       });
     });
   });
@@ -146,13 +146,13 @@ app.get('/participate', (req, res, next) => {
       const participation = (subscriber && subscriber.currentParticipation()) || new Participation();
       const expiresAt = writeModel.reservationExpiration(registrationTuple.sessionId);
       res.render('participate', {
-        member: member,
-        addon: addon,
-        subscriber: subscriber,
-        participation: participation,
-        registrationTuple: registrationTuple,
+        member,
+        addon,
+        subscriber,
+        participation,
+        registrationTuple,
         expiresIn: expiresAt && expiresAt.diff(moment(), 'minutes'),
-        expiresAt: expiresAt,
+        expiresAt,
         allCountries: allCountries.countries
       });
     });
@@ -245,14 +245,14 @@ app.get('/management', (req, res, next) => {
                         /* eslint camelcase: 0 */
                         res.render('managementTables', {
                           title: 'SoCraTes ' + currentYear,
-                          roomsReadModel: roomsReadModel,
-                          registrationReadModel: registrationReadModel,
-                          socratesReadModel: socratesReadModel,
+                          roomsReadModel,
+                          registrationReadModel,
+                          socratesReadModel,
                           roomOptionIds: roomOptions.allIds(),
-                          addonLines: addonLines,
-                          participantLinesOf: participantLinesOf,
+                          addonLines,
+                          participantLinesOf,
                           waitinglistLines: waitinglistAddonLines,
-                          waitinglistLinesOf: waitinglistLinesOf,
+                          waitinglistLinesOf,
                           tshirtsizes: managementService.tshirtSizes(addonLines),
                           durations: managementService.durations(registrationReadModel),
                           rooms: {
@@ -315,9 +315,9 @@ app.get('/hotelInfo', (req, res, next) => {
                     if (errX) { return next(errX); }
 
                     res.render('hotelInfoTables', {
-                      participantsOf: participantsOf,
-                      registrationReadModel: registrationReadModel,
-                      addonLines: addonLines,
+                      participantsOf,
+                      registrationReadModel,
+                      addonLines,
                       rooms: {
                         bed_in_double: {
                           unpairedParticipants: unpairedDoubleParticipants,

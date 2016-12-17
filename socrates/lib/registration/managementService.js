@@ -14,7 +14,7 @@ module.exports = {
           if (err || !subscriber) { return callback(err); }
           const participation = subscriber.isParticipating() ? subscriber.currentParticipation() : {};
 
-          callback(null, {member: member, addon: subscriber.addon(), participation: participation, subscriber: subscriber});
+          callback(null, {member, addon: subscriber.addon(), participation, subscriber});
         });
       },
       globalCallback);
@@ -23,7 +23,7 @@ module.exports = {
   addonLinesOfMembersWithSubscribers: function addonLinesOfMembersWithSubscribers(members) {
     return members.map(member => {
       const participation = member.subscriber.isParticipating() ? member.subscriber.currentParticipation() : {};
-      return {member: member, addon: member.subscriber.addon(), participation: participation};
+      return {member, addon: member.subscriber.addon(), participation};
     });
   },
 
@@ -35,7 +35,7 @@ module.exports = {
       if (currentCount) {
         sizes[size].count = currentCount.count + 1;
       } else {
-        sizes[size] = {count: 1, size: size};
+        sizes[size] = {count: 1, size};
       }
     });
     return sizes;

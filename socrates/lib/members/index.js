@@ -28,12 +28,12 @@ function editMember(req, res, next, returnToParticipantsListing) {
     if (err || !readModel) { return next(err); }
     const registeredResources = readModel.roomTypesOf(member.id());
     const options = {
-      member: member,
-      subscriber: subscriber,
+      member,
+      subscriber,
       addon: subscriber && subscriber.addon().homeAddress() ? subscriber.addon() : undefined,
       participation: subscriber && subscriber.isParticipating() ? subscriber.currentParticipation() : null,
       sharesARoom: registeredResources.length === 1 && registeredResources[0].indexOf('bed_in_') > -1,
-      returnToParticipantsListing: returnToParticipantsListing,
+      returnToParticipantsListing,
       allCountries: allCountries.countries
     };
     res.render('edit', options);
@@ -168,11 +168,11 @@ app.get('/:nickname', (req, res, next) => {
             async.each(potentialRoommateMembers, membersService.putAvatarIntoMemberAndSave, err5 => {
               if (err5) { return next(err5); }
               res.render('get', {
-                member: member,
-                roommate: roommate,
+                member,
+                roommate,
                 potentialRoommates: potentialRoommateMembers,
                 registration: {
-                  isInDoubleBedRoom: isInDoubleBedRoom,
+                  isInDoubleBedRoom,
                   alreadyRegistered: !!registeredInRoomType,
                   alreadyOnWaitinglist: registrationReadModel.isAlreadyOnWaitinglist(member.id())
                 }

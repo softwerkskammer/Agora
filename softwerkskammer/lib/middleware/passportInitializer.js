@@ -15,7 +15,7 @@ function deserializeUser(user, done) {
   if (user.profile) { return done(null, user); } // new user
   memberstore.getMemberForAuthentication(user.authenticationId, (err, member) => {
     if (err) { return done(err); }
-    done(null, {authenticationId: user.authenticationId, member: member});
+    done(null, {authenticationId: user.authenticationId, member});
   });
 }
 

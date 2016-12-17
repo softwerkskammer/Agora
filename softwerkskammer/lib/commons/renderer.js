@@ -70,7 +70,7 @@ module.exports = {
     const rendered = marked(evalTags(content, subdir));
     return enhanceTableTag(rendered);
   },
-  normalize: normalize,
+  normalize,
   firstTokentextOf: function firstTokentextOf(content, subdir) {
     const tokens = marked.lexer(evalTags(content, subdir));
     return tokens[0] ? tokens[0].text : '';

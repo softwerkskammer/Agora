@@ -35,7 +35,7 @@ describe('activityParticipantService', () => {
     sinon.stub(eventstore, 'getEventStore', (url, callback) => callback(null, eventStore));
 
     sinon.stub(memberstore, 'getMembersForIds', (ids, callback) => {
-      callback(null, ids.map(id => new Member({id: id})));
+      callback(null, ids.map(id => new Member({id})));
     });
 
     sinon.stub(subscriberstore, 'allSubscribers', callback => {

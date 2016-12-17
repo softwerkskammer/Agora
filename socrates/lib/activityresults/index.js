@@ -21,7 +21,7 @@ app.post('/', (req, res, next) => {
 
   activityresultsPersistence.save(new ActivityResult({
     id: activityResultName,
-    tags: tags,
+    tags,
     uploaded_by: req.user.member.id
   }).state, err => {
     if (err) { return next(err); }
@@ -48,7 +48,7 @@ app.get('/:activityResultName/photo/:photoId/edit', (req, res, next) => {
   activityresultsService.getActivityResultByName(activityResultName, (err, activityResult) => {
     if (err || !activityResult) { return next(err); }
     const model = {
-      activityResult: activityResult,
+      activityResult,
       photo: activityResult.getPhotoById(req.params.photoId)
     };
     if (model.photo && res.locals.accessrights.canEditPhoto(model.photo)) {
@@ -91,9 +91,9 @@ app.get('/:activityResultName', (req, res, next) => {
   activityresultsService.getActivityResultByName(activityResultName, (err, activityResult) => {
     if (err) { return next(err); }
     if (activityResult) {
-      return res.render('get', {activityResult: activityResult});
+      return res.render('get', {activityResult});
     }
-    return res.render('create', {activityResultName: activityResultName});
+    return res.render('create', {activityResultName});
   });
 });
 

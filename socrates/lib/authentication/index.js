@@ -35,7 +35,7 @@ app.get('/loggedIn', (req, res, next) => {
       // no member: this person+auth is unknown in SWK
       if (!member) { return callback(null, {authenticationId: token.userId, profile: token.profile}); }
       // add the member to the session user
-      return callback(null, {authenticationId: token.userId, member: member}, token.returnTo);
+      return callback(null, {authenticationId: token.userId, member}, token.returnTo);
     })();
   }
 

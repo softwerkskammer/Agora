@@ -21,7 +21,7 @@ function addProfileDataForMembers(mails, globalCallback) {
 }
 
 function mailHeadersWithProfileData(group, callback) {
-  persistence.listByField({group: group}, {timeUnix: -1},
+  persistence.listByField({group}, {timeUnix: -1},
     (err, mails) => {
       if (err) { return callback(err); }
       const theHeaders = mails.map(mail => new Mail(mail));
@@ -57,7 +57,7 @@ module.exports = {
   unthreadedMailsYoungerThan: function unthreadedMailsYoungerThan(group, age, callback) {
     persistence.listByField({
       $and: [
-        {group: group},
+        {group},
         {timeUnix: {$gt: age}}
       ]
     }, {timeUnix: -1}, (err, mails) => {

@@ -16,7 +16,7 @@ function activityAsICal(activity) {
 }
 
 module.exports = {
-  activityAsICal: activityAsICal,
+  activityAsICal,
 
   icalForActivities: function (activities) {
     /* eslint new-cap: 0 */

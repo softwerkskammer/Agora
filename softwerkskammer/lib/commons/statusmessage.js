@@ -2,10 +2,10 @@ function statusMessage(type, title, text, additionalArguments) {
   return {
     contents: function contents() {
       return {
-        type: type,
-        title: title,
-        text: text,
-        additionalArguments: additionalArguments
+        type,
+        title,
+        text,
+        additionalArguments
       };
     },
 

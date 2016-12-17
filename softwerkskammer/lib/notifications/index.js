@@ -41,9 +41,9 @@ function activityParticipation(activity, visitorID, ressourceName, content, type
       }
       if (R.isEmpty(organizersEmails)) { return; }
       const renderingOptions = {
-        activity: activity,
-        ressourceName: ressourceName,
-        content: content,
+        activity,
+        ressourceName,
+        content,
         count: activity.allRegisteredMembers().length,
         totalcount: activity.allRegisteredMembers().length,
         visitor: results.visitor
@@ -89,7 +89,7 @@ module.exports = {
     memberstore.allMembers((err, members) => {
       if (err) { return; }
       const renderingOptions = {
-        member: member,
+        member,
         groups: subscriptions,
         count: members.length
       };

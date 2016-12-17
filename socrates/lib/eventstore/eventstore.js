@@ -13,7 +13,7 @@ function toGlobalEventStore(callback, err, jsobject) {
 
 module.exports = {
   getEventStore: function getEventStore(url, callback) {
-    persistence.getByField({url: url}, R.partial(toGlobalEventStore, [callback]));
+    persistence.getByField({url}, R.partial(toGlobalEventStore, [callback]));
   },
 
   saveEventStore: function saveEventStore(eventStore, callback) {

@@ -15,7 +15,7 @@ const Activity = beans.get('activity');
 const activityUrl = 'urlOfTheActivity';
 
 const getActivity = (url, callback) => {
-  persistence.getByField({url: url}, (err, activityState) => callback(err, new Activity(activityState)));
+  persistence.getByField({url}, (err, activityState) => callback(err, new Activity(activityState)));
 };
 
 describe('Activities Service with DB', () => {

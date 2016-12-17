@@ -444,7 +444,7 @@ describe('MembersService', () => {
 
     it('simply returns the found member if the authentication is already known', done => {
       member.state.id = 'ID';
-      const user = {member: member};
+      const user = {member};
       membersService.findMemberFor(user, 'authID', undefined, (err, returnedMember) => {
         expect(returnedMember).to.be(member);
         expect(saveMember.called).to.be(false);

@@ -248,7 +248,7 @@ describe('utility functions', () => {
 describe('avatar handling', () => {
   it('constructs avatar from mail address using gravatar URL with https', () => {
     const email = 'member@mail.com';
-    const dbRecord = {nickname: 'Nick', email: email};
+    const dbRecord = {nickname: 'Nick', email};
     const member = new Member(dbRecord);
 
     expect(member.avatarUrl(10)).to.contain('https://www.gravatar.com/avatar/');
@@ -257,7 +257,7 @@ describe('avatar handling', () => {
 
   it('uses size 200 if no size is given', () => {
     const email = 'member@mail.com';
-    const dbRecord = {nickname: 'Nick', email: email};
+    const dbRecord = {nickname: 'Nick', email};
     const member = new Member(dbRecord);
 
     expect(member.avatarUrl()).to.contain('?d=mm&s=200');

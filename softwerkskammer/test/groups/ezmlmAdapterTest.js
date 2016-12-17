@@ -27,10 +27,10 @@ describe('The ezmlm adapter', () => {
         callback(null, ['anna@localhost', 'gudrun@localhost']);
       });
       sinon.stub(ezmlmStub, 'subscribeUserToList', (user, list, callback) => {
-        callback(null, {user: user, list: list});
+        callback(null, {user, list});
       });
       sinon.stub(ezmlmStub, 'unsubscribeUserFromList', (user, list, callback) => {
-        callback(null, {user: user, list: list});
+        callback(null, {user, list});
       });
     });
 

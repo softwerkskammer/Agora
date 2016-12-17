@@ -10,7 +10,7 @@ const Message = beans.get('message');
 
 function messageSubmitted(req, res, next) {
   const errors = validation.isValidMessage(req.body);
-  if (errors.length !== 0) { return res.render('../../../views/errorPages/validationError', {errors: errors}); }
+  if (errors.length !== 0) { return res.render('../../../views/errorPages/validationError', {errors}); }
 
   const message = new Message(req.body, req.user.member);
 

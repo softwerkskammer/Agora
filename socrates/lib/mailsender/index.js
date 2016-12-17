@@ -19,7 +19,7 @@ function messageSubmitted(req, res, next) {
   }
 
   const errors = validation.isValidMessage(req.body);
-  if (errors.length !== 0) { return res.render('../../../views/errorPages/validationError', {errors: errors}); }
+  if (errors.length !== 0) { return res.render('../../../views/errorPages/validationError', {errors}); }
 
   const message = new Message(req.body, req.user.member);
 
@@ -48,7 +48,7 @@ app.get('/massMailing', (req, res) => {
     text: 'To SoCraTes 2017',
     url: conf.get('publicUrlPrefix')
   });
-  res.render('compose', {message: message, successURL: '/', massMailing: true});
+  res.render('compose', {message, successURL: '/', massMailing: true});
 });
 
 app.get('/contactMember/:nickname', (req, res, next) => {

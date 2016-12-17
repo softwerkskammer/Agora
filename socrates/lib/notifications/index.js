@@ -19,9 +19,9 @@ function sendMail(params) {
 function renderingOptions(member) {
   return {
     pretty: true,
-    member: member,
+    member,
     url: conf.get('publicUrlPrefix'),
-    socratesConstants: socratesConstants
+    socratesConstants
   };
 }
 
@@ -72,8 +72,8 @@ module.exports = {
     memberstore.getMemberForId(memberID, (err, member) => {
       if (err || !member) { return logger.error(err); }
       const params = {
-        member: member,
-        bookingdetails: bookingdetails,
+        member,
+        bookingdetails,
         participantFilename: 'registrationConfirmation',
         participantSubject: 'SoCraTes Registration Confirmation',
         organizersFilename: 'superuserRegistrationNotification',
@@ -85,8 +85,8 @@ module.exports = {
 
   changedDuration: function changedDuration(member, bookingdetails) {
     const params = {
-      member: member,
-      bookingdetails: bookingdetails,
+      member,
+      bookingdetails,
       participantFilename: 'changedRegistration',
       participantSubject: 'SoCraTes Change of Length of Stay',
       organizersFilename: 'superuserRegistrationNotification',
@@ -97,8 +97,8 @@ module.exports = {
 
   changedResource: function changedResource(member, bookingdetails) {
     const params = {
-      member: member,
-      bookingdetails: bookingdetails,
+      member,
+      bookingdetails,
       participantFilename: 'changedRegistration',
       participantSubject: 'SoCraTes Change of Room Option',
       organizersFilename: 'superuserRegistrationNotification',
@@ -109,8 +109,8 @@ module.exports = {
 
   changedWaitinglist: function changedWaitinglist(member, bookingdetails) {
     const params = {
-      member: member,
-      bookingdetails: bookingdetails,
+      member,
+      bookingdetails,
       participantFilename: 'changedWaitinglist',
       participantSubject: 'SoCraTes Waitinglist Change of Room Option',
       organizersFilename: 'superuserWaitinglistNotification',
@@ -121,7 +121,7 @@ module.exports = {
 
   removedFromParticipants: function removedFromParticipants(member) {
     const params = {
-      member: member,
+      member,
       bookingdetails: {resourceKind: 'participant list'},
       participantFilename: 'removalNotification',
       participantSubject: 'SoCraTes - Removal from Participant List',
@@ -133,7 +133,7 @@ module.exports = {
 
   removedFromWaitinglist: function removedFromWaitinglist(member) {
     const params = {
-      member: member,
+      member,
       bookingdetails: {resourceKind: 'waitinglist'},
       participantFilename: 'removalNotification',
       participantSubject: 'SoCraTes - Removal from Waitinglist',
@@ -147,8 +147,8 @@ module.exports = {
     memberstore.getMemberForId(memberID, (err, member) => {
       if (err || !member) { return logger.error(err); }
       const params = {
-        member: member,
-        bookingdetails: bookingdetails,
+        member,
+        bookingdetails,
         participantFilename: 'waitinglistConfirmation',
         participantSubject: 'SoCraTes Waitinglist Confirmation',
         organizersFilename: 'superuserWaitinglistNotification',
@@ -172,7 +172,7 @@ module.exports = {
         receivers: emails,
         subject: 'SoCraTes Wiki Changes',
         html: pug.renderFile(filename, options),
-        callback: callback
+        callback
       });
     });
   },

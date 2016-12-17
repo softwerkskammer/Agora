@@ -11,7 +11,7 @@ function imageDataFromGravatar(url, callback) {
       return callback();
     }
     const image = 'data:' + response.headers['content-type'] + ';base64,' + new Buffer(body).toString('base64');
-    const data = {image: image, hasNoImage: body.length < 100};
+    const data = {image, hasNoImage: body.length < 100};
     callback(data);
   });
 }

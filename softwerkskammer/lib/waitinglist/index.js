@@ -27,7 +27,7 @@ app.get('/:activityUrl', (req, res, next) => {
     if (err || !activity) { return res.redirect('/activities/upcoming'); }
     waitinglistService.waitinglistFor(activityUrl, (err1, waitinglist) => {
       if (err1) { return next(err1); }
-      res.render('waitinglistTable', {waitinglist: waitinglist, activity: activity});
+      res.render('waitinglistTable', {waitinglist, activity});
     });
   });
 });
@@ -37,7 +37,7 @@ app.post('/add', (req, res, next) => {
   accessAllowedTo(activityUrl, res, (err, activity) => {
     if (err || !activity) { return res.redirect('/activities/upcoming'); }
 
-    const args = {nickname: req.body.nickname, activityUrl: activityUrl};
+    const args = {nickname: req.body.nickname, activityUrl};
     waitinglistService.saveWaitinglistEntry(args, err1 => {
       if (err1) { return next(err1); }
       res.redirect('/waitinglist/' + encodeURIComponent(activityUrl));

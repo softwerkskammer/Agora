@@ -13,7 +13,7 @@ const Activity = beans.get('activity');
 const createApp = require('../../testutil/testHelper')('activitiesApp', beans).createApp;
 
 function getActivity(url, callback) {
-  persistence.getByField({url: url}, (err, activityState) => {
+  persistence.getByField({url}, (err, activityState) => {
     callback(err, new Activity(activityState));
   });
 }

@@ -69,7 +69,7 @@ module.exports = {
 
         const event = registrationCommandProcessor.fromWaitinglistToParticipant(params.roomType, member.id(), now);
 
-        const args = {commandProcessor: registrationCommandProcessor, events: [event], callback: callback};
+        const args = {commandProcessor: registrationCommandProcessor, events: [event], callback};
 
         if (event.event === e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST) {
           args.handleSuccess = () => {

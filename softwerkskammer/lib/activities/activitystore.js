@@ -50,9 +50,9 @@ module.exports = {
     persistence.list({startUnix: 1}, R.partial(toActivityList, [callback]));
   },
 
-  allActivitiesByDateRangeInAscendingOrder: allActivitiesByDateRangeInAscendingOrder,
+  allActivitiesByDateRangeInAscendingOrder,
 
-  allActivitiesByDateRangeInDescendingOrder: allActivitiesByDateRangeInDescendingOrder,
+  allActivitiesByDateRangeInDescendingOrder,
 
   upcomingActivities: function upcomingActivities(callback) {
     const start = moment().unix();
@@ -67,7 +67,7 @@ module.exports = {
   },
 
   getActivity: function getActivity(url, callback) {
-    persistence.getByField({url: url}, R.partial(toActivity, [callback]));
+    persistence.getByField({url}, R.partial(toActivity, [callback]));
   },
 
   getActivityForId: function getActivityForId(id, callback) {
@@ -127,7 +127,7 @@ module.exports = {
 
     const now = moment().unix();
     const query = upcoming ? {endUnix: {$gt: now}} : {endUnix: {$lt: now}};
-    const parameters = {out: {inline: 1}, scope: {memberId: memberId, groupIds: groupIds}, query: query, jsMode: true};
+    const parameters = {out: {inline: 1}, scope: {memberId, groupIds}, query, jsMode: true};
 
     persistence.mapReduce(map, reduce, parameters, (err, collection) => {
       if (err && err.errmsg === 'ns doesn\'t exist') { return callback(null, []); } // no mongostore available -> nevermind
@@ -141,5 +141,5 @@ module.exports = {
     });
   },
 
-  flattenAndSortMongoResultCollection: flattenAndSortMongoResultCollection
+  flattenAndSortMongoResultCollection
 };

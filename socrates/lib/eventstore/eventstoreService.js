@@ -90,7 +90,7 @@ module.exports = {
       // when creating a new SoCraTes, we want to create a new event store for it:
       if (!eventStore) {
         eventStore = new GlobalEventStore({
-          url: url,
+          url,
           events: []
         });
       }

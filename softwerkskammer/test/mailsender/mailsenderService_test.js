@@ -141,13 +141,13 @@ describe('MailsenderService', () => {
 
   describe('sending mail as reminder for activity', () => {
     it('sends to participants', done => {
-      const emailAddress = 'emailAddress@e.mail';
-      emptyActivity.participants = [new Member({email: emailAddress})];
+      const email = 'emailAddress@e.mail';
+      emptyActivity.participants = [new Member({email})];
 
       mailsenderService.sendMailToParticipantsOf(activityURL, message, (err, statusmessage) => {
         expect(sendmail.calledOnce).to.be(true);
         const transportobject = sendmail.args[0][0];
-        expect(transportobject.bcc).to.contain(emailAddress);
+        expect(transportobject.bcc).to.contain(email);
         expect(transportobject.html).to.contain('mark down');
         expect(transportobject.icalEvent).to.contain('BEGIN:VCALENDAR');
         expect(transportobject.icalEvent).to.contain('URL:http://localhost:17125/activities/urlOfTheActivity');

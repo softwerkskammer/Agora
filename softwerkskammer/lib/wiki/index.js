@@ -20,7 +20,7 @@ function showPage(subdir, pageName, pageVersion, req, res, next) {
       content: headerAndBody.body,
       title: headerAndBody.title,
       pageName: normalizedPageName,
-      subdir: subdir,
+      subdir,
       canEdit: pageVersion === 'HEAD' && req.user
     });
   });
@@ -52,8 +52,8 @@ app.get('/versions/:subdir/:page', (req, res, next) => {
   wikiService.pageHistory(completePageName, (err, metadata) => {
     if (err || !metadata) { return next(); }
     res.render('history', {
-      pageName: pageName,
-      subdir: subdir,
+      pageName,
+      subdir,
       items: metadata
     });
   });
@@ -67,8 +67,8 @@ app.get('/compare/:subdir/:page/:revisions', (req, res, next) => {
   wikiService.pageCompare(completePageName, revisions, (err, diff) => {
     if (err || !diff) { return next(); }
     res.render('compare', {
-      pageName: pageName,
-      subdir: subdir,
+      pageName,
+      subdir,
       lines: diff.asLines()
     });
   });
@@ -83,9 +83,9 @@ app.get('/edit/:subdir/:page', (req, res, next) => {
   wikiService.pageEdit(completePageName, (err, content, metadata) => {
     if (err) { return next(err); }
     res.render('edit', {
-      page: {content: content, comment: '', metadata: metadata[0].fullhash},
-      subdir: subdir,
-      pageName: pageName
+      page: {content, comment: '', metadata: metadata[0].fullhash},
+      subdir,
+      pageName
     });
   });
 });
@@ -124,7 +124,7 @@ app.get('/list/:subdir/', (req, res, next) => {
   const subdir = req.params.subdir;
   wikiService.pageList(subdir, (err, items) => {
     if (err) { return next(err); }
-    res.render('list', {items: items, subdir: subdir});
+    res.render('list', {items, subdir});
   });
 });
 
@@ -133,7 +133,7 @@ app.get('/modal/:subdir/:page', (req, res, next) => {
   const completePageName = subdir + '/' + req.params.page;
   wikiService.showPage(completePageName, 'HEAD', (err, content) => {
     if (err) { return next(err); }
-    res.render('modal', {content: content && renderer.render(content, subdir), subdir: subdir});
+    res.render('modal', {content: content && renderer.render(content, subdir), subdir});
   });
 });
 
@@ -160,9 +160,9 @@ app.post('/search', (req, res, next) => {
     statusmessage.errorMessage('message.title.query', 'message.content.query').putIntoSession(req);
     return res.redirect(req.headers.referer);
   }
-  wikiService.search(searchtext, (err, results) => {
+  wikiService.search(searchtext, (err, matches) => {
     if (err) {return next(err); }
-    res.render('searchresults', {searchtext: searchtext, matches: results});
+    res.render('searchresults', {searchtext, matches});
   });
 });
 

@@ -13,13 +13,13 @@ const transport = require('nodemailer').createTransport(require('simple-configur
 
 function statusmessageForError(type, err) {
   return statusmessage.errorMessage('message.title.email_problem', 'message.content.mailsender.error_reason', {
-    type: type,
+    type,
     err: err.toString()
   });
 }
 
 function statusmessageForSuccess(type) {
-  return statusmessage.successMessage('message.title.email_successful', 'message.content.mailsender.success', {type: type});
+  return statusmessage.successMessage('message.title.email_successful', 'message.content.mailsender.success', {type});
 }
 
 function sendMail(message, type, senderAddress, callback) {
@@ -39,8 +39,8 @@ function sendBulkMail(receiverEmailAddresses, subject, html, fromName, fromAddre
   const mailoptions = {
     from: '"' + fromName + '" <' + fromAddress + '>',
     bcc: R.uniq(receiverEmailAddresses).toString(),
-    subject: subject,
-    html: html,
+    subject,
+    html,
     generateTextFromHTML: true
   };
 
@@ -53,9 +53,9 @@ function sendBulkMail(receiverEmailAddresses, subject, html, fromName, fromAddre
 }
 
 module.exports = {
-  transport: transport,
-  sendMail: sendMail,
-  sendBulkMail: sendBulkMail,
-  statusmessageForError: statusmessageForError,
-  statusmessageForSuccess: statusmessageForSuccess
+  transport,
+  sendMail,
+  sendBulkMail,
+  statusmessageForError,
+  statusmessageForSuccess
 };

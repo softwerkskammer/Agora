@@ -136,7 +136,7 @@ describe('Waitinglist Service', () => {
     beforeEach(() => {
       mailNotification = undefined;
       sinon.stub(mailsenderService, 'sendRegistrationAllowed', (member, activity, entry, callback) => {
-        mailNotification = {member: member, activity: activity, entry: entry};
+        mailNotification = {member, activity, entry};
         callback(null);
       });
     });
