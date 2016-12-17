@@ -3,6 +3,7 @@
 const sponsors = require('./sponsors.json');
 const R = require('ramda');
 
+// Fisher-Yates Shuffle (see e.g. http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array)
 function shuffle(array) {
   for (let i = 0; i < array.length; i++) {
     let rand = Math.floor(Math.random() * array.length);
