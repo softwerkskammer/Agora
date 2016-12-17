@@ -2,7 +2,7 @@
 
 const conf = require('simple-configure');
 const magick = require('imagemagick');
-const uuid = require('node-uuid');
+const uuid = require('uuid');
 const path = require('path');
 const fs = require('fs');
 const glob = require('glob');
