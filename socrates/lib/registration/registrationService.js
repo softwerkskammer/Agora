@@ -37,7 +37,7 @@ module.exports = {
   completeRegistration: function completeRegistration(memberID, sessionId, body, callback) {
     // TODO verify body fields
     const registrationTuple = {
-      sessionId: sessionId,
+      sessionId,
       activityUrl: body.activityUrl,
       desiredRoomTypes: body.desiredRoomTypes.split(',')
     };

@@ -5,7 +5,7 @@ const Member = beans.get('member');
 
 module.exports = function accessrights(req, res, next) {
   res.locals.accessrights = {
-    req: req,
+    req,
 
     member: function member() {
       return this.req.user && this.req.user.member;

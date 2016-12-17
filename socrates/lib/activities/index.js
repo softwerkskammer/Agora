@@ -64,7 +64,7 @@ app.get('/edit/:url', (req, res, next) => {
     if (!res.locals.accessrights.canEditActivity()) {
       return res.redirect('/registration/');
     }
-    res.render('edit', {socratesReadModel: socratesReadModel, roomTypes: roomOptions.allIds()});
+    res.render('edit', {socratesReadModel, roomTypes: roomOptions.allIds()});
   });
 });
 

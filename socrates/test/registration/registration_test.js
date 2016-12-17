@@ -79,7 +79,7 @@ describe('SoCraTes registration application', () => {
 
     sinon.stub(eventstore, 'getEventStore', (url, callback) => {
       callback(null, new GlobalEventStore({
-        url: url,
+        url,
         events: listOfEvents
       }));
     });

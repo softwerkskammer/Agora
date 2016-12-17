@@ -29,7 +29,7 @@ app.get('/', (req, res, next) => {
         roommate: roomsReadModel.roommateFor('bed_in_double', memberId) || roomsReadModel.roommateFor('bed_in_junior', memberId)
       };
 
-      res.render('index', {sponsors: sponsorpairs(), registration: registration});
+      res.render('index', {sponsors: sponsorpairs(), registration});
     });
   });
 });

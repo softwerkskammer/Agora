@@ -18,7 +18,7 @@ function deserializeUser(user, done) {
     if (err) { return done(err); }
     subscriberstore.getSubscriber(member.id(), (err1, subscriber) => {
       if (err1) { return done(err1); }
-      done(null, {authenticationId: user.authenticationId, member: member, subscriber: subscriber});
+      done(null, {authenticationId: user.authenticationId, member, subscriber});
     });
   });
 }

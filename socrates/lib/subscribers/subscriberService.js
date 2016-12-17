@@ -13,7 +13,7 @@ module.exports = {
     subscriberstore.getSubscriber(id, (err, particip) => {
       if (err) { return callback(err, true); }
       if (!particip) {
-        return subscriberstore.saveSubscriber(new Subscriber({id: id}), callback);
+        return subscriberstore.saveSubscriber(new Subscriber({id}), callback);
       }
       return callback(null, true);
     });
