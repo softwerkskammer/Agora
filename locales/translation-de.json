@@ -96,6 +96,7 @@
     "authenticate": "Authentifizieren",
     "authentication": "Authentifizierung",
     "authentication_text": "Du kannst Dich über einen der untenstehenden Dienste authentifizieren. Im Anschluss bitten wir Dich, einige persönliche Daten einzugeben.",
+    "authentication_text_green": "Beim letzten Mal hast Du Dich mit dem hervorgehobenen Provider angemeldet:",
     "error": "Authentifizierungsproblem",
     "error_text": [
       "h3 Problem bei der Authentifizierung!",
