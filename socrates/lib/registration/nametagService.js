@@ -28,6 +28,8 @@ const bottomMargin = orcana ? orcanaTags.bottomMargin : gillardonTags.bottomMarg
 const paperMargins = orcana ? orcanaTags.paperMargins : gillardonTags.paperMargins;
 
 
+// whenever we perform nested calls on two or more object members (e.g. this.nametagsFor calls this._tablesFor calls this._tableFor),
+// we need to re-bind 'this' to make it available for the subsequent nested calls.
 module.exports = {
   nametagsFor: function nametagsFor(members) {
     return this._prefix() + this._tablesFor.bind(this)(members) + this._postfix();
