@@ -11,6 +11,25 @@ const misc = beans.get('misc');
 
 const urlPrefix = conf.get('publicUrlPrefix');
 
+function loginChoiceCookieFor(url) {
+  const identifier = 'openid_identifier=';
+  if (url.startsWith('/openidconnect?')) {
+    return {oidc: true};
+  }
+  if (url.startsWith('/github?')) {
+    return {gh: true};
+  }
+  if (url.startsWith('/openid?') && url.includes(identifier + 'https://openid.stackexchange.com')) {
+    return {se: true};
+  }
+  if (url.startsWith('/openid?') && url.includes(identifier)) {
+    const start = url.indexOf(identifier) + identifier.length;
+    let end = url.indexOf('&', start);
+    if (end < 0) { end = undefined; }
+    return {provider: url.substring(start, end)};
+  }
+  return {};
+}
 
 function createProviderAuthenticationRoutes(app1, provider) {
 
@@ -22,6 +41,7 @@ function createProviderAuthenticationRoutes(app1, provider) {
     if (req.session.returnTo === undefined) {
       req.session.returnTo = req.query.returnTo || '/';
     }
+    res.cookie('loginChoice', loginChoiceCookieFor(decodeURIComponent(req.url)), { maxAge: 1000 * 60 * 60 * 24 * 365, httpOnly: true }); // expires: Date
     next();
   }
 

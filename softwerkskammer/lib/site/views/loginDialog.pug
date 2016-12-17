@@ -7,25 +7,35 @@ html
     .row
       .col-md-12
         p #{t('authentication.authentication_text')}
-    .row
-      .col-md-4
+    -var highlightStyle = 'padding-top: 1em; padding-bottom: 1em; background-color: lightgreen; border-radius: 5px;'
+    -var padStyle = 'padding-top: 1em; padding-bottom: 1em;'
+    -var hovertext = 'Your previous choice'
+    -var oidcStyle = loginChoice.oidc ? highlightStyle : loginChoice.gh || loginChoice.se ? padStyle : ''
+    -var oidcTitle = loginChoice.oidc ? hovertext : ''
+    -var ghStyle = loginChoice.gh ? highlightStyle : loginChoice.oidc || loginChoice.se ? padStyle : ''
+    -var ghTitle = loginChoice.gh ? hovertext : ''
+    -var seStyle = loginChoice.se ? highlightStyle : loginChoice.gh || loginChoice.oidc ? padStyle : ''
+    -var seTitle = loginChoice.se ? hovertext : ''
+    -var providerStyle = loginChoice.provider ? highlightStyle : ''
+    -var providerTitle = loginChoice.provider ? hovertext + ': ' + loginChoice.provider : ''
+    .row(style='margin-left: 0.1em; margin-right: 0.1em')
+      .col-md-4(style=oidcStyle, title=oidcTitle)
         a.btn.btn-default.btn-block(href='/auth/openidconnect?returnTo=' + encodeURIComponent(returnUrl))
           img(src='/img/googleplus.ico', alt='google', width='16', height='16')
           | &nbsp;Google
-      .col-md-4
+      .col-md-4(style=ghStyle, title=ghTitle)
         a.btn.btn-default.btn-block(href='/auth/github?returnTo=' + encodeURIComponent(returnUrl))
           img(src='/img/github.ico', alt='github', width='16', height='16')
           | &nbsp;Github
-      .col-md-4
+      .col-md-4(style=seStyle, title=seTitle)
         a.btn.btn-default.btn-block(href='/auth/openid?openid_identifier=' + encodeURIComponent('https://openid.stackexchange.com') + '&returnTo=' + encodeURIComponent(returnUrl))
           img(src='/img/stackexchange.ico', alt='stackexchange', width='16', height='16')
           | &nbsp;StackExchange
-    .row
-      .col-md-12
+    .row(style='margin-top: 1em; margin-bottom: 1em; margin-left: 0.1em; margin-right: 0.1em')
+      .col-md-12(style=providerStyle, title=providerTitle)
         form(action='/auth/openid', method='get')
-          p &nbsp; 
           input(type='hidden', name='returnTo', value=returnUrl)
-          .panel.panel-default
+          .panel.panel-default(style='margin-bottom: 0;')
             .panel-heading
               a.accordion-toggle(href='#openIDinput', data-toggle='collapse') #{t('authentication.alternative_url')}:
             #openIDinput.collapse.panel-collapse
