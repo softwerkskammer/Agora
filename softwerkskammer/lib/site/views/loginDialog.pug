@@ -30,8 +30,8 @@ html
             .panel-heading
               .panel-title
                 a(href='#openIDinput', data-toggle='collapse') #{t('authentication.alternative_url')}:
-            #openIDinput.collapse(class=(loginChoice.provider ? 'btn-success in' : 'btn-default')).panel-collapse
+            #openIDinput.collapse.panel-collapse(class=(loginChoice.provider ? 'btn-success in' : 'btn-default'))
               .input-group(class=(loginChoice.provider ? 'btn-success' : 'btn-default'))
-                input.form-control.bg-success#openid_identifier(type='text', name='openid_identifier', loginChoice.provider && value=loginChoice.provider)
+                input.form-control.bg-success#openid_identifier(type='text', name='openid_identifier', value=(loginChoice.provider ? loginChoice.provider : ''))
                 .input-group-btn
                   button.btn(class=(loginChoice.provider ? 'btn-success' : 'btn-default'), type='submit') #{t('authentication.authenticate')}
