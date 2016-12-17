@@ -60,7 +60,7 @@ app.get('/login', (req, res) => {
 });
 
 app.get('/loginDialog', (req, res) => {
-  res.render('loginDialog', {returnUrl: req.query.returnUrl});
+  res.render('loginDialog', {returnUrl: req.query.returnUrl, loginChoice: req.cookies.loginChoice || {}});
 });
 
 app.get('/mustBeSuperuser', (req, res) => {

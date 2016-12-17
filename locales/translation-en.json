@@ -104,6 +104,7 @@
     "authenticate": "Authenticate",
     "authentication": "Authentication",
     "authentication_text": "You can authenticate via one of the methods given below. Subsequently, we ask you to provide some personal data.",
+    "authentication_text_green": "Last time you have been authenticated by the highlighted provider:",
     "error": "Authentication Error",
     "error_text": [
       "h3 Authentication Error!",
