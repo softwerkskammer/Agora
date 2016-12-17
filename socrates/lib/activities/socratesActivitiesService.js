@@ -187,7 +187,11 @@ module.exports = {
 
         const events = roomsCommandProcessor.addParticipantPairFor(params.roomType, participant1.id(), participant2.id());
 
-        saveCommandProcessor({commandProcessor: roomsCommandProcessor, events, callback});
+        const args = {commandProcessor: roomsCommandProcessor, events, callback};
+        if (events.length === 1 && events[0].event === e.ROOM_PAIR_WAS_ADDED) {
+          args.handleSuccess = () => notifications.addedParticipantPair(participant1, participant2);
+        }
+        saveCommandProcessor(args);
       }
     );
   },
@@ -212,7 +216,11 @@ module.exports = {
 
         const events = roomsCommandProcessor.removeParticipantPairFor(params.roomType, participant1.id(), participant2.id());
 
-        saveCommandProcessor({commandProcessor: roomsCommandProcessor, events, callback});
+        const args = {commandProcessor: roomsCommandProcessor, events, callback};
+        if (events.length === 1 && events[0].event === e.ROOM_PAIR_WAS_REMOVED) {
+          args.handleSuccess = () => notifications.removedParticipantPair(participant1, participant2);
+        }
+        saveCommandProcessor(args);
       }
     );
   },
