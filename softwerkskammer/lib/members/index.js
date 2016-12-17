@@ -49,7 +49,7 @@ app.get('/', (req, res, next) => {
     if (err) { return next(err); }
     async.each(members, membersService.putAvatarIntoMemberAndSave, err1 => {
       if (err1) { return next(err1); }
-      res.render('index', {members: members, wordList: membersService.toWordList(members)});
+      res.render('index', {members, wordList: membersService.toWordList(members)});
     });
   });
 });
@@ -62,7 +62,7 @@ app.get('/interests', (req, res, next) => {
       if (err1) { return next(err1); }
       res.render('indexForTag', {
         interest: req.query.interest,
-        members: members,
+        members,
         wordList: membersService.toWordList(members)
       });
     });
@@ -117,7 +117,7 @@ app.get('/edit/:nickname', (req, res, next) => {
       }
       const allGroups = results.allGroups;
       res.render('edit', {
-        member: member,
+        member,
         regionalgroups: groupsService.combineSubscribedAndAvailableGroups(member.subscribedGroups, Group.regionalsFrom(allGroups)),
         themegroups: groupsService.combineSubscribedAndAvailableGroups(member.subscribedGroups, Group.thematicsFrom(allGroups)),
         tags: results.allTags
@@ -222,7 +222,7 @@ app.get('/:nickname', (req, res, next) => {
     if (err || !member) { return next(err); }
     activitiesService.getPastActivitiesOfMember(member, (err1, activities) => {
       if (err1) { return next(err1); }
-      res.render('get', {member: member, pastActivities: activities, subscribedGroups: subscribedGroups});
+      res.render('get', {member, pastActivities: activities, subscribedGroups});
     });
   });
 });

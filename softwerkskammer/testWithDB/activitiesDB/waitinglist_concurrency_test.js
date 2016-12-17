@@ -16,7 +16,7 @@ const Member = beans.get('member');
 const activityUrl = 'urlOfTheActivity';
 
 function getActivity(url, callback) {
-  persistence.getByField({url: url}, (err, activityState) => {
+  persistence.getByField({url}, (err, activityState) => {
     callback(err, new Activity(activityState));
   });
 }
@@ -94,7 +94,7 @@ describe('Waitinglist Service with DB', () => {
   it('saveWaitinglistEntry keeps the registrant that is in the database although it only reads an activity without registrant', done => {
     // here, we save an activity with a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    waitinglistService.saveWaitinglistEntry({nickname: 'nick', activityUrl: activityUrl, resourcename: 'Veranstaltung'}, err => {
+    waitinglistService.saveWaitinglistEntry({nickname: 'nick', activityUrl, resourcename: 'Veranstaltung'}, err => {
       if (err) { return done(err); }
       getActivity(activityUrl, (err1, activity) => {
         expect(activity.resourceNamed('Veranstaltung').waitinglistEntries()[0].registrantId(), 'Waiting member is still in the waitinglist').to.equal('memberIdWaiting');
@@ -108,7 +108,7 @@ describe('Waitinglist Service with DB', () => {
   it('allowRegistrationForWaitinglistEntry keeps the registrant that is in the database although it only reads an activity without registrant', done => {
     // here, we save an activity after removing a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first 'getActivity'.
-    waitinglistService.allowRegistrationForWaitinglistEntry({nickname: 'waiting', activityUrl: activityUrl, resourcename: 'Veranstaltung', hoursstring: '10'}, err => {
+    waitinglistService.allowRegistrationForWaitinglistEntry({nickname: 'waiting', activityUrl, resourcename: 'Veranstaltung', hoursstring: '10'}, err => {
       if (err) { return done(err); }
       getActivity(activityUrl, (err1, activity) => {
         expect(activity.resourceNamed('Veranstaltung').waitinglistEntries()[0].canSubscribe(), 'Waiting member is now allowed to subscribe').to.be(true);

@@ -17,7 +17,7 @@ const app = misc.expressAppIn(__dirname);
 function groupSubmitted(req, res, next) {
   const group = new Group(req.body);
   groupsService.isGroupValid(group, errors => {
-    if (errors.length !== 0) { return res.render('../../../views/errorPages/validationError', {errors: errors}); }
+    if (errors.length !== 0) { return res.render('../../../views/errorPages/validationError', {errors}); }
     groupsAndMembers.saveGroup(group, err => {
       if (err) { return next(err); }
       statusmessage.successMessage('message.title.save_successful', 'message.content.groups.saved').putIntoSession(req);
@@ -63,7 +63,7 @@ app.get('/edit/:groupname', (req, res, next) => {
     }
     const realGroup = group || new Group();
     const organizersChecked = realGroup.checkedOrganizers(realGroup.members);
-    res.render('edit', {group: realGroup, allTypes: Group.allTypes(), organizersChecked: organizersChecked});
+    res.render('edit', {group: realGroup, allTypes: Group.allTypes(), organizersChecked});
   });
 });
 
@@ -107,11 +107,11 @@ app.get('/:groupname', (req, res, next) => {
         if (err2) { return next(err2); }
         const registeredUserId = req && req.user ? req.user.member.id() : undefined;
         res.render('get', {
-          group: group,
+          group,
           users: group.members,
           userIsGroupMember: groupsAndMembers.memberIsInMemberList(registeredUserId, group.members),
           organizers: group.organizers,
-          blogposts: blogposts,
+          blogposts,
           webcalURL: conf.get('publicUrlPrefix').replace('http', 'webcal') + '/activities/icalForGroup/' + group.id,
           upcomingGroupActivities: activities || []
         });

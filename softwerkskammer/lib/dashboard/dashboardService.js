@@ -31,7 +31,7 @@ function groupsByColumns(groups = [], linesPerGroup) {
 }
 
 module.exports = {
-  groupsByColumns: groupsByColumns,
+  groupsByColumns,
 
   dataForDashboard: function dataForDashboard(nickname, callback) {
     groupsAndMembersService.getMemberWithHisGroups(nickname, (err, member) => {
@@ -67,11 +67,11 @@ module.exports = {
           });
         }, err2 => {
           callback(err2, {
-            member: member,
-            activities: activities,
-            postsByGroup: postsByGroup,
-            changesByGroup: changesByGroup,
-            mailsByGroup: mailsByGroup,
+            member,
+            activities,
+            postsByGroup,
+            changesByGroup,
+            mailsByGroup,
             groupsPerColumn: groupsByColumns(member.subscribedGroups, linesPerGroup)
           });
         });

@@ -63,7 +63,7 @@ module.exports = function importMails(file, group, done) {
         return done(err);
       }
       const mailDbObject = {
-        group: group,
+        group,
         subject: parsedObject.subject,
         text: parsedObject.text,
         html: parsedObject.html,

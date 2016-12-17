@@ -64,7 +64,7 @@ describe('Activity store', () => {
     const url = activity1.url;
     store.getActivity(url, (err, activity) => {
       expect(activity.title()).to.equal(activity1.title);
-      expect(getByField.calledWith({url: url})).to.be(true);
+      expect(getByField.calledWith({url})).to.be(true);
       expect(activity.descriptionHTML()).to.contain('bli');
       done(err);
     });

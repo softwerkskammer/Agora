@@ -13,7 +13,7 @@ const groupsAndMembersService = beans.get('groupsAndMembersService');
 
 const email = 'user@mail.com';
 const groupA = new Group({id: 'groupA', organizers: []});
-const member = new Member({id: 'id', email: email});
+const member = new Member({id: 'id', email});
 
 describe('Groups and Members Service (Subscriptions)', () => {
   let getMemberForIdSpy;

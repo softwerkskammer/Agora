@@ -98,9 +98,9 @@ module.exports = {
     return imageExtensions.includes(extension.replace(/\./, ''));
   },
 
-  regexEscape: regexEscape,
+  regexEscape,
 
-  compact: compact,
+  compact,
 
   startsWith: function startsWith(string, start) {
     return string.indexOf(start) === 0;

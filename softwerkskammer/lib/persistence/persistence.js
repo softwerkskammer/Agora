@@ -64,7 +64,7 @@ module.exports = function (collectionName) {
     },
 
     getById: function getById(id, callback) {
-      this.getByField({id: id}, callback);
+      this.getByField({id}, callback);
     },
 
     getByField: function getByField(fieldAsObject, callback) {

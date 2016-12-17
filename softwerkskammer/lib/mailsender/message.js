@@ -83,7 +83,7 @@ class Message {
     const replyTo = this.senderName ? formatEMailAddress(this.senderName, this.senderAddress) : undefined;
     return {
       from: formatEMailAddress(fromName, senderAddress),
-      replyTo: replyTo,
+      replyTo,
       to: this.to,
       cc: this.cc,
       bcc: this.bcc,

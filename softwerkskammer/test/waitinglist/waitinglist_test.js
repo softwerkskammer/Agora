@@ -15,7 +15,7 @@ describe('Waitinglist application', () => {
 
   beforeEach(() => {
     sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', (url, callback) => {
-      callback(null, new Activity({url: url, title: 'Activity\'s Title'}));
+      callback(null, new Activity({url, title: 'Activity\'s Title'}));
     });
     sinon.stub(waitinglistService, 'waitinglistFor', (url, callback) => {
       callback(null, []);

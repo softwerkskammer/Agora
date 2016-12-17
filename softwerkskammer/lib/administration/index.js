@@ -41,13 +41,13 @@ app.get('/memberAndGroupTable', (req, res, next) => {
 app.get('/groupTable', (req, res, next) => {
   groupsService.getAllAvailableGroups((err, groups) => {
     if (err) { return next(err); }
-    res.render('groupTable', {groups: groups, groupTypes: Group.allTypes()});
+    res.render('groupTable', {groups, groupTypes: Group.allTypes()});
   });
 });
 
 app.get('/activityTable', (req, res, next) => activitiesService.getActivitiesForDisplay(activitystore.allActivities, (err, activities) => {
   if (err) { return next(err); }
-  res.render('activityTable', {activities: activities});
+  res.render('activityTable', {activities});
 }));
 
 app.get('/interests', (req, res, next) => {

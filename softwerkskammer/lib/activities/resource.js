@@ -52,7 +52,7 @@ class Resource {
     if (this.canSubscribe() || this.canSubscribeFromWaitinglist(memberId)) {
       if (this.registeredMembers().indexOf(memberId) === -1) {
         this.state._registeredMembers.push({
-          memberId: memberId,
+          memberId,
           registeredAt: (momentOfRegistration || moment()).toDate()
         });
       }

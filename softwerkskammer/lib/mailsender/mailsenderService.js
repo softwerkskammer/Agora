@@ -31,7 +31,7 @@ function activityMarkdown(activity, language) {
 }
 
 module.exports = {
-  activityMarkdown: activityMarkdown,
+  activityMarkdown,
 
   dataForShowingMessageForActivity: function (activityURL, language, globalCallback) {
     async.parallel(
@@ -43,8 +43,8 @@ module.exports = {
         if (err || !results.activity) { return globalCallback(err); }
         const activity = results.activity;
         const invitationGroup = results.groups.find(group => group.id === activity.assignedGroup());
-        const regionalGroups = groupsService.combineSubscribedAndAvailableGroups([invitationGroup], Group.regionalsFrom(results.groups));
-        const thematicGroups = groupsService.combineSubscribedAndAvailableGroups([invitationGroup], Group.thematicsFrom(results.groups));
+        const regionalgroups = groupsService.combineSubscribedAndAvailableGroups([invitationGroup], Group.regionalsFrom(results.groups));
+        const themegroups = groupsService.combineSubscribedAndAvailableGroups([invitationGroup], Group.thematicsFrom(results.groups));
 
         const message = new Message();
         message.setSubject('Einladung: ' + activity.title());
@@ -54,11 +54,11 @@ module.exports = {
           url: misc.toFullQualifiedUrl('activities', encodeURIComponent(activity.url()))
         });
         const result = {
-          message: message,
-          regionalgroups: regionalGroups,
-          themegroups: thematicGroups,
+          message,
+          regionalgroups,
+          themegroups,
           successURL: '/activities/' + encodeURIComponent(activityURL),
-          activity: activity
+          activity
         };
         globalCallback(null, result);
       }
@@ -71,7 +71,7 @@ module.exports = {
       if (!member) {return callback(new Error('Empfänger wurde nicht gefunden.')); }
       const message = new Message();
       message.setReceiver(member);
-      callback(null, {message: message, successURL: '/members/' + encodeURIComponent(nickname)});
+      callback(null, {message, successURL: '/members/' + encodeURIComponent(nickname)});
     });
   },
 

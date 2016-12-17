@@ -17,7 +17,7 @@ module.exports = {
 
   payWithCreditCard: function payWithCreditCard(saveCreditCardPayment, netAmount, description, stripeId, callback) {
     const totalAmount = parseInt((netAmount + calcFee(netAmount)) * 100, 10);
-    const charge = {amount: totalAmount, currency: 'EUR', card: stripeId, description: description};
+    const charge = {amount: totalAmount, currency: 'EUR', card: stripeId, description};
     stripeService.transaction().charges.create(charge, (err1, charge1) => {
       if (err1) {
         logger.error('Error on payment: ' + err1.message + '. For: "' + description);
@@ -36,5 +36,5 @@ module.exports = {
     });
   },
 
-  calcFee: calcFee
+  calcFee
 };

@@ -12,7 +12,7 @@ app.get('/', (req, res, next) => {
   paymentService.getPaymentInfo((err, paymentInfo) => {
     if (err || !paymentInfo) { return next(err); }
     res.render('index', {
-      paymentInfo: paymentInfo,
+      paymentInfo,
       placeholder: fieldHelpers.formatNumberWithCurrentLocale(res, 0)
     });
   });

@@ -7,19 +7,19 @@ describe('Statusmessage', () => {
 
   it('has type "danger" when created as error', () => {
     const session = {};
-    statusmessage.errorMessage('', '').putIntoSession({session: session});
+    statusmessage.errorMessage('', '').putIntoSession({session});
     expect(session.statusmessage.type).to.equal('alert-danger');
   });
 
   it('has type "success" when created as success', () => {
     const session = {};
-    statusmessage.successMessage('', '').putIntoSession({session: session});
+    statusmessage.successMessage('', '').putIntoSession({session});
     expect(session.statusmessage.type).to.equal('alert-success');
   });
 
   it('is in res when recreated from object', () => {
     const locals = {};
-    statusmessage.fromObject({type: 'alert-success'}).putIntoSession({session: {}}, {locals: locals});
+    statusmessage.fromObject({type: 'alert-success'}).putIntoSession({session: {}}, {locals});
     expect(locals.statusmessage.contents().type).to.equal('alert-success');
   });
 

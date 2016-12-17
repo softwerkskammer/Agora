@@ -16,14 +16,14 @@ module.exports = function subdirs(req, res, next) {
     (err, results) => {
       if (err) { return next(err); }
       const gitdirs = results.gitdirs;
-      const regionals = R.intersection(Group.regionalsFrom(results.groups).map(group => group.id), gitdirs);
-      const thematics = R.intersection(Group.thematicsFrom(results.groups).map(group => group.id), gitdirs);
-      const additionalWikis = R.difference(gitdirs, results.groups.map(group => group.id));
+      const regional = R.intersection(Group.regionalsFrom(results.groups).map(group => group.id), gitdirs);
+      const themed = R.intersection(Group.thematicsFrom(results.groups).map(group => group.id), gitdirs);
+      const other = R.difference(gitdirs, results.groups.map(group => group.id));
       res.locals.wikisubdirs = gitdirs;
       res.locals.structuredWikisubdirs = {
-        regional: regionals,
-        themed: thematics,
-        other: additionalWikis
+        regional,
+        themed,
+        other
       };
       next();
     }

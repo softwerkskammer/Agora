@@ -37,7 +37,7 @@ class Group {
   }
 
   checkedOrganizers(members) {
-    return members.map(member => {return {member: member, checked: this.isOrganizer(member.id())}; });
+    return members.map(member => {return {member, checked: this.isOrganizer(member.id())}; });
   }
 
   mapYrelative() {

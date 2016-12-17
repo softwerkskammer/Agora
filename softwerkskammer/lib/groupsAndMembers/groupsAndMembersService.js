@@ -132,7 +132,7 @@ module.exports = {
     );
   },
 
-  addMembersToGroup: addMembersToGroup,
+  addMembersToGroup,
 
   addMembercountToGroup: function addMembercountToGroup(group, callback) {
     if (!group) { return callback(null); }

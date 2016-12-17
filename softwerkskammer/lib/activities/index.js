@@ -58,7 +58,7 @@ function activitiesForDisplay(activitiesFetcher, next, res, title) {
   return activitiesService.getActivitiesForDisplay(activitiesFetcher, (err, activities) => {
     if (err) { next(err); }
     res.render('index', {
-      activities: activities,
+      activities,
       range: title,
       webcalURL: conf.get('publicUrlPrefix').replace('http', 'webcal') + '/activities/ical'
     });
@@ -85,7 +85,7 @@ function renderGdcrFor(gdcrDay, res, next) {
     res.render('gdcr', {
       calViewYear: gdcrYear,
       calViewMonth: gdcrDate.month(),
-      activities: activities,
+      activities,
       year: String(gdcrYear),
       previousYears: R.range(2013, gdcrYear).map(year => String(year))
     });
@@ -160,9 +160,9 @@ function renderActivityCombinedWithGroups(res, next, activity) {
         groups.push(activity.group);
       }
       res.render('edit', {
-        activity: activity,
-        groups: groups,
-        editorNames: editorNames,
+        activity,
+        groups,
+        editorNames,
         participantNames: R.union(editorNames, participantNames)
       });
     });
@@ -241,10 +241,10 @@ app.get('/:url', (req, res, next) => {
       const editorNicknames = editors.map(editor => editor.nickname());
       const allowsRegistration = activity.resourceNames().every(resourceName => activity.resourceNamed(resourceName).limit() !== 0);
       res.render('get', {
-        activity: activity,
-        allowsRegistration: allowsRegistration,
-        editorNicknames: editorNicknames,
-        resourceRegistrationRenderer: resourceRegistrationRenderer,
+        activity,
+        allowsRegistration,
+        editorNicknames,
+        resourceRegistrationRenderer,
         calViewYear: activity.year(),
         calViewMonth: activity.month()
       });
