@@ -8,14 +8,14 @@ mixin text(name, label, value, tooltip, placeholder, readonly)
 mixin textWithTags(name, label, value, tags)
   .form-group
     +controlLabel(name, label)
-    select.form-control(multiple, id=name, name=name, data-tags=true, data-token-separators=[',', ', '])
+    select.form-control.enhance(multiple, id=name, name=name, data-tags=true, data-token-separators=[',', ', '])
       each tag in tags
         option(selected = value.indexOf(tag) > -1) #{tag}
 
 mixin singleselect(name, label, value, placeholder, tags)
   .form-group
     +controlLabel(name, label)
-    select.form-control(id=name, name=name, data-placeholder=placeholder)
+    select.form-control.enhance(id=name, name=name, data-placeholder=placeholder)
       option(value='') #{' '}
       each tag in tags
         option(value = tag.iso, selected = value && value.indexOf(tag.iso) === 0) #{tag.name}
@@ -23,14 +23,14 @@ mixin singleselect(name, label, value, placeholder, tags)
 mixin multiselect(name, label, value, tags)
   .form-group
     +controlLabel(name, label)
-    select.form-control(multiple, id=name, name=name)
+    select.form-control.enhance(multiple, id=name, name=name)
       each tag in tags
         option(selected = value.indexOf(tag) > -1) #{tag}
 
 mixin editableMultiselect(name, label, value, tags)
   .form-group
     +controlLabel(name, label)
-    select.form-control(multiple, id=name, name=name, data-tags=true)
+    select.form-control.enhance(multiple, id=name, name=name, data-tags=true)
       each tag in tags
         option(selected = value.indexOf(tag) > -1) #{tag}
 

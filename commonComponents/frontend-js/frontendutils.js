@@ -101,7 +101,7 @@ function surroundEmail(email) {
       $(this).colorpicker();
     });
 
-    $('select').each(function () {
+    $('.enhance').each(function () {
       /* eslint no-console: 0 */
       $(this).select2({theme: 'bootstrap'});
     });
