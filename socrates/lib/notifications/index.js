@@ -32,7 +32,7 @@ function notifyConcernedParties(params, self) {
   sendMail({
     fromName: 'SoCraTes Notifications',
     fromAddress: self.registrationListEmailAddress(),
-    receivers: [params.member.email()],
+    receivers: params.receivers || [params.member.email()],
     subject: params.participantSubject,
     html: pug.renderFile(filename, options)
   });
@@ -156,6 +156,30 @@ module.exports = {
       };
       notifyConcernedParties(params, this);
     });
+  },
+
+  addedParticipantPair: function addedParticipantPair(participant1, participant2) {
+    const params = {
+      receivers: [participant1.email(), participant2.email()],
+      bookingdetails: {participant1, participant2},
+      participantFilename: 'roomPairConfirmation',
+      participantSubject: 'SoCraTes Room Sharing Confirmation',
+      organizersFilename: 'superuserRoomPairNotification',
+      organizersSubject: 'New SoCraTes Room Pair'
+    };
+    notifyConcernedParties(params, this);
+  },
+
+  removedParticipantPair: function removedParticipantPair(participant1, participant2) {
+    const params = {
+      receivers: [participant1.email(), participant2.email()],
+      bookingdetails: {participant1, participant2},
+      participantFilename: 'roomPairRemoval',
+      participantSubject: 'SoCraTes Room Pair Removal',
+      organizersFilename: 'superuserRoomPairRemovalNotification',
+      organizersSubject: 'Removed SoCraTes Room Pair'
+    };
+    notifyConcernedParties(params, this);
   },
 
   wikiChanges: function wikiChanges(changes, callback) {

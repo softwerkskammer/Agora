@@ -15,12 +15,22 @@ const transport = beans.get('mailtransport').transport;
 const roomOptions = beans.get('roomOptions');
 const supermanEmail = 'superman@email.de';
 
+const hansmail = 'hans@email.de';
 const hans = new Member({
   id: 'hans',
   firstname: 'Hans',
   lastname: 'Dampf',
-  email: 'hans@email.de',
+  email: hansmail,
   nickname: 'Gassenhauer'
+});
+
+const fritzmail = 'fritz@email.de';
+const fritz = new Member({
+  id: 'fritz',
+  firstname: 'Fritz',
+  lastname: 'Fischer',
+  email: fritzmail,
+  nickname: 'Zungenbrecher'
 });
 
 describe('Notifications', () => {
@@ -78,31 +88,23 @@ describe('Notifications', () => {
   });
 
   describe('for new members', () => {
-    it('creates a meaningful text and subject', () => {
-      stubRegistrationListEmailAddress(supermanEmail);
-
-      notifications.newSoCraTesMemberRegistered(hans);
-      expect(transport.sendMail.calledOnce).to.be(true);
-      const options = transport.sendMail.firstCall.args[0];
-      expect(options.subject).to.equal('Neuer Interessent');
-      expect(options.html).to.contain('Es hat sich ein neuer SoCraTes-Interessent registriert:');
-      expect(options.html).to.contain('Hans Dampf');
-      expect(options.html).to.contain('/members/Gassenhauer');
-      expect(options.html).to.contain('hans@email.de');
-      expect(options.html).to.contain('Damit hat die SoCraTes jetzt 3 Interessenten.');
-    });
-
-    it('triggers mail sending for superusers', () => {
+    it('creates a meaningful text and subject and triggers mail sending for admins', () => {
       stubRegistrationListEmailAddress(supermanEmail);
 
       notifications.newSoCraTesMemberRegistered(hans);
       expect(transport.sendMail.calledOnce).to.be(true);
       const options = transport.sendMail.firstCall.args[0];
       expect(options.bcc).to.eql(supermanEmail);
-      expect(options.from).to.contain('SoCraTes Notifications');
+      expect(options.subject).to.equal('Neuer Interessent');
+      expect(options.html).to.contain('Es hat sich ein neuer SoCraTes-Interessent registriert:');
+      expect(options.html).to.contain('Hans Dampf');
+      expect(options.html).to.contain('/members/Gassenhauer');
+      expect(options.html).to.contain('hans@email.de');
+      expect(options.html).to.contain('Damit hat die SoCraTes jetzt 3 Interessenten.');
+      expect(options.from).to.be('"SoCraTes Notifications" <' + null + '>');
     });
 
-    it('does not trigger mail sending if there are no concerned parties', () => {
+    it('does not trigger mail sending if there are no admins', () => {
       stubRegistrationListEmailAddress();
 
       notifications.newSoCraTesMemberRegistered(hans);
@@ -120,6 +122,7 @@ describe('Notifications', () => {
       notifications.newParticipant(hans, roomOptions.informationFor('junior', 3));
       expect(transport.sendMail.calledTwice).to.be(true);
       const options = transport.sendMail.firstCall.args[0];
+      expect(options.bcc).to.eql(hansmail);
       expect(options.subject).to.equal('SoCraTes Registration Confirmation');
       expect(options.html).to.contain('junior room (exclusively)');
       expect(options.html).to.contain('<b>3</b>  nights');
@@ -133,12 +136,13 @@ describe('Notifications', () => {
       notifications.newParticipant(hans, bookingdetails);
       expect(transport.sendMail.calledTwice).to.be(true);
       const options = transport.sendMail.firstCall.args[0];
+      expect(options.bcc).to.eql(hansmail);
       expect(options.subject).to.equal('SoCraTes Registration Confirmation');
       expect(options.html).to.contain('If you want to stay longer, please tell us in your reply');
       expect(options.from).to.be('"SoCraTes Notifications" <' + supermanEmail + '>');
     });
 
-    it('sends a meaningful mail to superusers', () => {
+    it('sends a meaningful mail to admins', () => {
       notifications.newParticipant(hans, roomOptions.informationFor('junior', 3));
       expect(transport.sendMail.calledTwice).to.be(true);
       const options = transport.sendMail.secondCall.args[0];
@@ -146,6 +150,77 @@ describe('Notifications', () => {
       expect(options.subject).to.equal('New SoCraTes Registration');
       expect(options.html).to.contain('junior room (exclusively)');
       expect(options.html).to.contain('<b>3</b>  nights');
+      expect(options.html).to.contain('Gassenhauer');
+      expect(options.from).to.be('"SoCraTes Notifications" <' + null + '>');
+    });
+  });
+
+  describe('for change of', () => {
+    beforeEach(() => {
+      stubRegistrationListEmailAddress(supermanEmail);
+    });
+
+    it('duration - creates a meaningful text and subject', () => {
+      notifications.changedDuration(hans, roomOptions.informationFor('junior', 3));
+      expect(transport.sendMail.calledTwice).to.be(true);
+      const options = transport.sendMail.firstCall.args[0];
+      expect(options.bcc).to.eql(hansmail);
+      expect(options.subject).to.equal('SoCraTes Change of Length of Stay');
+      expect(options.html).to.contain('junior room (exclusively)');
+      expect(options.html).to.contain('sunday morning');
+      expect(options.from).to.be('"SoCraTes Notifications" <' + supermanEmail + '>');
+    });
+
+    it('duration - sends a meaningful mail to admins', () => {
+      notifications.changedDuration(hans, roomOptions.informationFor('junior', 3));
+      expect(transport.sendMail.calledTwice).to.be(true);
+      const options = transport.sendMail.secondCall.args[0];
+      expect(options.bcc).to.contain(supermanEmail);
+      expect(options.subject).to.equal('Change in SoCraTes Registration - Duration');
+      expect(options.html).to.contain('Gassenhauer');
+      expect(options.from).to.be('"SoCraTes Notifications" <' + null + '>');
+    });
+
+    it('resource - creates a meaningful text and subject', () => {
+      notifications.changedResource(hans, roomOptions.informationFor('junior', 3));
+      expect(transport.sendMail.calledTwice).to.be(true);
+      const options = transport.sendMail.firstCall.args[0];
+      expect(options.bcc).to.eql(hansmail);
+      expect(options.subject).to.equal('SoCraTes Change of Room Option');
+      expect(options.html).to.contain('junior room (exclusively)');
+      expect(options.html).to.contain('sunday morning');
+      expect(options.from).to.be('"SoCraTes Notifications" <' + supermanEmail + '>');
+    });
+
+    it('resource - sends a meaningful mail to admins', () => {
+      notifications.changedResource(hans, roomOptions.informationFor('junior', 3));
+      expect(transport.sendMail.calledTwice).to.be(true);
+      const options = transport.sendMail.secondCall.args[0];
+      expect(options.bcc).to.contain(supermanEmail);
+      expect(options.subject).to.equal('Change in SoCraTes Registration - Resource');
+      expect(options.html).to.contain('junior room (exclusively)');
+      expect(options.html).to.contain('sunday morning');
+      expect(options.html).to.contain('Gassenhauer');
+      expect(options.from).to.be('"SoCraTes Notifications" <' + null + '>');
+    });
+
+    it('waitinglist - creates a meaningful text and subject', () => {
+      notifications.changedWaitinglist(hans, [roomOptions.informationFor('junior', 'waitinglist')]);
+      expect(transport.sendMail.calledTwice).to.be(true);
+      const options = transport.sendMail.firstCall.args[0];
+      expect(options.bcc).to.eql(hansmail);
+      expect(options.subject).to.equal('SoCraTes Waitinglist Change of Room Option');
+      expect(options.html).to.contain('junior room (exclusively)');
+      expect(options.from).to.be('"SoCraTes Notifications" <' + supermanEmail + '>');
+    });
+
+    it('waitinglist - sends a meaningful mail to admins', () => {
+      notifications.changedWaitinglist(hans, [roomOptions.informationFor('junior', 'waitinglist')]);
+      expect(transport.sendMail.calledTwice).to.be(true);
+      const options = transport.sendMail.secondCall.args[0];
+      expect(options.bcc).to.contain(supermanEmail);
+      expect(options.subject).to.equal('Change in SoCraTes Waitinglist - Resource');
+      expect(options.html).to.contain('junior room (exclusively)');
       expect(options.html).to.contain('Gassenhauer');
       expect(options.from).to.be('"SoCraTes Notifications" <' + null + '>');
     });
@@ -161,12 +236,13 @@ describe('Notifications', () => {
       notifications.newWaitinglistEntry(hans, [roomOptions.informationFor('junior', 3)]);
       expect(transport.sendMail.calledTwice).to.be(true);
       const options = transport.sendMail.firstCall.args[0];
+      expect(options.bcc).to.eql(hansmail);
       expect(options.subject).to.equal('SoCraTes Waitinglist Confirmation');
       expect(options.html).to.contain('junior room (exclusively)');
       expect(options.from).to.be('"SoCraTes Notifications" <' + supermanEmail + '>');
     });
 
-    it('sends a meaningful mail to members concerned with registration', () => {
+    it('sends a meaningful mail to admins', () => {
       notifications.newWaitinglistEntry(hans, [roomOptions.informationFor('junior', 3)]);
       expect(transport.sendMail.calledTwice).to.be(true);
       const options = transport.sendMail.secondCall.args[0];
@@ -178,4 +254,103 @@ describe('Notifications', () => {
     });
   });
 
+  describe('for removal from', () => {
+    beforeEach(() => {
+      stubRegistrationListEmailAddress(supermanEmail);
+    });
+
+    it('participants - creates a meaningful text and subject', () => {
+      notifications.removedFromParticipants(hans);
+      expect(transport.sendMail.calledTwice).to.be(true);
+      const options = transport.sendMail.firstCall.args[0];
+      expect(options.bcc).to.eql(hansmail);
+      expect(options.subject).to.equal('SoCraTes - Removal from Participant List');
+      expect(options.html).to.contain('We have removed you from the participant list');
+      expect(options.from).to.be('"SoCraTes Notifications" <' + supermanEmail + '>');
+    });
+
+    it('participants - sends a meaningful mail to admins', () => {
+      notifications.removedFromParticipants(hans);
+      expect(transport.sendMail.calledTwice).to.be(true);
+      const options = transport.sendMail.secondCall.args[0];
+      expect(options.bcc).to.contain(supermanEmail);
+      expect(options.subject).to.equal('Change in SoCraTes Registration - Removal from Participants');
+      expect(options.html).to.contain('(Gassenhauer) has been removed from the participant list');
+      expect(options.from).to.be('"SoCraTes Notifications" <' + null + '>');
+    });
+
+    it('waitinglist - creates a meaningful text and subject', () => {
+      notifications.removedFromWaitinglist(hans);
+      expect(transport.sendMail.calledTwice).to.be(true);
+      const options = transport.sendMail.firstCall.args[0];
+      expect(options.bcc).to.eql(hansmail);
+      expect(options.subject).to.equal('SoCraTes - Removal from Waitinglist');
+      expect(options.html).to.contain('We have removed you from the waitinglist');
+      expect(options.from).to.be('"SoCraTes Notifications" <' + supermanEmail + '>');
+    });
+
+    it('waitinglist - sends a meaningful mail to admins', () => {
+      notifications.removedFromWaitinglist(hans);
+      expect(transport.sendMail.calledTwice).to.be(true);
+      const options = transport.sendMail.secondCall.args[0];
+      expect(options.bcc).to.contain(supermanEmail);
+      expect(options.subject).to.equal('Change in SoCraTes Registration - Removal from Waitinglist');
+      expect(options.html).to.contain('(Gassenhauer) has been removed from the waitinglist');
+      expect(options.from).to.be('"SoCraTes Notifications" <' + null + '>');
+    });
+  });
+
+  describe('for participant pair', () => {
+    beforeEach(() => {
+      stubRegistrationListEmailAddress(supermanEmail);
+    });
+
+    it('addition - creates a meaningful text and subject', () => {
+      notifications.addedParticipantPair(hans, fritz);
+      expect(transport.sendMail.calledTwice).to.be(true);
+      const options = transport.sendMail.firstCall.args[0];
+      expect(options.bcc).to.eql(hansmail + ',' + fritzmail);
+      expect(options.subject).to.equal('SoCraTes Room Sharing Confirmation');
+      expect(options.html).to.contain('Hans Dampf and Fritz Fischer');
+      expect(options.html).to.contain('/members/Gassenhauer');
+      expect(options.html).to.contain('/members/Zungenbrecher');
+      expect(options.from).to.be('"SoCraTes Notifications" <' + supermanEmail + '>');
+    });
+
+    it('addition - sends a meaningful mail to admins', () => {
+      notifications.addedParticipantPair(hans, fritz);
+      expect(transport.sendMail.calledTwice).to.be(true);
+      const options = transport.sendMail.secondCall.args[0];
+      expect(options.bcc).to.eql(supermanEmail);
+      expect(options.subject).to.equal('New SoCraTes Room Pair');
+      expect(options.html).to.contain('Hans Dampf (Gassenhauer)');
+      expect(options.html).to.contain('Fritz Fischer (Zungenbrecher)');
+      expect(options.from).to.be('"SoCraTes Notifications" <' + null + '>');
+    });
+
+    it('removal - creates a meaningful text and subject', () => {
+      notifications.removedParticipantPair(hans, fritz);
+      expect(transport.sendMail.calledTwice).to.be(true);
+      const options = transport.sendMail.firstCall.args[0];
+      expect(options.bcc).to.eql(hansmail + ',' + fritzmail);
+      expect(options.subject).to.equal('SoCraTes Room Pair Removal');
+      expect(options.html).to.contain('Hans Dampf and Fritz Fischer');
+      expect(options.html).to.contain('/members/Gassenhauer');
+      expect(options.html).to.contain('/members/Zungenbrecher');
+      expect(options.from).to.be('"SoCraTes Notifications" <' + supermanEmail + '>');
+    });
+
+    it('removal - sends a meaningful mail to admins', () => {
+      notifications.removedParticipantPair(hans, fritz);
+      expect(transport.sendMail.calledTwice).to.be(true);
+      const options = transport.sendMail.secondCall.args[0];
+      expect(options.bcc).to.contain(supermanEmail);
+      expect(options.subject).to.equal('Removed SoCraTes Room Pair');
+      expect(options.html).to.contain('Hans Dampf (Gassenhauer)');
+      expect(options.html).to.contain('Fritz Fischer (Zungenbrecher)');
+      expect(options.from).to.be('"SoCraTes Notifications" <' + null + '>');
+    });
+  });
+
 });
+
