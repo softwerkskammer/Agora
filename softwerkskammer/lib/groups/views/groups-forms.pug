@@ -37,7 +37,7 @@ mixin groupform(group, allTypes, organizersChecked)
           .control-group
             each memberAdmin in organizersChecked
               +checkbox('organizers', memberAdmin.member.nickname(), memberAdmin.checked, memberAdmin.member.id())
-        .col-md-6
+        #mapstuff.col-md-6
           .row
             .col-md-6
               +text('mapX', t('groups.x_coord'), group.mapX, t('groups.tooltip.x_coord'))
