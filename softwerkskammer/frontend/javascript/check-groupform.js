@@ -76,4 +76,16 @@ var groups_validator;
 
   };
   $(document).ready(initValidator);
+
+  // show / hide mapstuff widgets
+  function hideMapInfos() {
+    if ($('#type').val() === 'Themengruppe') {
+      $('#mapstuff').hide();
+    } else {
+      $('#mapstuff').show();
+    }
+  }
+
+  $(document).ready($('#type').on('change', hideMapInfos));
+  hideMapInfos();
 }());
