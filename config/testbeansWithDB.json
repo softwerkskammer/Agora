@@ -11,8 +11,7 @@
     "constructorArgs": {
       "collectionName": "teststore"
     }},
-  "mailsPersistence": {"module": "./softwerkskammer/test/persistence/testpersistence"},
-  "colorsPersistence": {"module": "./softwerkskammer/lib/persistence/testpersistence"},
+  "mailsPersistence": {"module": "./softwerkskammer/teststubs/testpersistence"},
   "mailinglistPersistence": {"module": "./softwerkskammer/lib/persistence/persistence",
     "constructorArgs": {
       "collectionName": "teststore"

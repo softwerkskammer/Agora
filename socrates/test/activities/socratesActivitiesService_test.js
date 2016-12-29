@@ -25,8 +25,6 @@ const RoomsReadModel = beans.get('RoomsReadModel');
 const RegistrationReadModel = beans.get('RegistrationReadModel');
 const socratesConstants = beans.get('socratesConstants');
 
-const transport = beans.get('mailtransport').transport;
-
 const aLongTimeAgo = moment.tz().subtract(40, 'minutes');
 const now = moment.tz();
 
@@ -44,7 +42,6 @@ describe('SoCraTes Activities Service', () => {
   let removedFromWaitinglistNotification;
 
   beforeEach(() => {
-    sinon.stub(transport, 'sendMail');
     cache.flushAll();
 
     listOfEvents = [];
