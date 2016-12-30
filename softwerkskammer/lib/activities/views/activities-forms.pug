@@ -30,13 +30,16 @@ mixin activityform(activity, groups, editorNames, participantNames)
               #dates.col-xs-6(style='padding-left:3px;padding-right:0px')
                 +time('endTime', activity.endMoment().locale(language).format('LT'))
           +textarea('description', t('general.description'), activity.description())
+          +textarea('direction', t('activities.directions'), activity.direction())
           +editableMultiselect('editorIds', t('activities.editors'), editorNames, participantNames)
         .col-md-6
           .form-group
             +controlLabel('url', t('activities.address_suffix'), t('activities.tooltip.address_suffix'))
             input.form-control#url(type='text', name='url', value=activity.url())
           +text('location', t('activities.location'), activity.location())
-          +textarea('direction', t('activities.directions'), activity.direction())
+          .form-group
+            +controlLabel('preview', 'Preview')
+            #map.hidden-print(style='width: ' + '100%' + '; height: ' + '420px')
           .form-group
             label.control-label(for='assignedGroup') #{t('groups.group')}:
             select#assignedGroup.form-control(name='assignedGroup')

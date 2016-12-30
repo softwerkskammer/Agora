@@ -1,5 +1,6 @@
 extends ../../../views/layoutOnlyMain
 include activities-forms
+include ../../../views/googlemaps-component
 
 block scripts
   script(src='/clientscripts/activityDateModel.js')
@@ -11,3 +12,7 @@ block title
 
 block content
   +activityform(activity, groups, editorNames, participantNames)
+
+block scripts
+  +map(activity.location())
+  script $('#location').change(function() {showLocation($('#location').val())})
