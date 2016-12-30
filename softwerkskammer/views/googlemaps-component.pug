@@ -1,6 +1,8 @@
 mixin map(location)
   script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBicQlzzNdi4OKA5uxV7SRwPpU8s4qUcS8', type='text/javascript')
   script.
+    var showLocation;
+    var theMarker;
     $(document).ready(function () {
       var mapOptions = {
           center: new google.maps.LatLng(50.77740690, 10.0987599999999),
@@ -34,11 +36,12 @@ mixin map(location)
       ];
       map.setOptions({styles: styles});
       var geocoder = new google.maps.Geocoder();
-      function showLocation(loc) {
+      showLocation = function (loc) {
         geocoder.geocode({'address': loc}, function (results, status) {
           if (status === google.maps.GeocoderStatus.OK) {
             const theLocation = results[0].geometry.location;
-            new google.maps.Marker({ map: map, position: theLocation});
+            if (theMarker) { theMarker.setMap(null); }
+            theMarker = new google.maps.Marker({ map: map, position: theLocation});
             map.setCenter(theLocation);
             map.setZoom(13);
           }
