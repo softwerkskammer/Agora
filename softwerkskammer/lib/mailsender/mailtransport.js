@@ -9,7 +9,7 @@ const statusmessage = beans.get('statusmessage');
 const logger = require('winston').loggers.get('application');
 
 // we need to expose the core in order to stub that during automated tests
-const transport = require('nodemailer').createTransport(require('simple-configure').get('transport-options'));
+const transport = beans.get('nodemailerTransport');
 
 function statusmessageForError(type, err) {
   return statusmessage.errorMessage('message.title.email_problem', 'message.content.mailsender.error_reason', {

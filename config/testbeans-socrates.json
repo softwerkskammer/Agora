@@ -1,4 +1,4 @@
 {
-  "subscribersPersistence": {"module": "./softwerkskammer/test/persistence/testpersistence"},
-  "eventstorePersistence": {"module": "./softwerkskammer/test/persistence/testpersistence"}
+  "subscribersPersistence": {"module": "./softwerkskammer/teststubs/testpersistence"},
+  "eventstorePersistence": {"module": "./softwerkskammer/teststubs/testpersistence"}
 }

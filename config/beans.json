@@ -110,6 +110,7 @@
     "constructorArgs": { "languages": "de,en" }
   },
   "mailtransport": {"module": "./softwerkskammer/lib/mailsender/mailtransport"},
+  "nodemailerTransport": {"module": "./softwerkskammer/lib/mailsender/nodemailerTransport"},
   "passportInitializer": {"module": "./softwerkskammer/lib/middleware/passportInitializer"},
   "passportSessionInitializer": {"module": "./softwerkskammer/lib/middleware/passportSessionInitializer"},
   "redirectRuleForNewUser": {"module": "./softwerkskammer/lib/middleware/redirectRuleForNewUser"},
