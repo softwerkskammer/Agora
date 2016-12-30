@@ -20,6 +20,8 @@ const secureByLogin = beans.get('secureByLogin');
 const secureSuperuserOnly = beans.get('secureSuperuserOnly');
 const secureSoCraTesAdminOnly = beans.get('secureSoCraTesAdminOnly');
 
+const transport = beans.get('mailtransport').transport;
+
 describe('SoCraTes mailsender application', () => {
   /* eslint camelcase: 0 */
 
@@ -49,6 +51,8 @@ describe('SoCraTes mailsender application', () => {
   }));
 
   beforeEach(() => {
+    sinon.stub(transport, 'sendMail', (options, callback) => callback()); // will be called, but is OK
+
     sinon.stub(eventstore, 'getEventStore', (url, callback) => callback(null, new GlobalEventStore()));
 
     sinon.stub(groupstore, 'getGroup', (group, callback) => callback());
