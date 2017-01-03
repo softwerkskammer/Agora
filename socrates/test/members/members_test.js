@@ -352,7 +352,7 @@ describe('SoCraTes members application', () => {
           .get('/edit')
           .expect(200)
           .expect(/Home Address/)
-          .expect(/Who do you want to share your room with/, done);
+          .expect(/You have chosen to share a room with another participant/, done);
       });
 
       it('allows a subscriber who is registered for a bed in a junior room to enter a desired roommate', done => {
@@ -366,7 +366,7 @@ describe('SoCraTes members application', () => {
           .get('/edit')
           .expect(200)
           .expect(/Home Address/)
-          .expect(/Who do you want to share your room with/, done);
+          .expect(/You have chosen to share a room with another participant/, done);
       });
     });
 

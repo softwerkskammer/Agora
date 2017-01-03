@@ -16,6 +16,7 @@ function createConfiguration() {
   Object.assign(swkBeans, socratesBeans);
 
   conf.addProperties({
+    adminListName: 'admins', // needed for member loading
     port: '17224',
     mongoURL: 'mongodb://localhost:27017/swk',
     publicUrlPrefix: 'http://localhost:17224',

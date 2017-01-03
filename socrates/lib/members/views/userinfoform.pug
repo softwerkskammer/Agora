@@ -41,7 +41,8 @@ mixin memberinfoform(member, subscriber, newmember_text, allCountries)
 mixin userinfoform(addon, participation, sharesARoom)
   .row
     .col-sm-12
-      hr
+      legend
+        h4 Participation Data
       p.
         The home address is required by the hotel. It needs to be the address where you are living (not your company's address).
         In case you want a different address on the invoice, please fill in the billing address.
@@ -50,7 +51,19 @@ mixin userinfoform(addon, participation, sharesARoom)
     .col-sm-6
       +textareaPure('billingAddress', 'Billing Address (if different)', addon.billingAddress())
   .row
-    .col-sm-6
+    .col-sm-6.col-sm-push-6
+      if participation
+        +hidden('hasParticipationInformation', true)
+        if sharesARoom
+          .well.well-sm
+            h4 Roommate
+            p You have chosen to share a room with another participant.
+            p.
+              Please tell us who you want to share a room with. In case you do not have a preferred roommate, you can 
+              specify restrictions if you like, e.g. "females only".
+            p You can come back to this page and adjust this setting at any time. 
+            +text('roommate', 'Roommate', participation.roommate(), '', 'The name of my preferred roommate')
+    .col-sm-6.col-sm-pull-6
       .row#tShirtBox
         .col-sm-6
           .form-group(style='margin-bottom:0;')
@@ -64,12 +77,5 @@ mixin userinfoform(addon, participation, sharesARoom)
             select#tShirtSizeFemale.form-control(name='tShirtSize')
               for item in ['', 'Ladies\' XS', 'Ladies\' S', 'Ladies\' M', 'Ladies\' L', 'Ladies\' XL', 'Ladies\' XXL', 'Ladies\' No Shirt' ]
                 option(value=item, selected=addon.tShirtSize() === item) #{item}
-    .col-sm-6
       +textareaPure('remarks', 'Remarks (e.g. dietary restrictions)', addon.remarks())
-  if participation
-    +hidden('hasParticipationInformation', true)
-    if sharesARoom
-      .row
-        .col-sm-12
-          hr
-          +text('roommate', 'Who do you want to share your room with', participation.roommate())
+    
