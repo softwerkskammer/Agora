@@ -8,17 +8,19 @@ const conf = require('simple-configure');
 const nametags = conf.get('nametags');
 
 const gillardonTags = {
-  colWidth: '7cm',
+  tableWidth: '210mm', // colWidth * 3
+  colWidth: '70mm',
   tagHeight: '38mm',
   bottomMargin: '-3mm',
   paperMargins: 'left=15mm, right=15mm, top=15mm, bottom=15mm'
 };
 
 const orcanaTags = {
-  colWidth: '81mm',
+  tableWidth: '276mm', // colWidth * 3
+  colWidth: '92mm',
   tagHeight: '51mm',
   bottomMargin: '10mm',
-  paperMargins: 'left=15mm, right=15mm, top=0mm, bottom=0mm'
+  paperMargins: 'left=5mm, right=5mm, top=0mm, bottom=0mm'
 };
 
 const tags = nametags === 'orcana' ? orcanaTags : gillardonTags;
@@ -32,23 +34,26 @@ module.exports = {
   },
 
   _prefix: function _prefix() {
-    return '\\documentclass[12pt,a4paper]{scrbook}\n' +
+    return '\\documentclass[12pt]{scrbook}\n' +
       '\n' +
       '\\usepackage{ngerman}\n' +
-      '\\usepackage[default,osfigures,scale=0.95]{opensans}\n' +
+      '\\usepackage[default,osfigures,scale=1]{opensans}\n' +
       '\\usepackage[utf8]{inputenc}\n' +
       '\\usepackage[T1]{fontenc}\n' +
+      '\\usepackage{tabularx}\n' +
       '\\usepackage[a4paper, ' + tags.paperMargins + ', landscape]{geometry}\n' +
       '\n' +
       '\\pagestyle{empty}\n' +
       '\n' +
+      '\\renewcommand{\\ttdefault}{lmtt}\n' +
       '\n' +
       '\\newcommand{\\nametag}[3]{%\n' +
       '  \\parbox[t]{' + tags.colWidth + '}{\\rule[0mm]{0mm}{' + tags.tagHeight + '}%\n' +
+      '    \\hspace{10mm}' +
       '    \\begin{minipage}[b]{' + tags.colWidth + '}%\n' +
       '      {\\Huge \\textbf{#1}}\\\\[5mm]%\n' +
       '      {\\large #2}\\\\[5mm]%\n' +
-      '    {\\Large \\textbf{#3}}\\\\[' + tags.bottomMargin + ']%\n' +
+      '    {\\Large \\textbf{\\texttt{#3}}}\\\\[' + tags.bottomMargin + ']%\n' +
       ' \\end{minipage}}}%\n' +
       '\n' +
       '\n' +
@@ -71,10 +76,10 @@ module.exports = {
     if (members.length > 12) {
       return 'ERROR! Passed more than 12 members to tableFor()';
     }
-    return '\\begin{tabular}{|p{' + tags.colWidth + '}|p{' + tags.colWidth + '}|p{' + tags.colWidth + '}|} \n' +
+    return '\\begin{tabularx}{' + tags.tableWidth + '}{|X|X|X|} \n' +
       '\\hline \n' +
       R.splitEvery(3, members).map(this._lineFor.bind(this)).join('') +
-      '\n\\end{tabular}\n\n\n';
+      '\n\\end{tabularx}\n\n\n';
   },
 
   _tablesFor: function _tablesFor(members) {
