@@ -9,6 +9,7 @@ const notifications = beans.get('socratesNotifications');
 
 const memberstore = beans.get('memberstore');
 const subscriberstore = beans.get('subscriberstore');
+const subscriberService = beans.get('subscriberService');
 
 const Member = beans.get('member');
 const transport = beans.get('mailtransport').transport;
@@ -39,8 +40,9 @@ describe('Notifications', () => {
   }
 
   beforeEach(() => {
-    sinon.stub(transport, 'sendMail');
+    sinon.stub(transport, 'sendMail', (options, callback) => callback(null));
     sinon.stub(subscriberstore, 'allSubscribers', callback => callback(null, ['p1', 'p2', 'p3']));
+    sinon.stub(subscriberService, 'emailAddressesForWikiNotifications', callback => callback(null, [fritzmail]));
   });
 
   afterEach(() => {
@@ -349,6 +351,18 @@ describe('Notifications', () => {
       expect(options.html).to.contain('Hans Dampf (Gassenhauer)');
       expect(options.html).to.contain('Fritz Fischer (Zungenbrecher)');
       expect(options.from).to.be('"SoCraTes Notifications" <' + null + '>');
+    });
+  });
+
+  describe('for wikiChanges', () => {
+    it('successfully passes the call', done => {
+      const changes = [{dir: 'A', sortedFiles: () => []}];
+      notifications.wikiChanges(changes, err => {
+        const options = transport.sendMail.firstCall.args[0];
+        expect(options.bcc).to.be('fritz@email.de');
+        expect(options.subject).to.be('SoCraTes Wiki Changes');
+        done(err);
+      });
     });
   });
 

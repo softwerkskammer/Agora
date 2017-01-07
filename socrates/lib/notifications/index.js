@@ -183,10 +183,8 @@ module.exports = {
   },
 
   wikiChanges: function wikiChanges(changes, callback) {
-    const options = {
-      directories: changes.sort(change => change.dir)
-    };
-    Object.defaults(options, renderingOptions());
+    const options = renderingOptions();
+    options.directories = changes.sort(change => change.dir);
     subscriberService.emailAddressesForWikiNotifications((err1, emails) => {
       if (err1 || emails.length === 0) { return callback(err1); }
       const filename = path.join(__dirname, 'pug/wikichangetemplate.pug');
