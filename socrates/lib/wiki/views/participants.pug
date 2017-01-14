@@ -1,24 +1,26 @@
 extends ../../../views/layoutNoFooter
 include  ../../../../commonComponents/pug/formComponents
 include ../../../../softwerkskammer/lib/members/views/editavatar
+include ../../../../softwerkskammer/lib/members/views/memberlist-mixin
+
 
 block title
   | Participants
 block content
   .row
     .col-md-12
-      each participant in participants
-        div(id=participant.nickname())
-          if accessrights.canEditMember(participant)
-            h4
-              .btn-group
-                a.btn.btn-primary(href='/members/editForParticipantListing', title=t('general.edit'))
-                  i.fa.fa-edit.fa-fw
-                  |  #{participant.displayName()}
-          else
-            h4: a(href='/members/' + participant.nickname()) #{participant.displayName()}
-          .row
-            if showQuestions
+      if showQuestions
+        each participant in participants
+          div(id=participant.nickname())
+            if accessrights.canEditMember(participant)
+              h4
+                .btn-group
+                  a.btn.btn-primary(href='/members/editForParticipantListing', title=t('general.edit'))
+                    i.fa.fa-edit.fa-fw
+                    |  #{participant.displayName()}
+            else
+              h4: a(href='/members/' + participant.nickname()) #{participant.displayName()}
+            .row
               .col-sm-3.col-sm-push-9
                 +avatar(participant, true)
               .col-sm-9.col-sm-pull-3
@@ -28,10 +30,10 @@ block content
                 | !{participant.participation.question2Html()}
                 h5: em What do you want to take home from the event?
                 | !{participant.participation.question3Html()}
-            else
-              +avatar(participant, true)
+            hr
+      else
+        +memberlist(participants)
 
-          hr
 
 block scripts
   +avatarscript
