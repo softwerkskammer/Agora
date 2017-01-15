@@ -45,7 +45,7 @@ describe('Authentication Service', () => {
       authenticationService.createUserObjectFromGooglePlus(req, undefined, sub, profile, jwtClaims, undefined, undefined, undefined, (err, user) => {
         expect(user).to.eql({
           authenticationId: {
-            newId: 'https://plus.google.com/12345678',
+            userId: 'https://plus.google.com/12345678',
             oldId: 'old user id',
             profile: {
               emails: [{value: 'hans.dampf@mail.com', type: 'account'}],
@@ -108,7 +108,7 @@ describe('Authentication Service', () => {
       authenticationService.createUserObjectFromGithub(req, undefined, undefined, profile, (err, user) => {
         expect(user).to.eql({
           authenticationId: {
-            newId: 'github:123456',
+            userId: 'github:123456',
             oldId: undefined,
             profile: {
               emails: [null],
@@ -137,7 +137,7 @@ describe('Authentication Service', () => {
       authenticationService.createUserObjectFromOpenID(req, 'my-authentication', profile, (err, user) => {
         expect(user).to.eql({
           authenticationId: {
-            newId: 'my-authentication',
+            userId: 'my-authentication',
             oldId: undefined,
             profile: {
               name: {familyName: 'Dampf', givenName: 'Hans'},

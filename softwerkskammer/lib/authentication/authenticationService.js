@@ -10,7 +10,7 @@ const jwtSecret = conf.get('jwtSecret');
 
 function createUserObject(req, authenticationId, legacyAuthenticationId, profile, done) {
   if (req.session.callingAppReturnTo) { // we're invoked from another app -> don't add a member to the session
-    const user = {authenticationId: {newId: authenticationId, oldId: legacyAuthenticationId, profile}};
+    const user = {authenticationId: {userId: authenticationId, oldId: legacyAuthenticationId, profile}};
     return done(null, user);
   }
   process.nextTick(membersService.findMemberFor(req.user, authenticationId, (err, member) => {
@@ -61,7 +61,7 @@ module.exports = {
     const returnTo = req.session.callingAppReturnTo;
     delete req.session.callingAppReturnTo;
     const jwtObject = {
-      userId: req.user.authenticationId.newId,
+      userId: req.user.authenticationId.userId,
       profile: req.user.authenticationId.profile,
       returnTo,
       expires: moment().add(5, 'seconds').toJSON()
