@@ -77,7 +77,7 @@ module.exports = {
   },
   secondTokentextOf: function secondTokentextOf(content, subdir) {
     const tokens = marked.lexer(evalTags(content, subdir));
-    return tokens[1] ? tokens[1].text : undefined;
+    return tokens[1] ? marked(evalTags(tokens[1].text, subdir)) : undefined;
   },
   titleAndRenderedTail: function titleAndRenderedTail(content, subdir) {
     const tokens = marked.lexer(evalTags(content, subdir));
