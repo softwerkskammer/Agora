@@ -87,7 +87,8 @@ function surroundEmail(email) {
       weekStart: 1,
       viewMode: 'days',
       minViewMode: 'days',
-      language: datepicker_lang
+      language: datepicker_lang,
+      orientation: 'bottom'
     });
 
     $('.timepicker').timepicker({
