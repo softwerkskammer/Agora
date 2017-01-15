@@ -57,7 +57,7 @@ describe('BlogPost', () => {
 
     expect(result.title).is('Lean Coffee _Februar_ 2013');
     expect(result.date().isSame(datum)).to.be.true();
-    expect(result.teaser).is('Und beim nächsten Mal haben wir dann.');
+    expect(result.teaser).is('<p>Und beim nächsten Mal haben wir dann.</p>\n');
   });
 
   it('is not valid for empty input', () => {
@@ -94,13 +94,13 @@ describe('BlogPost', () => {
     function parse(post) { return new Blogpost('blog_2013-02-01LeanCoffeeTest.md', post); }
 
     expect(parse('# Lean\n\nblank').title).is('Lean');
-    expect(parse('# Lean\n\nblank').teaser).is('blank');
+    expect(parse('# Lean\n\nblank').teaser).is('<p>blank</p>\n');
 
     expect(parse('# Lean\nblitz\nblank').title).is('Lean');
-    expect(parse('# Lean\nblitz\nblank').teaser).is('blitz\nblank');
+    expect(parse('# Lean\nblitz\nblank').teaser).is('<p>blitz<br>blank</p>\n');
 
     expect(parse('Lean\n====\n\nblank').title).is('Lean');
-    expect(parse('Lean\n====\n\nblank').teaser).is('blank');
+    expect(parse('Lean\n====\n\nblank').teaser).is('<p>blank</p>\n');
   });
 
   it('can parse a multitude of date variants', () => {
@@ -120,4 +120,13 @@ describe('BlogPost', () => {
     expect(result.url()).is('/wiki/path/file');
     expect(result.dialogUrl()).is('/wiki/modal/path/file');
   });
+
+  it('can parse links inside the teaser', () => {
+    function parse(post) { return new Blogpost('blog_2013-02-01LeanCoffeeTest.md', post); }
+
+    expect(parse('# Dummy\n\n[Some Link](http://www.google.de)').teaser).is('<p><a href=\"http://www.google.de\">Some Link</a></p>\n');
+
+  });
+
+
 });
