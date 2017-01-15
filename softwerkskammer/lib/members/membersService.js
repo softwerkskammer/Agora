@@ -110,26 +110,12 @@ module.exports = {
     return wordList(members, R.identity).sort((a, b) => a.text.localeCompare(b.text));
   },
 
-  findMemberFor: function findMemberFor(user, authenticationId, legacyAuthenticationId, callback) {
+  findMemberFor: function findMemberFor(user, authenticationId, callback) {
     return () => {
       if (!user) { // not currently logged in
         return store.getMemberForAuthentication(authenticationId, (err, member) => {
           if (err) { return callback(err); }
-          // we found a member:
-          if (member) { return callback(null, member); }
-          // no member: let's try again with the legacy id
-          if (legacyAuthenticationId) {
-            return store.getMemberForAuthentication(legacyAuthenticationId, (err1, member1) => {
-              if (err1 || !member1) {return callback(err1); }
-              if (authenticationId) {
-                // add the new authentication id to the member
-                member1.addAuthentication(authenticationId);
-                return store.saveMember(member1, err2 => { callback(err2, member1); });
-              }
-              callback(null, member1);
-            });
-          }
-          return callback(null);
+          return callback(null, member);
         });
       }
 

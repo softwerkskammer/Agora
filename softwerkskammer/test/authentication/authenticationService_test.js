@@ -1,30 +1,20 @@
 'use strict';
 
-const sinon = require('sinon').sandbox.create();
 const expect = require('must-dist');
 
 const conf = require('../../testutil/configureForTest');
 const beans = conf.get('beans');
 
 const authenticationService = beans.get('authenticationService');
-const membersService = beans.get('membersService');
 
 describe('Authentication Service', () => {
 
   describe('- where member cannot be found -', () => {
 
-    beforeEach(() => {
-      sinon.stub(membersService, 'findMemberFor', (member, callback) => { callback(); });
-    });
-
-    afterEach(() => {
-      sinon.restore();
-    });
-
     it('createUserObjectFromGooglePlus creates a user object with profile information', done => {
       const req = {session: {callingAppReturnTo: true}};
       const sub = '12345678';
-      const jwtClaims = {'openid_id': 'old user id'};
+      const jwtClaims = {};
       const profile = {
         displayName: {familyName: 'Dampf', givenName: 'Hans'},
         name: {},
@@ -55,8 +45,7 @@ describe('Authentication Service', () => {
       authenticationService.createUserObjectFromGooglePlus(req, undefined, sub, profile, jwtClaims, undefined, undefined, undefined, (err, user) => {
         expect(user).to.eql({
           authenticationId: {
-            newId: 'https://plus.google.com/12345678',
-            oldId: 'old user id',
+            userId: 'https://plus.google.com/12345678',
             profile: {
               emails: [{value: 'hans.dampf@mail.com', type: 'account'}],
               name: {familyName: 'Dampf', givenName: 'Hans'},
@@ -118,8 +107,7 @@ describe('Authentication Service', () => {
       authenticationService.createUserObjectFromGithub(req, undefined, undefined, profile, (err, user) => {
         expect(user).to.eql({
           authenticationId: {
-            newId: 'github:123456',
-            oldId: undefined,
+            userId: 'github:123456',
             profile: {
               emails: [null],
               profileUrl: 'https://github.com/HansDampf',
@@ -147,8 +135,7 @@ describe('Authentication Service', () => {
       authenticationService.createUserObjectFromOpenID(req, 'my-authentication', profile, (err, user) => {
         expect(user).to.eql({
           authenticationId: {
-            newId: 'my-authentication',
-            oldId: undefined,
+            userId: 'my-authentication',
             profile: {
               name: {familyName: 'Dampf', givenName: 'Hans'},
               emails: [{}],
