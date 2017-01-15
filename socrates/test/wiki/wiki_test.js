@@ -40,15 +40,16 @@ describe('SoCraTes wiki application', () => {
     it('and shows no editing option for anybody and does not show the questions in 2016', done => {
       request(createApp({id: 'anybody'}))
         .get('/2016/participantsOverview')
-        .expect(/<h4><a href="\/members\/nick">first last/)
+        .expect(/<a href="\/members\/nick">nick/)
+        .expect(/first last/)
         .expect(200, (err, res) => {
           expect(res.text).to.not.contain('What is your relation to Software Craftsmanship?');
           done(err);
         });
     });
-    it('and shows an editing option for the current user', done => {
+    it('and shows an editing option for the current user in 2015', done => {
       request(createApp({id: 'userid'}))
-        .get('/2016/participantsOverview')
+        .get('/2015/participantsOverview')
         .expect(/<h4><div class="btn-group"><a class="btn btn-primary" href="\/members\/editForParticipantListing" title="Edit"><i class="fa fa-edit fa-fw"><\/i> first last/)
         .expect(200, done);
     });
