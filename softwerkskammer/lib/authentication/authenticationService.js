@@ -13,7 +13,7 @@ function createUserObject(req, authenticationId, legacyAuthenticationId, profile
     const user = {authenticationId: {newId: authenticationId, oldId: legacyAuthenticationId, profile}};
     return done(null, user);
   }
-  process.nextTick(membersService.findMemberFor(req.user, authenticationId, legacyAuthenticationId, (err, member) => {
+  process.nextTick(membersService.findMemberFor(req.user, authenticationId, (err, member) => {
     if (err) { return done(err); }
     if (!member) { return done(null, {authenticationId, profile}); }
     return done(null, {authenticationId, member});

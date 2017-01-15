@@ -30,7 +30,7 @@ app.get('/loggedIn', (req, res, next) => {
       return callback(new Error('Authentication failed (expired token).'));
     }
     // load member and subscriber:
-    membersService.findMemberFor(null, token.userId, token.oldUserId, (err, member) => {
+    membersService.findMemberFor(null, token.userId, (err, member) => {
       if (err) { return callback(err); }
       // no member: this person+auth is unknown in SWK
       if (!member) { return callback(null, {authenticationId: token.userId, profile: token.profile}); }
