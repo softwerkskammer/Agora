@@ -62,7 +62,6 @@ module.exports = {
     delete req.session.callingAppReturnTo;
     const jwtObject = {
       userId: req.user.authenticationId.newId,
-      oldUserId: req.user.authenticationId.oldId,
       profile: req.user.authenticationId.profile,
       returnTo,
       expires: moment().add(5, 'seconds').toJSON()
