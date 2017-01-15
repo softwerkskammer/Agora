@@ -121,30 +121,54 @@ describe('SubscriberService', () => {
   });
 
   describe('removeSubscriber', () => {
+    let removeMemberCall;
+    let removeSubscriberCall;
+
     beforeEach(() => {
-      sinon.stub(subscriberstore, 'removeSubscriber', (subscriber, callback) => {
+      expectedMember1.state.socratesOnly = false;
+
+      removeMemberCall = sinon.stub(memberstore, 'removeMember', (subscriber, callback) => {
         callback(null);
       });
 
-      sinon.stub(memberstore, 'getMemberForId', (subscriberId, callback) => {
-        callback(null, expectedMember1);
+      removeSubscriberCall = sinon.stub(subscriberstore, 'removeSubscriber', (subscriber, callback) => {
+        callback(null);
       });
     });
 
-    it('only removes the subscriber the member is also regular Softwerkskammer member', done => {
+    it('removes only the subscriber but not the member if the member is also a regular Softwerkskammer member', done => {
+      sinon.stub(memberstore, 'getMemberForId', (subscriberId, callback) => {
+        callback(null, expectedMember1);
+      });
+
       subscriberService.removeSubscriber(subscriber1, err => {
+        expect(removeSubscriberCall.called).to.be(true);
+        expect(removeMemberCall.called).to.be(false);
         done(err);
       });
     });
 
-    it('also removes the member if she is also regular Softwerkskammer member', done => {
-      const removeMemberCall = sinon.stub(memberstore, 'removeMember', (subscriber, callback) => {
+    it('removes only the subscriber if no matching member could be found', done => {
+      sinon.stub(memberstore, 'getMemberForId', (subscriberId, callback) => {
         callback(null);
       });
+
+      subscriberService.removeSubscriber(subscriber1, err => {
+        expect(removeSubscriberCall.called).to.be(true);
+        expect(removeMemberCall.called).to.be(false);
+        done(err);
+      });
+    });
+
+    it('removes the subscriber and the underlying member if she is not a regular Softwerkskammer member', done => {
+      sinon.stub(memberstore, 'getMemberForId', (subscriberId, callback) => {
+        callback(null, expectedMember1);
+      });
+
       expectedMember1.state.socratesOnly = true;
 
       subscriberService.removeSubscriber(subscriber1, err => {
-        expectedMember1.state.socratesOnly = false;
+        expect(removeSubscriberCall.called).to.be(true);
         expect(removeMemberCall.called).to.be(true);
         done(err);
       });

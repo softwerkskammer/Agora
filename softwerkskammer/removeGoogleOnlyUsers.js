@@ -3,10 +3,12 @@
 'use strict';
 
 const async = require('async');
-require('./configure'); // initializing parameters
+require('./../socrates/configure'); // initializing parameters
 const beans = require('simple-configure').get('beans');
 const memberstore = beans.get('memberstore');
 const gamService = beans.get('groupsAndMembersService');
+const subscriberService = beans.get('subscriberService');
+const subscriberstore = beans.get('subscriberstore');
 
 const really = process.argv[2];
 if (!really || really !== 'really') {
@@ -27,23 +29,35 @@ gamService.getAllMembersWithTheirGroups((err, members) => {
     googleOnlyMembers,
     (member, cb1) => async.each(
       member.subscribedGroups,
-      (group, cb2) => gamService.unsubscribeMemberFromGroup(member, group.id, cb2),
+      (group, cb2) => {
+        console.log('Unsubscribing ' + member.displayName() + ' from ' + group.longName);
+        gamService.unsubscribeMemberFromGroup(member, group.id, cb2);
+      },
       // callback when the one member has been unsubscribed from all groups:
       err1 => {
-        if (err1) { return cb1(); }
+        if (err1) { return cb1(err1); }
 
         memberstore.isSoCraTesSubscriber(member.id, (err2, isSubscriber) => {
-          if (err2) {return cb1(); }
+          if (err2) { return cb1(err2); }
+
           if (!isSubscriber) {
-            console.log('About to remove ' + member.displayName());
-            memberstore.removeMember(member, cb1);
-          } else {
-            console.log('Not removing ' + member.displayName() + ' because of SoCraTes membership');
-            cb1(); // in the first round, we only delete the non-SoCraTes members
+            console.log('About to remove SWK member ' + member.displayName());
+            return memberstore.removeMember(member, cb1);
           }
+
+          subscriberstore.getSubscriber(member.id, (err3, subscriber) => {
+            if (!subscriber || err3) { return cb1(err3); }
+            console.log('Removing SoCraTes member ' + member.displayName());
+            subscriberService.removeSubscriber(subscriber, err4 => {
+              if (err4) { return cb1(err4); }
+              console.log('Then, removing SWK member ' + member.displayName());
+              memberstore.removeMember(member, cb1);
+            });
+          });
         });
       }),
     // callback when all members have been handled:
-    () => process.exit());
+    () => process.exit()
+  );
 
 });
