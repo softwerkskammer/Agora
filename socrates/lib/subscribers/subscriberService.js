@@ -69,7 +69,7 @@ module.exports = {
     subscriberstore.removeSubscriber(subscriber, err => {
       if (err) { return callback(err); }
       memberstore.getMemberForId(subscriber.id(), (err1, member) => {
-        if (err1) { return callback(err1); }
+        if (!member || err1) { return callback(err1); }
         if (member.socratesOnly()) {
           return memberstore.removeMember(subscriber, err2 => {
             if (err2) { return callback(err2); }
