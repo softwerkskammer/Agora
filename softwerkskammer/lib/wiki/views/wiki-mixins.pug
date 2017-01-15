@@ -6,6 +6,6 @@ mixin blogposts-panel(posts)
         h1.panel-title #{post.title}
           small.pull-right #{post.date().locale(language).format('LL')}
       .panel-body
-        p #{post.teaser}
+        p !{post.teaser}
           small.pull-right: a(href=post.url()) #{t('groups.more')}
 
