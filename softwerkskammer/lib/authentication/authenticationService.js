@@ -8,9 +8,9 @@ const beans = conf.get('beans');
 const membersService = beans.get('membersService');
 const jwtSecret = conf.get('jwtSecret');
 
-function createUserObject(req, authenticationId, legacyAuthenticationId, profile, done) {
+function createUserObject(req, authenticationId, profile, done) {
   if (req.session.callingAppReturnTo) { // we're invoked from another app -> don't add a member to the session
-    const user = {authenticationId: {userId: authenticationId, oldId: legacyAuthenticationId, profile}};
+    const user = {authenticationId: {userId: authenticationId, profile}};
     return done(null, user);
   }
   process.nextTick(membersService.findMemberFor(req.user, authenticationId, (err, member) => {
@@ -29,7 +29,7 @@ module.exports = {
         profileUrl: openidProfile.profileUrl
       };
 
-    createUserObject(req, authenticationId, undefined, minimalProfile, done);
+    createUserObject(req, authenticationId, minimalProfile, done);
   },
 
   createUserObjectFromGithub: function (req, accessToken, refreshToken, githubProfile, done) {
@@ -42,7 +42,7 @@ module.exports = {
           }
         };
 
-    createUserObject(req, githubProfile.provider + ':' + githubProfile.id, undefined, minimalProfile, done);
+    createUserObject(req, githubProfile.provider + ':' + githubProfile.id, minimalProfile, done);
   },
 
   createUserObjectFromGooglePlus: function (req, iss, sub, profile, jwtClaims, accessToken, refreshToken, params, done) {
@@ -54,7 +54,7 @@ module.exports = {
         profileUrl: googleProfile.url
       };
 
-    createUserObject(req, 'https://plus.google.com/' + sub, jwtClaims.openid_id, minimalProfile, done);
+    createUserObject(req, 'https://plus.google.com/' + sub, minimalProfile, done);
   },
 
   redirectToCallingApp: function redirectToCallingApp(req, res) {

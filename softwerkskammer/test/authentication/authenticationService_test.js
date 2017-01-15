@@ -14,7 +14,7 @@ describe('Authentication Service', () => {
     it('createUserObjectFromGooglePlus creates a user object with profile information', done => {
       const req = {session: {callingAppReturnTo: true}};
       const sub = '12345678';
-      const jwtClaims = {'openid_id': 'old user id'};
+      const jwtClaims = {};
       const profile = {
         displayName: {familyName: 'Dampf', givenName: 'Hans'},
         name: {},
@@ -46,7 +46,6 @@ describe('Authentication Service', () => {
         expect(user).to.eql({
           authenticationId: {
             userId: 'https://plus.google.com/12345678',
-            oldId: 'old user id',
             profile: {
               emails: [{value: 'hans.dampf@mail.com', type: 'account'}],
               name: {familyName: 'Dampf', givenName: 'Hans'},
@@ -109,7 +108,6 @@ describe('Authentication Service', () => {
         expect(user).to.eql({
           authenticationId: {
             userId: 'github:123456',
-            oldId: undefined,
             profile: {
               emails: [null],
               profileUrl: 'https://github.com/HansDampf',
@@ -138,7 +136,6 @@ describe('Authentication Service', () => {
         expect(user).to.eql({
           authenticationId: {
             userId: 'my-authentication',
-            oldId: undefined,
             profile: {
               name: {familyName: 'Dampf', givenName: 'Hans'},
               emails: [{}],
