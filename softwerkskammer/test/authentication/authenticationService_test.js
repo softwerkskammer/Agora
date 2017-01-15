@@ -1,25 +1,15 @@
 'use strict';
 
-const sinon = require('sinon').sandbox.create();
 const expect = require('must-dist');
 
 const conf = require('../../testutil/configureForTest');
 const beans = conf.get('beans');
 
 const authenticationService = beans.get('authenticationService');
-const membersService = beans.get('membersService');
 
 describe('Authentication Service', () => {
 
   describe('- where member cannot be found -', () => {
-
-    beforeEach(() => {
-      sinon.stub(membersService, 'findMemberFor', (member, callback) => { callback(); });
-    });
-
-    afterEach(() => {
-      sinon.restore();
-    });
 
     it('createUserObjectFromGooglePlus creates a user object with profile information', done => {
       const req = {session: {callingAppReturnTo: true}};
