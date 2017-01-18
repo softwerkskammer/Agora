@@ -12,17 +12,6 @@ Your node.js ships npm in a suitable version.
 
 Some modules are compiled during the installation. Therefore some additional software must be installed.
 
-### Python & C++
-
-In former versions of this project it was neccessary to have Python and a C++ compiler installed on your local dev machine.
-This was because we indirectly used modules that itself were based on native code inside that needed to be compiled. For these native 
-modules nodejs uses `node-gyp`. Please have a look at their github project for further information. 
-https://github.com/nodejs/node-gyp
-
-We have removed all dependencies that required this. Please inform us via a github issue if you run into problems here.
-
-The sympton will be recognizable by errors during an `npm install` that contains failing `node-gyp` jobs.
-
 ### Git
 
 * Git must be in the system path.
@@ -54,11 +43,6 @@ We propose to install grunt-cli globally via the -g option of npm. To find out m
 * Check out this project into some folder (let's call it *REPO* from now on)
 * Open a shell as described above and go to *REPO*
 * Run `npm install`
-
-* If python 3 is the default version, the command line for `npm install` must be adapted to the right python version (2.7)
-
-            npm install --python=/usr/bin/python2
-
 * Start mongodb. If you only plan to use it for development, the default settings are ok. The app as well as the tests use these defaults if you did not change the configuration.
 * (Optional) Instructions for authenticated use are [here](softwerkskammer/lib/persistence/README.md)
 
@@ -148,7 +132,7 @@ Access for Softwerkskammer and SoCraTes:
   or you can choose one from this list: http://openid.net/get-an-openid/
 
 * To access certain admin features, you may want to become superuser. This step will make you superuser of both applications at once.
-  In order to do this, open `mongo swk`, display all member information via `db.memberstore.find().pretty()` and search for your entry. Select the string after `id`, create a copy of `config-examples/authentication-config.json` 
+  In order to do this, open `mongo swk`, display all member information via `db.memberstore.find().pretty()` and search for your entry. Select the string after `id`, create a copy of `config-examples/authentication-config.json`
   and add your id to the `superuser` array.
 
 Access for SoCraTes:
@@ -159,15 +143,15 @@ Access for SoCraTes:
 
 You can use Homebrew (https://brew.sh/) to install binary dependencies:
 
-* Install and run mongodb (with default settings, i.e. no security - definitely do not do this in production!): 
-  
+* Install and run mongodb (with default settings, i.e. no security - definitely do not do this in production!):
+
         brew install mongodb
         sudo mkdir -p /data/db
         sudo chown 777 /data/db
         mongod
 
 * Install ImageMagick:
-  
+
         brew install imagemagick
 
 ### Windows Systems
