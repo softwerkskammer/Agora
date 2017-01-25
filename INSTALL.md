@@ -64,19 +64,20 @@ We propose to install grunt-cli globally via the -g option of npm. To find out m
 
 ### The built-in wiki
 
-To set up the built-in wiki follow [these instructions](softwerkskammer/lib/wiki/README.md)
+To set up the built-in wiki follow [these instructions for Softwerkskammer](softwerkskammer/lib/wiki/README.md) and [these instructions for SoCraTes](socrates/lib/wiki/README.md)
 
 ### Configuring the server
 
 Configuration for Softwerkskammer and SoCraTes:
 
-* Copy `config/example-winston-config.json` to `config/winston-config.json`, remove the comment in the first line, and adapt the paths if you like.
+* Copy the logging configuration file `config/example-winston-config.json` to `config/winston-config.json`, remove the comment in the first line, and adapt the paths if you like.
 
 ### Running the server
 
 * Open a shell in *REPO*
-* If your installation is fresh, perform the db initialization script:
-   * Run `node softwerkskammer/initialDBSetup`
+* If your installation is fresh, run the db initialization script:
+   * In any case, run `node softwerkskammer/initialDBSetup`
+   * For socrates, run `node socrates/initialDBSetup`
 * If your installation is fresh or you changed anything:
    * Run `npm test` (this creates the CSS files and other static contents and performs eslint checking)
 
@@ -87,11 +88,12 @@ Now you can decide which app you want to start:
     * Now go to your local machine, open a browser and use `http://localhost:17124`
 
 * Start socrates
+    * Start softwerkskammer (because it acts as SSO server for socrates)
     * `./build-socrates.sh` in order to build some css, js etc.
-    * `node start-socrates`- will start the server
+    * `node start-socrates` will start the server
     * Now go to your local machine, open a browser and use `http://localhost:17224`
 
-* The ports `17124` and `17224` are the default and can be changed via the command line option `--port` or via the environment option 'port' to any desired value
+* The ports `17124` and `17224` are the defaults and can be changed via the command line option `--port` or via the environment option 'port' to any desired value
 * If your installation is fresh, you should create an account for yourself by registering.
   * The default setup assumes you are running on localhost for authentication. If you are using a different hostname, you have to edit the configuration file `config/example-server-config.json`. Follow the instructions in there.
 
@@ -111,7 +113,6 @@ Access for Softwerkskammer and SoCraTes:
 Access for SoCraTes:
 
 * Copy the `config/example-socrates-server-config.json` and name it `config/socrates-server-config.json` (don't forget to remove the comment).
-* Create a SoCraTes by invoking `/activities/new`. Make sure that the date matches the year that is hardcoded in `socrates/lib/activities/socratesConstants.js` in the variable `currentYear`.
 
 ### Windows Systems
 
