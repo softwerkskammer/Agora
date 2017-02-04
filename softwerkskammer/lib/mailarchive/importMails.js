@@ -7,7 +7,7 @@ const path = require('path');
 const winston = require('winston-config').fromFileSync(path.join(__dirname, '../../../config/winston-config.json'));
 const logger = winston.loggers.get('scripts');
 
-const MailParser = require('mailparser').MailParser;
+const simpleParser = require('mailparser').simpleParser;
 const fs = require('fs');
 const crypto = require('crypto');
 
@@ -17,9 +17,13 @@ const memberstore = beans.get('memberstore');
 
 module.exports = function importMails(file, group, done) {
 
+  function removeLeadingAndTrailingBrackets(string) {
+    return string.replace(/^</, '').replace(/>$/, '');
+  }
+
   function date(parsedObject) {
-    if (fieldHelpers.isFilled(parsedObject.headers.date)) {
-      return moment(parsedObject.headers.date, 'ddd, DD MMM YYYY HH:mm:ss ZZ', 'en');
+    if (parsedObject.headers.has('date')) {
+      return moment(parsedObject.headers.get('date'), 'ddd, DD MMM YYYY HH:mm:ss ZZ', 'en');
     }
     logger.info('No date found in eMail with subject: ' + parsedObject.subject);
     return moment();
@@ -28,7 +32,7 @@ module.exports = function importMails(file, group, done) {
   function getMessageId(parsedObject, callback) {
     /* eslint new-cap: 0 */
     if (parsedObject.messageId) {
-      return callback(parsedObject.messageId);
+      return callback(removeLeadingAndTrailingBrackets(parsedObject.messageId));
     }
 
     const shasum = crypto.createHash('sha1');
@@ -39,28 +43,27 @@ module.exports = function importMails(file, group, done) {
 
   function references(parsedObject) {
     if (fieldHelpers.isFilled(parsedObject.references)) {
-      return parsedObject.references;
+      return parsedObject.references.map(removeLeadingAndTrailingBrackets);
     }
     if (fieldHelpers.isFilled(parsedObject.inReplyTo)) {
-      return [parsedObject.inReplyTo[0]];
+      return parsedObject.inReplyTo.split(' ').map(removeLeadingAndTrailingBrackets);
     }
     logger.info('No references found for eMail with subject: ' + parsedObject.subject);
     return null;
   }
 
-  const mailparser = new MailParser({
-    // remove mail attachments
-    streamAttachments: true
-  });
-
-  mailparser.on('end', parsedObject => {
+  simpleParser(fs.createReadStream(file), (err, parsedObject) => {
     logger.info('Starting to parse eMail');
-    const from = parsedObject.from[0];
+    if (err) {
+      logger.error('Could not parse eMail, error is: ' + err);
+      return done(err);
+    }
+    const from = parsedObject.from.value[0];
 
-    memberstore.getMemberForEMail(from.address, (err, member) => {
-      if (err) {
-        logger.error('Could not get member for eMail, error is: ' + err);
-        return done(err);
+    memberstore.getMemberForEMail(from.address, (err1, member) => {
+      if (err1) {
+        logger.error('Could not get member for eMail, error is: ' + err1);
+        return done(err1);
       }
       const mailDbObject = {
         group,
@@ -79,6 +82,4 @@ module.exports = function importMails(file, group, done) {
       });
     });
   });
-
-  fs.createReadStream(file).pipe(mailparser);
 };
