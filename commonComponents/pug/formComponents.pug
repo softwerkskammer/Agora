@@ -39,7 +39,7 @@ mixin currency(name, label, value, tooltip, placeholder, readonly)
     if (readonly)
       +hidden(name, value)
     +controlLabel(name, label, tooltip)
-    input.form-control.currency(id=name, type='text', name=name, placeholder=placeholder, disabled=readonly, data-a-sign=' €', data-p-sign='s', data-a-dec=t('general.separator'), data-a-sep='')
+    input.form-control.currency(id=name, type='text', name=name, placeholder=placeholder, disabled=readonly, data-currency-symbol=' €', data-currency-symbol-placement='s', data-decimal-character=t('general.separator'), data-digit-group-separator='')
 
 mixin textareaPure(name, label, value, placeholder)
   +textareaInternal('form-control', '4', name, label, value, null, placeholder)

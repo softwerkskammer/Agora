@@ -3,7 +3,6 @@ const R = require('ramda');
 const beans = require('simple-configure').get('beans');
 const misc = beans.get('misc');
 const Renderer = beans.get('renderer');
-const fieldHelpers = beans.get('fieldHelpers');
 
 const themengruppe = 'Themengruppe';
 const regionalgruppe = 'Regionalgruppe';
@@ -16,7 +15,7 @@ class Group {
       this.description = object.description;
       this.type = object.type;
       this.emailPrefix = object.emailPrefix;
-      this.color = fieldHelpers.addPrefixTo('#', object.color);
+      this.color = object.color;
       this.organizers = misc.toArray(object.organizers);
       this.mapX = object.mapX;
       this.mapY = object.mapY;
