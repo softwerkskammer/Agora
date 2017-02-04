@@ -126,7 +126,7 @@ describe('Import of mails from files with mime messages', () => {
 
   it('imports reply-to as reference if no references are available', done => {
     mailimport(fileWithInReplyTo, 'group', (err, result) => {
-      expect(result.references).to.eql(['message0@nomail.com']);
+      expect(result.references).to.eql(['message0@nomail.com', 'message1@nomail.com']);
       done(err);
     });
   });
