@@ -219,7 +219,6 @@ module.exports = function (grunt) {
       standard: {
         options: {
           disallowAttributeInterpolation: true,
-          disallowAttributeTemplateString: true,
           disallowDuplicateAttributes: true,
           disallowIdAttributeWithStaticValue: true,
           disallowLegacyMixinCall: true,
