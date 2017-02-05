@@ -87,7 +87,7 @@ mixin footer
                   +contactbuttons
 
 mixin contactbuttons
-  - const socratesTwitterHandle = "SoCraTes_Conf";
+  -const socratesTwitterHandle = "SoCraTes_Conf";
 
   a.btn.btn-info(href='/registration/ical', title=t('activities.export'))
     span.glyphicon.glyphicon-download-alt
@@ -99,11 +99,11 @@ mixin contactbuttons
     i.fa.fa-fw.fa-envelope
     span.hidden-xs #{' ' + t('members.email')}
   .btn-group.dropup
-    a.btn.btn-info(href=`https://twitter.com/intent/tweet?text=SoCraTes+2017+will+take+place+from+24+to+27+August.+More+at&url=http%3A%2F%2Fsocrates-conference.de%2F&hashtags=socrates_17&via=${socratesTwitterHandle}`, title='Tweet')
+    a.btn.btn-info(href='https://twitter.com/intent/tweet?text=SoCraTes+2017+will+take+place+from+24+to+27+August.+More+at&url=http%3A%2F%2Fsocrates-conference.de%2F&hashtags=socrates_17&via=' + socratesTwitterHandle, title='Tweet')
       i.fa.fa-fw.fa-twitter
       span.hidden-xs #{' ' + t('general.tweet')}
     a.btn.btn-info.dropdown-toggle(data-toggle='dropdown')
       i.fa.fa-caret-up
     ul.dropdown-menu(role='menu')
-      li: a(href=`https://twitter.com/intent/user?screen_name=${socratesTwitterHandle}`) #{t('general.show_tweets')}
-      li: a(href=`https://twitter.com/intent/follow?screen_name=${socratesTwitterHandle}`) #{t('general.follow')}
+      li: a(href='https://twitter.com/intent/user?screen_name=' + socratesTwitterHandle) #{t('general.show_tweets')}
+      li: a(href='https://twitter.com/intent/follow?screen_name=' + socratesTwitterHandle) #{t('general.follow')}
