@@ -71,6 +71,7 @@ To set up the built-in wiki follow [these instructions for Softwerkskammer](soft
 Configuration for Softwerkskammer and SoCraTes:
 
 * Copy the logging configuration file `config/example-winston-config.json` to `config/winston-config.json`, remove the comment in the first line, and adapt the paths if you like.
+* Copy the mailsender configuration file `config/example(smtp)-mailsender-config.json` to `config/mailsender-config.json`, remove the comment in the first line. Without setting up a proper server sending mails won't work but this configuration is sufficient to be able to start both the softwerkskammer and socrates app.
 
 ### Running the server
 
