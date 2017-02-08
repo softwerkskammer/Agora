@@ -3,6 +3,7 @@
 const conf = require('simple-configure');
 const beans = conf.get('beans');
 const statusmessage = beans.get('statusmessage');
+const socratesConstants = beans.get('socratesConstants');
 
 module.exports = function expressViewHelper(req, res, next) {
   if (req.session) {
@@ -14,5 +15,6 @@ module.exports = function expressViewHelper(req, res, next) {
   res.locals.user = req.user;
   res.locals.currentUrl = req.url;
   res.locals.swkPublicUrl = conf.get('softwerkskammerURL');
+  res.locals.twitterConstants = socratesConstants.twitterConstants;
   next();
 };
