@@ -5,6 +5,11 @@
     "logo": "andrena160.png"
   },
   {
+    "name": "codecentric",
+    "url": "https://www.codecentric.de/",
+    "logo": "codecentric160.png"
+  },
+  {
     "name": "Mozaic Works",
     "url": "http://www.mozaicworks.com",
     "logo": "mozaic_works160.png"
@@ -15,18 +20,13 @@
     "logo": "msgGillardon160.png"
   },
   {
-    "name": "//SEIBERT/MEDIA GmbH",
-    "url": "https://www.seibert-media.net",
-    "logo": "seibert160.png"
-  },
-  {
-    "name": "codecentric",
-    "url": "https://www.codecentric.de/",
-    "logo": "codecentric160.png"
-  },
-  {
     "name": "Qixxit",
     "url": "https://www.qixxit.de/",
     "logo": "qixxit160.png"
+  },
+  {
+    "name": "//SEIBERT/MEDIA GmbH",
+    "url": "https://www.seibert-media.net",
+    "logo": "seibert160.png"
   }
 ]
