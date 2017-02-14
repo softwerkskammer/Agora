@@ -16,6 +16,7 @@ const fileWithTextAndHtml = 'test/mailarchive/testfiles/mailWithTextAndHtml';
 const fileWithTextOnlyWithoutSenderName = 'test/mailarchive/testfiles/mailWithTextOnly';
 const fileWithoutDate = 'test/mailarchive/testfiles/mailWithoutDate';
 const fileWithReferences = 'test/mailarchive/testfiles/mailWithReferences';
+const fileWithOneReference = 'test/mailarchive/testfiles/mailWithOneReference';
 const fileWithInReplyTo = 'test/mailarchive/testfiles/mailWithInReplyTo';
 const fileWithoutMessageId = 'test/mailarchive/testfiles/mailWithoutMessageID';
 
@@ -120,6 +121,13 @@ describe('Import of mails from files with mime messages', () => {
   it('imports references', done => {
     mailimport(fileWithReferences, 'group', (err, result) => {
       expect(result.references).to.eql(['message0@nomail.com', 'message1@nomail.com']);
+      done(err);
+    });
+  });
+
+  it('imports a single reference', done => {
+    mailimport(fileWithOneReference, 'group', (err, result) => {
+      expect(result.references).to.eql(['message0@nomail.com']);
       done(err);
     });
   });

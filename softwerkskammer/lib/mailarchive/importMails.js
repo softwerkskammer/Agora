@@ -13,6 +13,7 @@ const crypto = require('crypto');
 
 const beans = require('simple-configure').get('beans');
 const fieldHelpers = beans.get('fieldHelpers');
+const misc = beans.get('misc');
 const memberstore = beans.get('memberstore');
 
 module.exports = function importMails(file, group, done) {
@@ -43,7 +44,7 @@ module.exports = function importMails(file, group, done) {
 
   function references(parsedObject) {
     if (fieldHelpers.isFilled(parsedObject.references)) {
-      return parsedObject.references.map(removeLeadingAndTrailingBrackets);
+      return misc.toArray(parsedObject.references).map(removeLeadingAndTrailingBrackets);
     }
     if (fieldHelpers.isFilled(parsedObject.inReplyTo)) {
       return parsedObject.inReplyTo.split(' ').map(removeLeadingAndTrailingBrackets);
