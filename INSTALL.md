@@ -115,9 +115,24 @@ Access for SoCraTes:
 
 * Copy the `config/example-socrates-server-config.json` and name it `config/socrates-server-config.json` (don't forget to remove the comment).
 
+### Mac OS
+
+You can use Homebrew (https://brew.sh/) to install binary dependencies:
+
+* Install and run mongodb (with default settings, i.e. no security - definitely do not do this in production!): 
+  
+        brew install mongodb
+        sudo mkdir -p /data/db
+        sudo chown 777 /data/db
+        mongod
+
+* Install ImageMagick:
+  
+        brew install imagemagick
+
 ### Windows Systems
 
 Currently there are issues when running the tests:
-* most tests that verify pathnames will fail because of the "\" used by Windows as a separator
+* most tests that verify pathnames will fail because of the ` \ ` used by Windows as a separator
 * furthermore all tests that need imagemagick will fail as there is no binary version for Windows available
 
