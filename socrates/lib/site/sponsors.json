@@ -10,11 +10,6 @@
     "logo": "codecentric160.png"
   },
   {
-    "name": "NovaTec",
-    "url": "https://www.novatec-gmbh.de/",
-    "logo": "novatec160.png"
-  },
-  {
     "name": "Mozaic Works",
     "url": "http://www.mozaicworks.com",
     "logo": "mozaic_works160.png"
@@ -23,6 +18,11 @@
     "name": "msgGillardon AG",
     "url": "http://www.msg-gillardon.de",
     "logo": "msgGillardon160.png"
+  },
+  {
+    "name": "NovaTec",
+    "url": "https://www.novatec-gmbh.de/",
+    "logo": "novatec160.png"
   },
   {
     "name": "Qixxit",
