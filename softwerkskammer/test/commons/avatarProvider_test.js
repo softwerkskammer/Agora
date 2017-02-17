@@ -6,7 +6,7 @@ const beans = require('../../testutil/configureForTest').get('beans');
 const Member = beans.get('member');
 const avatarProvider = beans.get('avatarProvider');
 
-describe.skip('AvatarProvider', () => {
+describe('AvatarProvider', () => {
   it('loads the gravatar of "leider" from gravatar', done => {
     const member = new Member({email: 'derleider@web.de'});
     avatarProvider.getImage(member, () => {
@@ -25,7 +25,7 @@ describe.skip('AvatarProvider', () => {
     });
   });
 
-  it('defaults to "null" image if gravatar has errors', done => {
+  it.skip('defaults to "null" image if gravatar has errors', done => {
     const member = new Member({email: 'derleider@web.de'});
     avatarProvider.getImage(member, () => {
       expect(member.inlineAvatar()).to.be('');
