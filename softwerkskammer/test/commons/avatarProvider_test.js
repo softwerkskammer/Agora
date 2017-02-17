@@ -25,7 +25,7 @@ describe('AvatarProvider', () => {
     });
   });
 
-  it.skip('defaults to "null" image if gravatar has errors', done => {
+  it('defaults to "null" image if gravatar has errors', done => {
     const member = new Member({email: 'derleider@web.de'});
     avatarProvider.getImage(member, () => {
       expect(member.inlineAvatar()).to.be('');
