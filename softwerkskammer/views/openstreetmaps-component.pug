@@ -1,6 +1,6 @@
 mixin map(location)
   script.
-    var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    var osm = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       {
         minZoom: 11, maxZoom: 18,
         attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
@@ -10,7 +10,7 @@ mixin map(location)
     var marker;
 
     function showLocation(loc) {
-      $.getJSON('http://nominatim.openstreetmap.org/search?format=json&limit=5&q=' + encodeURIComponent(loc), function (data) {
+      $.getJSON('https://nominatim.openstreetmap.org/search?format=json&limit=5&q=' + encodeURIComponent(loc), function (data) {
         if (data.length > 0) {
           var latLng = new L.LatLng(data[0].lat, data[0].lon);
           daMap.setView(latLng, 16);
