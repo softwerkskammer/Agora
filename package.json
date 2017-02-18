@@ -59,6 +59,7 @@
     "jquery": "3.1.1",
     "jquery-validation": "1.16.0",
     "jwt-simple": "0.5.1",
+    "leaflet": "1.0.3",
     "less-plugin-clean-css": "1.5.1",
     "mailparser": "2.0.1",
     "marked": "0.3.6",

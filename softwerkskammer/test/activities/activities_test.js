@@ -198,7 +198,7 @@ describe('Activity application', () => {
       .expect(/description1/)
       .expect(/location1/)
       .expect(/direction1/)
-      .expect(/script src="https:\/\/maps\.googleapis\.com\/maps\/api\/js\?key/)
+      .expect(/http:\/\/openstreetmap.org/)
       .expect(/Bislang gibt es keine Teilnahmezusagen\./, (err, res) => {
         expect(res.text).to.not.contain('Angelegt von');
         done(err);
