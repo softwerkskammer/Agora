@@ -70,8 +70,8 @@ To set up the built-in wiki follow [these instructions for Softwerkskammer](soft
 
 Configuration for Softwerkskammer and SoCraTes:
 
-* Copy the logging configuration file `config/example-winston-config.json` to `config/winston-config.json`, remove the comment in the first line, and adapt the paths if you like.
-* Copy the mailsender configuration file `config/example(smtp)-mailsender-config.json` to `config/mailsender-config.json`, remove the comment in the first line. Without setting up a proper server sending mails won't work but this configuration is sufficient to be able to start both the softwerkskammer and socrates app.
+* Copy the logging configuration file `config-examples/winston-config.json` to `config/winston-config.json`, and adapt the paths if you like.
+* Copy the mailsender configuration file `config-examples/mailsender-config.json` to `config/mailsender-config.json`. Without setting up a proper server sending mails won't work but this configuration is sufficient to be able to start both the softwerkskammer and socrates app.
 
 ### Running the server
 
@@ -96,7 +96,7 @@ Now you can decide which app you want to start:
 
 * The ports `17124` and `17224` are the defaults and can be changed via the command line option `--port` or via the environment option 'port' to any desired value
 * If your installation is fresh, you should create an account for yourself by registering.
-  * The default setup assumes you are running on localhost for authentication. If you are using a different hostname, you have to edit the configuration file `config/example-server-config.json`. Follow the instructions in there.
+  * The default setup assumes you are running on localhost for authentication. If you are using a different hostname, you have to edit the configuration file `config-examples/server-config.json`. Follow the instructions in there.
 
 ### Full Access to the Applications
 
@@ -108,12 +108,12 @@ Access for Softwerkskammer and SoCraTes:
   or you can choose one from this list: http://openid.net/get-an-openid/
 
 * To access certain admin features, you may want to become superuser. This step will make you superuser of both applications at once.
-  In order to do this, open `mongo swk`, display all member information via `db.memberstore.find().pretty()` and search for your entry. Select the string after `id`, create a copy of `config/example-authentication-config.json`, 
-  name it `authentication-config.json`, and add your id to the `superuser` array.
+  In order to do this, open `mongo swk`, display all member information via `db.memberstore.find().pretty()` and search for your entry. Select the string after `id`, create a copy of `config-examples/authentication-config.json` 
+  and add your id to the `superuser` array.
 
 Access for SoCraTes:
 
-* Copy the `config/example-socrates-server-config.json` and name it `config/socrates-server-config.json` (don't forget to remove the comment).
+* Copy the `config-examples/socrates-server-config.json` to`config/socrates-server-config.json`.
 
 ### Mac OS
 
