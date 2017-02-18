@@ -1,0 +1,33 @@
+mixin map(location)
+  script.
+    var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+      {
+        minZoom: 11, maxZoom: 18,
+        attribution: 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+      }
+    );
+    var daMap = L.map('map', {scrollWheelZoom: false, touchZoom: false}).addLayer(osm);
+    var marker;
+
+    function showLocation(loc) {
+      $.getJSON('http://nominatim.openstreetmap.org/search?format=json&limit=5&q=' + encodeURIComponent(loc), function (data) {
+        if (data.length > 0) {
+          var latLng = new L.LatLng(data[0].lat, data[0].lon);
+          daMap.setView(latLng, 16);
+          if (marker) {
+            marker.setLatLng(latLng);
+          } else {
+            marker = L.marker(latLng);
+            marker.addTo(daMap);
+          }
+        } else {
+          var parts = loc.split(/,| /);
+          if (parts.length > 1) {
+            parts.shift();
+            showLocation(parts.join().trim());
+          }
+        }
+      });
+    }
+    
+    showLocation('#{location}');
