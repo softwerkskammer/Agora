@@ -54,7 +54,7 @@ module.exports = function (grunt) {
     'softwerkskammer/public/stylesheets/screen.css': [
       'node_modules/fullcalendar/dist/fullcalendar.css',
       'softwerkskammer/build/stylesheets/less/bootstrap.less',
-      'node_modules/bootstrap-datepicker/css/datepicker3.css',
+      'node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
       'softwerkskammer/build/stylesheets/less/bootstrap-markdown-patched.less',
       'node_modules/font-awesome/css/font-awesome.css',
       'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
