@@ -2,11 +2,6 @@ extends ../../../views/layoutOnlyMain
 include activities-forms
 include ../../../views/openstreetmaps-component
 
-block scripts
-  script(src='/clientscripts/activityDateModel.js')
-  script(src='/clientscripts/activityform-dateAdapter.js')
-  script(src='/clientscripts/check-activityform.js')
-
 block title
   | #{t('activities.activity')}
 
@@ -16,3 +11,6 @@ block content
 block scripts
   +map(activity.location())
   script $('#location').change(function() {showLocation($('#location').val())})
+  script(src='/clientscripts/activityDateModel.js')
+  script(src='/clientscripts/activityform-dateAdapter.js')
+  script(src='/clientscripts/check-activityform.js')
