@@ -29,6 +29,7 @@ module.exports = function (grunt) {
   const filesForCss = {
     'socrates/public/stylesheets/screen.css': [
       'socrates/build/stylesheets/less/bootstrap.less',
+      'node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
       'node_modules/font-awesome/css/font-awesome.css',
       'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
       'node_modules/drmonty-smartmenus/css/jquery.smartmenus.bootstrap.css',
