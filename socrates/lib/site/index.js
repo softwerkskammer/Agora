@@ -17,87 +17,97 @@ const sponsorpairs = require('./sponsorpairs');
 const app = misc.expressAppIn(__dirname);
 
 app.get('/', (req, res, next) => {
-  eventstoreService.getRegistrationReadModel(socratesConstants.currentUrl, (err, registrationReadModel) => {
-    if (err || !registrationReadModel) { return next(err); }
-    eventstoreService.getRoomsReadModel(socratesConstants.currentUrl, (err2, roomsReadModel) => {
-      if (err2 || !roomsReadModel) { return next(err2); }
-      const memberId = res.locals.accessrights.memberId();
-      const registration = {
-        alreadyRegistered: registrationReadModel.isAlreadyRegistered(memberId),
-        alreadyOnWaitinglist: registrationReadModel.isAlreadyOnWaitinglist(memberId),
-        selectedOptions: registrationReadModel.selectedOptionsFor(memberId),
-        roommate: roomsReadModel.roommateFor('bed_in_double', memberId) || roomsReadModel.roommateFor('bed_in_junior', memberId)
-      };
+  return eventstoreService.getRegistrationReadModel(socratesConstants.currentUrl, (err, registrationReadModel) => {
+    if (err || !registrationReadModel) {
+      return next(err);
+    } else {
+      return eventstoreService.getRoomsReadModel(socratesConstants.currentUrl, (err2, roomsReadModel) => {
+        if (err2 || !roomsReadModel) {
+          return next(err2);
+        } else {
+          const memberId = res.locals.accessrights.memberId();
+          const registration = {
+            alreadyRegistered: registrationReadModel.isAlreadyRegistered(memberId),
+            alreadyOnWaitinglist: registrationReadModel.isAlreadyOnWaitinglist(memberId),
+            selectedOptions: registrationReadModel.selectedOptionsFor(memberId),
+            roommate: roomsReadModel.roommateFor('bed_in_double', memberId) || roomsReadModel.roommateFor('bed_in_junior', memberId)
+          };
 
-      res.render('index', {sponsors: sponsorpairs(), registration});
-    });
+          return res.render('index', {sponsors: sponsorpairs(), registration});
+        }
+      });
+    }
   });
 });
 
 app.get('/goodbye.html', (req, res) => {
   if (req.user && req.user.member) {
     return res.redirect('/');
+  } else {
+    return res.render('goodbye');
   }
-  res.render('goodbye');
 });
 
 app.get('/robots.txt', (req, res, next) => {
-  fs.readFile(path.join(__dirname, 'views', 'robots.txt'), 'utf8', (err, data) => {
-    if (err) { return next(err); }
-    res.send(data);
+  return fs.readFile(path.join(__dirname, 'views', 'robots.txt'), 'utf8', (err, data) => {
+    if (!err) {
+      return res.send(data);
+    } else {
+      return next(err);
+    }
   });
 });
 
 app.get('/impressum.html', (req, res) => {
-  res.render('impressum');
+  return res.render('impressum');
 });
 
 app.get('/schedule.html', (req, res) => {
-  res.render('schedule', {currentYear: socratesConstants.currentYear});
+  return res.render('schedule', {currentYear: socratesConstants.currentYear});
 });
 
 app.get('/experienceReports.html', (req, res) => {
-  res.render('experienceReports');
+  return res.render('experienceReports');
 });
 
 app.get('/location.html', (req, res) => {
-  res.render('location');
+  return res.render('location');
 });
 
 app.get('/history.html', (req, res) => {
-  res.render('history');
+  return res.render('history');
 });
 
 app.get('/values.html', (req, res) => {
-  res.render('values');
+  return res.render('values');
 });
 
 app.get('/sponsoring.html', (req, res) => {
-  res.render('sponsoring');
+  return res.render('sponsoring');
 });
 
 app.post('/preview', (req, res) => {
-  res.send(Renderer.render(req.body.data, req.body.subdir));
+  return res.send(Renderer.render(req.body.data, req.body.subdir));
 });
 
 app.get('/login', (req, res) => {
-  res.render('authenticationRequired');
+  return res.render('authenticationRequired');
 });
 
 app.get('/loginDialog', (req, res) => {
-  res.render('loginDialog', {returnUrl: req.query.returnUrl});
+  return res.render('loginDialog', {returnUrl: req.query.returnUrl});
 });
 
 app.get('/cheatsheet.html', (req, res) => {
-  res.render('lazyMarkdownCheatsheet');
+  return res.render('lazyMarkdownCheatsheet');
 });
 
 app.get('/mustBeSuperuser', (req, res) => {
-  res.render('superuserRightsRequired', {requestedPage: req.query.page});
+  return res.render('superuserRightsRequired', {requestedPage: req.query.page});
 });
 
 app.get('/mustBeSoCraTesAdmin', (req, res) => {
-  res.render('socratesAdminRightsRequired', {requestedPage: req.query.page});
+  return res.render('socratesAdminRightsRequired', {requestedPage: req.query.page});
 });
 
 app.get('/qrcode', (req, res) => {
@@ -105,22 +115,26 @@ app.get('/qrcode', (req, res) => {
   const fullUrl = misc.startsWith(url, 'http') ? url : conf.get('publicUrlPrefix') + url;
   const img = qrimage.image(fullUrl, {type: 'svg'});
   res.type('svg');
-  img.pipe(res);
+  return img.pipe(res);
 });
 
 app.get('/resign', (req, res) => {
   if (req.user.member) {
     return res.render('compose-resign', {nickname: req.user.member.nickname()});
+  } else {
+    return res.render('/');
   }
-  return res.render('/');
 });
 
 app.post('/submitresign', (req, res, next) => {
   const markdown = '#### Resignation from SoCraTes-Conference\n\n' + '**' + req.i18n.t('mailsender.why-resign') + '**\n' + req.body.why + '\n\n**' + req.i18n.t('mailsender.notes-resign') + '**\n' + req.body.notes;
   return mailsenderService.sendResignment(markdown, req.user.member, (err, statusmsg) => {
-    if (err) { return next(err); }
-    statusmsg.putIntoSession(req);
-    res.redirect('/');
+    if (!err) {
+      statusmsg.putIntoSession(req);
+      return res.redirect('/');
+    } else {
+      return next(err);
+    }
   });
 });
 
