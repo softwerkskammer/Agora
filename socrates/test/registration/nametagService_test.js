@@ -6,6 +6,8 @@ const beans = require('../../testutil/configureForTest').get('beans');
 
 const nametagService = beans.get('nametagService');
 const Member = beans.get('member');
+const conf = require('simple-configure');
+const width = conf.get('nametags') === 'orcana' ? '276' : '210';
 
 describe('Nametag Service', () => {
   it('returns a nametag for a member without twitter handle', () => {
@@ -25,14 +27,14 @@ describe('Nametag Service', () => {
 
   it('returns a table for up to twelve members', () => {
     expect(nametagService._tableFor([new Member({firstname: 'Hans', lastname: 'Dampf'})])).to.equal(
-      '\\begin{tabularx}{210mm}{|X|X|X|} \n' +
+      '\\begin{tabularx}{' + width + 'mm}{|X|X|X|} \n' +
       '\\hline \n\\nametag{Hans}{Dampf}{}\\\\ \\hline \n' +
       '\n\\end{tabularx}\n\n\n');
   });
 
   it('returns tables for an arbitrary number of members', () => {
     expect(nametagService._tablesFor([new Member({firstname: 'Hans', lastname: 'Dampf'})])).to.equal(
-      '\\begin{tabularx}{210mm}{|X|X|X|} \n' +
+      '\\begin{tabularx}{' + width + 'mm}{|X|X|X|} \n' +
       '\\hline \n\\nametag{Hans}{Dampf}{}\\\\ \\hline \n' +
       '\n\\end{tabularx}\n\n\n');
   });
@@ -40,13 +42,13 @@ describe('Nametag Service', () => {
   it('returns tables for an arbitrary number of members and splits every 12 members for a new page and every 3 for a new row', () => {
     const member = new Member({firstname: 'Hans', lastname: 'Dampf'});
     expect(nametagService._tablesFor([member, member, member, member, member, member, member, member, member, member, member, member, member, member, member])).to.be(
-      '\\begin{tabularx}{210mm}{|X|X|X|} \n\\hline ' + '\n' +
+      '\\begin{tabularx}{' + width + 'mm}{|X|X|X|} \n\\hline ' + '\n' +
       '\\nametag{Hans}{Dampf}{} & \\nametag{Hans}{Dampf}{} & \\nametag{Hans}{Dampf}{}\\\\ \\hline \n' +
       '\\nametag{Hans}{Dampf}{} & \\nametag{Hans}{Dampf}{} & \\nametag{Hans}{Dampf}{}\\\\ \\hline \n' +
       '\\nametag{Hans}{Dampf}{} & \\nametag{Hans}{Dampf}{} & \\nametag{Hans}{Dampf}{}\\\\ \\hline \n' +
       '\\nametag{Hans}{Dampf}{} & \\nametag{Hans}{Dampf}{} & \\nametag{Hans}{Dampf}{}\\\\ \\hline \n' +
       '\n\\end{tabularx}\n\n\n' +
-      '\\begin{tabularx}{210mm}{|X|X|X|} \n' + '\\hline \n' +
+      '\\begin{tabularx}{' + width + 'mm}{|X|X|X|} \n' + '\\hline \n' +
       '\\nametag{Hans}{Dampf}{} & \\nametag{Hans}{Dampf}{} & \\nametag{Hans}{Dampf}{}\\\\ \\hline \n' +
       '\n\\end{tabularx}\n\n\n');
   });
