@@ -1,14 +1,15 @@
 'use strict';
 
-const thursdayEvening = 7;
-const dinner = 13;
-const day = 37; // adapt this line to the actual day fare as reduced by sponsoring
+const thursdayEvening = 8;
+const sunday = 45;
+const dinner = 14;
+const day = 53; // adapt this line to the actual day fare as reduced by sponsoring
 
 const rooms = [
-  {id: 'single', name: 'Single', display: 'single room', price: 70 + dinner},
-  {id: 'bed_in_double', name: 'Double shared', display: 'bed in a double room', price: 50 + dinner},
+  {id: 'single', name: 'Single', display: 'single room', price: 63 + dinner},
+  {id: 'bed_in_double', name: 'Double shared', display: 'bed in a double room', price: 48 + dinner},
   {id: 'bed_in_junior', name: 'Junior shared', display: 'bed in a junior room', price: 46 + dinner},
-  {id: 'junior', name: 'Junior (exclusively)', display: 'junior room (exclusively)', price: 2 * 46 + dinner}
+  {id: 'junior', name: 'Junior (exclusively)', display: 'junior room (exclusively)', price: 63 + dinner}
 ];
 
 module.exports = {
@@ -23,8 +24,8 @@ module.exports = {
         name: room.name,
         two: 2 * room.price + 2 * day + thursdayEvening,
         three: 3 * room.price + 2 * day + thursdayEvening,
-        threePlus: 3 * room.price + 3 * day + thursdayEvening,
-        four: 4 * room.price + 3 * day + thursdayEvening
+        threePlus: 3 * room.price + 2 * day + thursdayEvening + sunday,
+        four: 4 * room.price + 2 * day + thursdayEvening + sunday
       };
     }
 

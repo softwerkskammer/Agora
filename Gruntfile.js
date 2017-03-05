@@ -23,7 +23,8 @@ module.exports = function (grunt) {
     'node_modules/simple-timepicker/dist/simple-timepicker.js',
     'node_modules/jqcloud2/dist/jqcloud.js',
     'node_modules/tinygradient/tinygradient.js',
-    'node_modules/urijs/src/URI.js'
+    'node_modules/urijs/src/URI.js',
+    'node_modules/leaflet/dist/leaflet.js'
   ];
 
   // filesets for uglify
@@ -53,7 +54,7 @@ module.exports = function (grunt) {
     'softwerkskammer/public/stylesheets/screen.css': [
       'node_modules/fullcalendar/dist/fullcalendar.css',
       'softwerkskammer/build/stylesheets/less/bootstrap.less',
-      'node_modules/bootstrap-datepicker/css/datepicker3.css',
+      'node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
       'softwerkskammer/build/stylesheets/less/bootstrap-markdown-patched.less',
       'node_modules/font-awesome/css/font-awesome.css',
       'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
@@ -64,6 +65,7 @@ module.exports = function (grunt) {
       'node_modules/select2-bootstrap-theme/dist/select2-bootstrap.css',
       'node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
       'node_modules/guillotine/css/jquery.guillotine.css',
+      'node_modules/leaflet/dist/leaflet.css',
       'softwerkskammer/build/stylesheets/less/agora.less'
     ]
   };
@@ -128,6 +130,13 @@ module.exports = function (grunt) {
         dest: 'softwerkskammer/public/fonts',
         expand: true,
         flatten: true
+      },
+      leafletImages: {
+        cwd: 'node_modules/leaflet/dist/images',
+        src: ['**'],
+        dest: 'softwerkskammer/public/stylesheets/images/',
+        expand: true,
+        flatten: false
       },
       customJS: {
         cwd: 'softwerkskammer/frontend/javascript/',
