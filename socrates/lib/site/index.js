@@ -72,6 +72,10 @@ app.get('/values.html', (req, res) => {
   res.render('values');
 });
 
+app.get('/access.html', (req, res) => {
+  res.render('access');
+});
+
 app.get('/sponsoring.html', (req, res) => {
   res.render('sponsoring');
 });
