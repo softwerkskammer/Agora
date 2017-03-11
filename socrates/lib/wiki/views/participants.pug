@@ -12,7 +12,7 @@ block content
       if showQuestions
         each participant in participants
           div(id=participant.nickname())
-            if (accessrights.canEditMember(participant) && accessrights.isMember(participant))
+            if (accessrights.isMember(participant))
               h4
                 .btn-group
                   a.btn.btn-primary(href='/members/editForParticipantListing', title=t('general.edit'))

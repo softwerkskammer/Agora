@@ -411,7 +411,7 @@ describe('SoCraTes members application', () => {
   describe('editing a subscriber page as superuser', () => {
 
     describe('- entering the home address', () => {
-      it('does not allows a superuser to enter the home address of any subscriber', done => {
+      it('does not allow a superuser to enter the home address of a subscriber that never participated', done => {
         sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, softwerkskammerMember); });
         sinon.stub(memberstore, 'getMemberForId', (nickname, callback) => { callback(null, softwerkskammerMember); });
         sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, softwerkskammerSubscriber); });
@@ -425,7 +425,7 @@ describe('SoCraTes members application', () => {
           });
       });
 
-      it('does allow a superuser to enter the home address, even if he is not participating this year', done => {
+      it('allows a superuser to enter the home address, even if he is not participating this year', done => {
         sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, socratesMember); });
         sinon.stub(memberstore, 'getMemberForId', (nickname, callback) => { callback(null, socratesMember); });
         sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
