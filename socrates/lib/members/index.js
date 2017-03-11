@@ -18,12 +18,12 @@ const statusmessage = beans.get('statusmessage');
 
 const participantsOverviewUrlPrefix = '/wiki/' + socratesConstants.currentYear + '/participantsOverview#';
 
-function editMember(req, res, next, returnToParticipantsListing) {
+function editMember(req, res, next, returnToParticipantsListing, memberToEdit, subscriberToEdit) {
   if (!req.user.member) {
     return res.render('edit', {member: new Member().initFromSessionUser(req.user, true), allCountries: allCountries.countries});
   }
-  const member = req.user.member;
-  const subscriber = req.user.subscriber;
+  const member = memberToEdit || req.user.member;
+  const subscriber = subscriberToEdit || req.user.subscriber;
   eventstoreService.getRegistrationReadModel(socratesConstants.currentUrl, (err, readModel) => {
     if (err || !readModel) { return next(err); }
     const registeredResources = readModel.roomTypesOf(member.id());
@@ -68,6 +68,20 @@ app.get('/edit', (req, res, next) => {
   editMember(req, res, next);
 });
 
+app.get('/edit/:nickname', (req, res, next) => {
+  const nickname = req.params.nickname;
+  if (res.locals.user.member.nickname() !== nickname && !res.locals.accessrights.isSuperuser()) {
+    return next(); // provoke a 404
+  }
+  memberstore.getMember(nickname, (err, member) => {
+    if (err || !member) { return next(err); }
+    subscriberstore.getSubscriber(member.id(), (err1, subscriber) => {
+      if (err1 || !subscriber) { return next(err1); }
+      editMember(req, res, next, null, member, subscriber);
+    });
+  });
+});
+
 app.get('/editForParticipantListing', (req, res, next) => {
   editMember(req, res, next, 'returnToParticipantsListing');
 });
@@ -95,16 +109,19 @@ app.post('/delete', (req, res, next) => {
 });
 
 app.post('/submit', (req, res, next) => {
-  const returnToParticipantsListing = req.body.returnToParticipantsListing;
+  const editedData = req.body;
+  const returnToParticipantsListing = editedData.returnToParticipantsListing;
   memberSubmitHelper(req, res, next, err => {
     if (err) { return next(err); }
-    subscriberstore.getSubscriber(req.user.member.id(), (err1, subscriber) => {
+    const memberId = editedData.id;
+    const nickname = editedData.nickname;
+    subscriberstore.getSubscriber(memberId, (err1, subscriber) => {
       if (err1) { return next(err1); }
       subscriber.fillFromUI(req.body);
       subscriberstore.saveSubscriber(subscriber, err2 => {
         if (err2) { return next(err2); }
         if (returnToParticipantsListing) {
-          return res.redirect(participantsOverviewUrlPrefix + encodeURIComponent(req.user.member.nickname()));
+          return res.redirect(participantsOverviewUrlPrefix + encodeURIComponent(nickname));
         }
         res.redirect('/');
       });

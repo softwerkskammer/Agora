@@ -408,6 +408,48 @@ describe('SoCraTes members application', () => {
 
   });
 
+  describe('editing a subscriber page as superuser', () => {
+
+    describe('- entering the home address', () => {
+      it('does not allows a superuser to enter the home address of any subscriber', done => {
+        sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, softwerkskammerMember); });
+        sinon.stub(memberstore, 'getMemberForId', (nickname, callback) => { callback(null, softwerkskammerMember); });
+        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, softwerkskammerSubscriber); });
+
+        request(createApp({id: 'superuserID'}))
+          .get('/edit/hada')
+          .expect(200)
+          .end((err, res) => {
+            expect(res.text).to.not.contain('Home Address');
+            done(err);
+          });
+      });
+
+      it('does allow a superuser to enter the home address, even if he is not participating this year', done => {
+        sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, socratesMember); });
+        sinon.stub(memberstore, 'getMemberForId', (nickname, callback) => { callback(null, socratesMember); });
+        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
+
+        request(createApp({id: 'superuserID'}))
+          .get('/edit/nini')
+          .expect(200)
+          .expect(/Home Address/, done);
+      });
+
+      it('does not allow a normal user to edit another person\'s profile', done => {
+        sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, socratesMember); });
+        sinon.stub(memberstore, 'getMemberForId', (nickname, callback) => { callback(null, socratesMember); });
+        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
+
+        appWithSocratesMember
+          .get('/edit/hada')
+          .expect(404, done);
+      });
+
+    });
+
+  });
+
   describe('submitting a member form', () => {
 
     it('rejects a member with invalid and different nickname on submit', done => {
