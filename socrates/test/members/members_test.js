@@ -425,7 +425,7 @@ describe('SoCraTes members application', () => {
           });
       });
 
-      it('allows a superuser to enter the home address, even if he is not participating this year', done => {
+      it('allows a superuser to enter the home address of an existing participant, even if he is not participating this year', done => {
         sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, socratesMember); });
         sinon.stub(memberstore, 'getMemberForId', (nickname, callback) => { callback(null, socratesMember); });
         sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
