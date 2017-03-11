@@ -20,7 +20,7 @@ function memberSubmitted(req, res, callback) {
 
   return groupsAndMembersService.updateAndSaveSubmittedMemberWithoutSubscriptions(req.user, req.body, res.locals.accessrights, notifyNewMemberRegistration, (err, nickname) => {
     if (err) { return callback(err); }
-    subscriberService.createSubscriberIfNecessaryFor(req.user.member.id(), err1 => {
+    subscriberService.createSubscriberIfNecessaryFor(req.body.id, err1 => {
       if (err1) { return callback(err1); }
       if (nickname) {
         statusmessage.successMessage('message.title.save_successful', 'message.content.members.saved').putIntoSession(req);

@@ -15,7 +15,10 @@ block content
       .page-header
         .btn-group.pull-right
           if (accessrights.canEditMember(member))
-            a.btn.btn-default(href='/members/edit'): i.fa.fa-edit.fa-fw
+            if (accessrights.isMember(member))
+              a.btn.btn-default(href='/members/edit'): i.fa.fa-edit.fa-fw
+            else
+              a.btn.btn-default(href='/members/edit/' + member.nickname()): i.fa.fa-edit.fa-fw
           if (accessrights.canDeleteMember(member))
             -var deleteoptions = {url: '/members/delete', params: {nickname: member.nickname()}}
             +reallyDeleteModalPost('members.delete', deleteoptions)

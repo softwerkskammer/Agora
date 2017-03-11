@@ -32,7 +32,7 @@ module.exports = function accessrights(req, res, next) {
     },
 
     canEditMember: function canEditMember(member) {
-      return this.isMember(member);
+      return this.isSuperuser() || this.isMember(member);
     },
 
     canDeleteMember: function canDeleteMember(memberOrSubscriber) {
