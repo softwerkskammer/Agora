@@ -10,6 +10,11 @@
     "logo": "codecentric160.png"
   },
   {
+    "name": "codurance",
+    "url": "http://www.codurance.com",
+    "logo": "codurance160.png"
+  },
+  {
     "name": "improuv GmbH",
     "url": "http://www.improuv.de",
     "logo": "improuv160.png"
@@ -38,6 +43,11 @@
     "name": "NovaTec",
     "url": "https://www.novatec-gmbh.de/",
     "logo": "novatec160.png"
+  },
+  {
+    "name": "oose. Innovative Informatik eG",
+    "url": "http://www.oose.de",
+    "logo": "oose160.png"
   },
   {
     "name": "Qixxit",
