@@ -5,7 +5,6 @@ const async = require('async');
 const maxAgeInDays = process.argv[2];
 
 /*eslint no-sync: 0 */
-/* eslint no-console: 0 */
 const winston = require('winston-config').fromFileSync(path.join(__dirname, '../../../config/winston-config.json'));
 const logger = winston.loggers.get('scripts');
 
@@ -23,46 +22,38 @@ function importIt(filename, listname, callback) {
   importMail(filename, listname, (err, mailDbObject) => {
     if (err) {
       logger.error('Error during import, exiting process: ' + err);
-      console.log('Error during import, exiting process: ' + err);   // for cron mail
       return callback(err);
     }
 
     persistence.save(mailDbObject, err1 => {
       if (err1) {
         logger.error('Error during save: ' + err1);
-        console.log('Error during save: ' + err1);
       }
       logger.info('Subject of eMail: ' + mailDbObject.subject);
-      console.log('Subject of eMail: ' + mailDbObject.subject);
       callback(err1);
     });
   });
 }
 
 logger.info('== Import Mails ==========================================================================');
-console.log('== Import Mails ==========================================================================');
 
 ezmlmAdapter.getAllAvailableLists((err, listnames) => {
   if (err) {
     logger.error('Error during retrieval of all lists, exiting process: ' + err);
-    console.log('Error during retrieval of all lists, exiting process: ' + err);
     return closeAndExit();
   }
   async.each(listnames,
     (listname, callback) => {
       logger.info('== Import Started for List ' + listname);
-      console.log('== Import Started for List ' + listname);
       ezmlmAdapter.archivedMails(listname, maxAgeInDays, (err1, filenames) => {
         if (err1) {
           logger.error('Error during retrieval of archived mails, exiting process: ' + err1);
-          console.log('Error during retrieval of archived mails, exiting process: ' + err1);
           return callback(err1);
         }
         async.each(filenames,
           (filename, cb) => importIt(filename, listname, cb),
           err2 => {
             logger.info('== Import Finished for List ' + listname);
-            console.log('== Import Finished for List ' + listname);
             callback(err2);
           });
       });
