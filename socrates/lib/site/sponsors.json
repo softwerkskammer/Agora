@@ -15,6 +15,11 @@
     "logo": "codurance160.png"
   },
   {
+    "name": "Holisticon AG",
+    "url": "http://www.holisticon.de",
+    "logo": "holisticon160.png"
+  },
+  {
     "name": "improuv GmbH",
     "url": "http://www.improuv.de",
     "logo": "improuv160.png"
@@ -78,5 +83,10 @@
     "name": "TNG Technology Consulting GmbH",
     "url": "http://www.tngtech.com",
     "logo": "tng160.png"
+  },
+  {
+    "name": "Wikimedia Deutschland e.V",
+    "url": "http://www.wikimedia.de/",
+    "logo": "wikimedia160.png"
   }
 ]
