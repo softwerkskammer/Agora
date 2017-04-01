@@ -52,23 +52,23 @@ describe('SoCraTes Activities Service', () => {
     newParticipantNotification = sinon.stub(notifications, 'newParticipant');
     changedDurationNotification = sinon.stub(notifications, 'changedDuration');
     changedResource = sinon.spy();
-    changedRoomTypeNotification = sinon.stub(notifications, 'changedResource', changedResource);
+    changedRoomTypeNotification = sinon.stub(notifications, 'changedResource').callsFake(changedResource);
     changedWaitinglistNotification = sinon.stub(notifications, 'changedWaitinglist');
     removedFromParticipantsNotification = sinon.stub(notifications, 'removedFromParticipants');
     removedFromWaitinglistNotification = sinon.stub(notifications, 'removedFromWaitinglist');
 
-    sinon.stub(memberstore, 'getMember', (nickname, callback) => {
+    sinon.stub(memberstore, 'getMember').callsFake((nickname, callback) => {
       if (nickname === 'nicknameForPair1') { return callback(null, new Member({id: 'memberIdForPair1'})); }
       if (nickname === 'nicknameForPair2') { return callback(null, new Member({id: 'memberIdForPair2'})); }
       callback(null, new Member({id: 'memberId'}));
     });
 
-    sinon.stub(eventstore, 'getEventStore', (url, callback) => {
+    sinon.stub(eventstore, 'getEventStore').callsFake((url, callback) => {
       const newStore = new GlobalEventStore();
       newStore.state.events = listOfEvents;
       callback(null, newStore);
     });
-    saveEventStore = sinon.stub(eventstore, 'saveEventStore', (store, callback) => { callback(); });
+    saveEventStore = sinon.stub(eventstore, 'saveEventStore').callsFake((store, callback) => { callback(); });
   });
 
   afterEach(() => {

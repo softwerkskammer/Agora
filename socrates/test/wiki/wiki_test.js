@@ -17,7 +17,7 @@ describe('SoCraTes wiki application', () => {
 
   beforeEach(() => {
 
-    sinon.stub(activityParticipantService, 'getParticipantsFor', (year, callback) => {
+    sinon.stub(activityParticipantService, 'getParticipantsFor').callsFake((year, callback) => {
       const member = new Member({id: 'userid', nickname: 'nick', firstname: 'first', lastname: 'last'});
       member.participation = new Participation({question1: 'Relation to SC'});
       callback(null, [member]);

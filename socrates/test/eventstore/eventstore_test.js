@@ -18,7 +18,7 @@ describe('eventstore', () => {
   let getByField;
 
   beforeEach(() => {
-    getByField = sinon.stub(persistence, 'getByField', (object, callback) => callback(null, eventStore));
+    getByField = sinon.stub(persistence, 'getByField').callsFake((object, callback) => callback(null, eventStore));
   });
 
   afterEach(() => {

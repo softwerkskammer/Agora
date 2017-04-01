@@ -90,9 +90,9 @@ describe('SoCraTes members application', () => {
       events.roomQuotaWasSet('bed_in_junior', 10)
     ];
 
-    sinon.stub(eventstore, 'getEventStore', (url, callback) => callback(null, eventStore));
+    sinon.stub(eventstore, 'getEventStore').callsFake((url, callback) => callback(null, eventStore));
 
-    sinon.stub(memberstore, 'getMembersForIds', (ids, callback) => {
+    sinon.stub(memberstore, 'getMembersForIds').callsFake((ids, callback) => {
       const members = [];
       if (ids.indexOf('memberId') > -1) {
         members.push(softwerkskammerMember);
@@ -102,7 +102,7 @@ describe('SoCraTes members application', () => {
       }
       callback(null, members);
     });
-    sinon.stub(membersService, 'putAvatarIntoMemberAndSave', (member, callback) => callback());
+    sinon.stub(membersService, 'putAvatarIntoMemberAndSave').callsFake((member, callback) => callback());
   });
 
   afterEach(() => {
@@ -112,7 +112,7 @@ describe('SoCraTes members application', () => {
   describe('accessing a member page', () => {
 
     it('gives a 404 if there is no matching member in the database', done => {
-      sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null); });
+      sinon.stub(memberstore, 'getMember').callsFake((nickname, callback) => { callback(null); });
 
       appWithSoftwerkskammerMember
         .get('/hada')
@@ -120,8 +120,8 @@ describe('SoCraTes members application', () => {
     });
 
     it('gives a 404 if there is a member but no matching subscriber in the database', done => {
-      sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, softwerkskammerMember); });
-      sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null); });
+      sinon.stub(memberstore, 'getMember').callsFake((nickname, callback) => { callback(null, softwerkskammerMember); });
+      sinon.stub(subscriberstore, 'getSubscriber').callsFake((nickname, callback) => { callback(null); });
 
       appWithSoftwerkskammerMember
         .get('/hada')
@@ -129,9 +129,9 @@ describe('SoCraTes members application', () => {
     });
 
     it('shows the subscriber\'s own page for a Softwerkskammer member', done => {
-      sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, softwerkskammerMember); });
-      sinon.stub(memberstore, 'getMemberForId', (nickname, callback) => { callback(null, softwerkskammerMember); });
-      sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, softwerkskammerSubscriber); });
+      sinon.stub(memberstore, 'getMember').callsFake((nickname, callback) => { callback(null, softwerkskammerMember); });
+      sinon.stub(memberstore, 'getMemberForId').callsFake((nickname, callback) => { callback(null, softwerkskammerMember); });
+      sinon.stub(subscriberstore, 'getSubscriber').callsFake((nickname, callback) => { callback(null, softwerkskammerSubscriber); });
 
       appWithSoftwerkskammerMember
         .get('/hada')
@@ -141,9 +141,9 @@ describe('SoCraTes members application', () => {
     });
 
     it('shows the subscriber\'s own page for a non-Softwerkskammer member', done => {
-      sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, socratesMember); });
-      sinon.stub(memberstore, 'getMemberForId', (nickname, callback) => { callback(null, socratesMember); });
-      sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
+      sinon.stub(memberstore, 'getMember').callsFake((nickname, callback) => { callback(null, socratesMember); });
+      sinon.stub(memberstore, 'getMemberForId').callsFake((nickname, callback) => { callback(null, socratesMember); });
+      sinon.stub(subscriberstore, 'getSubscriber').callsFake((nickname, callback) => { callback(null, socratesSubscriber); });
 
       appWithSocratesMember
         .get('/nini')
@@ -153,9 +153,9 @@ describe('SoCraTes members application', () => {
     });
 
     it('shows a different subscriber\'s page', done => {
-      sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, socratesMember); });
-      sinon.stub(memberstore, 'getMemberForId', (nickname, callback) => { callback(null, socratesMember); });
-      sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
+      sinon.stub(memberstore, 'getMember').callsFake((nickname, callback) => { callback(null, socratesMember); });
+      sinon.stub(memberstore, 'getMemberForId').callsFake((nickname, callback) => { callback(null, socratesMember); });
+      sinon.stub(subscriberstore, 'getSubscriber').callsFake((nickname, callback) => { callback(null, socratesSubscriber); });
 
       appWithSoftwerkskammerMember
         .get('/nini')
@@ -168,7 +168,7 @@ describe('SoCraTes members application', () => {
 
       beforeEach(() => {
 
-        sinon.stub(memberstore, 'getMember', (nickname, callback) => {
+        sinon.stub(memberstore, 'getMember').callsFake((nickname, callback) => {
           if (nickname === 'hada') {
             return callback(null, softwerkskammerMember);
           }
@@ -177,7 +177,7 @@ describe('SoCraTes members application', () => {
           }
           callback(null, undefined);
         });
-        sinon.stub(memberstore, 'getMemberForId', (id, callback) => {
+        sinon.stub(memberstore, 'getMemberForId').callsFake((id, callback) => {
           if (id === 'memberId') {
             return callback(null, softwerkskammerMember);
           }
@@ -186,7 +186,7 @@ describe('SoCraTes members application', () => {
           }
           callback(null, undefined);
         });
-        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
+        sinon.stub(subscriberstore, 'getSubscriber').callsFake((nickname, callback) => { callback(null, socratesSubscriber); });
       });
 
       it('does not display anything about roommates if the subscriber is not a participant', done => {
@@ -267,7 +267,7 @@ describe('SoCraTes members application', () => {
 
     describe('initially creates an account', () => {
       it('allows somebody who is neither member nor subscriber to create his account', done => {
-        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(); });
+        sinon.stub(subscriberstore, 'getSubscriber').callsFake((nickname, callback) => { callback(); });
 
         appWithoutMember
           .get('/edit')
@@ -276,7 +276,7 @@ describe('SoCraTes members application', () => {
       });
 
       it('allows a SoCraTes-only member to edit his page', done => {
-        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
+        sinon.stub(subscriberstore, 'getSubscriber').callsFake((nickname, callback) => { callback(null, socratesSubscriber); });
 
         appWithSocratesMember
           .get('/edit')
@@ -285,7 +285,7 @@ describe('SoCraTes members application', () => {
       });
 
       it('allows a Softwerkskammer member to edit his page', done => {
-        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, softwerkskammerSubscriber); });
+        sinon.stub(subscriberstore, 'getSubscriber').callsFake((nickname, callback) => { callback(null, softwerkskammerSubscriber); });
 
         appWithSoftwerkskammerMember
           .get('/edit')
@@ -296,7 +296,7 @@ describe('SoCraTes members application', () => {
 
     describe('- entering a desired roommate', () => {
       it('does not allow an unregistered subscriber to enter a roommate', done => {
-        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
+        sinon.stub(subscriberstore, 'getSubscriber').callsFake((nickname, callback) => { callback(null, socratesSubscriber); });
 
         appWithSocratesMember
           .get('/edit')
@@ -312,7 +312,7 @@ describe('SoCraTes members application', () => {
           events.registeredParticipantFromWaitinglist('single', 3, 'memberId2', aShortTimeAgo)
         ]);
         socratesSubscriber.state.participations[currentYear] = {};
-        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
+        sinon.stub(subscriberstore, 'getSubscriber').callsFake((nickname, callback) => { callback(null, socratesSubscriber); });
 
         appWithSocratesMember
           .get('/edit')
@@ -329,7 +329,7 @@ describe('SoCraTes members application', () => {
           events.registeredParticipantFromWaitinglist('junior', 3, 'memberId2', aShortTimeAgo)
         ]);
         socratesSubscriber.state.participations[currentYear] = {};
-        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
+        sinon.stub(subscriberstore, 'getSubscriber').callsFake((nickname, callback) => { callback(null, socratesSubscriber); });
 
         appWithSocratesMember
           .get('/edit')
@@ -346,7 +346,7 @@ describe('SoCraTes members application', () => {
           events.registeredParticipantFromWaitinglist('bed_in_double', 3, 'memberId2', aShortTimeAgo)
         ]);
         socratesSubscriber.state.participations[currentYear] = {};
-        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
+        sinon.stub(subscriberstore, 'getSubscriber').callsFake((nickname, callback) => { callback(null, socratesSubscriber); });
 
         appWithSocratesMember
           .get('/edit')
@@ -360,7 +360,7 @@ describe('SoCraTes members application', () => {
           events.registeredParticipantFromWaitinglist('bed_in_junior', 3, 'memberId2', aShortTimeAgo)
         ]);
         socratesSubscriber.state.participations[currentYear] = {};
-        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
+        sinon.stub(subscriberstore, 'getSubscriber').callsFake((nickname, callback) => { callback(null, socratesSubscriber); });
 
         appWithSocratesMember
           .get('/edit')
@@ -372,7 +372,7 @@ describe('SoCraTes members application', () => {
 
     describe('- entering the home address', () => {
       it('does not allow an unregistered subscriber to enter the home address', done => {
-        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, softwerkskammerSubscriber); });
+        sinon.stub(subscriberstore, 'getSubscriber').callsFake((nickname, callback) => { callback(null, softwerkskammerSubscriber); });
 
         appWithSoftwerkskammerMember
           .get('/edit')
@@ -384,7 +384,7 @@ describe('SoCraTes members application', () => {
       });
 
       it('does allow a registered subscriber to enter the home address, even if he is not participating this year', done => {
-        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
+        sinon.stub(subscriberstore, 'getSubscriber').callsFake((nickname, callback) => { callback(null, socratesSubscriber); });
 
         appWithSocratesMember
           .get('/edit')
@@ -398,7 +398,7 @@ describe('SoCraTes members application', () => {
       eventStore.state.events = eventStore.state.events.concat([
         events.registeredParticipantFromWaitinglist('bed_in_double', 3, 'memberId2', aShortTimeAgo)
       ]);
-      sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
+      sinon.stub(subscriberstore, 'getSubscriber').callsFake((nickname, callback) => { callback(null, socratesSubscriber); });
 
       appWithSocratesMember
         .get('/edit')
@@ -412,9 +412,9 @@ describe('SoCraTes members application', () => {
 
     describe('- entering the home address', () => {
       it('does not allow a superuser to enter the home address of a subscriber that never participated', done => {
-        sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, softwerkskammerMember); });
-        sinon.stub(memberstore, 'getMemberForId', (nickname, callback) => { callback(null, softwerkskammerMember); });
-        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, softwerkskammerSubscriber); });
+        sinon.stub(memberstore, 'getMember').callsFake((nickname, callback) => { callback(null, softwerkskammerMember); });
+        sinon.stub(memberstore, 'getMemberForId').callsFake((nickname, callback) => { callback(null, softwerkskammerMember); });
+        sinon.stub(subscriberstore, 'getSubscriber').callsFake((nickname, callback) => { callback(null, softwerkskammerSubscriber); });
 
         request(createApp({id: 'superuserID'}))
           .get('/edit/hada')
@@ -426,9 +426,9 @@ describe('SoCraTes members application', () => {
       });
 
       it('allows a superuser to enter the home address of an existing participant, even if he is not participating this year', done => {
-        sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, socratesMember); });
-        sinon.stub(memberstore, 'getMemberForId', (nickname, callback) => { callback(null, socratesMember); });
-        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
+        sinon.stub(memberstore, 'getMember').callsFake((nickname, callback) => { callback(null, socratesMember); });
+        sinon.stub(memberstore, 'getMemberForId').callsFake((nickname, callback) => { callback(null, socratesMember); });
+        sinon.stub(subscriberstore, 'getSubscriber').callsFake((nickname, callback) => { callback(null, socratesSubscriber); });
 
         request(createApp({id: 'superuserID'}))
           .get('/edit/nini')
@@ -437,9 +437,9 @@ describe('SoCraTes members application', () => {
       });
 
       it('does not allow a normal user to edit another person\'s profile', done => {
-        sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, socratesMember); });
-        sinon.stub(memberstore, 'getMemberForId', (nickname, callback) => { callback(null, socratesMember); });
-        sinon.stub(subscriberstore, 'getSubscriber', (nickname, callback) => { callback(null, socratesSubscriber); });
+        sinon.stub(memberstore, 'getMember').callsFake((nickname, callback) => { callback(null, socratesMember); });
+        sinon.stub(memberstore, 'getMemberForId').callsFake((nickname, callback) => { callback(null, socratesMember); });
+        sinon.stub(subscriberstore, 'getSubscriber').callsFake((nickname, callback) => { callback(null, socratesSubscriber); });
 
         appWithSocratesMember
           .get('/edit/hada')
@@ -453,7 +453,7 @@ describe('SoCraTes members application', () => {
   describe('submitting a member form', () => {
 
     it('rejects a member with invalid and different nickname on submit', done => {
-      sinon.stub(membersService, 'isValidNickname', (nickname, callback) => {
+      sinon.stub(membersService, 'isValidNickname').callsFake((nickname, callback) => {
         callback(null, false);
       });
 
@@ -469,7 +469,7 @@ describe('SoCraTes members application', () => {
     });
 
     it('rejects a member with invalid and different email address on submit', done => {
-      sinon.stub(membersService, 'isValidEmail', (nickname, callback) => {
+      sinon.stub(membersService, 'isValidEmail').callsFake((nickname, callback) => {
         callback(null, false);
       });
 
@@ -497,10 +497,10 @@ describe('SoCraTes members application', () => {
 
     it('rejects a member with missing first name who validly changed their nickname and mailaddress on submit', done => {
       // attention: This combination is required to prove the invocations of the callbacks in case of no error!
-      sinon.stub(membersService, 'isValidNickname', (nickname, callback) => {
+      sinon.stub(membersService, 'isValidNickname').callsFake((nickname, callback) => {
         callback(null, true);
       });
-      sinon.stub(membersService, 'isValidEmail', (nickname, callback) => {
+      sinon.stub(membersService, 'isValidEmail').callsFake((nickname, callback) => {
         callback(null, true);
       });
 
@@ -514,10 +514,10 @@ describe('SoCraTes members application', () => {
     });
 
     it('rejects a member with invalid nickname and email address on submit, giving two error messages', done => {
-      sinon.stub(membersService, 'isValidNickname', (nickname, callback) => {
+      sinon.stub(membersService, 'isValidNickname').callsFake((nickname, callback) => {
         callback(null, false);
       });
-      sinon.stub(membersService, 'isValidEmail', (nickname, callback) => {
+      sinon.stub(membersService, 'isValidEmail').callsFake((nickname, callback) => {
         callback(null, false);
       });
 
@@ -537,19 +537,19 @@ describe('SoCraTes members application', () => {
 
     it('saves an existing Softwerkskammer member, creates a subscriber because it is not yet there, and does not trigger notification sending', done => {
       let subscriberSaved = false;
-      sinon.stub(membersService, 'isValidNickname', (nickname, callback) => { callback(null, true); });
-      sinon.stub(membersService, 'isValidEmail', (nickname, callback) => { callback(null, true); });
-      sinon.stub(memberstore, 'saveMember', (member, callback) => { callback(null); });
-      const subscriberSave = sinon.stub(subscriberstore, 'saveSubscriber', (subscriber, callback) => {
+      sinon.stub(membersService, 'isValidNickname').callsFake((nickname, callback) => { callback(null, true); });
+      sinon.stub(membersService, 'isValidEmail').callsFake((nickname, callback) => { callback(null, true); });
+      sinon.stub(memberstore, 'saveMember').callsFake((member, callback) => { callback(null); });
+      const subscriberSave = sinon.stub(subscriberstore, 'saveSubscriber').callsFake((subscriber, callback) => {
         subscriberSaved = true;
         callback(null);
       });
-      const notificationCall = sinon.stub(socratesNotifications, 'newSoCraTesMemberRegistered', () => undefined);
+      const notificationCall = sinon.stub(socratesNotifications, 'newSoCraTesMemberRegistered').callsFake(() => undefined);
 
       // the following stub indicates that the member already exists
-      sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', (nickname, callback) => { callback(null, softwerkskammerMember); });
+      sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups').callsFake((nickname, callback) => { callback(null, softwerkskammerMember); });
       // and that the subscriber is not yet there at first call
-      sinon.stub(subscriberstore, 'getSubscriber', (id, callback) => {
+      sinon.stub(subscriberstore, 'getSubscriber').callsFake((id, callback) => {
         if (subscriberSaved) { return callback(null, softwerkskammerSubscriber); }
         callback(null);
       });
@@ -571,16 +571,16 @@ describe('SoCraTes members application', () => {
     describe('for exisiting members with subscribers', () => {
 
       it('saves an existing SoCraTes member, creates no subscriber because it is already there, and does not trigger notification sending; forwards to root page', done => {
-        sinon.stub(membersService, 'isValidNickname', (nickname, callback) => { callback(null, true); });
-        sinon.stub(membersService, 'isValidEmail', (nickname, callback) => { callback(null, true); });
-        sinon.stub(memberstore, 'saveMember', (member, callback) => { callback(null); });
-        const subscriberSave = sinon.stub(subscriberstore, 'saveSubscriber', (subscriber, callback) => { callback(null); });
-        const notificationCall = sinon.stub(socratesNotifications, 'newSoCraTesMemberRegistered', () => undefined);
+        sinon.stub(membersService, 'isValidNickname').callsFake((nickname, callback) => { callback(null, true); });
+        sinon.stub(membersService, 'isValidEmail').callsFake((nickname, callback) => { callback(null, true); });
+        sinon.stub(memberstore, 'saveMember').callsFake((member, callback) => { callback(null); });
+        const subscriberSave = sinon.stub(subscriberstore, 'saveSubscriber').callsFake((subscriber, callback) => { callback(null); });
+        const notificationCall = sinon.stub(socratesNotifications, 'newSoCraTesMemberRegistered').callsFake(() => undefined);
 
         // the following stub indicates that the member already exists
-        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', (nickname, callback) => { callback(null, socratesMember); });
+        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups').callsFake((nickname, callback) => { callback(null, socratesMember); });
         // and that the subscriber also exists
-        sinon.stub(subscriberstore, 'getSubscriber', (id, callback) => { callback(null, socratesSubscriber); });
+        sinon.stub(subscriberstore, 'getSubscriber').callsFake((id, callback) => { callback(null, socratesSubscriber); });
 
         appWithSocratesMember
           .post('/submit')
@@ -601,20 +601,20 @@ describe('SoCraTes members application', () => {
 
     it('saves a new SoCraTes member and a new subscriber and triggers notification sending', done => {
       let subscriberSaved = false;
-      sinon.stub(membersService, 'isValidNickname', (nickname, callback) => { callback(null, true); });
-      sinon.stub(membersService, 'isValidEmail', (nickname, callback) => { callback(null, true); });
-      sinon.stub(memberstore, 'allMembers', callback => { callback(null, [softwerkskammerMember, socratesMember]); });
-      sinon.stub(memberstore, 'saveMember', (member, callback) => { callback(null); });
-      const subscriberSave = sinon.stub(subscriberstore, 'saveSubscriber', (subscriber, callback) => {
+      sinon.stub(membersService, 'isValidNickname').callsFake((nickname, callback) => { callback(null, true); });
+      sinon.stub(membersService, 'isValidEmail').callsFake((nickname, callback) => { callback(null, true); });
+      sinon.stub(memberstore, 'allMembers').callsFake(callback => { callback(null, [softwerkskammerMember, socratesMember]); });
+      sinon.stub(memberstore, 'saveMember').callsFake((member, callback) => { callback(null); });
+      const subscriberSave = sinon.stub(subscriberstore, 'saveSubscriber').callsFake((subscriber, callback) => {
         subscriberSaved = true;
         callback(null);
       });
-      const notificationCall = sinon.stub(socratesNotifications, 'newSoCraTesMemberRegistered', () => undefined);
+      const notificationCall = sinon.stub(socratesNotifications, 'newSoCraTesMemberRegistered').callsFake(() => undefined);
 
       // the following stub indicates that the member does not exist yet
-      sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', (nickname, callback) => { callback(null); });
+      sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups').callsFake((nickname, callback) => { callback(null); });
       // and that the subscriber does not exist either
-      sinon.stub(subscriberstore, 'getSubscriber', (id, callback) => {
+      sinon.stub(subscriberstore, 'getSubscriber').callsFake((id, callback) => {
         if (subscriberSaved) { return callback(null, socratesSubscriber); }
         callback(null);
       });
@@ -637,7 +637,7 @@ describe('SoCraTes members application', () => {
 
   describe('submitting deletion of a member', () => {
     beforeEach(() => {
-      sinon.stub(subscriberstore, 'getSubscriberByNickname', (nicknameOfEditMember, callback) => {
+      sinon.stub(subscriberstore, 'getSubscriberByNickname').callsFake((nicknameOfEditMember, callback) => {
         callback(null, socratesSubscriber);
       });
     });
@@ -653,7 +653,7 @@ describe('SoCraTes members application', () => {
     });
 
     it('refuses deletion when the subscriber is also participant and redirects to the profile page', done => {
-      sinon.stub(socratesMembersService, 'participationStatus', (subscriber, callback) => {
+      sinon.stub(socratesMembersService, 'participationStatus').callsFake((subscriber, callback) => {
         callback(null, true);
       });
 
@@ -667,11 +667,11 @@ describe('SoCraTes members application', () => {
     });
 
     it('deletes a subscriber that is not participant and redirects to the profiles overview page of current year', done => {
-      sinon.stub(socratesMembersService, 'participationStatus', (subscriber, callback) => {
+      sinon.stub(socratesMembersService, 'participationStatus').callsFake((subscriber, callback) => {
         callback(null, false);
       });
 
-      const deleteCall = sinon.stub(subscriberService, 'removeSubscriber', (subscriber, callback) => {
+      const deleteCall = sinon.stub(subscriberService, 'removeSubscriber').callsFake((subscriber, callback) => {
         callback(null);
       });
 

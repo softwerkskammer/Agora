@@ -67,13 +67,13 @@ describe('Registration Service', () => {
     sinon.stub(notifications, 'newParticipant');
     sinon.stub(notifications, 'newWaitinglistEntry');
 
-    sinon.stub(memberstore, 'getMember', (nickname, callback) => {
+    sinon.stub(memberstore, 'getMember').callsFake((nickname, callback) => {
       callback(null, new Member({id: 'memberId'}));
     });
-    sinon.stub(subscriberstore, 'getSubscriber', (memberId, callback) => {
+    sinon.stub(subscriberstore, 'getSubscriber').callsFake((memberId, callback) => {
       callback(null, new Subscriber({id: 'memberId'}));
     });
-    sinon.stub(eventstore, 'getEventStore', (url, callback) => {
+    sinon.stub(eventstore, 'getEventStore').callsFake((url, callback) => {
       if (url === 'wrongUrl') {
         return callback(new Error('Wrong URL!'));
       }
@@ -83,9 +83,9 @@ describe('Registration Service', () => {
       return callback(null);
     });
 
-    saveEventStoreStub = sinon.stub(eventstore, 'saveEventStore', (activity, callback) => {callback();});
+    saveEventStoreStub = sinon.stub(eventstore, 'saveEventStore').callsFake((activity, callback) => {callback();});
     saveSubscriberCount = 0;
-    sinon.stub(subscriberstore, 'saveSubscriber', (activity, callback) => {
+    sinon.stub(subscriberstore, 'saveSubscriber').callsFake((activity, callback) => {
       saveSubscriberCount += 1;
       callback();
     });
@@ -149,7 +149,7 @@ describe('Registration Service', () => {
     it('returns no error if waitinglist reservation fails due to duplicate reservation - let the user continue', done => {
       registrationTuple.duration = 3;
       registrationTuple.desiredRoomTypes = ['single'];
-      sinon.stub(RegistrationCommandProcessor.prototype, 'issueWaitinglistReservation', () => {return {event: e.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION}; });
+      sinon.stub(RegistrationCommandProcessor.prototype, 'issueWaitinglistReservation').callsFake(() => {return {event: e.DID_NOT_ISSUE_WAITINGLIST_RESERVATION_FOR_ALREADY_RESERVED_SESSION}; });
 
       registrationService.startRegistration(registrationTuple, 'memberId', now, (err, statusTitle, statusText) => {
         expect(statusTitle).not.exist();
@@ -181,7 +181,7 @@ describe('Registration Service', () => {
 
     it('returns error and saves subscriber info if waitinglist registration fails due to expired session', done => {
       registrationBody.desiredRoomTypes = 'single';
-      sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', () => {return {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION};});
+      sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant').callsFake(() => {return {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_WITH_EXPIRED_OR_MISSING_RESERVATION};});
 
       registrationService.completeRegistration('memberId', 'sessionId', registrationBody, (err, statusTitle, statusText) => {
         expect(statusTitle).to.be('activities.registration_problem');
@@ -193,7 +193,7 @@ describe('Registration Service', () => {
 
     it('returns error and saves subscriber info if waitinglist registration fails due to duplicate booking', done => {
       registrationBody.desiredRoomTypes = 'single';
-      sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', () => {return {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME};});
+      sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant').callsFake(() => {return {event: e.DID_NOT_REGISTER_WAITINGLIST_PARTICIPANT_A_SECOND_TIME};});
 
       registrationService.completeRegistration('memberId', 'sessionId', registrationBody, (err, statusTitle, statusText) => {
         expect(statusTitle).to.be('activities.registration_problem');
@@ -205,7 +205,7 @@ describe('Registration Service', () => {
 
     it('returns nothing and saves subscriber info if waitinglist registration succeeds', done => {
       registrationBody.desiredRoomTypes = 'single';
-      sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant', () => {return events.waitinglistParticipantWasRegistered(['single'], 2, 'sessionId', 'memberId', aShortTimeAgo);});
+      sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant').callsFake(() => {return events.waitinglistParticipantWasRegistered(['single'], 2, 'sessionId', 'memberId', aShortTimeAgo);});
 
       registrationService.completeRegistration('memberId', 'sessionId', registrationBody, (err, statusTitle, statusText) => {
         expect(statusTitle).to.not.exist();

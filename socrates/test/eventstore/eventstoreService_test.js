@@ -21,7 +21,7 @@ describe('eventstoreService', () => {
 
   beforeEach(() => {
     cache.flushAll();
-    getEventStore = sinon.stub(eventstore, 'getEventStore', (url, callback) => callback(null, new GlobalEventStore(eventStore)));
+    getEventStore = sinon.stub(eventstore, 'getEventStore').callsFake((url, callback) => callback(null, new GlobalEventStore(eventStore)));
   });
 
   afterEach(() => {

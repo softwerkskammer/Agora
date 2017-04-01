@@ -27,7 +27,7 @@ describe('SubscriberService', () => {
   describe('getMemberIfSubscriberExists', () => {
 
     it('returns an error if getMember returns an error', done => {
-      sinon.stub(memberstore, 'getMember', (nick, cb) => { cb(error); });
+      sinon.stub(memberstore, 'getMember').callsFake((nick, cb) => { cb(error); });
 
       subscriberService.getMemberIfSubscriberExists('irrelevant', (err, member) => {
         expect(err).to.eql(error);
@@ -37,7 +37,7 @@ describe('SubscriberService', () => {
     });
 
     it('returns no member if getMember returns no member', done => {
-      sinon.stub(memberstore, 'getMember', (nick, cb) => { cb(null); });
+      sinon.stub(memberstore, 'getMember').callsFake((nick, cb) => { cb(null); });
 
       subscriberService.getMemberIfSubscriberExists('irrelevant', (err, member) => {
         expect(member).to.be.falsy();
@@ -46,8 +46,8 @@ describe('SubscriberService', () => {
     });
 
     it('returns an error if getSubscriber returns an error', done => {
-      sinon.stub(memberstore, 'getMember', (nick, cb) => { cb(null, expectedMember1); });
-      sinon.stub(subscriberstore, 'getSubscriber', (nick, cb) => { cb(error); });
+      sinon.stub(memberstore, 'getMember').callsFake((nick, cb) => { cb(null, expectedMember1); });
+      sinon.stub(subscriberstore, 'getSubscriber').callsFake((nick, cb) => { cb(error); });
 
       subscriberService.getMemberIfSubscriberExists('irrelevant', (err, member) => {
         expect(err).to.eql(error);
@@ -57,8 +57,8 @@ describe('SubscriberService', () => {
     });
 
     it('returns no member if getSubscriber returns no subscriber', done => {
-      sinon.stub(memberstore, 'getMember', (nick, cb) => { cb(null, expectedMember1); });
-      sinon.stub(subscriberstore, 'getSubscriber', (nick, cb) => { cb(null); });
+      sinon.stub(memberstore, 'getMember').callsFake((nick, cb) => { cb(null, expectedMember1); });
+      sinon.stub(subscriberstore, 'getSubscriber').callsFake((nick, cb) => { cb(null); });
 
       subscriberService.getMemberIfSubscriberExists('irrelevant', (err, member) => {
         expect(member).to.be.falsy();
@@ -67,8 +67,8 @@ describe('SubscriberService', () => {
     });
 
     it('returns a member if getMember and getSubscriber both return a valid result', done => {
-      sinon.stub(memberstore, 'getMember', (nick, cb) => { cb(null, expectedMember1); });
-      sinon.stub(subscriberstore, 'getSubscriber', (nick, cb) => { cb(null, subscriber1); });
+      sinon.stub(memberstore, 'getMember').callsFake((nick, cb) => { cb(null, expectedMember1); });
+      sinon.stub(subscriberstore, 'getSubscriber').callsFake((nick, cb) => { cb(null, subscriber1); });
 
       subscriberService.getMemberIfSubscriberExists('irrelevant', (err, member) => {
         expect(member).to.eql(expectedMember1);
@@ -83,7 +83,7 @@ describe('SubscriberService', () => {
     const subscriber3 = new Subscriber({id: 'unknown_member'});
 
     beforeEach(() => {
-      sinon.stub(memberstore, 'getMembersForIds', (ids, cb) => {
+      sinon.stub(memberstore, 'getMembersForIds').callsFake((ids, cb) => {
         const result = [];
         if (ids.indexOf(memberID1) > -1) { result.push(expectedMember1); }
         if (ids.indexOf(memberID2) > -1) { result.push(expectedMember2); }
@@ -92,7 +92,7 @@ describe('SubscriberService', () => {
     });
 
     it('are collected if subscribers are interested', done => {
-      sinon.stub(subscriberstore, 'allSubscribers', cb => { cb(null, [subscriber1, subscriber2]); });
+      sinon.stub(subscriberstore, 'allSubscribers').callsFake(cb => { cb(null, [subscriber1, subscriber2]); });
 
       subscriberService.emailAddressesForWikiNotifications((err, emailAddresses) => {
         expect(emailAddresses).to.have.length(1);
@@ -102,7 +102,7 @@ describe('SubscriberService', () => {
     });
 
     it('are empty if subscribers are not interested', done => {
-      sinon.stub(subscriberstore, 'allSubscribers', cb => { cb(null, [subscriber2]); });
+      sinon.stub(subscriberstore, 'allSubscribers').callsFake(cb => { cb(null, [subscriber2]); });
 
       subscriberService.emailAddressesForWikiNotifications((err, emailAddresses) => {
         expect(emailAddresses).to.have.length(0);
@@ -111,7 +111,7 @@ describe('SubscriberService', () => {
     });
 
     it('are empty if subscribers have no member', done => {
-      sinon.stub(subscriberstore, 'allSubscribers', cb => { cb(null, [subscriber3]); });
+      sinon.stub(subscriberstore, 'allSubscribers').callsFake(cb => { cb(null, [subscriber3]); });
 
       subscriberService.emailAddressesForWikiNotifications((err, emailAddresses) => {
         expect(emailAddresses).to.have.length(0);
@@ -127,17 +127,17 @@ describe('SubscriberService', () => {
     beforeEach(() => {
       expectedMember1.state.socratesOnly = false;
 
-      removeMemberCall = sinon.stub(memberstore, 'removeMember', (subscriber, callback) => {
+      removeMemberCall = sinon.stub(memberstore, 'removeMember').callsFake((subscriber, callback) => {
         callback(null);
       });
 
-      removeSubscriberCall = sinon.stub(subscriberstore, 'removeSubscriber', (subscriber, callback) => {
+      removeSubscriberCall = sinon.stub(subscriberstore, 'removeSubscriber').callsFake((subscriber, callback) => {
         callback(null);
       });
     });
 
     it('removes only the subscriber but not the member if the member is also a regular Softwerkskammer member', done => {
-      sinon.stub(memberstore, 'getMemberForId', (subscriberId, callback) => {
+      sinon.stub(memberstore, 'getMemberForId').callsFake((subscriberId, callback) => {
         callback(null, expectedMember1);
       });
 
@@ -149,7 +149,7 @@ describe('SubscriberService', () => {
     });
 
     it('removes only the subscriber if no matching member could be found', done => {
-      sinon.stub(memberstore, 'getMemberForId', (subscriberId, callback) => {
+      sinon.stub(memberstore, 'getMemberForId').callsFake((subscriberId, callback) => {
         callback(null);
       });
 
@@ -161,7 +161,7 @@ describe('SubscriberService', () => {
     });
 
     it('removes the subscriber and the underlying member if she is not a regular Softwerkskammer member', done => {
-      sinon.stub(memberstore, 'getMemberForId', (subscriberId, callback) => {
+      sinon.stub(memberstore, 'getMemberForId').callsFake((subscriberId, callback) => {
         callback(null, expectedMember1);
       });
 

@@ -36,13 +36,13 @@ const fritz = new Member({
 
 describe('Notifications', () => {
   function stubRegistrationListEmailAddress(emailAdresses) {
-    sinon.stub(notifications, 'registrationListEmailAddress', () => emailAdresses);
+    sinon.stub(notifications, 'registrationListEmailAddress').callsFake(() => emailAdresses);
   }
 
   beforeEach(() => {
-    sinon.stub(transport, 'sendMail', (options, callback) => callback(null));
-    sinon.stub(subscriberstore, 'allSubscribers', callback => callback(null, ['p1', 'p2', 'p3']));
-    sinon.stub(subscriberService, 'emailAddressesForWikiNotifications', callback => callback(null, [fritzmail]));
+    sinon.stub(transport, 'sendMail').callsFake((options, callback) => callback(null));
+    sinon.stub(subscriberstore, 'allSubscribers').callsFake(callback => callback(null, ['p1', 'p2', 'p3']));
+    sinon.stub(subscriberService, 'emailAddressesForWikiNotifications').callsFake(callback => callback(null, [fritzmail]));
   });
 
   afterEach(() => {
@@ -116,7 +116,7 @@ describe('Notifications', () => {
 
   describe('for participation', () => {
     beforeEach(() => {
-      sinon.stub(memberstore, 'getMemberForId', (id, callback) => { callback(null, hans); });
+      sinon.stub(memberstore, 'getMemberForId').callsFake((id, callback) => { callback(null, hans); });
       stubRegistrationListEmailAddress(supermanEmail);
     });
 
@@ -230,7 +230,7 @@ describe('Notifications', () => {
 
   describe('for waitinglist', () => {
     beforeEach(() => {
-      sinon.stub(memberstore, 'getMemberForId', (id, callback) => { callback(null, hans); });
+      sinon.stub(memberstore, 'getMemberForId').callsFake((id, callback) => { callback(null, hans); });
       stubRegistrationListEmailAddress(supermanEmail);
     });
 
