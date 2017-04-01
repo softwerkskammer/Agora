@@ -63,7 +63,11 @@ module.exports = {
     tShirtSize: function () { return 'yes'; },
     roommate: function () { return 'yes'; },
     deposit: function () { return ''; },
-    remarks: function () { return ''; }
+    pronoun: function () { return ''; },
+    remarks: function () { return ''; },
+    diet: function () { return ''; },
+    needAssistance: function () { return false; },
+    provideAssistance: function () { return false; }
   },
   roomOptions: [
     {

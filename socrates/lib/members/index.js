@@ -20,7 +20,8 @@ const participantsOverviewUrlPrefix = '/wiki/' + socratesConstants.currentYear +
 
 function editMember(req, res, next, returnToParticipantsListing, memberToEdit, subscriberToEdit) {
   if (!req.user.member) {
-    return res.render('edit', {member: new Member().initFromSessionUser(req.user, true), allCountries: allCountries.countries});
+    let options = {member: new Member().initFromSessionUser(req.user, true), allCountries: allCountries.countries};
+    return res.render('edit', options);
   }
   const member = memberToEdit || req.user.member;
   const subscriber = subscriberToEdit || req.user.subscriber;

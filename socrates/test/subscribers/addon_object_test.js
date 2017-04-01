@@ -21,8 +21,11 @@ describe('Subscriber\'s Addon', () => {
   });
 
   it('can be filled from the UI (unpacks t-shirt size)', () => {
-    const addonDataUI = {homeAddress: 'homeOne', billingAddress: 'billingTwo', tShirtSize: ['XXXL', '']};
-    const addonData = {homeAddress: 'homeOne', billingAddress: 'billingTwo', tShirtSize: 'XXXL', remarks: undefined};
+    const addonDataUI = {homeAddress: 'homeOne', billingAddress: 'billingTwo', tShirtSize: ['XXXL', ''], pronoun: 'she/her/her'};
+    const addonData = {
+      homeAddress: 'homeOne', billingAddress: 'billingTwo', diet: undefined, tShirtSize: 'XXXL',
+      needAssistance: undefined, provideAssistance: undefined, remarks: undefined, pronoun: 'she/her/her'
+    };
     const subscriberFromUI = new Subscriber();
     subscriberFromUI.addon().fillFromUI(addonDataUI);
     expect(subscriberFromUI).to.eql(new Subscriber({_addon: addonData}));

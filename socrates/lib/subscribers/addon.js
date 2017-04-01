@@ -13,11 +13,31 @@ class Addon {
     this.state.billingAddress = uiInputObject.billingAddress;
     this.state.tShirtSize = misc.compact(uiInputObject.tShirtSize)[0];
     this.state.remarks = uiInputObject.remarks;
+    this.state.pronoun = uiInputObject.pronoun;
+    this.state.diet = uiInputObject.diet;
+    this.state.needAssistance = uiInputObject.needAssistance;
+    this.state.provideAssistance = uiInputObject.provideAssistance;
     return this;
   }
 
   remarks() {
     return this.state.remarks;
+  }
+
+  diet() {
+    return this.state.diet;
+  }
+
+  pronoun() {
+    return this.state.pronoun;
+  }
+
+  needAssistance() {
+    return this.state.needAssistance;
+  }
+
+  provideAssistance() {
+    return this.state.provideAssistance;
   }
 
   homeAddress() {
