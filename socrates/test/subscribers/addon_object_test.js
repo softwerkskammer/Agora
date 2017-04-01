@@ -24,7 +24,7 @@ describe('Subscriber\'s Addon', () => {
     const addonDataUI = {homeAddress: 'homeOne', billingAddress: 'billingTwo', tShirtSize: ['XXXL', ''], pronoun: 'she/her/her'};
     const addonData = {
       homeAddress: 'homeOne', billingAddress: 'billingTwo', diet: undefined, tShirtSize: 'XXXL',
-      needAssistance: undefined, provideAssistance: undefined, remarks: undefined, pronoun: 'she/her/her'
+      needsAssistance: undefined, canProvideAssistance: undefined, remarks: undefined, pronoun: 'she/her/her'
     };
     const subscriberFromUI = new Subscriber();
     subscriberFromUI.addon().fillFromUI(addonDataUI);

@@ -15,8 +15,8 @@ class Addon {
     this.state.remarks = uiInputObject.remarks;
     this.state.pronoun = uiInputObject.pronoun;
     this.state.diet = uiInputObject.diet;
-    this.state.needAssistance = uiInputObject.needAssistance;
-    this.state.provideAssistance = uiInputObject.provideAssistance;
+    this.state.needsAssistance = uiInputObject.needsAssistance;
+    this.state.canProvideAssistance = uiInputObject.canProvideAssistance;
     return this;
   }
 
@@ -32,12 +32,12 @@ class Addon {
     return this.state.pronoun;
   }
 
-  needAssistance() {
-    return this.state.needAssistance;
+  needsAssistance() {
+    return this.state.needsAssistance;
   }
 
-  provideAssistance() {
-    return this.state.provideAssistance;
+  canProvideAssistance() {
+    return this.state.canProvideAssistance;
   }
 
   homeAddress() {

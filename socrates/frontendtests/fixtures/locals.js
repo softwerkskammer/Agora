@@ -66,8 +66,8 @@ module.exports = {
     pronoun: function () { return ''; },
     remarks: function () { return ''; },
     diet: function () { return ''; },
-    needAssistance: function () { return false; },
-    provideAssistance: function () { return false; }
+    needsAssistance: function () { return false; },
+    canProvideAssistance: function () { return false; }
   },
   roomOptions: [
     {
