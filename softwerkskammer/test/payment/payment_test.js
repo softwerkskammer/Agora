@@ -84,11 +84,13 @@ describe('Payment application', () => {
 
     beforeEach(() => {
       amount = undefined;
-      sinon.stub(paymentService, 'payWithCreditCard', (saveCreditCardPayment, passedAmount, description, stripeId, callback) => {
-        amount = passedAmount;
-        const message = statusmessage.successMessage('message.title.save_successful', 'message.content.activities.credit_card_paid', {amount: passedAmount});
-        callback(null, message);
-      });
+      sinon.stub(paymentService, 'payWithCreditCard').callsFake(
+        (saveCreditCardPayment, passedAmount, description, stripeId, callback) => {
+          amount = passedAmount;
+          const message = statusmessage.successMessage('message.title.save_successful', 'message.content.activities.credit_card_paid', {amount: passedAmount});
+          callback(null, message);
+        }
+      );
     });
 
     it('passes a float to the service method when a float with comma and Euro sign is posted', done => {

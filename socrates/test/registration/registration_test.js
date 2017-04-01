@@ -71,13 +71,13 @@ describe('SoCraTes registration application', () => {
     ];
 
     conf.addProperties({registrationOpensAt: moment().subtract(10, 'days').format()}); // already opened
-    sinon.stub(groupsAndMembersService, 'updateAndSaveSubmittedMemberWithoutSubscriptions',
+    sinon.stub(groupsAndMembersService, 'updateAndSaveSubmittedMemberWithoutSubscriptions').callsFake(
       (sessionUser, memberformData, accessrights, notifyNewMemberRegistration, callback) => { callback(); });
-    eventStoreSave = sinon.stub(eventstore, 'saveEventStore', (store, callback) => { callback(); });
-    sinon.stub(subscriberstore, 'getSubscriber', (memberId, callback) => { callback(null, new Subscriber({})); });
-    sinon.stub(subscriberstore, 'saveSubscriber', (subscriber, callback) => { callback(); });
+    eventStoreSave = sinon.stub(eventstore, 'saveEventStore').callsFake((store, callback) => { callback(); });
+    sinon.stub(subscriberstore, 'getSubscriber').callsFake((memberId, callback) => { callback(null, new Subscriber({})); });
+    sinon.stub(subscriberstore, 'saveSubscriber').callsFake((subscriber, callback) => { callback(); });
 
-    sinon.stub(eventstore, 'getEventStore', (url, callback) => {
+    sinon.stub(eventstore, 'getEventStore').callsFake((url, callback) => {
       callback(null, new GlobalEventStore({
         url,
         events: listOfEvents

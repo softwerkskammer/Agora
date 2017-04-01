@@ -27,44 +27,44 @@ const GroupA = new Group({
 describe('Groups application', () => {
 
   before(() => {
-    sinon.stub(fakeListAdapter, 'getAllAvailableLists', callback => callback(null, ['GroupA']));
+    sinon.stub(fakeListAdapter, 'getAllAvailableLists').callsFake(callback => callback(null, ['GroupA']));
 
-    sinon.stub(fakeListAdapter, 'getUsersOfList', (groupname, callback) => {
+    sinon.stub(fakeListAdapter, 'getUsersOfList').callsFake((groupname, callback) => {
       if (groupname === 'groupa') {
         return callback(null, ['peter@google.de', 'hans@aol.com']);
       }
       callback(null, []);
     });
 
-    sinon.stub(membersPersistence, 'list', (sortorder, callback) => {
+    sinon.stub(membersPersistence, 'list').callsFake((sortorder, callback) => {
       callback(null, [
         {nickname: 'hada', firstname: 'Hans', lastname: 'Dampf', email: 'hans@aol.com'},
         {nickname: 'pepe', firstname: 'Peter', lastname: 'Meyer', email: 'peter@google.de'}
       ]);
     });
 
-    sinon.stub(membersPersistence, 'listByField', (email, sortOrder, callback) => {
+    sinon.stub(membersPersistence, 'listByField').callsFake((email, sortOrder, callback) => {
       callback(null, [
         {nickname: 'hada', firstname: 'Hans', lastname: 'Dampf', email: 'hans@aol.com'},
         {nickname: 'pepe', firstname: 'Peter', lastname: 'Meyer', email: 'peter@google.de'}
       ]);
     });
 
-    sinon.stub(membersService, 'putAvatarIntoMemberAndSave', (member, callback) => {
+    sinon.stub(membersService, 'putAvatarIntoMemberAndSave').callsFake((member, callback) => {
       callback();
     });
 
-    sinon.stub(groupsPersistence, 'listByIds', (list, sortOrder, callback) => {
+    sinon.stub(groupsPersistence, 'listByIds').callsFake((list, sortOrder, callback) => {
       if (list[0] === 'GroupA') { return callback(null, [GroupA]); }
       return callback(null, []);
     });
 
-    sinon.stub(groupsPersistence, 'getById', (list, callback) => {
+    sinon.stub(groupsPersistence, 'getById').callsFake((list, callback) => {
       if (list.test('GroupA')) { return callback(null, GroupA); }
       return callback(null, null);
     });
 
-    sinon.stub(groupsPersistence, 'getByField', (list, callback) => {
+    sinon.stub(groupsPersistence, 'getByField').callsFake((list, callback) => {
       if (list.emailPrefix.test('Group-A')) { return callback(null, GroupA); }
       return callback(null, null);
     });
@@ -179,7 +179,7 @@ describe('Groups application', () => {
       const date1 = fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013');
       const date2 = fieldHelpers.parseToUnixUsingDefaultTimezone('01.05.2013');
 
-      sinon.stub(activitystore, 'upcomingActivitiesForGroupIds', (list, callback) => callback(null, [new Activity({
+      sinon.stub(activitystore, 'upcomingActivitiesForGroupIds').callsFake((list, callback) => callback(null, [new Activity({
         title: 'Erste Aktivität',
         startUnix: date1
       }), new Activity({

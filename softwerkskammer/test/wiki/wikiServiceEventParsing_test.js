@@ -30,7 +30,7 @@ describe('Wiki Service - Event Parsing', () => {
       '[OOP](http://www.oop-konferenz.de/) | München  | 1.2.\n' +
       '[microXchg - The Microservices Conference](http://microxchg.io) | Berlin | 4.2.  - 5.2.';
 
-    sinon.stub(Git, 'readFile', (name, version, callback) => {
+    sinon.stub(Git, 'readFile').callsFake((name, version, callback) => {
       callback(null, wikifile);
     });
 

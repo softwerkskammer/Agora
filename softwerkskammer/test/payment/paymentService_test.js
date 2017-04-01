@@ -27,7 +27,9 @@ describe('Payment Service', () => {
     });
 
     it('executes save callback', done => {
-      sinon.stub(stripeService, 'transaction', () => ({charges: {create: (charge, callback) => {callback(null, charge); }}}));
+      sinon.stub(stripeService, 'transaction').callsFake(
+        () => ({charges: {create: (charge, callback) => {callback(null, charge); }}})
+      );
 
       paymentService.payWithCreditCard(saveCreditCardPayment, 100, 'Credit Card Payment', 'stripe-id', (err, message) => {
         expect(invoked).to.be.true();
@@ -38,7 +40,9 @@ describe('Payment Service', () => {
     });
 
     it('shows a status message if the returned error contains a message', done => {
-      sinon.stub(stripeService, 'transaction', () => ({charges: {create: (charge, callback) => {callback({message: 'General problem'}); }}}));
+      sinon.stub(stripeService, 'transaction').callsFake(
+        () => ({charges: {create: (charge, callback) => {callback({message: 'General problem'}); }}})
+      );
 
       paymentService.payWithCreditCard(saveCreditCardPayment, 100, 'Credit Card Payment', 'stripe-id', (err, message) => {
         expect(invoked).to.be.false();
@@ -50,7 +54,7 @@ describe('Payment Service', () => {
     });
 
     it('shows a normal error if the returned error contains no message', done => {
-      sinon.stub(stripeService, 'transaction', () => ({charges: {create: (charge, callback) => {callback({}); }}}));
+      sinon.stub(stripeService, 'transaction').callsFake(() => ({charges: {create: (charge, callback) => {callback({}); }}}));
 
       paymentService.payWithCreditCard(saveCreditCardPayment, 100, 'Credit Card Payment', 'stripe-id', (err, message) => {
         expect(invoked).to.be.false();
@@ -87,7 +91,7 @@ describe('Payment Service', () => {
      */
 
     it('shows a normal error if the method is invoked with amount being null', done => {
-      sinon.stub(stripeService, 'transaction', () => ({charges: {create: (charge, callback) => {callback({}); }}}));
+      sinon.stub(stripeService, 'transaction').callsFake(() => ({charges: {create: (charge, callback) => {callback({}); }}}));
 
       paymentService.payWithCreditCard(saveCreditCardPayment, null, 'Credit Card Payment', 'stripe-id', (err, message) => {
         expect(invoked).to.be.false();

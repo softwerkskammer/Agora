@@ -36,14 +36,14 @@ describe('SoCraTes Members Service', () => {
     sinon.stub(notifications, 'removedFromParticipants');
     sinon.stub(notifications, 'removedFromWaitinglist');
 
-    sinon.stub(memberstore, 'getMember', (nickname, callback) => {
+    sinon.stub(memberstore, 'getMember').callsFake((nickname, callback) => {
       if (nickname === 'nicknameForPair1') { return callback(null, new Member({id: 'memberIdForPair1'})); }
       if (nickname === 'nicknameForPair2') { return callback(null, new Member({id: 'memberIdForPair2'})); }
       callback(null, new Member({id: 'memberId'}));
     });
 
-    sinon.stub(eventstore, 'getEventStore', (url, callback) => callback(null, globalEventStore));
-    sinon.stub(eventstore, 'saveEventStore', (store, callback) => callback());
+    sinon.stub(eventstore, 'getEventStore').callsFake((url, callback) => callback(null, globalEventStore));
+    sinon.stub(eventstore, 'saveEventStore').callsFake((store, callback) => callback());
   });
 
   afterEach(() => {
@@ -52,7 +52,7 @@ describe('SoCraTes Members Service', () => {
 
   describe('checking participation of a subscriber', () => {
     it('tells that a subscriber participated in an old SoCraTes', done => {
-      sinon.stub(activitystore, 'activitiesForGroupIdsAndRegisteredMemberId', (groups, memberId, upcoming, callback) => {
+      sinon.stub(activitystore, 'activitiesForGroupIdsAndRegisteredMemberId').callsFake((groups, memberId, upcoming, callback) => {
         if (upcoming) { return callback(null, []); }
         callback(null, [{state: {isSoCraTes: true}}, {state: {isSoCraTes: false}}]);
       });
@@ -65,7 +65,7 @@ describe('SoCraTes Members Service', () => {
 
     it('tells that a subscriber will participate or participated in a new eventsourced SoCraTes', done => {
       cache.flushAll();
-      sinon.stub(activitystore, 'activitiesForGroupIdsAndRegisteredMemberId', (groups, memberId, upcoming, callback) => callback(null, []));
+      sinon.stub(activitystore, 'activitiesForGroupIdsAndRegisteredMemberId').callsFake((groups, memberId, upcoming, callback) => callback(null, []));
       globalEventStore.state.events = [
         events.registeredParticipantFromWaitinglist('single', 3, 'memberId', aLongTimeAgo)
       ];
@@ -78,7 +78,7 @@ describe('SoCraTes Members Service', () => {
 
     it('tells that a subscriber did not and will not participate in any SoCraTes', done => {
       cache.flushAll();
-      sinon.stub(activitystore, 'activitiesForGroupIdsAndRegisteredMemberId', (groups, memberId, upcoming, callback) => {
+      sinon.stub(activitystore, 'activitiesForGroupIdsAndRegisteredMemberId').callsFake((groups, memberId, upcoming, callback) => {
         callback(null, [{state: {isSoCraTes: false}}]);
       });
 

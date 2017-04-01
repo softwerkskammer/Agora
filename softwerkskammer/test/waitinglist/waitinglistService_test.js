@@ -23,7 +23,7 @@ function waitinglistMembersOf(activity, resourceName) {
 function activityWithEinzelzimmer(resource) {
   const state = {url: 'activity-url', resources: {Veranstaltung: resource}};
   const activity = new Activity(state);
-  sinon.stub(activitystore, 'getActivity', (id, callback) => { callback(null, activity); });
+  sinon.stub(activitystore, 'getActivity').callsFake((id, callback) => { callback(null, activity); });
   return activity;
 }
 
@@ -40,11 +40,11 @@ describe('Waitinglist Service', () => {
       const member2 = new Member({id: 'abcxyz', nickname: 'nickinick'});
       activity1 = new Activity({id: 'Meine Aktivität', url: 'myActivity', resources: {'Veranstaltung': {_waitinglist: []}}});
 
-      sinon.stub(memberstore, 'getMemberForId', (memberId, callback) => {
+      sinon.stub(memberstore, 'getMemberForId').callsFake((memberId, callback) => {
         if (memberId === member1.id()) { return callback(null, member1); }
         if (memberId === member2.id()) { return callback(null, member2); }
       });
-      sinon.stub(activitystore, 'getActivity', (activity, callback) => callback(null, activity1));
+      sinon.stub(activitystore, 'getActivity').callsFake((activity, callback) => callback(null, activity1));
     });
 
     it('returns an empty list when the waitinglist is empty', done => {
@@ -91,11 +91,13 @@ describe('Waitinglist Service', () => {
         ]
       });
       let savedActivity;
-      sinon.stub(activitystore, 'saveActivity', (activityToSave, callback) => {
+      sinon.stub(activitystore, 'saveActivity').callsFake((activityToSave, callback) => {
         savedActivity = activityToSave;
         callback(null);
       });
-      sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
+      sinon.stub(memberstore, 'getMember').callsFake(
+        (nickname, callback) => { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); }
+      );
 
       const args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistService.saveWaitinglistEntry(args, err => {
@@ -107,8 +109,10 @@ describe('Waitinglist Service', () => {
     });
 
     it('gives an error when activity could not be loaded', done => {
-      sinon.stub(activitystore, 'getActivity', (id, callback) => { callback(new Error('error')); });
-      sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
+      sinon.stub(activitystore, 'getActivity').callsFake((id, callback) => { callback(new Error('error')); });
+      sinon.stub(memberstore, 'getMember').callsFake(
+        (nickname, callback) => { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); }
+      );
 
       const args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistService.saveWaitinglistEntry(args, err => {
@@ -118,8 +122,8 @@ describe('Waitinglist Service', () => {
     });
 
     it('gives an error when member could not be loaded', done => {
-      sinon.stub(activitystore, 'getActivity', (id, callback) => { callback(null, new Activity()); });
-      sinon.stub(memberstore, 'getMember', (id, callback) => { callback(new Error('error')); });
+      sinon.stub(activitystore, 'getActivity').callsFake((id, callback) => { callback(null, new Activity()); });
+      sinon.stub(memberstore, 'getMember').callsFake((id, callback) => { callback(new Error('error')); });
 
       const args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistService.saveWaitinglistEntry(args, err => {
@@ -135,7 +139,7 @@ describe('Waitinglist Service', () => {
 
     beforeEach(() => {
       mailNotification = undefined;
-      sinon.stub(mailsenderService, 'sendRegistrationAllowed', (member, activity, entry, callback) => {
+      sinon.stub(mailsenderService, 'sendRegistrationAllowed').callsFake((member, activity, entry, callback) => {
         mailNotification = {member, activity, entry};
         callback(null);
       });
@@ -149,11 +153,13 @@ describe('Waitinglist Service', () => {
         ]
       });
       let savedActivity;
-      sinon.stub(activitystore, 'saveActivity', (activityToSave, callback) => {
+      sinon.stub(activitystore, 'saveActivity').callsFake((activityToSave, callback) => {
         savedActivity = activityToSave;
         callback(null);
       });
-      sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
+      sinon.stub(memberstore, 'getMember').callsFake(
+        (nickname, callback) => { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); }
+      );
 
       const args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistService.allowRegistrationForWaitinglistEntry(args, err => {
@@ -175,10 +181,12 @@ describe('Waitinglist Service', () => {
           {_memberId: 'otherId'}
         ]
       });
-      sinon.stub(activitystore, 'saveActivity', (activityToSave, callback) => {
+      sinon.stub(activitystore, 'saveActivity').callsFake((activityToSave, callback) => {
         callback(new Error('Some problem during save'));
       });
-      sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
+      sinon.stub(memberstore, 'getMember').callsFake(
+        (nickname, callback) => { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); }
+      );
 
       const args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistService.allowRegistrationForWaitinglistEntry(args, err => {
@@ -195,11 +203,13 @@ describe('Waitinglist Service', () => {
         ]
       });
       let savedActivity;
-      sinon.stub(activitystore, 'saveActivity', (activityToSave, callback) => {
+      sinon.stub(activitystore, 'saveActivity').callsFake((activityToSave, callback) => {
         savedActivity = activityToSave;
         callback(null);
       });
-      sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
+      sinon.stub(memberstore, 'getMember').callsFake(
+        (nickname, callback) => { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); }
+      );
 
       const args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistService.allowRegistrationForWaitinglistEntry(args, err => {
@@ -213,8 +223,10 @@ describe('Waitinglist Service', () => {
     });
 
     it('gives an error when activity could not be loaded', done => {
-      sinon.stub(activitystore, 'getActivity', (id, callback) => { callback(new Error('error')); });
-      sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); });
+      sinon.stub(activitystore, 'getActivity').callsFake((id, callback) => { callback(new Error('error')); });
+      sinon.stub(memberstore, 'getMember').callsFake(
+        (nickname, callback) => { callback(null, new Member({id: 'memberId', nickname: 'hansdampf'})); }
+      );
 
       const args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistService.allowRegistrationForWaitinglistEntry(args, err => {
@@ -225,8 +237,8 @@ describe('Waitinglist Service', () => {
     });
 
     it('gives an error when member could not be loaded', done => {
-      sinon.stub(activitystore, 'getActivity', (id, callback) => { callback(null, new Activity()); });
-      sinon.stub(memberstore, 'getMember', (id, callback) => { callback(new Error('error')); });
+      sinon.stub(activitystore, 'getActivity').callsFake((id, callback) => { callback(null, new Activity()); });
+      sinon.stub(memberstore, 'getMember').callsFake((id, callback) => { callback(new Error('error')); });
 
       const args = {nickname: 'memberId', activityUrl: 'activity-url', resourcename: 'Einzelzimmer'};
       waitinglistService.allowRegistrationForWaitinglistEntry(args, err => {

@@ -20,7 +20,7 @@ describe('Security regarding', () => {
   describe('Clickjacking:', () => {
 
     beforeEach(() => {
-      sinon.stub(memberstore, 'allMembers', callback => { callback(null, []); });
+      sinon.stub(memberstore, 'allMembers').callsFake(callback => { callback(null, []); });
     });
 
     afterEach(() => {
@@ -44,9 +44,9 @@ describe('Security regarding', () => {
         id: 'memberId', nickname: 'hada', email: 'a@b.c', site: 'http://my.blog',
         firstname: 'Hans', lastname: 'Dampf', authentications: [], subscribedGroups: []
       });
-      sinon.stub(groupsService, 'getAllAvailableGroups', callback => { callback(null, []); });
-      sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', (nickname, callback) => { callback(null, dummymember); });
-      sinon.stub(memberstore, 'allMembers', callback => { callback(null, [dummymember]); });
+      sinon.stub(groupsService, 'getAllAvailableGroups').callsFake(callback => { callback(null, []); });
+      sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups').callsFake((nickname, callback) => { callback(null, dummymember); });
+      sinon.stub(memberstore, 'allMembers').callsFake(callback => { callback(null, [dummymember]); });
     });
 
     afterEach(() => {
@@ -89,7 +89,7 @@ describe('Security regarding', () => {
 
   describe('Information disclosure', () => {
     beforeEach(() => {
-      sinon.stub(memberstore, 'getMember', (nickname, callback) => { callback(null, null); });
+      sinon.stub(memberstore, 'getMember').callsFake((nickname, callback) => { callback(null, null); });
     });
 
     afterEach(() => {

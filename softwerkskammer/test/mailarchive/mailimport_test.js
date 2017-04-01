@@ -1,8 +1,7 @@
 'use strict';
 
 const expect = require('must-dist');
-const sinon = require('sinon');
-const sinonSandbox = sinon.sandbox.create();
+const sinon = require('sinon').sandbox.create();
 const moment = require('moment-timezone');
 
 const beans = require('../../testutil/configureForTest').get('beans');
@@ -22,13 +21,13 @@ const fileWithoutMessageId = 'test/mailarchive/testfiles/mailWithoutMessageID';
 
 describe('Import of mails from files with mime messages', () => {
   beforeEach(() => {
-    sinonSandbox.stub(memberstore, 'getMemberForEMail', (emails, callback) => {
+    sinon.stub(memberstore, 'getMemberForEMail').callsFake((emails, callback) => {
       callback(null, dummymember);
     });
   });
 
   afterEach(() => {
-    sinonSandbox.restore();
+    sinon.restore();
   });
 
   it('imports plain text from multipart message', done => {

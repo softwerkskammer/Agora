@@ -21,7 +21,7 @@ describe('Calendar Service', () => {
   });
 
   before(() => {
-    sinon.stub(activitystore, 'allActivitiesByDateRangeInAscendingOrder', (rangeFrom, rangeTo, callback) => {
+    sinon.stub(activitystore, 'allActivitiesByDateRangeInAscendingOrder').callsFake((rangeFrom, rangeTo, callback) => {
       callback(null, [activity]);
     });
   });

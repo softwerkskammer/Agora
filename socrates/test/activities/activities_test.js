@@ -26,10 +26,10 @@ describe('SoCraTes activities application', () => {
   beforeEach(() => {
     cache.flushAll();
 
-    sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', (url, callback) => { callback(); });
-    sinon.stub(activitystore, 'saveActivity', (activity, callback) => { callback(); });
+    sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants').callsFake((url, callback) => { callback(); });
+    sinon.stub(activitystore, 'saveActivity').callsFake((activity, callback) => { callback(); });
 
-    saveEventStoreStub = sinon.stub(eventstore, 'saveEventStore', (store, callback) => { callback(); });
+    saveEventStoreStub = sinon.stub(eventstore, 'saveEventStore').callsFake((store, callback) => { callback(); });
   });
 
   afterEach(() => {
@@ -40,7 +40,7 @@ describe('SoCraTes activities application', () => {
 
     it('creates the eventstore and the socrates read model', done => {
 
-      sinon.stub(eventstore, 'getEventStore', (url, callback) => callback(null, null));
+      sinon.stub(eventstore, 'getEventStore').callsFake((url, callback) => callback(null, null));
 
       appWithSocratesMember
         .post('/submit')
@@ -60,7 +60,7 @@ describe('SoCraTes activities application', () => {
     });
 
     it('updates the eventstore and the socrates read model', done => {
-      sinon.stub(eventstore, 'getEventStore', (url, callback) => { callback(null, new GlobalEventStore({url: 'socrates-2015', events: [{event: 'EVENT1'}, {event: 'EVENT2'}, {event: 'EVENT3'}]})); });
+      sinon.stub(eventstore, 'getEventStore').callsFake((url, callback) => { callback(null, new GlobalEventStore({url: 'socrates-2015', events: [{event: 'EVENT1'}, {event: 'EVENT2'}, {event: 'EVENT3'}]})); });
 
       // first, initialise the cache with a read model:
       eventstoreService.getSoCraTesReadModel('socrates-2015', () => {
@@ -91,7 +91,7 @@ describe('SoCraTes activities application', () => {
     });
 
     it('changing the year of an existing SoCraTes is not allowed (and has no effect)', done => {
-      sinon.stub(eventstore, 'getEventStore', (url, callback) => {
+      sinon.stub(eventstore, 'getEventStore').callsFake((url, callback) => {
         if (url === 'socrates-2014') {
           return callback(null, new GlobalEventStore({url: 'socrates-2014', events: [{event: 'EVENT1'}, {event: 'EVENT2'}, {event: 'EVENT3'}]}));
         }

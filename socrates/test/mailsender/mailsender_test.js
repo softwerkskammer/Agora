@@ -51,15 +51,15 @@ describe('SoCraTes mailsender application', () => {
   }));
 
   beforeEach(() => {
-    sinon.stub(transport, 'sendMail', (options, callback) => callback()); // will be called, but is OK
+    sinon.stub(transport, 'sendMail').callsFake((options, callback) => callback()); // will be called, but is OK
 
-    sinon.stub(eventstore, 'getEventStore', (url, callback) => callback(null, new GlobalEventStore()));
+    sinon.stub(eventstore, 'getEventStore').callsFake((url, callback) => callback(null, new GlobalEventStore()));
 
-    sinon.stub(groupstore, 'getGroup', (group, callback) => callback());
-    sinon.stub(memberstore, 'getMembersForIds', (members, callback) => callback(null, []));
-    sinon.stub(memberstore, 'getMemberForId', (memberId, callback) => callback(null, socratesMember));
-    sinon.stub(memberstore, 'getMember', (member, callback) => callback(null, socratesMember));
-    sinon.stub(subscriberstore, 'allSubscribers', callback => callback(null, []));
+    sinon.stub(groupstore, 'getGroup').callsFake((group, callback) => callback());
+    sinon.stub(memberstore, 'getMembersForIds').callsFake((members, callback) => callback(null, []));
+    sinon.stub(memberstore, 'getMemberForId').callsFake((memberId, callback) => callback(null, socratesMember));
+    sinon.stub(memberstore, 'getMember').callsFake((member, callback) => callback(null, socratesMember));
+    sinon.stub(subscriberstore, 'allSubscribers').callsFake(callback => callback(null, []));
   });
 
   afterEach(() => {

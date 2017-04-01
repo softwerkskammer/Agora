@@ -51,17 +51,17 @@ describe('Notifications', () => {
     group = new Group({id: 'groupname', longName: 'Buxtehude'});
     activity = new Activity({title: 'Title of the Activity', assignedGroup: 'groupname', url: 'urlurl'});
     activity2 = new Activity({title: 'Another Nice Activity', assignedGroup: 'groupname', url: 'niceurl'});
-    sinon.stub(groupsAndMembersService, 'getGroupAndMembersForList', (groupID, callback) => { callback(null, group); });
-    sinon.stub(memberstore, 'getMemberForId', (memberID, callback) => {
+    sinon.stub(groupsAndMembersService, 'getGroupAndMembersForList').callsFake((groupID, callback) => { callback(null, group); });
+    sinon.stub(memberstore, 'getMemberForId').callsFake((memberID, callback) => {
       if (memberID === 'hans') { return callback(null, hans); }
       if (memberID === 'alice') { return callback(null, alice); }
       if (memberID === 'bob') { return callback(null, bob); }
       callback(null);
     });
-    sinon.stub(memberstore, 'allMembers', callback => {
+    sinon.stub(memberstore, 'allMembers').callsFake(callback => {
       callback(null, [hans, alice, bob, superuser]);
     });
-    sinon.stub(transport, 'sendMail', (opts, callback) => callback());
+    sinon.stub(transport, 'sendMail').callsFake((opts, callback) => callback());
   });
 
   afterEach(() => {

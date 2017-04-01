@@ -26,7 +26,7 @@ describe('SoCraTes activityresults application', () => {
     });
 
     it('should allow to create a new one with the name if not existing yet', done => {
-      sinon.stub(activityresultsService, 'getActivityResultByName', (activityResultName, callback) => {
+      sinon.stub(activityresultsService, 'getActivityResultByName').callsFake((activityResultName, callback) => {
         callback();
       });
 
@@ -36,7 +36,7 @@ describe('SoCraTes activityresults application', () => {
     });
 
     it('should render the results if the activity result is known', done => {
-      sinon.stub(activityresultsService, 'getActivityResultByName', (activityResultName, callback) => {
+      sinon.stub(activityresultsService, 'getActivityResultByName').callsFake((activityResultName, callback) => {
         callback(null, new ActivityResult({
           id: activityResultName,
           title: 'TITLE for ' + activityResultName,
@@ -59,7 +59,7 @@ describe('SoCraTes activityresults application', () => {
   describe('for creation and uploading', () => {
     it('should create a new activity result with tags', done => {
       let theResult;
-      sinon.stub(activityresultsPersistence, 'save', (activityResult, callback) => {
+      sinon.stub(activityresultsPersistence, 'save').callsFake((activityResult, callback) => {
         theResult = activityResult;
         callback(null, activityResult);
       });
@@ -91,7 +91,7 @@ describe('SoCraTes activityresults application', () => {
     });
 
     it('should store an image and redirect to edit', done => {
-      sinon.stub(activityresultsService, 'addPhotoToActivityResult', (activity, photo, user, callback) => {
+      sinon.stub(activityresultsService, 'addPhotoToActivityResult').callsFake((activity, photo, user, callback) => {
         callback(null, 'my-custom-image-id');
       });
 
@@ -107,7 +107,7 @@ describe('SoCraTes activityresults application', () => {
   describe('editing photos', () => {
     const photoId = 'photo_id';
     beforeEach(() => {
-      sinon.stub(activityresultsService, 'getActivityResultByName', (activityResultName, callback) => {
+      sinon.stub(activityresultsService, 'getActivityResultByName').callsFake((activityResultName, callback) => {
         /* eslint camelcase: 0 */
 
         callback(null, new ActivityResult({
@@ -136,7 +136,7 @@ describe('SoCraTes activityresults application', () => {
     });
 
     it('should save a photos time, tags and title', done => {
-      sinon.stub(activityresultsService, 'updatePhotoOfActivityResult', (activityResultName, photoID, data, accessrights, callback) => {
+      sinon.stub(activityresultsService, 'updatePhotoOfActivityResult').callsFake((activityResultName, photoID, data, accessrights, callback) => {
         expect(data.title).to.eql('My adventures with the softwerkskammer');
         expect(data.tags).to.eql(['a', 'b']);
         callback();
@@ -157,7 +157,7 @@ describe('SoCraTes activityresults application', () => {
     });
 
     it('should not let me save changes to a photo if I didn\'t upload it', done => {
-      sinon.stub(activityresultsService, 'updatePhotoOfActivityResult', (activityResultName, photoID, data, accessrights, callback) => {
+      sinon.stub(activityresultsService, 'updatePhotoOfActivityResult').callsFake((activityResultName, photoID, data, accessrights, callback) => {
         expect(data.title).to.eql('My adventures with the softwerkskammer');
         expect(data.tags).to.eql(['a', 'b']);
         callback();

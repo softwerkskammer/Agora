@@ -21,7 +21,7 @@ describe('Members store', () => {
   });
 
   it('calls persistence.getById for store.getMemberForId and passes on the given callback', done => {
-    const getById = sinon.stub(persistence, 'getById', (field, callback) => {
+    const getById = sinon.stub(persistence, 'getById').callsFake((field, callback) => {
       callback(null, sampleMember);
     });
     store.getMemberForId('id', (err, member) => {
@@ -32,7 +32,7 @@ describe('Members store', () => {
   });
 
   it('calls persistence.listByIds for store.getMembersForIds and passes on the given callback', done => {
-    const listByIds = sinon.stub(persistence, 'listByIds', (searchObject, sortOrder, callback) => {
+    const listByIds = sinon.stub(persistence, 'listByIds').callsFake((searchObject, sortOrder, callback) => {
       callback(null, sampleList);
     });
 
@@ -45,7 +45,7 @@ describe('Members store', () => {
   });
 
   it('calls persistence.getByField for store.getMemberForEMail and passes on the given callback', done => {
-    sinon.stub(persistence, 'getByField', (object, callback) => {
+    sinon.stub(persistence, 'getByField').callsFake((object, callback) => {
       if (object.email.test('nick2s mail')) {
         return callback(null, sampleMember2);
       }
@@ -61,7 +61,7 @@ describe('Members store', () => {
   });
 
   it('calls persistence.getByField for each member for store.getMembersForEMails and passes on the given callback', done => {
-    sinon.stub(persistence, 'listByField', (searchObject, sortOrder, callback) => {
+    sinon.stub(persistence, 'listByField').callsFake((searchObject, sortOrder, callback) => {
       callback(null, sampleList);
     });
     store.getMembersForEMails(['nicks mail', 'nick2s mail'], (err, members) => {
@@ -74,7 +74,7 @@ describe('Members store', () => {
   });
 
   it('calls persistence.getByField with an appropriate regex', done => {
-    const getByField = sinon.stub(persistence, 'getByField', (field, callback) => {
+    const getByField = sinon.stub(persistence, 'getByField').callsFake((field, callback) => {
       callback(null, sampleMember);
     });
     store.getMember('nick', (err, member) => {
@@ -87,7 +87,7 @@ describe('Members store', () => {
   });
 
   it('calls persistence.list for store.allMembers and passes on the given callback', done => {
-    sinon.stub(persistence, 'listByField', (criteria, sortorder, callback) => {
+    sinon.stub(persistence, 'listByField').callsFake((criteria, sortorder, callback) => {
       callback(null, sampleList);
     });
 
@@ -105,7 +105,7 @@ describe('Members store', () => {
     const bettiLow = {lastname: 'betti', firstname: 'Bodo'};
     const adonisLow = {lastname: 'adonis', firstname: 'Abbu'};
 
-    sinon.stub(persistence, 'listByField', (criteria, sortorder, callback) => {
+    sinon.stub(persistence, 'listByField').callsFake((criteria, sortorder, callback) => {
       callback(null, [adonis, betti, dave, bettiLow, adonisLow]);
     });
 
@@ -124,7 +124,7 @@ describe('Members store', () => {
     const tata10 = {lastname: 'Tata10', firstname: 'Egal'};
     const tata2 = {lastname: 'Tata2', firstname: 'Egal'};
 
-    sinon.stub(persistence, 'listByField', (criteria, sortorder, callback) => {
+    sinon.stub(persistence, 'listByField').callsFake((criteria, sortorder, callback) => {
       callback(null, [tata1, tata10, tata2]);
     });
 
@@ -137,7 +137,7 @@ describe('Members store', () => {
   });
 
   it('calls persistence.save for store.saveMember and passes on the given callback', done => {
-    const save = sinon.stub(persistence, 'save', (member, callback) => { callback(); });
+    const save = sinon.stub(persistence, 'save').callsFake((member, callback) => { callback(); });
 
     store.saveMember(sampleMember, err => {
       expect(save.calledWith(sampleMember.state)).to.be(true);
@@ -146,7 +146,7 @@ describe('Members store', () => {
   });
 
   it('calls persistence.remove for store.removeMember and passes on the given callback', done => {
-    const remove = sinon.stub(persistence, 'remove', (memberId, callback) => { callback(); });
+    const remove = sinon.stub(persistence, 'remove').callsFake((memberId, callback) => { callback(); });
     const member = new Member(sampleMember);
     member.state.id = 'I D';
     store.removeMember(member, err => {
@@ -163,7 +163,7 @@ describe('Members store', () => {
   });
 
   it('tells that some user is a socrates subscriber', done => {
-    sinon.stub(subscriberPersistence, 'getById', (memberId, callback) => { callback(null, {}); });
+    sinon.stub(subscriberPersistence, 'getById').callsFake((memberId, callback) => { callback(null, {}); });
     store.isSoCraTesSubscriber('id', (err, isSubscriber) => {
       expect(isSubscriber).to.be(true);
       done(err);

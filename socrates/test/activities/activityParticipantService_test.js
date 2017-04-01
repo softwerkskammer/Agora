@@ -32,13 +32,13 @@ describe('activityParticipantService', () => {
 
     eventStore = new GlobalEventStore();
 
-    sinon.stub(eventstore, 'getEventStore', (url, callback) => callback(null, eventStore));
+    sinon.stub(eventstore, 'getEventStore').callsFake((url, callback) => callback(null, eventStore));
 
-    sinon.stub(memberstore, 'getMembersForIds', (ids, callback) => {
+    sinon.stub(memberstore, 'getMembersForIds').callsFake((ids, callback) => {
       callback(null, ids.map(id => new Member({id})));
     });
 
-    sinon.stub(subscriberstore, 'allSubscribers', callback => {
+    sinon.stub(subscriberstore, 'allSubscribers').callsFake(callback => {
       callback(null, [subscriber]);
     });
   });
@@ -50,7 +50,7 @@ describe('activityParticipantService', () => {
   it('loads the participants and their participation information for a year (before 2016)', done => {
     /*eslint camelcase: 0*/
     const socrates = {resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId', duration: 2}]}}};
-    sinon.stub(activitystore, 'getActivity', (url, callback) => {
+    sinon.stub(activitystore, 'getActivity').callsFake((url, callback) => {
       callback(null, new SoCraTesActivity(socrates));
     });
 

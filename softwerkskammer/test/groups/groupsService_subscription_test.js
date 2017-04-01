@@ -18,8 +18,8 @@ describe('Groups Service (updateSubscriptions)', () => {
   let unsubscribeSpy;
 
   beforeEach(() => {
-    subscribeSpy = sinon.stub(fakeListAdapter, 'addUserToList', (email, list, callback) => { callback(); });
-    unsubscribeSpy = sinon.stub(fakeListAdapter, 'removeUserFromList', (email, list, callback) => { callback(); });
+    subscribeSpy = sinon.stub(fakeListAdapter, 'addUserToList').callsFake((email, list, callback) => { callback(); });
+    unsubscribeSpy = sinon.stub(fakeListAdapter, 'removeUserFromList').callsFake((email, list, callback) => { callback(); });
   });
 
   afterEach(() => {
@@ -27,7 +27,7 @@ describe('Groups Service (updateSubscriptions)', () => {
   });
 
   function setupSubscribedListsForUser(lists) {
-    sinon.stub(fakeListAdapter, 'getSubscribedListsForUser', (email, callback) => {
+    sinon.stub(fakeListAdapter, 'getSubscribedListsForUser').callsFake((email, callback) => {
       callback(null, lists);
     });
   }

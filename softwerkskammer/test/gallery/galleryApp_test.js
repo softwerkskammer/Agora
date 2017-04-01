@@ -19,7 +19,7 @@ describe('/gallery', () => {
   });
 
   it('GET /{imageId} responds with the image', done => {
-    sinon.stub(galleryService, 'retrieveScaledImage', (imageId, width, callback) => {
+    sinon.stub(galleryService, 'retrieveScaledImage').callsFake((imageId, width, callback) => {
       if (storedImageId === imageId) {
         callback(null, imagePath);
       }

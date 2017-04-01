@@ -35,10 +35,10 @@ describe('Activity store', () => {
   beforeEach(() => {
     sampleList = [activity1, activity2];
 
-    list = sinon.stub(persistence, 'list', (sortOrder, callback) => callback(null, sampleList));
-    sinon.stub(persistence, 'listByField', (searchObject, sortOrder, callback) => callback(null, sampleList));
-    getByField = sinon.stub(persistence, 'getByField', (object, callback) => callback(null, activity1));
-    getById = sinon.stub(persistence, 'getById', (id, callback) => {
+    list = sinon.stub(persistence, 'list').callsFake((sortOrder, callback) => callback(null, sampleList));
+    sinon.stub(persistence, 'listByField').callsFake((searchObject, sortOrder, callback) => callback(null, sampleList));
+    getByField = sinon.stub(persistence, 'getByField').callsFake((object, callback) => callback(null, activity1));
+    getById = sinon.stub(persistence, 'getById').callsFake((id, callback) => {
       if (id === 'socrates') {
         return callback(null, socrates);
       }
@@ -82,7 +82,7 @@ describe('Activity store', () => {
 
   it('returns an activity object for the given id although the persistence only returns a JS object', done => {
     getByField.restore();
-    sinon.stub(persistence, 'getByField', (id, callback) => callback(null, {url: 'activityUrl'}));
+    sinon.stub(persistence, 'getByField').callsFake((id, callback) => callback(null, {url: 'activityUrl'}));
 
     store.getActivity('activityUrl', (err, result) => {
       expect(result.url()).to.equal('activityUrl');
@@ -92,7 +92,7 @@ describe('Activity store', () => {
 
   it('returns null when id does not exist', done => {
     getByField.restore();
-    sinon.stub(persistence, 'getByField', (id, callback) => { callback(); });
+    sinon.stub(persistence, 'getByField').callsFake((id, callback) => { callback(); });
 
     store.getActivity(1234, (err, result) => {
       expect(result).to.be(null);
@@ -102,7 +102,7 @@ describe('Activity store', () => {
 
   it('returns undefined when persistence yields an error', done => {
     getByField.restore();
-    sinon.stub(persistence, 'getByField', (id, callback) => { callback(new Error('error')); });
+    sinon.stub(persistence, 'getByField').callsFake((id, callback) => { callback(new Error('error')); });
 
     store.getActivity(1234, (err, result) => {
       expect(err).to.exist();
@@ -113,7 +113,7 @@ describe('Activity store', () => {
 
   it('returns all activites although the persistence only returns JS objects', done => {
     list.restore();
-    sinon.stub(persistence, 'list', (sortOrder, callback) => { callback(null, [{url: 'activityUrl'}]); });
+    sinon.stub(persistence, 'list').callsFake((sortOrder, callback) => { callback(null, [{url: 'activityUrl'}]); });
 
     store.allActivities((err, result) => {
       expect(result).to.have.length(1);
@@ -137,7 +137,7 @@ describe('Activity store', () => {
   });
 
   it('calls persistence.remove for store.removeActivity and passes on the given callback', done => {
-    const remove = sinon.stub(persistence, 'remove', (memberId, callback) => { callback(); });
+    const remove = sinon.stub(persistence, 'remove').callsFake((memberId, callback) => { callback(); });
     const activity = new Activity(activity1);
     activity.state.id = 'I D';
     store.removeActivity(activity, err => {

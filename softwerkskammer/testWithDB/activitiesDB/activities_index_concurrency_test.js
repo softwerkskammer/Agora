@@ -45,7 +45,7 @@ describe('Activity application with DB - on submit -', () => {
       }, version: 2
     });
 
-    sinon.stub(activitystore, 'getActivity', (url, callback) => callback(null, activityBeforeConcurrentAccess));
+    sinon.stub(activitystore, 'getActivity').callsFake((url, callback) => callback(null, activityBeforeConcurrentAccess));
 
     persistence.drop(() => {
       // save our activity with one registrant

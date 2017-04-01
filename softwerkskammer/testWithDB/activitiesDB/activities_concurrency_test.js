@@ -56,7 +56,7 @@ describe('Activities Service with DB', () => {
 
     invocation = 1;
 
-    sinon.stub(activitystore, 'getActivity', (url, callback) => {
+    sinon.stub(activitystore, 'getActivity').callsFake((url, callback) => {
       // on the first invocation, getActivity returns an activity without registrant to mimick a racing condition.
       if (invocation === 1) {
         invocation = 2;
