@@ -142,6 +142,6 @@ app.post('/removeParticipant', (req, res, next) =>
   updateFor(socratesActivitiesService.removeParticipantFor, {roomType: req.body.roomType, participantNick: req.body.participant}, res, next));
 
 app.post('/removeWaitinglistMember', (req, res, next) =>
-  updateFor(socratesActivitiesService.removeWaitinglistMemberFor, {desiredRoomTypes: [req.body.roomType], waitinglistMemberNick: req.body.waitinglistMember}, res, next));
+  updateFor(socratesActivitiesService.removeWaitinglistMemberFor, {desiredRoomTypes: misc.toArray(req.body.desiredRoomTypes), waitinglistMemberNick: req.body.waitinglistMember}, res, next));
 
 module.exports = app;
