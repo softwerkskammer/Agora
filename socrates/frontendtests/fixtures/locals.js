@@ -49,7 +49,8 @@ module.exports = {
   },
   subscriber: {
     notifyOnWikiChangesSoCraTes: function () { return true; },
-    country: function () {return 'UNKNOWN'; }
+    country: function () {return 'UNKNOWN'; },
+    addon: function () { return {pronoun: function () {return '';}};}
   },
   paymentInfo: {
     paymentDone: function () { return false; },
