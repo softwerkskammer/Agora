@@ -30,7 +30,7 @@ mixin memberinfoform(member, subscriber, newmember_text, allCountries)
         .col-sm-12
           +singleselect('country', 'Country of Residence', subscriber ? subscriber.country() : null, 'Select your country', allCountries)
         .col-sm-12
-          +text('pronoun', 'Preferred pronoun (will appear on your name tag)', subscriber ? subscriber.addon().pronoun():'')
+          +text('pronoun', 'Preferred pronoun (will appear on your name tag)', subscriber ? subscriber.addon().pronoun() : '')
 
 
     .col-sm-6
