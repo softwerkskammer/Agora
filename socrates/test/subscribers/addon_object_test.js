@@ -14,10 +14,19 @@ describe('Subscriber\'s Addon', () => {
   });
 
   it('returns the values stored in the subscriber\'s addon', () => {
-    const subscriber = new Subscriber({_addon: {homeAddress: 'homeOne', billingAddress: 'billingTwo', tShirtSize: 'XXXL'}});
+    const subscriber = new Subscriber({
+      _addon: {
+        homeAddress: 'homeOne', billingAddress: 'billingTwo', tShirtSize: 'XXXL'
+        , pronoun: 'she/her/her', diet: 'lactose intolerant', needsAssistance: false, canProvideAssistance: true
+      }
+    });
     expect(subscriber.addon().homeAddress()).to.equal('homeOne');
     expect(subscriber.addon().billingAddress()).to.equal('billingTwo');
     expect(subscriber.addon().tShirtSize()).to.equal('XXXL');
+    expect(subscriber.addon().pronoun()).to.equal('she/her/her');
+    expect(subscriber.addon().diet()).to.equal('lactose intolerant');
+    expect(subscriber.addon().needsAssistance()).to.be(false);
+    expect(subscriber.addon().canProvideAssistance()).to.be(true);
   });
 
   it('can be filled from the UI (unpacks t-shirt size)', () => {
