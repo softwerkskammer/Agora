@@ -25,7 +25,7 @@ describe('Members application checks', () => {
     });
 
     it('validates a duplicate email address via ajax - email is not taken and different to previous', done => {
-      sinon.stub(memberstore, 'getMemberForEMail', (email, callback) => {
+      sinon.stub(memberstore, 'getMemberForEMail').callsFake((email, callback) => {
         callback(null, null);
       });
       request(app)
@@ -35,7 +35,7 @@ describe('Members application checks', () => {
     });
 
     it('validates a duplicate email address via ajax - email is taken and different to previous', done => {
-      sinon.stub(memberstore, 'getMemberForEMail', (email, callback) => {
+      sinon.stub(memberstore, 'getMemberForEMail').callsFake((email, callback) => {
         callback(null, new Member());
       });
       request(app)
@@ -45,7 +45,7 @@ describe('Members application checks', () => {
     });
 
     it('validates a duplicate email address via ajax - email query yields and error and email is different to previous', done => {
-      sinon.stub(memberstore, 'getMemberForEMail', (email, callback) => {
+      sinon.stub(memberstore, 'getMemberForEMail').callsFake((email, callback) => {
         callback(new Error());
       });
       request(app)
@@ -64,7 +64,7 @@ describe('Members application checks', () => {
     });
 
     it('validates a duplicate nickname via ajax - nickname is not taken and different to previous', done => {
-      sinon.stub(memberstore, 'getMember', (nickname, callback) => {
+      sinon.stub(memberstore, 'getMember').callsFake((nickname, callback) => {
         callback(null, null);
       });
       request(app)
@@ -74,7 +74,7 @@ describe('Members application checks', () => {
     });
 
     it('validates a duplicate nickname via ajax - nickname is taken and different to previous', done => {
-      sinon.stub(memberstore, 'getMember', (nickname, callback) => {
+      sinon.stub(memberstore, 'getMember').callsFake((nickname, callback) => {
         callback(null, new Member());
       });
       request(app)
@@ -84,7 +84,7 @@ describe('Members application checks', () => {
     });
 
     it('validates a duplicate nickname via ajax - nickname query yields and error and email is different to previous', done => {
-      sinon.stub(memberstore, 'getMember', (nickname, callback) => {
+      sinon.stub(memberstore, 'getMember').callsFake((nickname, callback) => {
         callback(new Error());
       });
       request(app)

@@ -17,7 +17,7 @@ describe('the gitmech module', () => {
     const argsForLog = ['log', '-1', '--no-notes', '--follow', '--pretty=format:%h%n%H%n%an%n%ai%n%s', 'HEAD', '--name-only', '--', '\'path\''];
 
     it('"readFile" returns file contents as string', done => {
-      const gitCommand = sinon.stub(gitExec, 'command', (args, callback) => callback(null, 'string'));
+      const gitCommand = sinon.stub(gitExec, 'command').callsFake((args, callback) => callback(null, 'string'));
 
       Git.readFile('path', 1, (err, string) => {
         expect(gitCommand.withArgs(['show', '1:\'path\'']).calledOnce).to.be(true);
@@ -27,7 +27,7 @@ describe('the gitmech module', () => {
     });
 
     it('"readFile" returns error on error', done => {
-      sinon.stub(gitExec, 'command', (args, callback) => callback(new Error()));
+      sinon.stub(gitExec, 'command').callsFake((args, callback) => callback(new Error()));
       Git.readFile('path', 1, err => {
         expect(err).to.exist();
         done();
@@ -36,7 +36,7 @@ describe('the gitmech module', () => {
 
     it('escapes the dynamic argument in "readFile" to avoid cmd injection', done => {
       const pathGiven = 'Given | Path';
-      const gitCommand = sinon.stub(gitExec, 'command', (args, callback) => callback(null, 'string'));
+      const gitCommand = sinon.stub(gitExec, 'command').callsFake((args, callback) => callback(null, 'string'));
 
       Git.readFile(pathGiven, 1, err => {
         expect(gitCommand.firstCall.args[0][1]).to.be('1:\'Given | Path\'');
@@ -45,14 +45,13 @@ describe('the gitmech module', () => {
     });
 
     it('produces sensible metadata via "git log" for editing', done => {
-      const gitCommand = sinon.stub(gitExec, 'command', (args, callback) =>
+      const gitCommand = sinon.stub(gitExec, 'command').callsFake((args, callback) =>
         callback(null, '7f91fc6\n' +
           '7f91fc607da7947e62b2d8a52088ee0ce29a88c8\n' +
           'leider\n' +
           '2014-03-01 18:36:29 +0100\n' +
           'no comment\n' +
-          'path/file.md\n\n')
-      );
+          'path/file.md\n\n'));
       Git.log('path', 'HEAD', 1, (err, metadatas) => {
         expect(gitCommand.withArgs(argsForLog).calledOnce).to.be(true);
         const metadata = metadatas[0];
@@ -68,7 +67,7 @@ describe('the gitmech module', () => {
     });
 
     it('produces sensible metadata via "git log" for viewing the history', done => {
-      const gitCommand = sinon.stub(gitExec, 'command', (args, callback) =>
+      const gitCommand = sinon.stub(gitExec, 'command').callsFake((args, callback) =>
         callback(null, '7f91fc6\n' +
           '7f91fc607da7947e62b2d8a52088ee0ce29a88c8\n' +
           'leider\n' +
@@ -98,8 +97,7 @@ describe('the gitmech module', () => {
           'trauerleider\n' +
           '2013-12-08 12:53:42 +0100\n' +
           'no comment\n' +
-          'path/file.md\n\n')
-      );
+          'path/file.md\n\n'));
       Git.log('path', 'HEAD', 1, (err, metadatas) => {
         expect(gitCommand.withArgs(argsForLog).calledOnce).to.be(true);
         const metadata = metadatas[0];
@@ -121,7 +119,7 @@ describe('the gitmech module', () => {
     });
 
     it('can handle renames via "git log" for viewing the history', done => {
-      const gitCommand = sinon.stub(gitExec, 'command', (args, callback) =>
+      const gitCommand = sinon.stub(gitExec, 'command').callsFake((args, callback) =>
         callback(null, '7f91fc6\n' +
           '7f91fc607da7947e62b2d8a52088ee0ce29a88c8\n' +
           'leider\n' +
@@ -134,8 +132,7 @@ describe('the gitmech module', () => {
           'leider\n' +
           '2014-03-01 18:36:29 +0100\n' +
           'no comment\n' +
-          'path/file.md\n\n')
-      );
+          'path/file.md\n\n'));
       Git.log('path', 'HEAD', 1, (err, metadatas) => {
         expect(gitCommand.withArgs(argsForLog).calledOnce).to.be(true);
         let metadata = metadatas[0];
@@ -156,7 +153,7 @@ describe('the gitmech module', () => {
     });
 
     it('calls the callback with an error when failing at "log"', done => {
-      sinon.stub(gitExec, 'command', (args, callback) => callback(new Error()));
+      sinon.stub(gitExec, 'command').callsFake((args, callback) => callback(new Error()));
       Git.log('path', 'HEAD', 1, err => {
         expect(err).to.exist();
         done();
@@ -165,7 +162,7 @@ describe('the gitmech module', () => {
 
     it('escapes the dynamic argument in "git log" to avoid cmd injection', done => {
       const pathGiven = 'Given | Path';
-      const gitCommand = sinon.stub(gitExec, 'command', (args, callback) => callback(null));
+      const gitCommand = sinon.stub(gitExec, 'command').callsFake((args, callback) => callback(null));
       Git.log(pathGiven, 'HEAD', 1, err => {
         expect(gitCommand.firstCall.args[0][8]).to.be('\'Given | Path\'');
         done(err);
@@ -173,7 +170,7 @@ describe('the gitmech module', () => {
     });
 
     it('produces sensible metadata via "latestChanges" for sending change emails', done => {
-      const gitCommand = sinon.stub(gitExec, 'command', (args, callback) => {
+      const gitCommand = sinon.stub(gitExec, 'command').callsFake((args, callback) => {
         if (args[0] === 'log') {
           callback(null, '60ca4ed\n' +
             '60ca4eda5b79fd55461a78725ff0815cfd3f8550\n' +
@@ -203,7 +200,7 @@ describe('the gitmech module', () => {
     });
 
     it('calls the callback with an error when failing at "latestChanges"', done => {
-      sinon.stub(gitExec, 'command', (args, callback) => callback(new Error()));
+      sinon.stub(gitExec, 'command').callsFake((args, callback) => callback(new Error()));
       Git.latestChanges('path', moment(), err => {
         expect(err).to.exist();
         done();
@@ -216,7 +213,7 @@ describe('the gitmech module', () => {
       return () => {
         it('calls commit when successful', done => {
           let commitcalled = false;
-          sinon.stub(gitExec, 'command', (args, callback) => {
+          sinon.stub(gitExec, 'command').callsFake((args, callback) => {
             if (args[0] === commandName) { callback(null); }
             if (args[0] === 'commit') {
               commitcalled = true;
@@ -232,7 +229,7 @@ describe('the gitmech module', () => {
 
         it('does not call commit when failing', done => {
           let commitcalled = false;
-          sinon.stub(gitExec, 'command', (args, callback) => {
+          sinon.stub(gitExec, 'command').callsFake((args, callback) => {
             if (args[0] === commandName) { callback(new Error()); }
             if (args[0] === 'commit') {
               commitcalled = true;
@@ -248,7 +245,7 @@ describe('the gitmech module', () => {
 
         it('handles "commit" errors', done => {
           let commitcalled = false;
-          sinon.stub(gitExec, 'command', (args, callback) => {
+          sinon.stub(gitExec, 'command').callsFake((args, callback) => {
             if (args[0] === commandName) { callback(null); }
             if (args[0] === 'commit') {
               commitcalled = true;
@@ -263,7 +260,7 @@ describe('the gitmech module', () => {
         });
 
         it('escapes the dynamic argument in "command" to avoid cmd injection', done => {
-          const stub = sinon.stub(gitExec, 'command', (args, callback) => callback(null));
+          const stub = sinon.stub(gitExec, 'command').callsFake((args, callback) => callback(null));
           gitmechCommand('message', 'author', err => {
             const argument = stub.firstCall.args[0];
             if (argument[0] === commandName) {
@@ -277,7 +274,7 @@ describe('the gitmech module', () => {
         });
 
         it('escapes the dynamic argument in "commit" to avoid cmd injection', done => {
-          const stub = sinon.stub(gitExec, 'command', (args, callback) => callback(null));
+          const stub = sinon.stub(gitExec, 'command').callsFake((args, callback) => callback(null));
           gitmechCommand('message', 'author', err => {
             const argument = stub.lastCall.args[0];
             if (argument[0] === 'commit') {
@@ -299,7 +296,7 @@ describe('the gitmech module', () => {
 
   describe(' - searching', () => {
     it('finds in file contents', done => {
-      sinon.stub(gitExec, 'command', (args, callback) => {
+      sinon.stub(gitExec, 'command').callsFake((args, callback) => {
         if (args[0] === 'grep') {
           callback(null, 'global/index.md:8:Dies ist der Index [für] das [[andreas:test]] -dudelo\n' +
             'global/veran.md:12:[UK Tester Forums - Test Management Forum](http://uktmf.com/index.php?q=node/5271)                                             | London                  | 5.2.             \n' +
@@ -318,7 +315,7 @@ describe('the gitmech module', () => {
     });
 
     it('finds in file names', done => {
-      sinon.stub(gitExec, 'command', (args, callback) => {
+      sinon.stub(gitExec, 'command').callsFake((args, callback) => {
         if (args[0] === 'grep') {
           callback();
         }
@@ -336,7 +333,7 @@ describe('the gitmech module', () => {
     });
 
     it('handles errors in grep search with more than two lines', done => {
-      sinon.stub(gitExec, 'command', (args, callback) => {
+      sinon.stub(gitExec, 'command').callsFake((args, callback) => {
         if (args[0] === 'grep') { callback(new Error('line1\nline2\nline3')); }
       });
       Git.grep('test', err => {
@@ -346,7 +343,7 @@ describe('the gitmech module', () => {
     });
 
     it('handles errors in grep search with less than two lines', done => {
-      sinon.stub(gitExec, 'command', (args, callback) => {
+      sinon.stub(gitExec, 'command').callsFake((args, callback) => {
         if (args[0] === 'grep') { callback(new Error('line1\nline2')); }
       });
       Git.grep('test', (err, result) => {
@@ -357,7 +354,7 @@ describe('the gitmech module', () => {
     });
 
     it('handles errors in file search', done => {
-      sinon.stub(gitExec, 'command', (args, callback) => {
+      sinon.stub(gitExec, 'command').callsFake((args, callback) => {
         if (args[0] === 'grep') { callback(); }
         if (args[0] === 'ls-files') { callback(new Error()); }
       });
@@ -368,7 +365,7 @@ describe('the gitmech module', () => {
     });
 
     it('escapes the dynamic argument in "grep" to avoid cmd injection', done => {
-      const stub = sinon.stub(gitExec, 'command', (args, callback) => callback(null));
+      const stub = sinon.stub(gitExec, 'command').callsFake((args, callback) => callback(null));
       Git.grep('some | text', err => {
         const argument = stub.firstCall.args[0];
         if (argument[0] === 'grep') {
@@ -379,7 +376,7 @@ describe('the gitmech module', () => {
     });
 
     it('escapes the dynamic argument in "ls-files" to avoid cmd injection', done => {
-      const stub = sinon.stub(gitExec, 'command', (args, callback) => callback(null, 'andex.md'));
+      const stub = sinon.stub(gitExec, 'command').callsFake((args, callback) => callback(null, 'andex.md'));
       Git.grep('some | text', err => {
         const argument = stub.lastCall.args[0];
         if (argument[0] === 'ls-files') {
@@ -392,7 +389,7 @@ describe('the gitmech module', () => {
 
   describe(' - listing files', () => {
     it('"ls" - converts the data to an array of single non empty lines', done => {
-      sinon.stub(gitExec, 'command', (args, callback) => {
+      sinon.stub(gitExec, 'command').callsFake((args, callback) => {
         if (args[0] === 'ls-tree') {
           callback(null, 'andex.md\n' +
             '\n' +
@@ -407,7 +404,7 @@ describe('the gitmech module', () => {
     });
 
     it('"ls" - handles errors correct', done => {
-      sinon.stub(gitExec, 'command', (args, callback) => {
+      sinon.stub(gitExec, 'command').callsFake((args, callback) => {
         if (args[0] === 'ls-tree') { callback(new Error()); }
       });
       Git.ls('subdir', err => {
@@ -417,7 +414,7 @@ describe('the gitmech module', () => {
     });
 
     it('escapes the dynamic argument in "ls" to avoid cmd injection', done => {
-      const stub = sinon.stub(gitExec, 'command', (args, callback) => callback(null));
+      const stub = sinon.stub(gitExec, 'command').callsFake((args, callback) => callback(null));
       Git.ls('subdir | dd', err => {
         const argument = stub.firstCall.args[0];
         expect(argument[4]).to.be('\'subdir | dd\'');
@@ -426,7 +423,7 @@ describe('the gitmech module', () => {
     });
 
     it('"lsdirs" - converts the data to an array of single non empty lines', done => {
-      sinon.stub(gitExec, 'command', (args, callback) => {
+      sinon.stub(gitExec, 'command').callsFake((args, callback) => {
         if (args[0] === 'ls-tree') {
           callback(null, 'andex.md\n' +
             '\n' +
@@ -441,7 +438,7 @@ describe('the gitmech module', () => {
     });
 
     it('"lsdirs" - handles errors correct', done => {
-      sinon.stub(gitExec, 'command', (args, callback) => {
+      sinon.stub(gitExec, 'command').callsFake((args, callback) => {
         if (args[0] === 'ls-tree') { callback(new Error()); }
       });
       Git.lsdirs(err => {
@@ -451,7 +448,7 @@ describe('the gitmech module', () => {
     });
 
     it('"lsblogposts" - converts the data to an array of single non empty lines', done => {
-      sinon.stub(gitExec, 'command', (args, callback) => {
+      sinon.stub(gitExec, 'command').callsFake((args, callback) => {
         if (args[0] === 'ls-files') {
           callback(null, 'andex.md\n' +
             '\n' +
@@ -466,7 +463,7 @@ describe('the gitmech module', () => {
     });
 
     it('"lsblogposts" - handles errors correct', done => {
-      sinon.stub(gitExec, 'command', (args, callback) => {
+      sinon.stub(gitExec, 'command').callsFake((args, callback) => {
         if (args[0] === 'ls-files') { callback(new Error()); }
       });
       Git.lsblogposts('group', 'pattern', err => {
@@ -476,7 +473,7 @@ describe('the gitmech module', () => {
     });
 
     it('escapes the dynamic argument in "lsblogposts" to avoid cmd injection', done => {
-      const stub = sinon.stub(gitExec, 'command', (args, callback) => callback(null));
+      const stub = sinon.stub(gitExec, 'command').callsFake((args, callback) => callback(null));
       Git.lsblogposts('group', 'some | text', err => {
         const argument = stub.firstCall.args[0];
         expect(argument[1]).to.be('\'group/some | text\'');

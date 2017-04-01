@@ -25,7 +25,7 @@ describe('Dashboard Service', () => {
     member = {membername: 'membername'};
     activity1 = {activity: 1};
     activity2 = {activity: 2};
-    sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', (nickname, callback) => {
+    sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups').callsFake((nickname, callback) => {
       if (nickname === NOT_FOUND) {
         return callback(null, null);
       }
@@ -34,7 +34,7 @@ describe('Dashboard Service', () => {
       }
       callback(null, member);
     });
-    sinon.stub(activitiesService, 'getUpcomingActivitiesOfMemberAndHisGroups', (mem, callback) => {
+    sinon.stub(activitiesService, 'getUpcomingActivitiesOfMemberAndHisGroups').callsFake((mem, callback) => {
       if (mem === CRASH_ACTIVITY) {
         return callback(new Error());
       }
@@ -84,19 +84,19 @@ describe('Dashboard Service', () => {
     const mails = [mail1, mail2];
 
     beforeEach(() => {
-      sinon.stub(wikiService, 'getBlogpostsForGroup', (groupid, callback) => {
+      sinon.stub(wikiService, 'getBlogpostsForGroup').callsFake((groupid, callback) => {
         if (groupid === CRASH_BLOG) {
           return callback(new Error());
         }
         callback(null, blogs);
       });
-      sinon.stub(wikiService, 'listChangedFilesinDirectory', (groupid, callback) => {
+      sinon.stub(wikiService, 'listChangedFilesinDirectory').callsFake((groupid, callback) => {
         if (groupid === CRASH_CHANGE) {
           return callback(new Error());
         }
         callback(null, changedFiles);
       });
-      sinon.stub(mailarchiveService, 'unthreadedMailsYoungerThan', (groupid, age, callback) => {
+      sinon.stub(mailarchiveService, 'unthreadedMailsYoungerThan').callsFake((groupid, age, callback) => {
         if (groupid === CRASH_MAILS) {
           return callback(new Error());
         }

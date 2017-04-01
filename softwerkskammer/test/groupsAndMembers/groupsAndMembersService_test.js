@@ -30,7 +30,7 @@ describe('Groups and Members Service (getMemberWithHisGroups or getMemberWithHis
 
   describe('- getMemberWithHisGroups -', () => {
     it('returns no member when there is no member for the given nickname', done => {
-      sinon.stub(memberstore, 'getMember', (nickname, callback) => {
+      sinon.stub(memberstore, 'getMember').callsFake((nickname, callback) => {
         callback(null, null);
       });
 
@@ -41,10 +41,10 @@ describe('Groups and Members Service (getMemberWithHisGroups or getMemberWithHis
     });
 
     it('returns the member and his groups when there is a member for the given nickname', done => {
-      sinon.stub(memberstore, 'getMember', (nickname, callback) => {
+      sinon.stub(memberstore, 'getMember').callsFake((nickname, callback) => {
         callback(null, dummymember);
       });
-      sinon.stub(groupsService, 'getSubscribedGroupsForUser', (userMail, globalCallback) => {
+      sinon.stub(groupsService, 'getSubscribedGroupsForUser').callsFake((userMail, globalCallback) => {
         globalCallback(null, [GroupA, GroupB]);
       });
 
@@ -61,7 +61,7 @@ describe('Groups and Members Service (getMemberWithHisGroups or getMemberWithHis
 
   describe('- getMemberWithHisGroupsByMemberId -', () => {
     it('returns no member when there is no member for the given memberID', done => {
-      sinon.stub(memberstore, 'getMemberForId', (memberID, callback) => {
+      sinon.stub(memberstore, 'getMemberForId').callsFake((memberID, callback) => {
         callback(null, null);
       });
 
@@ -72,10 +72,10 @@ describe('Groups and Members Service (getMemberWithHisGroups or getMemberWithHis
     });
 
     it('returns the member and his groups when there is a member for the given memberID', done => {
-      sinon.stub(memberstore, 'getMemberForId', (memberID, callback) => {
+      sinon.stub(memberstore, 'getMemberForId').callsFake((memberID, callback) => {
         callback(null, dummymember);
       });
-      sinon.stub(groupsService, 'getSubscribedGroupsForUser', (userMail, globalCallback) => {
+      sinon.stub(groupsService, 'getSubscribedGroupsForUser').callsFake((userMail, globalCallback) => {
         globalCallback(null, [GroupA, GroupB]);
       });
 
@@ -94,7 +94,7 @@ describe('Groups and Members Service (getMemberWithHisGroups or getMemberWithHis
 describe('Groups and Members Service (getGroupAndMembersForList)', () => {
 
   beforeEach(() => {
-    sinon.stub(memberstore, 'allMembers', callback => { callback(null, null); });
+    sinon.stub(memberstore, 'allMembers').callsFake(callback => { callback(null, null); });
   });
 
   afterEach(() => {
@@ -102,9 +102,9 @@ describe('Groups and Members Service (getGroupAndMembersForList)', () => {
   });
 
   it('returns no group when there is no group and no mailing-list', done => {
-    sinon.stub(memberstore, 'getMembersForEMails', (member, callback) => { callback(); });
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', (ignoredErr, callback) => { callback(null, []); });
-    sinon.stub(groupstore, 'getGroup', (groupname, callback) => { callback(null, null); });
+    sinon.stub(memberstore, 'getMembersForEMails').callsFake((member, callback) => { callback(); });
+    sinon.stub(groupsService, 'getMailinglistUsersOfList').callsFake((ignoredErr, callback) => { callback(null, []); });
+    sinon.stub(groupstore, 'getGroup').callsFake((groupname, callback) => { callback(null, null); });
 
     groupsAndMembersService.getGroupAndMembersForList('unbekannteListe', (err, group) => {
       expect(group).to.not.exist();
@@ -113,13 +113,13 @@ describe('Groups and Members Service (getGroupAndMembersForList)', () => {
   });
 
   it('returns no group when there is no group but a mailing-list', done => {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', (ignoredErr, callback) => {
+    sinon.stub(groupsService, 'getMailinglistUsersOfList').callsFake((ignoredErr, callback) => {
       callback(null, ['user1@mail1.com', 'user2@mail2.com']);
     });
-    sinon.stub(memberstore, 'getMembersForEMails', (member, callback) => {
+    sinon.stub(memberstore, 'getMembersForEMails').callsFake((member, callback) => {
       callback(null, [dummymember, dummymember2]);
     });
-    sinon.stub(groupstore, 'getGroup', (groupname, callback) => { callback(null, null); });
+    sinon.stub(groupstore, 'getGroup').callsFake((groupname, callback) => { callback(null, null); });
 
     groupsAndMembersService.getGroupAndMembersForList('mailingListWithoutGroup', (err, group) => {
       expect(group).to.not.exist();
@@ -128,11 +128,11 @@ describe('Groups and Members Service (getGroupAndMembersForList)', () => {
   });
 
   it('returns the group with the given name and an empty list of subscribed users when there is no mailing-list or when there are no subscribers', done => {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', (ignoredErr, callback) => { callback(null, []); });
-    sinon.stub(groupstore, 'getGroup', (groupname, callback) => {
+    sinon.stub(groupsService, 'getMailinglistUsersOfList').callsFake((ignoredErr, callback) => { callback(null, []); });
+    sinon.stub(groupstore, 'getGroup').callsFake((groupname, callback) => {
       callback(null, GroupA);
     });
-    sinon.stub(memberstore, 'getMembersForEMails', (member, callback) => {
+    sinon.stub(memberstore, 'getMembersForEMails').callsFake((member, callback) => {
       callback(null, []);
     });
 
@@ -145,14 +145,14 @@ describe('Groups and Members Service (getGroupAndMembersForList)', () => {
   });
 
   it('returns the group with the given name and a list of one subscribed user when there is one subscriber in mailinglist', done => {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', (ignoredErr, callback) => { callback(null, ['user@email.com']); });
-    sinon.stub(groupstore, 'getGroup', (groupname, callback) => {
+    sinon.stub(groupsService, 'getMailinglistUsersOfList').callsFake((ignoredErr, callback) => { callback(null, ['user@email.com']); });
+    sinon.stub(groupstore, 'getGroup').callsFake((groupname, callback) => {
       callback(null, GroupA);
     });
-    sinon.stub(memberstore, 'getMembersForEMails', (member, callback) => {
+    sinon.stub(memberstore, 'getMembersForEMails').callsFake((member, callback) => {
       callback(null, [dummymember]);
     });
-    sinon.stub(membersService, 'putAvatarIntoMemberAndSave', (member, callback) => {
+    sinon.stub(membersService, 'putAvatarIntoMemberAndSave').callsFake((member, callback) => {
       callback();
     });
 
@@ -166,8 +166,8 @@ describe('Groups and Members Service (getGroupAndMembersForList)', () => {
   });
 
   it('fails gracefully if groupsService has an error', done => {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', (ignoredErr, callback) => { callback(new Error()); });
-    sinon.stub(groupstore, 'getGroup', (groupname, callback) => {
+    sinon.stub(groupsService, 'getMailinglistUsersOfList').callsFake((ignoredErr, callback) => { callback(new Error()); });
+    sinon.stub(groupstore, 'getGroup').callsFake((groupname, callback) => {
       callback(null, GroupA);
     });
 
@@ -199,7 +199,7 @@ describe('Groups and Members Service (addMembercountToGroup)', () => {
   });
 
   it('adds zero to group if there are no subscribers', done => {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', (ignoredErr, callback) => { callback(null, []); });
+    sinon.stub(groupsService, 'getMailinglistUsersOfList').callsFake((ignoredErr, callback) => { callback(null, []); });
     groupsAndMembersService.addMembercountToGroup({}, (err, group) => {
       expect(group.membercount).to.equal(0);
       done(err);
@@ -207,7 +207,7 @@ describe('Groups and Members Service (addMembercountToGroup)', () => {
   });
 
   it('adds the number of subscribers to the group', done => {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', (ignoredErr, callback) => { callback(null, ['1', '2', '4']); });
+    sinon.stub(groupsService, 'getMailinglistUsersOfList').callsFake((ignoredErr, callback) => { callback(null, ['1', '2', '4']); });
     groupsAndMembersService.addMembercountToGroup({}, (err, group) => {
       expect(group.membercount).to.equal(3);
       done(err);
@@ -219,7 +219,7 @@ describe('Groups and Members Service (addMembercountToGroup)', () => {
 describe('Groups and Members Service (addMembersToGroup)', () => {
 
   beforeEach(() => {
-    sinon.stub(memberstore, 'allMembers', callback => { callback(null, null); });
+    sinon.stub(memberstore, 'allMembers').callsFake(callback => { callback(null, null); });
   });
 
   afterEach(() => {
@@ -227,8 +227,8 @@ describe('Groups and Members Service (addMembersToGroup)', () => {
   });
 
   it('returns no group when the group is null', done => {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', () => undefined);
-    sinon.stub(memberstore, 'getMembersForEMails', () => undefined);
+    sinon.stub(groupsService, 'getMailinglistUsersOfList').callsFake(() => undefined);
+    sinon.stub(memberstore, 'getMembersForEMails').callsFake(() => undefined);
 
     groupsAndMembersService.addMembersToGroup(null, (err, group) => {
       expect(group).to.not.exist();
@@ -237,8 +237,8 @@ describe('Groups and Members Service (addMembersToGroup)', () => {
   });
 
   it('returns no group when the group is undefined', done => {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', () => undefined);
-    sinon.stub(memberstore, 'getMembersForEMails', () => undefined);
+    sinon.stub(groupsService, 'getMailinglistUsersOfList').callsFake(() => undefined);
+    sinon.stub(memberstore, 'getMembersForEMails').callsFake(() => undefined);
 
     groupsAndMembersService.addMembersToGroup(undefined, (err, group) => {
       expect(group).to.not.exist();
@@ -247,8 +247,8 @@ describe('Groups and Members Service (addMembersToGroup)', () => {
   });
 
   it('returns the group with an empty list of subscribed users when there are no subscribers', done => {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', (ignoredErr, callback) => { callback(null, []); });
-    sinon.stub(memberstore, 'getMembersForEMails', (member, callback) => {
+    sinon.stub(groupsService, 'getMailinglistUsersOfList').callsFake((ignoredErr, callback) => { callback(null, []); });
+    sinon.stub(memberstore, 'getMembersForEMails').callsFake((member, callback) => {
       callback(null, []);
     });
 
@@ -263,11 +263,11 @@ describe('Groups and Members Service (addMembersToGroup)', () => {
   });
 
   it('returns the group with a list of one subscribed user when there is one subscriber in mailinglist', done => {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList', (ignoredErr, callback) => { callback(null, ['user@email.com']); });
-    sinon.stub(memberstore, 'getMembersForEMails', (member, callback) => {
+    sinon.stub(groupsService, 'getMailinglistUsersOfList').callsFake((ignoredErr, callback) => { callback(null, ['user@email.com']); });
+    sinon.stub(memberstore, 'getMembersForEMails').callsFake((member, callback) => {
       callback(null, [dummymember]);
     });
-    sinon.stub(membersService, 'putAvatarIntoMemberAndSave', (member, callback) => {
+    sinon.stub(membersService, 'putAvatarIntoMemberAndSave').callsFake((member, callback) => {
       callback();
     });
 

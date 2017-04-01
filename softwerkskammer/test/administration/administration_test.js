@@ -31,8 +31,10 @@ describe('Administration application', () => {
   });
 
   beforeEach(() => {
-    sinon.stub(groupsService, 'getAllAvailableGroups', callback => callback(null, [new Group({id: 'id', longName: 'GRUPPO', description: 'desc'})]));
-    sinon.stub(membersService, 'putAvatarIntoMemberAndSave', (member, callback) => {
+    sinon.stub(groupsService, 'getAllAvailableGroups').callsFake(
+      callback => callback(null, [new Group({id: 'id', longName: 'GRUPPO', description: 'desc'})])
+    );
+    sinon.stub(membersService, 'putAvatarIntoMemberAndSave').callsFake((member, callback) => {
       callback();
     });
   });
@@ -42,8 +44,8 @@ describe('Administration application', () => {
   });
 
   it('shows the table for members including socrates only members', done => {
-    sinon.stub(memberstore, 'allMembers', callback => callback(null, [dummymember]));
-    sinon.stub(memberstore, 'socratesOnlyMembers', callback => callback(null, [socratesmember]));
+    sinon.stub(memberstore, 'allMembers').callsFake(callback => callback(null, [dummymember]));
+    sinon.stub(memberstore, 'socratesOnlyMembers').callsFake(callback => callback(null, [socratesmember]));
     appWithSuperuser
       .get('/memberTable')
       .expect(200)
@@ -54,7 +56,9 @@ describe('Administration application', () => {
   });
 
   it('shows the table for members and groups', done => {
-    sinon.stub(groupsAndMembersService, 'getAllMembersWithTheirGroups', callback => callback(null, [dummymember], [{group: 'Überflüssig', extraAddresses: ['peter.pan@alice.de']}]));
+    sinon.stub(groupsAndMembersService, 'getAllMembersWithTheirGroups').callsFake(
+      callback => callback(null, [dummymember], [{group: 'Überflüssig', extraAddresses: ['peter.pan@alice.de']}])
+    );
     appWithSuperuser
       .get('/memberAndGroupTable')
       .expect(200)
@@ -74,7 +78,7 @@ describe('Administration application', () => {
   });
 
   it('shows the table for activities', done => {
-    sinon.stub(activitiesService, 'getActivitiesForDisplay', (activitiesFetcher, callback) => callback(null, [emptyActivity]));
+    sinon.stub(activitiesService, 'getActivitiesForDisplay').callsFake((activitiesFetcher, callback) => callback(null, [emptyActivity]));
     appWithSuperuser
       .get('/activityTable')
       .expect(200)

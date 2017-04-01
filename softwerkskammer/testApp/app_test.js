@@ -13,8 +13,8 @@ const app = require('../app.js');
 
 describe('SWK Plattform server', () => {
   beforeEach(done => {
-    sinon.stub(groupstore, 'allGroups', callback => callback(null, []));
-    sinon.stub(groupsService, 'getAllAvailableGroups', callback => callback(null, []));
+    sinon.stub(groupstore, 'allGroups').callsFake(callback => callback(null, []));
+    sinon.stub(groupsService, 'getAllAvailableGroups').callsFake(callback => callback(null, []));
     app.start(done);
   });
 
@@ -75,8 +75,8 @@ describe('SWK Plattform server', () => {
 
 describe('SWK Plattform server with Error', () => {
   beforeEach(done => {
-    sinon.stub(groupstore, 'allGroups', callback => callback(new Error(), []));
-    sinon.stub(groupsService, 'getAllAvailableGroups', callback => callback(null, []));
+    sinon.stub(groupstore, 'allGroups').callsFake(callback => callback(new Error(), []));
+    sinon.stub(groupsService, 'getAllAvailableGroups').callsFake(callback => callback(null, []));
     app.start(done);
   });
 

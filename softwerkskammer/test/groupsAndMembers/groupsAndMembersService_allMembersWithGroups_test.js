@@ -27,7 +27,7 @@ const groupsAndMembersService = beans.get('groupsAndMembersService');
 describe('Groups and Members Service (getAllMembersWithTheirGroups)', () => {
 
   beforeEach(() => {
-    sinon.stub(groupsService, 'getAllAvailableGroups', callback => {
+    sinon.stub(groupsService, 'getAllAvailableGroups').callsFake(callback => {
       callback(null, [GroupA, GroupB]);
     });
     chado.createDouble('groupsService', groupsService);
@@ -39,7 +39,7 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', () => {
   });
 
   it('returns no members when there are no members', done => {
-    sinon.stub(memberstore, 'allMembers', callback => {
+    sinon.stub(memberstore, 'allMembers').callsFake(callback => {
       callback(null, []);
     });
     assume(groupsService).canHandle('getMailinglistUsersOfList').withArgs('groupa', cb).andCallsCallbackWith(null, []);
@@ -53,7 +53,7 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', () => {
   });
 
   it('returns a member and his groups when there is a member who has groups', done => {
-    sinon.stub(memberstore, 'allMembers', callback => {
+    sinon.stub(memberstore, 'allMembers').callsFake(callback => {
       callback(null, [dummymember]);
     });
     assume(groupsService).canHandle('getMailinglistUsersOfList').withArgs('groupa', cb).andCallsCallbackWith(null, ['email1']);
@@ -71,7 +71,7 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', () => {
   });
 
   it('returns a member and his only group when there is a member who has only 1 subscribed group', done => {
-    sinon.stub(memberstore, 'allMembers', callback => {
+    sinon.stub(memberstore, 'allMembers').callsFake(callback => {
       callback(null, [dummymember]);
     });
     assume(groupsService).canHandle('getMailinglistUsersOfList').withArgs('groupa', cb).andCallsCallbackWith(null, ['email1']);
@@ -88,7 +88,7 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', () => {
   });
 
   it('returns a member without groups when there is a member who has no groups', done => {
-    sinon.stub(memberstore, 'allMembers', callback => {
+    sinon.stub(memberstore, 'allMembers').callsFake(callback => {
       callback(null, [dummymember]);
     });
     assume(groupsService).canHandle('getMailinglistUsersOfList').withArgs('groupa', cb).andCallsCallbackWith(null, []);
@@ -104,7 +104,7 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', () => {
   });
 
   it('returns a member with and one without groups', done => {
-    sinon.stub(memberstore, 'allMembers', callback => {
+    sinon.stub(memberstore, 'allMembers').callsFake(callback => {
       callback(null, [dummymember, dummymember2]);
     });
     assume(groupsService).canHandle('getMailinglistUsersOfList').withArgs('groupa', cb).andCallsCallbackWith(null, ['email1']);
@@ -125,7 +125,7 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', () => {
   });
 
   it('returns an additional email address in GroupA when there is no member for this email address', done => {
-    sinon.stub(memberstore, 'allMembers', callback => {
+    sinon.stub(memberstore, 'allMembers').callsFake(callback => {
       callback(null, [dummymember, dummymember2]);
     });
     assume(groupsService).canHandle('getMailinglistUsersOfList').withArgs('groupa', cb).andCallsCallbackWith(null, ['email1', 'email2', 'email3']);
@@ -140,7 +140,7 @@ describe('Groups and Members Service (getAllMembersWithTheirGroups)', () => {
   });
 
   it('returns no additional email address in GroupA just because of case sensitivity', done => {
-    sinon.stub(memberstore, 'allMembers', callback => {
+    sinon.stub(memberstore, 'allMembers').callsFake(callback => {
       callback(null, [dummymember, dummymember2]);
     });
     assume(groupsService).canHandle('getMailinglistUsersOfList').withArgs('groupa', cb).andCallsCallbackWith(null, ['email1']);

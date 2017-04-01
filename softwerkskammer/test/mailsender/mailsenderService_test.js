@@ -40,21 +40,21 @@ describe('MailsenderService', () => {
       startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
       url: 'urlOfTheActivity'
     });
-    sinon.stub(groupsService, 'getAllAvailableGroups', callback => { callback(null, availableGroups); });
-    sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants', (actURL, callback) => {
+    sinon.stub(groupsService, 'getAllAvailableGroups').callsFake(callback => { callback(null, availableGroups); });
+    sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants').callsFake((actURL, callback) => {
       if (actURL === null) { return callback(new Error()); }
       callback(null, emptyActivity);
     });
-    sinon.stub(memberstore, 'getMember', (nick, callback) => {
+    sinon.stub(memberstore, 'getMember').callsFake((nick, callback) => {
       if (nick === null) { return callback(null); }
       if (nick === 'broken') { return callback(new Error()); }
       callback(null, new Member({email: 'email@mail.de'}));
     });
-    sinon.stub(activitystore, 'getActivity', (url, callback) => {
+    sinon.stub(activitystore, 'getActivity').callsFake((url, callback) => {
       if (url === 'activityUrlForMock') { return callback(null, emptyActivity); }
       callback(new Error());
     });
-    sendmail = sinon.stub(transport, 'sendMail', (transportobject, callback) => {
+    sendmail = sinon.stub(transport, 'sendMail').callsFake((transportobject, callback) => {
       if (!transportobject.to && (!transportobject.bcc || transportobject.bcc.length === 0)) {
         // simulating the behaviour of nodemailer
         return callback(new Error());
@@ -207,7 +207,7 @@ describe('MailsenderService', () => {
     const superuser = new Member({id: 'superuserID', email: 'email@super.user'});
 
     beforeEach(() => {
-      sinon.stub(memberstore, 'superUsers', callback => { callback(null, [superuser]); });
+      sinon.stub(memberstore, 'superUsers').callsFake(callback => { callback(null, [superuser]); });
     });
 
     it('sends the email', done => {
@@ -246,7 +246,7 @@ describe('MailsenderService', () => {
     const groupB = new Group({id: 'groupB'});
 
     beforeEach(() => {
-      sinon.stub(groupsService, 'getGroups', (groupnames, callback) => {
+      sinon.stub(groupsService, 'getGroups').callsFake((groupnames, callback) => {
         if (groupnames === null) { return callback(new Error()); }
         if (groupnames.length === 0) { return callback(null, []); }
         callback(null, [groupA, groupB]);
@@ -254,7 +254,7 @@ describe('MailsenderService', () => {
     });
 
     it('sends to members of selected groups', done => {
-      sinon.stub(groupsAndMembersService, 'addMembersToGroup', (group, callback) => {
+      sinon.stub(groupsAndMembersService, 'addMembersToGroup').callsFake((group, callback) => {
         if (group === null) { return callback(null); }
         if (group === groupA) { group.members = [new Member({email: 'memberA'})]; }
         if (group === groupB) { group.members = [new Member({email: 'memberB'})]; }
@@ -275,7 +275,7 @@ describe('MailsenderService', () => {
     });
 
     it('ignores errors finding the activity when sending to members of selected groups', done => {
-      sinon.stub(groupsAndMembersService, 'addMembersToGroup', (group, callback) => {
+      sinon.stub(groupsAndMembersService, 'addMembersToGroup').callsFake((group, callback) => {
         if (group === null) { return callback(null); }
         if (group === groupA) { group.members = [new Member({email: 'memberA'})]; }
         if (group === groupB) { group.members = [new Member({email: 'memberB'})]; }
@@ -313,7 +313,7 @@ describe('MailsenderService', () => {
     });
 
     it('does not send to members if filling groups with members causes error', done => {
-      sinon.stub(groupsAndMembersService, 'addMembersToGroup', (group, callback) => {
+      sinon.stub(groupsAndMembersService, 'addMembersToGroup').callsFake((group, callback) => {
         callback(new Error());
       });
 

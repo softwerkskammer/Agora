@@ -22,10 +22,10 @@ describe('Groups and Members Service (Subscriptions)', () => {
   let subscribedGroups = [];
 
   beforeEach(() => {
-    getMemberForIdSpy = sinon.stub(memberstore, 'getMemberForId', (memberID, callback) => { callback(null, member); });
-    addUserToListSpy = sinon.stub(groupsService, 'addUserToList', (someEmail, list, callback) => { callback(); });
-    removeUserFromListSpy = sinon.stub(groupsService, 'removeUserFromList', (someEmail, list, callback) => { callback(); });
-    sinon.stub(groupsService, 'getSubscribedGroupsForUser', (memberEmail, callback) => { callback(null, subscribedGroups); });
+    getMemberForIdSpy = sinon.stub(memberstore, 'getMemberForId').callsFake((memberID, callback) => { callback(null, member); });
+    addUserToListSpy = sinon.stub(groupsService, 'addUserToList').callsFake((someEmail, list, callback) => { callback(); });
+    removeUserFromListSpy = sinon.stub(groupsService, 'removeUserFromList').callsFake((someEmail, list, callback) => { callback(); });
+    sinon.stub(groupsService, 'getSubscribedGroupsForUser').callsFake((memberEmail, callback) => { callback(null, subscribedGroups); });
   });
 
   afterEach(() => {
@@ -39,7 +39,7 @@ describe('Groups and Members Service (Subscriptions)', () => {
     it('subscribes a new contact person', done => {
       groupA.organizers.push(member.id());
       subscribedGroups.push(groupA);
-      sinon.stub(groupsService, 'getMailinglistUsersOfList', (listname, callback) => { callback(null, []); });
+      sinon.stub(groupsService, 'getMailinglistUsersOfList').callsFake((listname, callback) => { callback(null, []); });
 
       groupsAndMembersService.updateAdminlistSubscriptions(member.id(), err => {
         expect(addUserToListSpy.called, 'subscribe is called').to.be(true);
@@ -49,7 +49,7 @@ describe('Groups and Members Service (Subscriptions)', () => {
     });
 
     it('unsubscribes an ex-contact person', done => {
-      sinon.stub(groupsService, 'getMailinglistUsersOfList', (listname, callback) => { callback(null, [email]); });
+      sinon.stub(groupsService, 'getMailinglistUsersOfList').callsFake((listname, callback) => { callback(null, [email]); });
 
       groupsAndMembersService.updateAdminlistSubscriptions(member.id(), err => {
         expect(addUserToListSpy.called, 'subscribe is called').to.be(false);
@@ -61,7 +61,7 @@ describe('Groups and Members Service (Subscriptions)', () => {
     it('does nothing if contact person is already subscribed', done => {
       groupA.organizers.push(member.id());
       subscribedGroups.push(groupA);
-      sinon.stub(groupsService, 'getMailinglistUsersOfList', (listname, callback) => { callback(null, [email]); });
+      sinon.stub(groupsService, 'getMailinglistUsersOfList').callsFake((listname, callback) => { callback(null, [email]); });
 
       groupsAndMembersService.updateAdminlistSubscriptions(member.id(), err => {
         expect(addUserToListSpy.called, 'subscribe is called').to.be(false);
@@ -71,7 +71,7 @@ describe('Groups and Members Service (Subscriptions)', () => {
     });
 
     it('does nothing if non-contact person is not subscribed', done => {
-      sinon.stub(groupsService, 'getMailinglistUsersOfList', (listname, callback) => { callback(null, []); });
+      sinon.stub(groupsService, 'getMailinglistUsersOfList').callsFake((listname, callback) => { callback(null, []); });
 
       groupsAndMembersService.updateAdminlistSubscriptions(member.id(), err => {
         expect(addUserToListSpy.called, 'subscribe is called').to.be(false);
@@ -87,8 +87,8 @@ describe('Groups and Members Service (Subscriptions)', () => {
 
     beforeEach(() => {
       subscribedGroups.push(groupA);
-      createOrSaveGroupSpy = sinon.stub(groupsService, 'createOrSaveGroup', (group, callback) => { callback(); });
-      sinon.stub(groupsService, 'getMailinglistUsersOfList', (listname, callback) => { callback(null, []); });
+      createOrSaveGroupSpy = sinon.stub(groupsService, 'createOrSaveGroup').callsFake((group, callback) => { callback(); });
+      sinon.stub(groupsService, 'getMailinglistUsersOfList').callsFake((listname, callback) => { callback(null, []); });
     });
 
     it('calls groupService to perform saving', done => {
@@ -125,8 +125,8 @@ describe('Groups and Members Service (Subscriptions)', () => {
 
     beforeEach(() => {
       subscribedGroups.push(groupA);
-      updateSubscriptionsSpy = sinon.stub(groupsService, 'updateSubscriptions', (memberEmail, oldEmail, subscriptions, callback) => { callback(); });
-      sinon.stub(groupsService, 'getMailinglistUsersOfList', (listname, callback) => { callback(null, mailinglistUsers); });
+      updateSubscriptionsSpy = sinon.stub(groupsService, 'updateSubscriptions').callsFake((memberEmail, oldEmail, subscriptions, callback) => { callback(); });
+      sinon.stub(groupsService, 'getMailinglistUsersOfList').callsFake((listname, callback) => { callback(null, mailinglistUsers); });
     });
 
     it('calls groupService to perform saving', done => {
@@ -162,7 +162,7 @@ describe('Groups and Members Service (Subscriptions)', () => {
     let mailinglistUsers = [];
 
     beforeEach(() => {
-      sinon.stub(groupsService, 'getMailinglistUsersOfList', (listname, callback) => { callback(null, mailinglistUsers); });
+      sinon.stub(groupsService, 'getMailinglistUsersOfList').callsFake((listname, callback) => { callback(null, mailinglistUsers); });
     });
 
     afterEach(() => {

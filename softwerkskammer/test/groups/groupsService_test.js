@@ -28,10 +28,10 @@ describe('Groups Service (getSubscribedGroupsForUser)', () => {
   });
 
   it('returns an empty array of groups for a user who is not subscribed anywhere', done => {
-    sinon.stub(groupstore, 'groupsByLists', (lists, globalCallback) => {
+    sinon.stub(groupstore, 'groupsByLists').callsFake((lists, globalCallback) => {
       globalCallback(null, []);
     });
-    sinon.stub(listAdapter, 'getSubscribedListsForUser', (email, callback) => { callback(null, []); });
+    sinon.stub(listAdapter, 'getSubscribedListsForUser').callsFake((email, callback) => { callback(null, []); });
 
     groupsService.getSubscribedGroupsForUser('me@bla.com', (err, validLists) => {
       expect(validLists).to.not.be(null);
@@ -41,10 +41,10 @@ describe('Groups Service (getSubscribedGroupsForUser)', () => {
   });
 
   it('returns one group for a user who is subscribed to one list', done => {
-    sinon.stub(groupstore, 'groupsByLists', (lists, globalCallback) => {
+    sinon.stub(groupstore, 'groupsByLists').callsFake((lists, globalCallback) => {
       globalCallback(null, [GroupA]);
     });
-    sinon.stub(listAdapter, 'getSubscribedListsForUser', (email, callback) => { callback(null, ['GroupA']); });
+    sinon.stub(listAdapter, 'getSubscribedListsForUser').callsFake((email, callback) => { callback(null, ['GroupA']); });
 
     groupsService.getSubscribedGroupsForUser('GroupAuser@softwerkskammer.de', (err, validLists) => {
       expect(validLists).to.not.be(null);
@@ -55,10 +55,10 @@ describe('Groups Service (getSubscribedGroupsForUser)', () => {
   });
 
   it('returns two groups for a user who is subscribed to two lists', done => {
-    sinon.stub(groupstore, 'groupsByLists', (lists, globalCallback) => {
+    sinon.stub(groupstore, 'groupsByLists').callsFake((lists, globalCallback) => {
       globalCallback(null, [GroupA, GroupB]);
     });
-    sinon.stub(listAdapter, 'getSubscribedListsForUser', (email, callback) => {
+    sinon.stub(listAdapter, 'getSubscribedListsForUser').callsFake((email, callback) => {
       callback(null, ['GroupA', 'GroupB']);
     });
 
@@ -72,10 +72,10 @@ describe('Groups Service (getSubscribedGroupsForUser)', () => {
   });
 
   it('never returns the admin group subscription', done => {
-    const spy = sinon.stub(groupstore, 'groupsByLists', (lists, globalCallback) => {
+    const spy = sinon.stub(groupstore, 'groupsByLists').callsFake((lists, globalCallback) => {
       globalCallback(null, []);
     });
-    sinon.stub(listAdapter, 'getSubscribedListsForUser', (email, callback) => {
+    sinon.stub(listAdapter, 'getSubscribedListsForUser').callsFake((email, callback) => {
       callback(null, ['GroupA', 'GroupB', conf.get('adminListName')]);
     });
 
@@ -86,7 +86,7 @@ describe('Groups Service (getSubscribedGroupsForUser)', () => {
   });
 
   it('handles errors in retrieving lists', done => {
-    sinon.stub(listAdapter, 'getSubscribedListsForUser', (email, callback) => {
+    sinon.stub(listAdapter, 'getSubscribedListsForUser').callsFake((email, callback) => {
       callback(new Error(), null);
     });
 
@@ -104,10 +104,10 @@ describe('Groups Service (getAllAvailableGroups)', () => {
   });
 
   it('returns an empty array of groups if there are no lists defined in mailinglist', done => {
-    sinon.stub(groupstore, 'groupsByLists', (lists, globalCallback) => {
+    sinon.stub(groupstore, 'groupsByLists').callsFake((lists, globalCallback) => {
       globalCallback(null, []);
     });
-    sinon.stub(listAdapter, 'getAllAvailableLists', callback => { callback(null, []); });
+    sinon.stub(listAdapter, 'getAllAvailableLists').callsFake(callback => { callback(null, []); });
 
     groupsService.getAllAvailableGroups((err, lists) => {
       expect(lists).to.not.be(null);
@@ -117,10 +117,10 @@ describe('Groups Service (getAllAvailableGroups)', () => {
   });
 
   it('returns an empty array of groups if there is one list defined in mailinglist but there is no matching group in Softwerkskammer', done => {
-    sinon.stub(groupstore, 'groupsByLists', (lists, globalCallback) => {
+    sinon.stub(groupstore, 'groupsByLists').callsFake((lists, globalCallback) => {
       globalCallback(null, []);
     });
-    sinon.stub(listAdapter, 'getAllAvailableLists', callback => { callback(null, ['unknownGroup']); });
+    sinon.stub(listAdapter, 'getAllAvailableLists').callsFake(callback => { callback(null, ['unknownGroup']); });
 
     groupsService.getAllAvailableGroups((err, lists) => {
       expect(lists).to.not.be(null);
@@ -130,10 +130,10 @@ describe('Groups Service (getAllAvailableGroups)', () => {
   });
 
   it('returns one group if there are two lists defined in mailinglist and there is one matching group in Softwerkskammer', done => {
-    sinon.stub(groupstore, 'groupsByLists', (lists, globalCallback) => {
+    sinon.stub(groupstore, 'groupsByLists').callsFake((lists, globalCallback) => {
       globalCallback(null, [GroupA]);
     });
-    sinon.stub(listAdapter, 'getAllAvailableLists', callback => { callback(null, ['GroupA', 'unknownGroup']); });
+    sinon.stub(listAdapter, 'getAllAvailableLists').callsFake(callback => { callback(null, ['GroupA', 'unknownGroup']); });
 
     groupsService.getAllAvailableGroups((err, lists) => {
       expect(lists).to.not.be(null);
@@ -144,10 +144,10 @@ describe('Groups Service (getAllAvailableGroups)', () => {
   });
 
   it('returns two groups if there are two lists defined in mailinglist and there are two matching groups in Softwerkskammer', done => {
-    sinon.stub(groupstore, 'groupsByLists', (lists, globalCallback) => {
+    sinon.stub(groupstore, 'groupsByLists').callsFake((lists, globalCallback) => {
       globalCallback(null, [GroupA, GroupB]);
     });
-    sinon.stub(listAdapter, 'getAllAvailableLists', callback => { callback(null, ['GroupA', 'GroupB']); });
+    sinon.stub(listAdapter, 'getAllAvailableLists').callsFake(callback => { callback(null, ['GroupA', 'GroupB']); });
 
     groupsService.getAllAvailableGroups((err, lists) => {
       expect(lists).to.not.be(null);
@@ -171,35 +171,37 @@ describe('Groups Service (getMailinglistUsersOfList)', () => {
   });
 
   it('returns an empty array if there are no users subscribed to the list "groupa" in mailinglist', done => {
-    sinon.stub(listAdapter, 'getUsersOfList', (groupname, callback) => { callback(null, []); });
+    sinon.stub(listAdapter, 'getUsersOfList').callsFake((groupname, callback) => { callback(null, []); });
 
     verify('groupsService').canHandle('getMailinglistUsersOfList')
       .withArgs('groupa', cb).andCallsCallbackWith(null, []).on(groupsService, done);
   });
 
   it('returns an array with the email address if there is one user subscribed to the list "groupa" in mailinglist', done => {
-    sinon.stub(listAdapter, 'getUsersOfList', (groupname, callback) => { callback(null, ['email1']); });
+    sinon.stub(listAdapter, 'getUsersOfList').callsFake((groupname, callback) => { callback(null, ['email1']); });
 
     verify('groupsService').canHandle('getMailinglistUsersOfList')
       .withArgs('groupa', cb).andCallsCallbackWith(null, ['email1']).on(groupsService, done);
   });
 
   it('returns an empty array of lists if there are no users subscribed to the list "groupb" in mailinglist', done => {
-    sinon.stub(listAdapter, 'getUsersOfList', (groupname, callback) => { callback(null, []); });
+    sinon.stub(listAdapter, 'getUsersOfList').callsFake((groupname, callback) => { callback(null, []); });
 
     verify('groupsService').canHandle('getMailinglistUsersOfList')
       .withArgs('groupb', cb).andCallsCallbackWith(null, []).on(groupsService, done);
   });
 
   it('returns an array with the email address if there is one user subscribed to the list "groupb" in mailinglist', done => {
-    sinon.stub(listAdapter, 'getUsersOfList', (groupname, callback) => { callback(null, ['email1']); });
+    sinon.stub(listAdapter, 'getUsersOfList').callsFake((groupname, callback) => { callback(null, ['email1']); });
 
     verify('groupsService').canHandle('getMailinglistUsersOfList')
       .withArgs('groupb', cb).andCallsCallbackWith(null, ['email1']).on(groupsService, done);
   });
 
   it('returns multiple users subscribed to the list in mailinglist', done => {
-    sinon.stub(listAdapter, 'getUsersOfList', (groupname, callback) => { callback(null, ['email1', 'email2', 'email3']); });
+    sinon.stub(listAdapter, 'getUsersOfList').callsFake(
+      (groupname, callback) => { callback(null, ['email1', 'email2', 'email3']); }
+    );
 
     verify('groupsService').canHandle('getMailinglistUsersOfList')
       .withArgs('groupa', cb).andCallsCallbackWith(null, ['email1', 'email2', 'email3']).on(groupsService, done);
@@ -212,10 +214,10 @@ describe('Groups Service (createOrSaveGroup)', () => {
   let saveGroupSpy;
 
   beforeEach(() => {
-    createListSpy = sinon.stub(listAdapter, 'createList', (listname, prefix, callback) => { callback(); });
-    saveGroupSpy = sinon.stub(groupstore, 'saveGroup', (group, callback) => { callback(null); });
+    createListSpy = sinon.stub(listAdapter, 'createList').callsFake((listname, prefix, callback) => { callback(); });
+    saveGroupSpy = sinon.stub(groupstore, 'saveGroup').callsFake((group, callback) => { callback(null); });
 
-    sinon.stub(groupstore, 'getGroup', (name, callback) => {
+    sinon.stub(groupstore, 'getGroup').callsFake((name, callback) => {
       if (name === 'groupa') {
         callback(null, GroupA);
       } else if (name === 'groupb') {
@@ -288,10 +290,10 @@ describe('Groups Service (allGroupColors)', () => {
   it('returns an object with group id and color', done => {
     GroupA.color = '#FFFFFF';
     GroupB.color = '#AAAAAA';
-    sinon.stub(groupstore, 'groupsByLists', (lists, globalCallback) => {
+    sinon.stub(groupstore, 'groupsByLists').callsFake((lists, globalCallback) => {
       globalCallback(null, [GroupA, GroupB]);
     });
-    sinon.stub(listAdapter, 'getAllAvailableLists', callback => { callback(null, ['GroupA', 'GroupB']); });
+    sinon.stub(listAdapter, 'getAllAvailableLists').callsFake(callback => { callback(null, ['GroupA', 'GroupB']); });
 
     groupsService.allGroupColors((err, colorMap) => {
       expect(colorMap).to.have.ownProperty('groupa', '#FFFFFF');
@@ -303,7 +305,7 @@ describe('Groups Service (allGroupColors)', () => {
   });
 
   it('handles an error gracefully', done => {
-    sinon.stub(listAdapter, 'getAllAvailableLists', callback => { callback(new Error()); });
+    sinon.stub(listAdapter, 'getAllAvailableLists').callsFake(callback => { callback(new Error()); });
 
     groupsService.allGroupColors(err => {
       expect(err).to.exist();
@@ -314,7 +316,7 @@ describe('Groups Service (allGroupColors)', () => {
 
 describe('Groups Service (isGroupNameAvailable)', () => {
   before(() => {
-    sinon.stub(groupstore, 'getGroup', (name, callback) => {
+    sinon.stub(groupstore, 'getGroup').callsFake((name, callback) => {
       if (name === 'GroupA') {
         callback(null, GroupA);
       } else if (name === 'GroupB') {

@@ -56,7 +56,7 @@ describe('Waitinglist Service with DB', () => {
 
     invocation = 1;
 
-    sinon.stub(activitystore, 'getActivity', (url, callback) => {
+    sinon.stub(activitystore, 'getActivity').callsFake((url, callback) => {
       // on the first invocation, getActivity returns an activity without registrant to mimick a racing condition.
       if (invocation === 1) {
         invocation = 2;
@@ -66,7 +66,7 @@ describe('Waitinglist Service with DB', () => {
       return callback(null, activityAfterConcurrentAccess);
     });
 
-    sinon.stub(memberstore, 'getMember', (nickname, callback) => {
+    sinon.stub(memberstore, 'getMember').callsFake((nickname, callback) => {
       if (nickname === 'nick') {
         return callback(null, new Member({id: 'memberIdNew'}));
       }
@@ -76,7 +76,7 @@ describe('Waitinglist Service with DB', () => {
       return callback(new Error('Member ' + nickname + ' not found.'));
     });
 
-    sinon.stub(mailsenderService, 'sendRegistrationAllowed', (member, activity, entry, callback) => {
+    sinon.stub(mailsenderService, 'sendRegistrationAllowed').callsFake((member, activity, entry, callback) => {
       // we don't want to send an email
       return callback(null);
     });

@@ -13,16 +13,16 @@ describe('Wiki Service', () => {
   const nonExistingPage = 'global/nonExisting';
 
   beforeEach(() => {
-    sinon.stub(Git, 'readFile', (completePageName, pageVersion, callback) => {
+    sinon.stub(Git, 'readFile').callsFake((completePageName, pageVersion, callback) => {
       if (completePageName === nonExistingPage + '.md') {
         return callback(new Error());
       }
       callback(null, content);
     });
-    sinon.stub(Git, 'log', (path, version, howMany, callback) => {
+    sinon.stub(Git, 'log').callsFake((path, version, howMany, callback) => {
       callback(null, []);
     });
-    sinon.stub(Git, 'absPath', path => path);
+    sinon.stub(Git, 'absPath').callsFake(path => path);
   });
 
   afterEach(() => {
@@ -126,7 +126,7 @@ describe('WikiService (list for dashboard)', () => {
         'comment': 'no comment'
       }
     ];
-    sinon.stub(Git, 'log', (path, version, howMany, callback) => {
+    sinon.stub(Git, 'log').callsFake((path, version, howMany, callback) => {
       callback(null, metadatas);
     });
   });
@@ -151,7 +151,7 @@ describe('WikiService (list for dashboard)', () => {
 describe('WikiService (getBlogPosts)', () => {
 
   beforeEach(() => {
-    sinon.stub(Git, 'lsblogposts', (groupname, pattern, callback) => {
+    sinon.stub(Git, 'lsblogposts').callsFake((groupname, pattern, callback) => {
       if (groupname === 'internet') {
         callback(null, ['internet/blog_2013-10-01AgoraCodeKata.md', 'internet/blog_2013-11-01LeanCoffeeTest.md']);
       } else if (groupname === 'alle') {
@@ -160,7 +160,7 @@ describe('WikiService (getBlogPosts)', () => {
         callback(null, ['error/blog_2013-10-01.md', 'error/blog_notadate.md', 'error/blog_2013-05-01.md', 'error/blog_2013-05-1.md', 'error/blog_2013-5-01.md', 'error/blog_.md']);
       }
     });
-    sinon.stub(Git, 'readFileFs', (path, callback) => {
+    sinon.stub(Git, 'readFileFs').callsFake((path, callback) => {
       if (path === 'internet/blog_2013-11-01LeanCoffeeTest.md') {
         callback(null,
           '####   Lean Coffee November 2013\n' +
@@ -257,19 +257,19 @@ describe('Wiki Service (daily digest)', () => {
   const metadataB1 = {author: 'authorB1', fullhash: 'hashB1', date: '2014-01-11 18:45:29 +0100'};
 
   beforeEach(() => {
-    sinon.stub(Git, 'ls', (dirname, callback) => {
+    sinon.stub(Git, 'ls').callsFake((dirname, callback) => {
       if (dirname === 'dirA') { return callback(null, filesForDirA); }
       if (dirname === 'dirB') { return callback(null, filesForDirB); }
     });
 
-    sinon.stub(Git, 'latestChanges', (filename, someMoment, callback) => {
+    sinon.stub(Git, 'latestChanges').callsFake((filename, someMoment, callback) => {
       if (filename.indexOf('A1') > -1) { return callback(null, [metadataA1]); }
       if (filename.indexOf('A2') > -1) { return callback(null, [metadataA2]); }
       if (filename.indexOf('B1') > -1) { return callback(null, [metadataB1]); }
       callback(null, []);
     });
 
-    sinon.stub(Git, 'readFile', (filename, tag, callback) => {
+    sinon.stub(Git, 'readFile').callsFake((filename, tag, callback) => {
       callback(null);
     });
   });
@@ -280,11 +280,11 @@ describe('Wiki Service (daily digest)', () => {
 
   describe('Digest', () => {
     it('finds all changed pages', done => {
-      sinon.stub(Git, 'lsdirs', callback => {
+      sinon.stub(Git, 'lsdirs').callsFake(callback => {
         callback(null, subdirs);
       });
 
-      sinon.stub(Git, 'diff', (path, revisions, callback) => {
+      sinon.stub(Git, 'diff').callsFake((path, revisions, callback) => {
         callback(null, '');
       });
 
@@ -302,7 +302,7 @@ describe('Wiki Service (daily digest)', () => {
     });
 
     it('handles an error correctly', done => {
-      sinon.stub(Git, 'lsdirs', callback => {
+      sinon.stub(Git, 'lsdirs').callsFake(callback => {
         callback(new Error());
       });
 

@@ -29,7 +29,7 @@ describe('Groups and Members Service', () => {
     describe('when some error occurs', () => {
 
       it('returns an error when the member loading caused an error', done => {
-        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', (nickname, callback) => { callback(new Error('some error')); });
+        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups').callsFake((nickname, callback) => { callback(new Error('some error')); });
 
         groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(undefined, {previousNickname: 'nick'}, accessrights, undefined, (err, nickname) => {
           expect(err.message).to.equal('some error');
@@ -39,8 +39,8 @@ describe('Groups and Members Service', () => {
       });
 
       it('returns an error when the submitted member is a new member and saving the member caused an error', done => {
-        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', (nickname, callback) => { callback(null, null); });
-        sinon.stub(memberstore, 'saveMember', (anyMember, callback) => { callback(new Error('some error')); });
+        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups').callsFake((nickname, callback) => { callback(null, null); });
+        sinon.stub(memberstore, 'saveMember').callsFake((anyMember, callback) => { callback(new Error('some error')); });
 
         groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(undefined, {previousNickname: 'nick'}, accessrights, undefined, (err, nickname) => {
           expect(err.message).to.equal('some error');
@@ -50,9 +50,9 @@ describe('Groups and Members Service', () => {
       });
 
       it('returns an error when the submitted member is an existing member and we are allowed to edit the member but saving causes an error', done => {
-        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', (nickname, callback) => { callback(null, member); });
+        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups').callsFake((nickname, callback) => { callback(null, member); });
         accessrights.canEditMember = () => true;
-        sinon.stub(memberstore, 'saveMember', (anyMember, callback) => { callback(new Error('some error')); });
+        sinon.stub(memberstore, 'saveMember').callsFake((anyMember, callback) => { callback(new Error('some error')); });
 
         groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(undefined, memberformData, accessrights, undefined, (err, nickname) => {
           expect(err.message).to.equal('some error');
@@ -66,9 +66,9 @@ describe('Groups and Members Service', () => {
     describe('when the submitted member is a new member', () => {
 
       beforeEach(() => {
-        sinon.stub(memberstore, 'saveMember', (anyMember, callback) => { callback(null); });
-        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', (nickname, callback) => { callback(null, null); });
-        sinon.stub(groupsAndMembersService, 'updateSubscriptions', (anyMember, oldEmail, subscriptions, callback) => { callback(null); });
+        sinon.stub(memberstore, 'saveMember').callsFake((anyMember, callback) => { callback(null); });
+        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups').callsFake((nickname, callback) => { callback(null, null); });
+        sinon.stub(groupsAndMembersService, 'updateSubscriptions').callsFake((anyMember, oldEmail, subscriptions, callback) => { callback(null); });
       });
 
       it('adds the new member to the sessionUser', done => {
@@ -87,9 +87,9 @@ describe('Groups and Members Service', () => {
     describe('when the submitted member is an existing member', () => {
 
       beforeEach(() => {
-        sinon.stub(memberstore, 'saveMember', (anyMember, callback) => { callback(null); });
-        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', (nickname, callback) => { callback(null, member); });
-        sinon.stub(groupsAndMembersService, 'updateSubscriptions', (anyMember, oldEmail, subscriptions, callback) => { callback(null); });
+        sinon.stub(memberstore, 'saveMember').callsFake((anyMember, callback) => { callback(null); });
+        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups').callsFake((nickname, callback) => { callback(null, member); });
+        sinon.stub(groupsAndMembersService, 'updateSubscriptions').callsFake((anyMember, oldEmail, subscriptions, callback) => { callback(null); });
       });
 
       it('returns null when we are not allowed to edit the member', done => {
@@ -141,9 +141,9 @@ describe('Groups and Members Service', () => {
 
     describe('called from SoCraTes', () => {
       beforeEach(() => {
-        sinon.stub(memberstore, 'saveMember', (anyMember, callback) => { callback(null); });
-        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups', (nickname, callback) => { callback(null, member); });
-        sinon.stub(groupsAndMembersService, 'updateSubscriptions', (anyMember, oldEmail, subscriptions, callback) => { callback(null); });
+        sinon.stub(memberstore, 'saveMember').callsFake((anyMember, callback) => { callback(null); });
+        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups').callsFake((nickname, callback) => { callback(null, member); });
+        sinon.stub(groupsAndMembersService, 'updateSubscriptions').callsFake((anyMember, oldEmail, subscriptions, callback) => { callback(null); });
       });
 
       it('does _not_ set to SoCraTes only if the member seems to be a Softwerkskammer member', done => {

@@ -17,10 +17,10 @@ describe('Wikisubdirs', () => {
     new Group({id: 'groupWithoutWiki', type: Group.allTypes()[1]})
   ];
   beforeEach(() => {
-    sinon.stub(Git, 'lsdirs', callback => {
+    sinon.stub(Git, 'lsdirs').callsFake(callback => {
       callback(null, ['a', 'c', 'b', 'andere']);
     });
-    sinon.stub(groupstore, 'allGroups', callback => {
+    sinon.stub(groupstore, 'allGroups').callsFake(callback => {
       callback(null, allGroups);
     });
   });

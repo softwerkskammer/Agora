@@ -16,7 +16,7 @@ describe('ActivityResult service', () => {
 
   beforeEach(() => {
     activityResult = {id: 'Hackergarten2', photos: [{id: 'image1.jpg'}]};
-    getById = sinon.stub(persistence, 'getById', (object, callback) => callback(null, activityResult));
+    getById = sinon.stub(persistence, 'getById').callsFake((object, callback) => callback(null, activityResult));
   });
 
   afterEach(() => {
@@ -33,7 +33,7 @@ describe('ActivityResult service', () => {
 
     it('should return an error if activity does not exist', done => {
       getById.restore();
-      sinon.stub(persistence, 'getById', (object, callback) => callback(new Error('not found'), null));
+      sinon.stub(persistence, 'getById').callsFake((object, callback) => callback(new Error('not found'), null));
 
       service.getActivityResultByName('non-existing-id', (err, result) => {
         expect(err).to.exist();
@@ -51,12 +51,12 @@ describe('ActivityResult service', () => {
   });
 
   it('addPhotoToActivityResult should add an image to an activityresult', done => {
-    const saveStub = sinon.stub(persistence, 'save', (object, callback) => {
+    const saveStub = sinon.stub(persistence, 'save').callsFake((object, callback) => {
       callback();
     });
 
-    sinon.stub(galleryService, 'storeImage', (path, callback) => { callback(null, path); });
-    sinon.stub(galleryService, 'getMetadataForImage', (path, callback) => { callback(null); });
+    sinon.stub(galleryService, 'storeImage').callsFake((path, callback) => { callback(null, path); });
+    sinon.stub(galleryService, 'getMetadataForImage').callsFake((path, callback) => { callback(null); });
 
     service.addPhotoToActivityResult('Hackergarten2', {path: 'my_uri'}, 'memberId', (err, imageUri) => {
       expect(saveStub.called).to.be(true);
@@ -68,7 +68,7 @@ describe('ActivityResult service', () => {
   });
 
   it('updatePhotoOfActivityResult should change an image in an activityresult', done => {
-    const saveStub = sinon.stub(persistence, 'save', (object, callback) => {
+    const saveStub = sinon.stub(persistence, 'save').callsFake((object, callback) => {
       callback();
     });
 

@@ -23,18 +23,17 @@ describe('Mailarchive', () => {
   const idOfMailWithMember = 'id2';
 
   beforeEach(() => {
-    sinon.stub(memberstore, 'getMemberForId',
-      (id, callback) => {
-        if (id === memberID) { return callback(null, sampleMember); }
-        callback(null, null);
-      });
+    sinon.stub(memberstore, 'getMemberForId').callsFake((id, callback) => {
+      if (id === memberID) { return callback(null, sampleMember); }
+      callback(null, null);
+    });
 
-    getById = sinon.stub(persistence, 'getById', (id, callback) => {
+    getById = sinon.stub(persistence, 'getById').callsFake((id, callback) => {
       if (id === idOfMailWithMember) { return callback(null, sampleMail3); }
       callback(null, sampleMail1);
     });
 
-    listByField = sinon.stub(persistence, 'listByField', (searchObject, sortOrder, callback) => {
+    listByField = sinon.stub(persistence, 'listByField').callsFake((searchObject, sortOrder, callback) => {
       callback(null, sampleMailList);
     });
   });

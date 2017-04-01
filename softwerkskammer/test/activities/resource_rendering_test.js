@@ -14,14 +14,14 @@ describe('ResourceRegistrationRenderer', () => {
   let resourceNamesList;
 
   function resultForState(state) {
-    sinon.stub(resource, 'registrationStateFor', () => state);
+    sinon.stub(resource, 'registrationStateFor').callsFake(() => state);
     return resourceRegistrationRenderer.htmlRepresentationOf(activity);
   }
 
   beforeEach(() => {
     resourceNamesList = ['name1'];
-    sinon.stub(activity, 'resourceNamed', () => resource);
-    sinon.stub(activity, 'resourceNames', () => resourceNamesList);
+    sinon.stub(activity, 'resourceNamed').callsFake(() => resource);
+    sinon.stub(activity, 'resourceNames').callsFake(() => resourceNamesList);
   });
 
   afterEach(() => {

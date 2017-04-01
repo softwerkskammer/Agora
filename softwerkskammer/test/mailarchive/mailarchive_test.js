@@ -27,7 +27,7 @@ describe('Mail content page', () => {
   });
 
   it('shows text "Keine E-Mails" if mail is not found', done => {
-    const mailForId = sinon.stub(mailarchiveService, 'mailForId', (id, callback) => {callback(null, undefined); });
+    const mailForId = sinon.stub(mailarchiveService, 'mailForId').callsFake((id, callback) => {callback(null, undefined); });
     request(app)
       .get('/message/mailID')
       .expect(200)
@@ -43,7 +43,7 @@ describe('Mail content page', () => {
       'id': '<message1@nomail.com>'
     });
 
-    const mailForId = sinon.stub(mailarchiveService, 'mailForId', (id, callback) => {callback(null, displayedMail); });
+    const mailForId = sinon.stub(mailarchiveService, 'mailForId').callsFake((id, callback) => {callback(null, displayedMail); });
     request(app)
       .get('/message/mailID')
       .expect(200)
@@ -59,7 +59,7 @@ describe('Mail content page', () => {
       'id': '<message1@nomail.com>'
     });
 
-    const mailForId = sinon.stub(mailarchiveService, 'mailForId', (id, callback) => {callback(null, displayedMail); });
+    const mailForId = sinon.stub(mailarchiveService, 'mailForId').callsFake((id, callback) => {callback(null, displayedMail); });
     request(app)
       .get('/message/mailID')
       .expect(200)
@@ -75,7 +75,7 @@ describe('Mail content page', () => {
     });
     displayedMail.member = member;
 
-    const mailForId = sinon.stub(mailarchiveService, 'mailForId', (id, callback) => {callback(null, displayedMail); });
+    const mailForId = sinon.stub(mailarchiveService, 'mailForId').callsFake((id, callback) => {callback(null, displayedMail); });
 
     request(app)
       .get('/message/mailID')
@@ -94,8 +94,8 @@ describe('Mail index page', () => {
   });
 
   function stubMailHeaders(headers) {
-    sinon.stub(mailarchiveService, 'threadedMails', (group, callback) => {callback(null, headers); });
-    sinon.stub(mailarchiveService, 'unthreadedMails', (group, callback) => {callback(null, headers); });
+    sinon.stub(mailarchiveService, 'threadedMails').callsFake((group, callback) => {callback(null, headers); });
+    sinon.stub(mailarchiveService, 'unthreadedMails').callsFake((group, callback) => {callback(null, headers); });
   }
 
   it('shows group name in the title', done => {
