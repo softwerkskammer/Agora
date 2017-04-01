@@ -49,7 +49,8 @@ module.exports = {
   },
   subscriber: {
     notifyOnWikiChangesSoCraTes: function () { return true; },
-    country: function () {return 'UNKNOWN'; }
+    country: function () {return 'UNKNOWN'; },
+    addon: function () { return {pronoun: function () {return '';}};}
   },
   paymentInfo: {
     paymentDone: function () { return false; },
@@ -63,7 +64,11 @@ module.exports = {
     tShirtSize: function () { return 'yes'; },
     roommate: function () { return 'yes'; },
     deposit: function () { return ''; },
-    remarks: function () { return ''; }
+    pronoun: function () { return ''; },
+    remarks: function () { return ''; },
+    diet: function () { return ''; },
+    needsAssistance: function () { return false; },
+    canProvideAssistance: function () { return false; }
   },
   roomOptions: [
     {

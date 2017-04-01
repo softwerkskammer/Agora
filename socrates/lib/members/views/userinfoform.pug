@@ -29,6 +29,9 @@ mixin memberinfoform(member, subscriber, newmember_text, allCountries)
           +text('lastname', 'Last name', member.lastname())
         .col-sm-12
           +singleselect('country', 'Country of Residence', subscriber ? subscriber.country() : null, 'Select your country', allCountries)
+        .col-sm-12
+          +text('pronoun', 'Preferred pronoun (will appear on your name tag)', subscriber ? subscriber.addon().pronoun() : '')
+
 
     .col-sm-6
       +text('email', 'E-Mail', member.email())
@@ -50,6 +53,12 @@ mixin userinfoform(addon, participation, sharesARoom)
       +textareaPure('homeAddress', 'Home Address', addon.homeAddress())
     .col-sm-6
       +textareaPure('billingAddress', 'Billing Address (if different)', addon.billingAddress())
+    .col-sm-12
+      p.
+        All meals will include one vegan and one 'with meat' option. If you have additional dietary restrictions, such as allergies or
+        other intolerances, please fill in the field below. While we can't promise to solve every issue, we will try our best to work
+        something out with the kitchen.
+      +text('diet', 'Special dietary restrictions', addon.diet())
   .row
     .col-sm-6.col-sm-push-6
       if participation
@@ -77,5 +86,28 @@ mixin userinfoform(addon, participation, sharesARoom)
             select#tShirtSizeFemale.form-control(name='tShirtSize')
               for item in ['', 'Ladies\' XS', 'Ladies\' S', 'Ladies\' M', 'Ladies\' L', 'Ladies\' XL', 'Ladies\' XXL', 'Ladies\' No Shirt' ]
                 option(value=item, selected=addon.tShirtSize() === item) #{item}
-      +textareaPure('remarks', 'Remarks (e.g. dietary restrictions)', addon.remarks())
-    
+      .row
+        p
+          br
+
+  .row#conferenceBuddy
+    .col-sm-12
+      legend
+        h4 "Conference Buddy"
+      p.
+        In order to make more people feel instantly welcome, we want to try something new for SoCraTes 2017: A system of support to make it easier to
+        get started with the Open Space chaos, and the many new acquaintances and sometimes intense social experience our lively and exuberant
+        community provides.
+    .col-sm-6
+      p.
+        If you believe you would benefit from someone to assist you with anything, be it coming up with a session idea, or announcing it in front
+        of 200 others in the market place, or just letting them show you the premises, please check the box below.
+      +checkbox('needsAssistance', 'I would like someone to assist/support me', addon.needsAssistance())
+    .col-sm-6
+      p.
+        Likewise, if you have been to SoCraTes or one of its sister conferences before, and you feel comfortable explaining the World Café,
+        joining someone's first try at Powerpoint Karaoke, or introducing them to a bunch of others, etc. etc., please check the box below.
+      +checkbox('canProvideAssistance', 'I have been to SoCraTes before, and I can assist/support others', addon.canProvideAssistance())
+  .row#remarks
+    .col-sm-12
+      +textareaPure('remarks', 'Additional remarks (e.g., if you require child care arrangements)', addon.remarks())
