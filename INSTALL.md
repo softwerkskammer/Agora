@@ -60,7 +60,7 @@ We propose to install grunt-cli globally via the -g option of npm. To find out m
             npm install --python=/usr/bin/python2
 
 * Start mongodb. If you only plan to use it for development, the default settings are ok. The app as well as the tests use these defaults if you did not change the configuration.
-* (Optional) Instructions for authenticated use are [here](lib/persistence/README.md)
+* (Optional) Instructions for authenticated use are [here](softwerkskammer/lib/persistence/README.md)
 
 ### The built-in wiki
 
