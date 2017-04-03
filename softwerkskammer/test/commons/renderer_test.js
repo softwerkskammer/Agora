@@ -97,6 +97,10 @@ describe('Renderer', () => {
       expect(Renderer.secondTokentextOf(undefined, '')).to.be(undefined);
       expect(Renderer.secondTokentextOf(null, '')).to.be(undefined);
     });
+
+    it('should get along with a blog post that does not have an initial text', () => {
+      expect(Renderer.secondTokentextOf('Blog Title\n\n- Enumeration', '')).to.be(undefined);
+    });
   });
 
   describe('titleAndRenderedTail', () => {
