@@ -78,14 +78,25 @@ describe('Renderer', () => {
       expect(Renderer.normalize('Caff<p>e</p> senza schiuma')).to.equal('caffpe-p-senza-schiuma');
       expect(Renderer.normalize('Per favore: nessun, dico; E un punto...')).to.equal('per-favore-nessun-dico-e-un-punto');
     });
+
+    it('should get along with "null" or "undefined" input', () => {
+      expect(Renderer.normalize(undefined)).to.be('');
+      expect(Renderer.normalize(null)).to.be('');
+    });
   });
 
   describe('firstTokentextOf', () => {
-
+    it('should get along with "null" or "undefined" input', () => {
+      expect(Renderer.firstTokentextOf(undefined, '')).to.be('');
+      expect(Renderer.firstTokentextOf(null, '')).to.be('');
+    });
   });
 
   describe('secondTokentextOf', () => {
-
+    it('should get along with "null" or "undefined" input', () => {
+      expect(Renderer.secondTokentextOf(undefined, '')).to.be(undefined);
+      expect(Renderer.secondTokentextOf(null, '')).to.be(undefined);
+    });
   });
 
   describe('titleAndRenderedTail', () => {
@@ -111,6 +122,11 @@ describe('Renderer', () => {
       const result = Renderer.titleAndRenderedTail('## Hallo *kursiv* jj\n\nDresden');
       expect(result).to.have.property('title', 'Hallo *kursiv* jj');
       expect(result).to.have.property('body', '<p>Dresden</p>\n');
+    });
+
+    it('should get along with "null" or "undefined" input', () => {
+      expect(Renderer.titleAndRenderedTail(undefined, '')).to.be('');
+      expect(Renderer.titleAndRenderedTail(null, '')).to.be('');
     });
   });
 
