@@ -73,7 +73,7 @@ module.exports = {
 
         if (event.event === e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST) {
           args.handleSuccess = () => {
-            const bookingdetails = roomOptions.informationFor(params.roomType, params.duration);
+            const bookingdetails = roomOptions.informationFor(event.roomType, event.duration);
             bookingdetails.fromWaitinglist = true;
             notifications.newParticipant(member.id(), bookingdetails);
           };

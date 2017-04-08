@@ -90,7 +90,7 @@ mixin removeParticipantWithModal(roomType, participantNick)
                 | #{t('general.delete')}
   button.btn.btn-danger(data-toggle='modal', data-target='#' + theID): i.fa.fa-trash-o.fa-fw
 
-mixin removeWaitinglistMemberWithModal(roomType, waitinglistNick)
+mixin removeWaitinglistMemberWithModal(desiredRoomTypes, waitinglistNick)
   -var theID = 'reallyRemoveWaitinglistMember' + waitinglistNick.replace(/\s/g, '').replace(/@/g, 'AT').replace(/\./g, 'DOT')
   .modal.fade(id=theID, tabindex='-1')
     .modal-dialog
@@ -105,7 +105,8 @@ mixin removeWaitinglistMemberWithModal(roomType, waitinglistNick)
             .btn-group
               button.btn.btn-default(type='cancel', data-dismiss='modal', aria-hidden='true') #{t('general.no')}
               +csrf
-              +hidden('roomType', roomType)
+              for roomType in desiredRoomTypes
+                +hidden('desiredRoomTypes', roomType)
               +hidden('waitinglistMember', waitinglistNick)
               button.btn.btn-danger(type='submit')
                 i.fa.fa-trash-o.fa-fw &nbsp;
@@ -309,7 +310,7 @@ block content
                     td #{line.member.location()}
                     td #{line.participation.roommate()}
                     td: +newWaitinglist(registrationReadModel.roomTypesOf(line.member.id()), line.member.nickname())
-                    td: +removeWaitinglistMemberWithModal(roomType, line.member.nickname())
+                    td: +removeWaitinglistMemberWithModal(registrationReadModel.roomTypesOf(line.member.id()), line.member.nickname())
 
             hr
 

@@ -72,14 +72,18 @@ module.exports = {
   },
   normalize,
   firstTokentextOf: function firstTokentextOf(content, subdir) {
+    if (content === undefined || content === null) { return ''; }
     const tokens = marked.lexer(evalTags(content, subdir));
     return tokens[0] ? tokens[0].text : '';
   },
   secondTokentextOf: function secondTokentextOf(content, subdir) {
+    if (content === undefined || content === null) { return undefined; }
     const tokens = marked.lexer(evalTags(content, subdir));
-    return tokens[1] ? marked(evalTags(tokens[1].text, subdir)) : undefined;
+    return tokens[1] && tokens[1].text !== undefined && tokens[1].text !== null
+      ? marked(evalTags(tokens[1].text, subdir)) : undefined;
   },
   titleAndRenderedTail: function titleAndRenderedTail(content, subdir) {
+    if (content === undefined || content === null) { return ''; }
     const tokens = marked.lexer(evalTags(content, subdir));
     if (tokens.length === 0) {
       return {title: '', body: ''};
