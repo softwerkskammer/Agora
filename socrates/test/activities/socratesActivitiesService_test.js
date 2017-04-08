@@ -48,6 +48,7 @@ describe('SoCraTes Activities Service', () => {
     sinon.stub(notifications, 'changedDuration');
     sinon.stub(notifications, 'changedResource');
     sinon.stub(notifications, 'changedWaitinglist');
+    sinon.stub(notifications, 'addedParticipantPair');
     removedFromParticipantsNotification = sinon.stub(notifications, 'removedFromParticipants');
     removedFromWaitinglistNotification = sinon.stub(notifications, 'removedFromWaitinglist');
 
@@ -314,6 +315,7 @@ describe('SoCraTes Activities Service', () => {
         const readModel = cache.get(socratesConstants.currentUrl + '_roomsReadModel');
         expect(readModel.roomPairsFor('bed_in_double')).to.have.length(1);
 
+        sinon.assert.calledWith(notifications.addedParticipantPair, new Member({id: 'memberIdForPair1'}), new Member({id: 'memberIdForPair2'}));
         done(err);
       });
     });
@@ -321,6 +323,7 @@ describe('SoCraTes Activities Service', () => {
     it('does not add a participant pair if the first nickname is empty', done => {
       socratesActivitiesService.addParticipantPairFor({roomType: 'bed_in_double', participant1Nick: '', participant2Nick: 'nicknameForPair2'}, err => {
         expect(saveEventStore.called).to.be.false();
+        sinon.assert.notCalled(notifications.addedParticipantPair);
         expect(err.errors).to.eql(['An empty first nickname is invalid!']);
         done();
       });
@@ -329,6 +332,7 @@ describe('SoCraTes Activities Service', () => {
     it('does not add a participant pair if the second nickname is empty', done => {
       socratesActivitiesService.addParticipantPairFor({roomType: 'bed_in_double', participant1Nick: 'nicknameForPair1', participant2Nick: ''}, err => {
         expect(saveEventStore.called).to.be.false();
+        sinon.assert.notCalled(notifications.addedParticipantPair);
         expect(err.errors).to.eql(['An empty second nickname is invalid!']);
         done();
       });
@@ -337,6 +341,7 @@ describe('SoCraTes Activities Service', () => {
     it('does not add a participant pair if the room type is invalid', done => {
       socratesActivitiesService.addParticipantPairFor({roomType: 'unknown', participant1Nick: 'nicknameForPair1', participant2Nick: 'nicknameForPair2'}, err => {
         expect(saveEventStore.called).to.be.false();
+        sinon.assert.notCalled(notifications.addedParticipantPair);
         expect(err.errors).to.eql(['The room type is invalid!']);
         done();
       });
