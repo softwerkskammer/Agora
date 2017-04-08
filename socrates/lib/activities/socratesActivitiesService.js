@@ -160,7 +160,9 @@ module.exports = {
         const args = {commandProcessor: registrationCommandProcessor, events: [event], callback};
 
         if (event.event === e.DESIRED_ROOM_TYPES_WERE_CHANGED) {
-          args.handleSuccess = () => notifications.changedWaitinglist(member, params.newDesiredRoomTypes.map(name => roomOptions.informationFor(name, 'waitinglist')));
+          const bookingdetails = roomOptions.durationFor(event.duration);
+          bookingdetails.desiredRooms = params.newDesiredRoomTypes.map(name => roomOptions.waitinglistInformationFor(name));
+          args.handleSuccess = () => notifications.changedWaitinglist(member, bookingdetails);
         }
         saveCommandProcessor(args);
       }

@@ -107,14 +107,13 @@ describe('The registration write model', () => {
       const listOfEvents = [
         events.registeredParticipantFromWaitinglist(singleBedRoom, untilSaturday, memberId1, aLongTimeAgo),
         events.waitinglistParticipantWasRegistered([bedInDouble], 2, sessionId2, memberId2, aLongTimeAgo),
-        events.desiredRoomTypesWereChanged(memberId2, [singleBedRoom], aLongTimeAgo),
+        events.desiredRoomTypesWereChanged(memberId2, [singleBedRoom], 2, aLongTimeAgo),
         events.roomTypeWasChanged(memberId1, bedInDouble, untilSundayMorning, aLongTimeAgo)
       ];
       const writeModel = new RegistrationWriteModel(listOfEvents);
 
       expect(writeModel.roomTypesOf(memberId1)).to.eql([bedInDouble]);
       expect(writeModel.roomTypesOf(memberId2)).to.eql([singleBedRoom]);
-
     });
 
     it('returns the right room types when participant/waitinglist participant was removed', () => {

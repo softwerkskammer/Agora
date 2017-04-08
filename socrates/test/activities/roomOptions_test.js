@@ -7,25 +7,39 @@ const roomOptions = beans.get('roomOptions');
 
 describe('Room Options', () => {
   describe('for a room', () => {
-    it('returns the correct room name for each room selection', () => {
+    it('information contains the correct room name for each room selection', () => {
       expect(roomOptions.informationFor('single', '2').room).to.be('single room');
       expect(roomOptions.informationFor('bed_in_double', '2').room).to.be('bed in a double room');
       expect(roomOptions.informationFor('bed_in_junior', '2').room).to.be('bed in a junior room');
       expect(roomOptions.informationFor('junior', '2').room).to.be('junior room (exclusively)');
     });
 
-    it('returns the correct number of nights for each duration selection', () => {
+    it('information contains the correct number of nights for each duration selection', () => {
       expect(roomOptions.informationFor('single', '2').nights).to.be('2');
       expect(roomOptions.informationFor('single', '3').nights).to.be('3');
       expect(roomOptions.informationFor('single', '4').nights).to.be(3);
       expect(roomOptions.informationFor('single', '5').nights).to.be(4);
     });
 
-    it('returns the correct weekday for each duration selection', () => {
+    it('information contains the correct weekday for each duration selection', () => {
       expect(roomOptions.informationFor('single', '2').until).to.be('saturday evening');
       expect(roomOptions.informationFor('single', '3').until).to.be('sunday morning');
       expect(roomOptions.informationFor('single', '4').until).to.be('sunday evening');
       expect(roomOptions.informationFor('single', '5').until).to.be('monday morning');
+    });
+
+    it('returns the correct number of nights for each duration selection', () => {
+      expect(roomOptions.durationFor('2').nights).to.be('2');
+      expect(roomOptions.durationFor('3').nights).to.be('3');
+      expect(roomOptions.durationFor('4').nights).to.be(3);
+      expect(roomOptions.durationFor('5').nights).to.be(4);
+    });
+
+    it('returns the correct weekday for each duration selection', () => {
+      expect(roomOptions.durationFor('2').until).to.be('saturday evening');
+      expect(roomOptions.durationFor('3').until).to.be('sunday morning');
+      expect(roomOptions.durationFor('4').until).to.be('sunday evening');
+      expect(roomOptions.durationFor('5').until).to.be('monday morning');
     });
 
     it('returns whether the duration is valid', () => {

@@ -517,10 +517,11 @@ describe('SoCraTes Activities Service', () => {
         const savedEventStore = saveEventStore.firstCall.args[0];
         expect(stripTimestamps(savedEventStore.state.events)).to.eql([
           {event: e.WAITINGLIST_PARTICIPANT_WAS_REGISTERED, desiredRoomTypes: ['single'], duration: 2, memberId: 'memberId', joinedWaitinglist: aLongTimeAgo.valueOf(), sessionId: 'session-id'},
-          {event: e.DESIRED_ROOM_TYPES_WERE_CHANGED, desiredRoomTypes: ['bed_in_double'], memberId: 'memberId', joinedWaitinglist: aLongTimeAgo.valueOf()}
+          {event: e.DESIRED_ROOM_TYPES_WERE_CHANGED, desiredRoomTypes: ['bed_in_double'], duration: 2, memberId: 'memberId', joinedWaitinglist: aLongTimeAgo.valueOf()}
         ]);
 
         expect(changedWaitinglistNotification.called).to.be.true();
+        sinon.assert.calledWith(notifications.changedWaitinglist, new Member({id: 'memberId'}), {desiredRooms: [{room: 'bed in a double room'}], nights: 2, until: 'saturday evening'});
 
         const writeModel = cache.get(socratesConstants.currentUrl + '_registrationWriteModel');
         expect(writeModel.roomTypesOf('memberId')).to.eql(['bed_in_double']);
