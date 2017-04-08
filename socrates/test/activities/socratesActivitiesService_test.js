@@ -49,6 +49,7 @@ describe('SoCraTes Activities Service', () => {
     sinon.stub(notifications, 'changedResource');
     sinon.stub(notifications, 'changedWaitinglist');
     sinon.stub(notifications, 'addedParticipantPair');
+    sinon.stub(notifications, 'removedParticipantPair');
     removedFromParticipantsNotification = sinon.stub(notifications, 'removedFromParticipants');
     removedFromWaitinglistNotification = sinon.stub(notifications, 'removedFromWaitinglist');
 
@@ -374,6 +375,7 @@ describe('SoCraTes Activities Service', () => {
 
         const readModel = cache.get(socratesConstants.currentUrl + '_roomsReadModel');
         expect(readModel.roomPairsFor('bed_in_double')).to.have.length(0);
+        sinon.assert.calledWith(notifications.removedParticipantPair, new Member({id: 'memberIdForPair1'}), new Member({id: 'memberIdForPair2'}));
 
         //      expect(new RoomsReadModel(listOfEvents, new RegistrationWriteModel(listOfEvents, new SoCraTesReadModel(listOfEvents))).roomPairsFor('bed_in_double')).to.eql([]);
         done(err);
@@ -384,6 +386,7 @@ describe('SoCraTes Activities Service', () => {
       socratesActivitiesService.removeParticipantPairFor({roomType: 'bed_in_double', participant1Nick: '', participant2Nick: 'nicknameForPair2'}, err => {
         expect(saveEventStore.called).to.be.false();
         expect(err.errors).to.eql(['An empty first nickname is invalid!']);
+        sinon.assert.notCalled(notifications.removedParticipantPair);
         done();
       });
     });
@@ -392,6 +395,7 @@ describe('SoCraTes Activities Service', () => {
       socratesActivitiesService.removeParticipantPairFor({roomType: 'bed_in_double', participant1Nick: 'nicknameForPair1', participant2Nick: ''}, err => {
         expect(saveEventStore.called).to.be.false();
         expect(err.errors).to.eql(['An empty second nickname is invalid!']);
+        sinon.assert.notCalled(notifications.removedParticipantPair);
         done();
       });
     });
@@ -400,6 +404,7 @@ describe('SoCraTes Activities Service', () => {
       socratesActivitiesService.removeParticipantPairFor({roomType: 'unknown', participant1Nick: 'nicknameForPair1', participant2Nick: 'nicknameForPair2'}, err => {
         expect(saveEventStore.called).to.be.false();
         expect(err.errors).to.eql(['The room type is invalid!']);
+        sinon.assert.notCalled(notifications.removedParticipantPair);
         done();
       });
     });
