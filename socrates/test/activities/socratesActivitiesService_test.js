@@ -33,10 +33,8 @@ const now = moment.tz();
 describe('SoCraTes Activities Service', () => {
 
   let listOfEvents;
-  let changedResource;
   let saveEventStore;
 
-  let changedRoomTypeNotification;
   let changedWaitinglistNotification;
   let removedFromParticipantsNotification;
   let removedFromWaitinglistNotification;
@@ -49,8 +47,7 @@ describe('SoCraTes Activities Service', () => {
 
     sinon.stub(notifications, 'newParticipant');
     sinon.stub(notifications, 'changedDuration');
-    changedResource = sinon.spy();
-    changedRoomTypeNotification = sinon.stub(notifications, 'changedResource').callsFake(changedResource);
+    sinon.stub(notifications, 'changedResource');
     changedWaitinglistNotification = sinon.stub(notifications, 'changedWaitinglist');
     removedFromParticipantsNotification = sinon.stub(notifications, 'removedFromParticipants');
     removedFromWaitinglistNotification = sinon.stub(notifications, 'removedFromWaitinglist');
@@ -259,7 +256,7 @@ describe('SoCraTes Activities Service', () => {
           {event: e.REGISTERED_PARTICIPANT_FROM_WAITINGLIST, roomType: 'single', memberId: 'memberId', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()},
           {event: e.ROOM_TYPE_WAS_CHANGED, roomType: 'bed_in_double', memberId: 'memberId', duration: 2, joinedSoCraTes: aLongTimeAgo.valueOf()}]);
 
-        expect(changedRoomTypeNotification.called).to.be.true();
+        sinon.assert.calledWith(notifications.changedResource, new Member({id: 'memberId'}), {nights: 2, room: 'bed in a double room', until: 'saturday evening'});
 
         const writeModel = cache.get(socratesConstants.currentUrl + '_registrationWriteModel');
         expect(writeModel.participantEventFor('memberId').roomType).to.eql('bed_in_double');
@@ -275,7 +272,7 @@ describe('SoCraTes Activities Service', () => {
         expect(stripTimestamps(saveEventStore.firstCall.args[0].state.events)).to.eql([
           {event: e.DID_NOT_CHANGE_ROOM_TYPE_FOR_NON_PARTICIPANT, roomType: 'bed_in_double', memberId: 'memberId'}]);
 
-        expect(changedRoomTypeNotification.called).to.be.false();
+        sinon.assert.notCalled(notifications.changedResource);
         done(err);
       });
     });
@@ -283,7 +280,7 @@ describe('SoCraTes Activities Service', () => {
     it('does not change the room type if the nickname is empty', done => {
       socratesActivitiesService.newRoomTypeFor({nickname: '', newRoomType: 'single'}, err => {
         expect(saveEventStore.called).to.be.false();
-        expect(changedRoomTypeNotification.called).to.be.false();
+        sinon.assert.notCalled(notifications.changedResource);
         expect(err.errors).to.eql(['An empty nickname is invalid!']);
         done();
       });
@@ -292,7 +289,7 @@ describe('SoCraTes Activities Service', () => {
     it('does not change the room type if the room type is invalid', done => {
       socratesActivitiesService.newRoomTypeFor({nickname: 'nickname', newRoomType: 'unknown'}, err => {
         expect(saveEventStore.called).to.be.false();
-        expect(changedRoomTypeNotification.called).to.be.false();
+        sinon.assert.notCalled(notifications.changedResource);
         expect(err.errors).to.eql(['The room type is invalid!']);
         done();
       });
