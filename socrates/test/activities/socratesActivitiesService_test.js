@@ -35,7 +35,6 @@ describe('SoCraTes Activities Service', () => {
   let listOfEvents;
   let saveEventStore;
 
-  let removedFromParticipantsNotification;
   let removedFromWaitinglistNotification;
 
   beforeEach(() => {
@@ -50,7 +49,7 @@ describe('SoCraTes Activities Service', () => {
     sinon.stub(notifications, 'changedWaitinglist');
     sinon.stub(notifications, 'addedParticipantPair');
     sinon.stub(notifications, 'removedParticipantPair');
-    removedFromParticipantsNotification = sinon.stub(notifications, 'removedFromParticipants');
+    sinon.stub(notifications, 'removedFromParticipants');
     removedFromWaitinglistNotification = sinon.stub(notifications, 'removedFromWaitinglist');
 
     sinon.stub(memberstore, 'getMember').callsFake((nickname, callback) => {
@@ -425,7 +424,7 @@ describe('SoCraTes Activities Service', () => {
           {event: e.PARTICIPANT_WAS_REMOVED, roomType: 'bed_in_double', memberId: 'memberId'}
         ]);
 
-        expect(removedFromParticipantsNotification.called).to.be.true();
+        sinon.assert.calledWith(notifications.removedFromParticipants, new Member({id: 'memberId'}));
 
         //      expect(R.keys(new RegistrationWriteModel(listOfEvents, new SoCraTesReadModel(listOfEvents)).participantsByMemberIdFor('bed_in_double'))).to.eql([]);
         done(err);
@@ -449,7 +448,7 @@ describe('SoCraTes Activities Service', () => {
           {event: e.PARTICIPANT_WAS_REMOVED, roomType: 'bed_in_double', memberId: 'memberIdForPair1'}
         ]);
 
-        expect(removedFromParticipantsNotification.called).to.be.true();
+        sinon.assert.calledWith(notifications.removedFromParticipants, new Member({id: 'memberIdForPair1'}));
 
         const registrationWriteModel = cache.get(socratesConstants.currentUrl + '_registrationWriteModel');
         const roomsReadModel = cache.get(socratesConstants.currentUrl + '_roomsReadModel');
@@ -468,7 +467,7 @@ describe('SoCraTes Activities Service', () => {
           {event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, roomType: 'bed_in_double', memberId: 'memberId'}
         ]);
 
-        expect(removedFromParticipantsNotification.called).to.be.false();
+        sinon.assert.notCalled(notifications.removedFromParticipants);
         done(err);
       });
     });
@@ -485,7 +484,7 @@ describe('SoCraTes Activities Service', () => {
           {event: e.DID_NOT_REMOVE_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED_FOR_THIS_ROOM_TYPE, roomType: 'single', memberId: 'memberId'}
         ]);
 
-        expect(removedFromParticipantsNotification.called).to.be.false();
+        sinon.assert.notCalled(notifications.removedFromParticipants);
         done(err);
       });
     });
@@ -493,7 +492,7 @@ describe('SoCraTes Activities Service', () => {
     it('does not remove a participant if the nickname is empty', done => {
       socratesActivitiesService.removeParticipantFor({roomType: 'bed_in_double', participantNick: ''}, err => {
         expect(saveEventStore.called).to.be.false();
-        expect(removedFromParticipantsNotification.called).to.be.false();
+        sinon.assert.notCalled(notifications.removedFromParticipants);
         expect(err.errors).to.eql(['An empty nickname is invalid!']);
         done();
       });
@@ -502,7 +501,7 @@ describe('SoCraTes Activities Service', () => {
     it('does not remove a participant if the room type is invalid', done => {
       socratesActivitiesService.removeParticipantFor({roomType: 'unknown', participantNick: 'nickname'}, err => {
         expect(saveEventStore.called).to.be.false();
-        expect(removedFromParticipantsNotification.called).to.be.false();
+        sinon.assert.notCalled(notifications.removedFromParticipants);
         expect(err.errors).to.eql(['The room type is invalid!']);
         done();
       });
