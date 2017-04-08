@@ -107,8 +107,8 @@ module.exports = {
   },
 
   // management after registration:
-  desiredRoomTypesWereChanged: function (memberId, desiredRoomTypes, joinedWaitinglist) {
-    return enrich({event: e.DESIRED_ROOM_TYPES_WERE_CHANGED, memberId, desiredRoomTypes, joinedWaitinglist: joinedWaitinglist.valueOf()});
+  desiredRoomTypesWereChanged: function (memberId, desiredRoomTypes, duration, joinedWaitinglist) {
+    return enrich({event: e.DESIRED_ROOM_TYPES_WERE_CHANGED, memberId, desiredRoomTypes, duration, joinedWaitinglist: joinedWaitinglist.valueOf()});
   },
 
   didNotChangeDesiredRoomTypesBecauseParticipantIsNotOnWaitinglist: function (memberId, desiredRoomTypes) {

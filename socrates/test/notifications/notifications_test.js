@@ -207,7 +207,7 @@ describe('Notifications', () => {
     });
 
     it('waitinglist - creates a meaningful text and subject', () => {
-      notifications.changedWaitinglist(hans, [roomOptions.informationFor('junior', 'waitinglist')]);
+      notifications.changedWaitinglist(hans, {desiredRooms: [roomOptions.informationFor('junior', 'waitinglist')]});
       expect(transport.sendMail.calledTwice).to.be(true);
       const options = transport.sendMail.firstCall.args[0];
       expect(options.bcc).to.eql(hansmail);
@@ -217,7 +217,7 @@ describe('Notifications', () => {
     });
 
     it('waitinglist - sends a meaningful mail to admins', () => {
-      notifications.changedWaitinglist(hans, [roomOptions.informationFor('junior', 'waitinglist')]);
+      notifications.changedWaitinglist(hans, {desiredRooms: [roomOptions.informationFor('junior', 'waitinglist')]});
       expect(transport.sendMail.calledTwice).to.be(true);
       const options = transport.sendMail.secondCall.args[0];
       expect(options.bcc).to.contain(supermanEmail);
@@ -235,7 +235,7 @@ describe('Notifications', () => {
     });
 
     it('creates a meaningful text and subject', () => {
-      notifications.newWaitinglistEntry(hans, [roomOptions.informationFor('junior', 3)]);
+      notifications.newWaitinglistEntry(hans, {desiredRooms: [roomOptions.informationFor('junior', 3)]});
       expect(transport.sendMail.calledTwice).to.be(true);
       const options = transport.sendMail.firstCall.args[0];
       expect(options.bcc).to.eql(hansmail);
@@ -245,7 +245,7 @@ describe('Notifications', () => {
     });
 
     it('sends a meaningful mail to admins', () => {
-      notifications.newWaitinglistEntry(hans, [roomOptions.informationFor('junior', 3)]);
+      notifications.newWaitinglistEntry(hans, {desiredRooms: [roomOptions.informationFor('junior', 3)]});
       expect(transport.sendMail.calledTwice).to.be(true);
       const options = transport.sendMail.secondCall.args[0];
       expect(options.bcc).to.contain(supermanEmail);

@@ -162,6 +162,7 @@ describe('The registration command processor', () => {
         {
           event: e.DESIRED_ROOM_TYPES_WERE_CHANGED,
           desiredRoomTypes: [bedInDouble],
+          duration: 2,
           memberId: memberId1,
           joinedWaitinglist: aLongTimeAgo.valueOf()
         }

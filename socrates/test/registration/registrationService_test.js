@@ -166,6 +166,7 @@ describe('Registration Service', () => {
       registrationBody.activityUrl = 'wrongUrl';
       registrationService.completeRegistration('memberId', 'sessionId', registrationBody, err => {
         expect(err.message).to.be('Wrong URL!');
+        sinon.assert.notCalled(notifications.newWaitinglistEntry);
         done();
       });
     });
@@ -175,6 +176,7 @@ describe('Registration Service', () => {
       registrationService.completeRegistration('memberId', 'sessionId', registrationBody, (err, statusTitle, statusText) => {
         expect(statusTitle).to.not.exist();
         expect(statusText).to.not.exist();
+        sinon.assert.notCalled(notifications.newWaitinglistEntry);
         done(err);
       });
     });
@@ -187,6 +189,7 @@ describe('Registration Service', () => {
         expect(statusTitle).to.be('activities.registration_problem');
         expect(statusText).to.be('activities.registration_timed_out');
         expect(saveSubscriberCount).to.be(1);
+        sinon.assert.notCalled(notifications.newWaitinglistEntry);
         done(err);
       });
     });
@@ -199,11 +202,12 @@ describe('Registration Service', () => {
         expect(statusTitle).to.be('activities.registration_problem');
         expect(statusText).to.be('activities.already_registered');
         expect(saveSubscriberCount).to.be(1);
+        sinon.assert.notCalled(notifications.newWaitinglistEntry);
         done(err);
       });
     });
 
-    it('returns nothing and saves subscriber info if waitinglist registration succeeds', done => {
+    it('returns nothing, saves subscriber info and notifies the subscriber if waitinglist registration succeeds', done => {
       registrationBody.desiredRoomTypes = 'single';
       sinon.stub(RegistrationCommandProcessor.prototype, 'registerWaitinglistParticipant').callsFake(() => {return events.waitinglistParticipantWasRegistered(['single'], 2, 'sessionId', 'memberId', aShortTimeAgo);});
 
@@ -211,6 +215,7 @@ describe('Registration Service', () => {
         expect(statusTitle).to.not.exist();
         expect(statusText).to.not.exist();
         expect(saveSubscriberCount).to.be(1);
+        sinon.assert.calledWith(notifications.newWaitinglistEntry, 'memberId', {desiredRooms: [{room: 'single room'}], nights: 2, until: 'saturday evening'});
         done(err);
       });
     });
