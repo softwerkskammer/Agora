@@ -13,7 +13,12 @@ html
       else
         | You are waiting for #{' '}
         b #{bookingdetails.desiredRooms.map(room => room.room).join(', ')}
-    p We will book you into a room as soon as a space is available. You can then choose the number of nights you want to stay.
+      | #{' '} for #{' '}
+      b #{bookingdetails.desiredRooms[0].nights}
+      | #{' '} nights until #{' '}
+      b #{bookingdetails.desiredRooms[0].until}
+
+    p Once we have drawn the lottery and you get a spot, we will book you a room.
     p You can review and modify your waitinglist data at #{' '}
       a(href=url + '/members/edit') #{url}/members/edit
 

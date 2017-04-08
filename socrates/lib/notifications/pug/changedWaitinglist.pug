@@ -8,8 +8,14 @@ html
     p
       | You are waiting for a #{' '}
       b #{bookingdetails.desiredRooms.map(x => x.room).join(', ')}
+      if (bookingdetails.desiredRooms[0].until !== undefined)
+        | #{' '} for #{' '}
+        b #{bookingdetails.desiredRooms[0].nights}
+        | #{' '} nights until #{' '}
+        b #{bookingdetails.desiredRooms[0].until}
+
       | .
-    p We will inform you as soon as a space is available. You can then choose the number of nights you want to stay.
+    p Once we have drawn the lottery and you get a spot, we will book you a room.
     p You can review and modify your participant data at #{' '}
       a(href=url + '/members/edit') #{url}/members/edit
 

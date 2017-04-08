@@ -179,6 +179,8 @@ describe('Notifications', () => {
       const options = transport.sendMail.secondCall.args[0];
       expect(options.bcc).to.contain(supermanEmail);
       expect(options.subject).to.equal('Change in SoCraTes Registration - Duration');
+      expect(options.html).to.contain('junior room (exclusively)');
+      expect(options.html).to.contain('sunday morning');
       expect(options.html).to.contain('Gassenhauer');
       expect(options.from).to.be('"SoCraTes Notifications" <' + null + '>');
     });
@@ -213,6 +215,8 @@ describe('Notifications', () => {
       expect(options.bcc).to.eql(hansmail);
       expect(options.subject).to.equal('SoCraTes Waitinglist Change of Room Option');
       expect(options.html).to.contain('junior room (exclusively)');
+      expect(options.html).not.to.contain('nights until');
+      expect(options.html).to.contain('Once we have drawn the lottery and you get a spot, we will book you a room');
       expect(options.from).to.be('"SoCraTes Notifications" <' + supermanEmail + '>');
     });
 
@@ -223,6 +227,7 @@ describe('Notifications', () => {
       expect(options.bcc).to.contain(supermanEmail);
       expect(options.subject).to.equal('Change in SoCraTes Waitinglist - Resource');
       expect(options.html).to.contain('junior room (exclusively)');
+      expect(options.html).not.to.contain('nights until');
       expect(options.html).to.contain('Gassenhauer');
       expect(options.from).to.be('"SoCraTes Notifications" <' + null + '>');
     });
@@ -241,6 +246,8 @@ describe('Notifications', () => {
       expect(options.bcc).to.eql(hansmail);
       expect(options.subject).to.equal('SoCraTes Waitinglist Confirmation');
       expect(options.html).to.contain('junior room (exclusively)');
+      expect(options.html).to.contain('sunday morning');
+      expect(options.html).to.contain('Once we have drawn the lottery and you get a spot, we will book you a room');
       expect(options.from).to.be('"SoCraTes Notifications" <' + supermanEmail + '>');
     });
 
@@ -251,6 +258,7 @@ describe('Notifications', () => {
       expect(options.bcc).to.contain(supermanEmail);
       expect(options.subject).to.equal('New SoCraTes Waitinglist Entry');
       expect(options.html).to.contain('junior room (exclusively)');
+      expect(options.html).to.contain('sunday morning');
       expect(options.html).to.contain('Gassenhauer');
       expect(options.from).to.be('"SoCraTes Notifications" <' + null + '>');
     });
