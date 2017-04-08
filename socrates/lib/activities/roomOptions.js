@@ -33,10 +33,10 @@ module.exports = {
   },
 
   informationFor: function informationFor(id, duration) {
-    return Object.assign(this.waitinglistInformationFor(id), this.durationFor(duration));
+    return Object.assign(this.waitinglistInformationFor(id), this.nightsUntilFor(duration));
   },
 
-  durationFor: function durationFor(duration) {
+  nightsUntilFor: function durationFor(duration) {
     return {
       nights: (duration > 3 ? duration - 1 : duration),
       until: this.endOfStayFor(duration)

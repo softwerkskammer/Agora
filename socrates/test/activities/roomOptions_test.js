@@ -29,17 +29,17 @@ describe('Room Options', () => {
     });
 
     it('returns the correct number of nights for each duration selection', () => {
-      expect(roomOptions.durationFor('2').nights).to.be('2');
-      expect(roomOptions.durationFor('3').nights).to.be('3');
-      expect(roomOptions.durationFor('4').nights).to.be(3);
-      expect(roomOptions.durationFor('5').nights).to.be(4);
+      expect(roomOptions.nightsUntilFor('2').nights).to.be('2');
+      expect(roomOptions.nightsUntilFor('3').nights).to.be('3');
+      expect(roomOptions.nightsUntilFor('4').nights).to.be(3);
+      expect(roomOptions.nightsUntilFor('5').nights).to.be(4);
     });
 
     it('returns the correct weekday for each duration selection', () => {
-      expect(roomOptions.durationFor('2').until).to.be('saturday evening');
-      expect(roomOptions.durationFor('3').until).to.be('sunday morning');
-      expect(roomOptions.durationFor('4').until).to.be('sunday evening');
-      expect(roomOptions.durationFor('5').until).to.be('monday morning');
+      expect(roomOptions.nightsUntilFor('2').until).to.be('saturday evening');
+      expect(roomOptions.nightsUntilFor('3').until).to.be('sunday morning');
+      expect(roomOptions.nightsUntilFor('4').until).to.be('sunday evening');
+      expect(roomOptions.nightsUntilFor('5').until).to.be('monday morning');
     });
 
     it('returns whether the duration is valid', () => {
