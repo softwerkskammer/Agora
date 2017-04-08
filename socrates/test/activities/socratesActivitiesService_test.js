@@ -35,8 +35,6 @@ describe('SoCraTes Activities Service', () => {
   let listOfEvents;
   let saveEventStore;
 
-  let removedFromWaitinglistNotification;
-
   beforeEach(() => {
     sinon.stub(transport, 'sendMail');
     cache.flushAll();
@@ -50,7 +48,7 @@ describe('SoCraTes Activities Service', () => {
     sinon.stub(notifications, 'addedParticipantPair');
     sinon.stub(notifications, 'removedParticipantPair');
     sinon.stub(notifications, 'removedFromParticipants');
-    removedFromWaitinglistNotification = sinon.stub(notifications, 'removedFromWaitinglist');
+    sinon.stub(notifications, 'removedFromWaitinglist');
 
     sinon.stub(memberstore, 'getMember').callsFake((nickname, callback) => {
       if (nickname === 'nicknameForPair1') { return callback(null, new Member({id: 'memberIdForPair1'})); }
@@ -607,7 +605,7 @@ describe('SoCraTes Activities Service', () => {
           {event: e.WAITINGLIST_PARTICIPANT_WAS_REMOVED, desiredRoomTypes: ['single'], memberId: 'memberId'}
         ]);
 
-        expect(removedFromWaitinglistNotification.called).to.be.true();
+        sinon.assert.calledWith(notifications.removedFromWaitinglist, new Member({id: 'memberId'}));
 
         const writeModel = cache.get(socratesConstants.currentUrl + '_registrationWriteModel');
         expect(writeModel.roomTypesOf('memberId')).to.eql([]);
@@ -625,7 +623,7 @@ describe('SoCraTes Activities Service', () => {
           {event: e.DID_NOT_REMOVE_WAITINGLIST_PARTICIPANT_BECAUSE_THEY_ARE_NOT_REGISTERED, desiredRoomTypes: ['single'], memberId: 'memberId'}
         ]);
 
-        expect(removedFromWaitinglistNotification.called).to.be.false();
+        sinon.assert.notCalled(notifications.removedFromWaitinglist);
         done(err);
       });
     });
@@ -633,7 +631,7 @@ describe('SoCraTes Activities Service', () => {
     it('does not remove from the waitinglist if the nickname is empty', done => {
       socratesActivitiesService.removeWaitinglistMemberFor({waitinglistMemberNick: '', desiredRoomTypes: ['single']}, err => {
         expect(saveEventStore.called).to.be.false();
-        expect(removedFromWaitinglistNotification.called).to.be.false();
+        sinon.assert.notCalled(notifications.removedFromWaitinglist);
         expect(err.errors).to.eql(['An empty nickname is invalid!']);
         done();
       });
@@ -642,7 +640,7 @@ describe('SoCraTes Activities Service', () => {
     it('does not remove from the waitinglist if one of the room types is invalid', done => {
       socratesActivitiesService.removeWaitinglistMemberFor({waitinglistMemberNick: 'nickname', desiredRoomTypes: ['single', 'unknown']}, err => {
         expect(saveEventStore.called).to.be.false();
-        expect(removedFromWaitinglistNotification.called).to.be.false();
+        sinon.assert.notCalled(notifications.removedFromWaitinglist);
         expect(err.errors).to.eql(['One of the room types is invalid!']);
         done();
       });
@@ -651,7 +649,7 @@ describe('SoCraTes Activities Service', () => {
     it('does not remove from the waitinglist if the list of room types is empty', done => {
       socratesActivitiesService.removeWaitinglistMemberFor({waitinglistMemberNick: 'nickname', desiredRoomTypes: []}, err => {
         expect(saveEventStore.called).to.be.false();
-        expect(removedFromWaitinglistNotification.called).to.be.false();
+        sinon.assert.notCalled(notifications.removedFromWaitinglist);
         expect(err.errors).to.eql(['Please select at least one desired room type!']);
         done();
       });
