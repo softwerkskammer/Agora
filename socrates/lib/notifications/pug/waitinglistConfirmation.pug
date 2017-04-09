@@ -9,16 +9,16 @@ html
       if bookingdetails.desiredRooms.length === 1
         | You are waiting for a #{' '}
         b #{bookingdetails.desiredRooms[0].room}
-        | .
       else
         | You are waiting for #{' '}
         b #{bookingdetails.desiredRooms.map(room => room.room).join(', ')}
       | #{' '} for #{' '}
-      b #{bookingdetails.desiredRooms[0].nights}
+      b #{bookingdetails.nights}
       | #{' '} nights until #{' '}
-      b #{bookingdetails.desiredRooms[0].until}
+      b #{bookingdetails.until}
+      | .
 
-    p Once we have drawn the lottery and you get a spot, we will book you a room.
+p We will inform you as soon as you got a spot through the lottery or from the waitinglist (in case you registered after the lottery deadline).
     p You can review and modify your waitinglist data at #{' '}
       a(href=url + '/members/edit') #{url}/members/edit
 
