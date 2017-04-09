@@ -6,10 +6,15 @@ html
       Hello #{member.displayName()},
     p We have changed your waitinglist entry for the SoCraTes Conference 2017 as follows:
     p
-      | You are waiting for a #{' '} 
-      b #{bookingdetails.map(x => x.room).join(', ')}
+      | You are waiting for a #{' '}
+      b #{bookingdetails.desiredRooms.map(x => x.room).join(', ')}
+      | #{' '} for #{' '}
+      b #{bookingdetails.nights}
+      | #{' '} nights until #{' '}
+      b #{bookingdetails.until}
       | .
-    p We will inform you as soon as a space is available. You can then choose the number of nights you want to stay.
+
+    p We will inform you as soon as you got a spot through the lottery or from the waitinglist (in case you registered after the lottery deadline).
     p You can review and modify your participant data at #{' '}
       a(href=url + '/members/edit') #{url}/members/edit
 

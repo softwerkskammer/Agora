@@ -45,7 +45,7 @@ class RegistrationCommandProcessor {
     }
     // all is well
     const waitinglistReservation = this.writeModel.waitinglistParticipantEventFor(memberId);
-    return events.desiredRoomTypesWereChanged(memberId, desiredRoomTypes, moment(waitinglistReservation.joinedWaitinglist));
+    return events.desiredRoomTypesWereChanged(memberId, desiredRoomTypes, waitinglistReservation.duration, moment(waitinglistReservation.joinedWaitinglist));
   }
 
   moveParticipantToNewRoomType(memberId, roomType) {

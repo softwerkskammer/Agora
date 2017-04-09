@@ -6,14 +6,19 @@ html
       Hello #{member.displayName()},
     p Congratulations! You entered the waitinglist for the SoCraTes Conference 2017.
     p
-      if bookingdetails.length === 1
+      if bookingdetails.desiredRooms.length === 1
         | You are waiting for a #{' '}
-        b #{bookingdetails[0].room}
-        | .
+        b #{bookingdetails.desiredRooms[0].room}
       else
         | You are waiting for #{' '}
-        b #{bookingdetails.map(room => room.room).join(', ')}
-    p We will book you into a room as soon as a space is available. You can then choose the number of nights you want to stay.
+        b #{bookingdetails.desiredRooms.map(room => room.room).join(', ')}
+      | #{' '} for #{' '}
+      b #{bookingdetails.nights}
+      | #{' '} nights until #{' '}
+      b #{bookingdetails.until}
+      | .
+
+    p We will inform you as soon as you got a spot through the lottery or from the waitinglist (in case you registered after the lottery deadline).
     p You can review and modify your waitinglist data at #{' '}
       a(href=url + '/members/edit') #{url}/members/edit
 

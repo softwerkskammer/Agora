@@ -278,7 +278,7 @@ describe('The registration read model', () => {
       listOfEvents = [
         events.registeredParticipantFromWaitinglist(singleBedRoom, untilSaturday, memberId1, aLongTimeAgo),
         events.waitinglistParticipantWasRegistered([bedInDouble], 2, sessionId2, memberId2, aLongTimeAgo),
-        events.desiredRoomTypesWereChanged(memberId2, [singleBedRoom], aLongTimeAgo),
+        events.desiredRoomTypesWereChanged(memberId2, [singleBedRoom], 2, aLongTimeAgo),
         events.roomTypeWasChanged(memberId1, bedInDouble, untilSundayMorning, aLongTimeAgo)
       ];
       const readModel = new RegistrationReadModel(listOfEvents);
@@ -375,7 +375,7 @@ describe('The registration read model', () => {
 
     it('when his desired room types are changed', () => {
       listOfEvents = [
-        events.desiredRoomTypesWereChanged(memberId1, [singleBedRoom], aLongTimeAgo)
+        events.desiredRoomTypesWereChanged(memberId1, [singleBedRoom], 3, aLongTimeAgo)
       ];
       const readModel = new RegistrationReadModel(listOfEvents);
 

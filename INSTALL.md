@@ -60,7 +60,7 @@ We propose to install grunt-cli globally via the -g option of npm. To find out m
             npm install --python=/usr/bin/python2
 
 * Start mongodb. If you only plan to use it for development, the default settings are ok. The app as well as the tests use these defaults if you did not change the configuration.
-* (Optional) Instructions for authenticated use are [here](lib/persistence/README.md)
+* (Optional) Instructions for authenticated use are [here](softwerkskammer/lib/persistence/README.md)
 
 ### The built-in wiki
 
@@ -72,6 +72,46 @@ Configuration for Softwerkskammer and SoCraTes:
 
 * Copy the logging configuration file `config-examples/winston-config.json` to `config/winston-config.json`, and adapt the paths if you like.
 * Copy the mailsender configuration file `config-examples/mailsender-config.json` to `config/mailsender-config.json`. Without setting up a proper server sending mails won't work but this configuration is sufficient to be able to start both the softwerkskammer and socrates app.
+
+#### Mailserver settings
+if you want to be able to send mails, you need to configure the mail sender. One way to achieve a running configuration
+is to use a mail server, you have access to. The configuration should look like:
+
+###### config/mailsender-config.json
+
+<pre><code>
+{
+ "transport-options": {
+   "host": "server host name i.e. smtp.yourdomain.com",
+   "port": the port you use connect to the server to send mails i.e. 25 or 465,
+   "secure": false,
+   "auth": {
+     "user": "the user to log in your mail server",
+     "pass": "the password"
+   },
+   "debug": "true",
+   "tls": {
+     "rejectUnauthorized": false
+   }
+ },
+ "sender-name": "Softwerkskammer Benachrichtigungen",
+ "sender-address": "mail address to send from"
+}
+</code></pre>
+
+For SoCraTes admin notifications, update also:
+
+###### config/socrates-mailsender-config.json
+
+<pre><code>
+{
+  "infoListEmailAddress": "mail address to send infos",
+  "registrationListEmailAddress": "mail address to send registrations",
+  "notificationListEmailAddress": "mail address to send other notifications"
+}
+</code></pre>
+
+you can use the same address for all of them.
 
 ### Running the server
 
