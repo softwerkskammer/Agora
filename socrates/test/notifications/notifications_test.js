@@ -120,18 +120,6 @@ describe('Notifications', () => {
       stubRegistrationListEmailAddress(supermanEmail);
     });
 
-    it('creates a meaningful text and subject for immediate registrants', () => {
-      notifications.newParticipant(hans, roomOptions.informationFor('junior', 3));
-      expect(transport.sendMail.calledTwice).to.be(true);
-      const options = transport.sendMail.firstCall.args[0];
-      expect(options.bcc).to.eql(hansmail);
-      expect(options.subject).to.equal('SoCraTes Registration Confirmation');
-      expect(options.html).to.contain('junior room (exclusively)');
-      expect(options.html).to.contain('<b>3</b>  nights');
-      expect(options.html).to.not.contain('If you want to stay longer, please tell us by replying to this e-mail');
-      expect(options.from).to.be('"SoCraTes Notifications" <' + supermanEmail + '>');
-    });
-
     it('creates a meaningful text and subject for registrants coming from the waitinglist', () => {
       const bookingdetails = roomOptions.informationFor('junior', 3);
       bookingdetails.fromWaitinglist = true;
@@ -140,6 +128,8 @@ describe('Notifications', () => {
       const options = transport.sendMail.firstCall.args[0];
       expect(options.bcc).to.eql(hansmail);
       expect(options.subject).to.equal('SoCraTes Registration Confirmation');
+      expect(options.html).to.contain('junior room (exclusively)');
+      expect(options.html).to.contain('<b>3</b>  nights');
       expect(options.html).to.contain('If you want to stay longer, please tell us in your reply');
       expect(options.from).to.be('"SoCraTes Notifications" <' + supermanEmail + '>');
     });
