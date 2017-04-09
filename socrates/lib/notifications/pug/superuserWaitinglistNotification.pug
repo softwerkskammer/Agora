@@ -5,8 +5,8 @@ html
     p
       | #{member.displayName()} (#{member.nickname()}) is on the waitinglist for a #{' '}
       b #{bookingdetails.desiredRooms.map(room => room.room).join(', ')}
-       | #{' '} for #{' '}
+      | #{' '} for #{' '}
       b #{bookingdetails.nights}
       | #{' '} nights until #{' '}
       b #{bookingdetails.until}
-    | .
+      | .
