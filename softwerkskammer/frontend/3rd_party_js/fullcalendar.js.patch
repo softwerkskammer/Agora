@@ -2,7 +2,7 @@ Index: node_modules/fullcalendar/dist/fullcalendar.js
 ===================================================================
 --- softwerkskammer/build/javascript/fullcalendar.js	(revision )
 +++ softwerkskammer/build/javascript/fullcalendar.js	(revision )
-@@ -6653,12 +6653,7 @@
+@@ -6949,12 +6949,7 @@
  		classes.unshift('fc-day-grid-event', 'fc-h-event');
  
  		// Only display a timed events time if it is the starting segment
@@ -16,7 +16,7 @@ Index: node_modules/fullcalendar/dist/fullcalendar.js
  
  		titleHtml =
  			'<span class="fc-title">' +
-@@ -10145,89 +10140,104 @@
+@@ -10768,89 +10763,104 @@
  									calendar.options.buttonIcons[buttonName];
  
  							if (overrideText) {
