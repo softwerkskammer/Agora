@@ -32,6 +32,12 @@ class Addon {
     return this.state.pronoun;
   }
 
+  hasNonMalePronoun() {
+    const pr = this.state.pronoun ? this.state.pronoun.replace(/[.,|\s/]/g, '').toLowerCase() : '';
+    const valuesConsideredMale = ['hehishim', 'he', 'er', 'm', 'guy', 'dude'];
+    return pr.length > 0 && valuesConsideredMale.filter(val => val === pr).length === 0;
+  }
+
   needsAssistance() {
     return this.state.needsAssistance;
   }
@@ -61,7 +67,7 @@ class Addon {
   }
 
   ladiesTShirt() {
-    return this.state.tShirtSize.startsWith('Ladies');
+    return this.state.tShirtSize && this.state.tShirtSize.length > 0 && this.state.tShirtSize.startsWith('Ladies');
   }
 
   static hasAddonInformation(uiInputObject) {

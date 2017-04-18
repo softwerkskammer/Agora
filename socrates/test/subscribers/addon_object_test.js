@@ -57,4 +57,55 @@ describe('Subscriber\'s Addon', () => {
     expect(subscriber.addon().billingAddressLines()).to.eql([]);
   });
 
+  describe('evaluates whether someone entered a non-male preferred pronoun', () => {
+    it('recognizes male values', () => {
+      const subscriber = new Subscriber();
+      const addon = subscriber.addon();
+      addon.state.pronoun = 'he';
+      expect(subscriber.hasNonMalePronoun()).to.be.false();
+      addon.state.pronoun = 'er';
+      expect(subscriber.hasNonMalePronoun()).to.be.false();
+      addon.state.pronoun = 'm';
+      expect(subscriber.hasNonMalePronoun()).to.be.false();
+      addon.state.pronoun = 'guy';
+      expect(subscriber.hasNonMalePronoun()).to.be.false();
+      addon.state.pronoun = 'dude';
+      expect(subscriber.hasNonMalePronoun()).to.be.false();
+      addon.state.pronoun = 'He';
+      expect(subscriber.hasNonMalePronoun()).to.be.false();
+      addon.state.pronoun = 'He/His/Him';
+      expect(subscriber.hasNonMalePronoun()).to.be.false();
+      addon.state.pronoun = 'he/His/him';
+      expect(subscriber.hasNonMalePronoun()).to.be.false();
+      addon.state.pronoun = 'hE';
+      expect(subscriber.hasNonMalePronoun()).to.be.false();
+      addon.state.pronoun = 'he,his,him';
+      expect(subscriber.hasNonMalePronoun()).to.be.false();
+      addon.state.pronoun = 'He,His,Him';
+      expect(subscriber.hasNonMalePronoun()).to.be.false();
+      addon.state.pronoun = 'He/ His, Him';
+      expect(subscriber.hasNonMalePronoun()).to.be.false();
+    });
+
+    it('recognizes non-male values', () => {
+      const subscriber = new Subscriber();
+      subscriber.addon().state.pronoun = 'Anything else';
+      expect(subscriber.hasNonMalePronoun()).to.be.true();
+    });
+
+    it('assumes non-values are not an indicator of non-male-ness', () => {
+      const subscriber = new Subscriber();
+      subscriber.addon().state.pronoun = null;
+      expect(subscriber.hasNonMalePronoun()).to.be.false();
+      subscriber.addon().state.pronoun = undefined;
+      expect(subscriber.hasNonMalePronoun()).to.be.false();
+      subscriber.addon().state.pronoun = false;
+      expect(subscriber.hasNonMalePronoun()).to.be.false();
+      subscriber.addon().state.pronoun = '';
+      expect(subscriber.hasNonMalePronoun()).to.be.false();
+      subscriber.addon().state.pronoun = ' ';
+      expect(subscriber.hasNonMalePronoun()).to.be.false();
+    });
+  });
+
 });

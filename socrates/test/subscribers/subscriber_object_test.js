@@ -66,4 +66,26 @@ describe('Subscriber', () => {
       expect(unregisteredSubscriber.participationOf('2010').roommate()).to.be('My sister');
     });
   });
+
+  describe('evaluates diversity status', () => {
+    it('should not consider anyone living in Germany to be diversity by default', () => {
+      registeredSubscriber.state.country = 'DE';
+      expect(registeredSubscriber.isDiversity()).to.be.false();
+    });
+
+    it('should consider living outside of Germany an indicator for diversity', () => {
+      registeredSubscriber.state.country = 'US';
+      expect(registeredSubscriber.isDiversity()).to.be.true();
+    });
+
+    it('should consider ladies t-shirts an indicator for diversity', () => {
+      registeredSubscriber.addon().state.tShirtSize = 'Ladies';
+      expect(registeredSubscriber.isDiversity()).to.be.true();
+    });
+
+    it('should consider a non-male pronoun an indicator for diversity', () => {
+      registeredSubscriber.addon().state.pronoun = 'She';
+      expect(registeredSubscriber.isDiversity()).to.be.true();
+    });
+  });
 });
