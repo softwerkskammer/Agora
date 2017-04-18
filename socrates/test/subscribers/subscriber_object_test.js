@@ -69,11 +69,13 @@ describe('Subscriber', () => {
 
   describe('evaluates diversity status', () => {
     it('should not consider anyone living in Germany to be diversity by default', () => {
+      registeredSubscriber.addon().state.tShirtSize = '';
       registeredSubscriber.state.country = 'DE';
       expect(registeredSubscriber.isDiversity()).to.be.false();
     });
 
     it('should consider living outside of Germany an indicator for diversity', () => {
+      registeredSubscriber.addon().state.tShirtSize = '';
       registeredSubscriber.state.country = 'US';
       expect(registeredSubscriber.isDiversity()).to.be.true();
     });
@@ -84,6 +86,7 @@ describe('Subscriber', () => {
     });
 
     it('should consider a non-male pronoun an indicator for diversity', () => {
+      registeredSubscriber.addon().state.tShirtSize = '';
       registeredSubscriber.addon().state.pronoun = 'She';
       expect(registeredSubscriber.isDiversity()).to.be.true();
     });

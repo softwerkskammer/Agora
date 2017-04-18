@@ -67,7 +67,7 @@ class Addon {
   }
 
   ladiesTShirt() {
-    return this.state.tShirtSize && this.state.tShirtSize.length > 0 && this.state.tShirtSize.startsWith('Ladies');
+    return this.state.tShirtSize.startsWith('Ladies');
   }
 
   static hasAddonInformation(uiInputObject) {
