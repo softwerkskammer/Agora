@@ -36,15 +36,11 @@ class Subscriber {
   }
 
   livesInGermany() {
-    return this.state.country && this.state.country.length > 0 && this.country() === 'DE';
+    return this.country() === 'DE';
   }
 
   isDiversity() {
-    return this.addon().ladiesTShirt() || this.hasNonMalePronoun() || !this.livesInGermany();
-  }
-
-  hasNonMalePronoun() {
-    return this.addon().hasNonMalePronoun();
+    return this.addon().ladiesTShirt() || this.addon().hasNonMalePronoun() || !this.livesInGermany();
   }
 
   addon() {
