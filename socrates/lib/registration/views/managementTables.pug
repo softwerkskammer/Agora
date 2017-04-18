@@ -163,8 +163,8 @@ block content
                   -var quota = socratesReadModel.quotaFor(roomType)
                   -var waitingOptions = registrationReadModel.waitinglistParticipantCountFor(roomType)
                   -var freeSpots = quota === undefined ? undefined : quota - participants
-                  -var participantDiversity = participantLinesOf[roomType].filter(line => line.addon.ladiesTShirt() || !line.subscriber.livesInGermany()).length
-                  -var waitingDiversity = waitinglistLinesOf[roomType].filter(line => line.addon.ladiesTShirt() || !line.subscriber.livesInGermany()).length
+                  -var participantDiversity = participantLinesOf[roomType].filter(line => line.subscriber.isDiversity()).length
+                  -var waitingDiversity = waitinglistLinesOf[roomType].filter(line => line.subscriber.isDiversity()).length
                   -totalParticipants += participants
                   -totalFreeSpots = freeSpots ? totalFreeSpots + freeSpots : totalFreeSpots
                   -totalWaitingOptions += waitingOptions
@@ -178,10 +178,10 @@ block content
                 tr
                   td <b>Summe</b>
                   td <b>#{totalParticipants}</b>
-                  td <b>#{addonLines.filter(line => line.addon.ladiesTShirt() || !line.subscriber.livesInGermany()).length}</b>
+                  td <b>#{addonLines.filter(line => line.subscriber.isDiversity()).length}</b>
                   td <b>#{totalFreeSpots}</b>
                   td <b>Rooms: #{totalWaitingOptions} / Persons: #{totalWaitingMembers}</b>
-                  td <b>#{waitinglistLines.filter(line => line.addon.ladiesTShirt() || !line.subscriber.livesInGermany()).length}</b>
+                  td <b>#{waitinglistLines.filter(line => line.subscriber.isDiversity()).length}</b>
 
             hr
             h4 Aufenthaltsdauer
@@ -270,7 +270,8 @@ block content
                     th Nickname
                     th Vorname
                     th Nachname
-                    th Ort/Region
+                    th Land
+                    th Pronomen
                     th Gewählte Zimmer
                     th Diversity?
                     th Übernehmen
@@ -281,9 +282,10 @@ block content
                       td: +linkedMember(line.member.nickname())
                       td #{line.member.firstname()}
                       td #{line.member.lastname()}
-                      td #{line.member.location()}
+                      td #{line.subscriber.country()}
+                      td #{line.addon.pronoun()}
                       td #{formatList(registrationReadModel.roomTypesOf(line.member.id()))}
-                      td #{line.addon.ladiesTShirt() || !line.subscriber.livesInGermany() ? 'yes' : ''}
+                      td #{line.subscriber.isDiversity() ? 'yes' : ''}
                       td: +fromWaitinglistToParticipant(roomType, line.member.nickname())
             hr
         .tab-pane#waitinglist
