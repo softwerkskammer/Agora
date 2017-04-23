@@ -29,7 +29,7 @@ mixin groupform(group, allTypes, organizersChecked)
         .col-md-6
           .form-group
             label.control-label(for='type') #{t('groups.type')}:
-            select#type.form-control(name='type')
+            select#type.form-control.enhance(name='type')
               for item in allTypes
                 option(selected=group.type === item) #{item}
 

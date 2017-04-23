@@ -5,7 +5,7 @@ module.exports = function (grunt) {
   const commonJSfiles = [
     'node_modules/jquery/dist/jquery.js',
     'node_modules/guillotine/js/jquery.guillotine.js',
-    'node_modules/select2/dist/js/select2.js',
+    'node_modules/select2/dist/js/select2.full.js',
     'node_modules/autonumeric/dist/autonumeric.js',
     'node_modules/bootstrap/dist/js/bootstrap.js',
     'node_modules/bootstrap-datepicker/js/bootstrap-datepicker.js',
@@ -62,7 +62,7 @@ module.exports = function (grunt) {
       'node_modules/datatables.net-bs/css/dataTables.bootstrap.css',
       'softwerkskammer/frontend/3rd_party_css/dataTables.fontAwesome.css',
       'node_modules/select2/dist/css/select2.css',
-      'node_modules/select2-bootstrap-theme/dist/select2-bootstrap.css',
+      'softwerkskammer/build/stylesheets/less/build-select2-bootstrap.less',
       'node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
       'node_modules/guillotine/css/jquery.guillotine.css',
       'node_modules/leaflet/dist/leaflet.css',
@@ -128,6 +128,12 @@ module.exports = function (grunt) {
       fontawesomeFONTS: {
         src: 'node_modules/font-awesome/fonts/*',
         dest: 'softwerkskammer/public/fonts',
+        expand: true,
+        flatten: true
+      },
+      bootstrapSelect2LESS: {
+        src: 'node_modules/select2-bootstrap-theme/src/select2-bootstrap.less',
+        dest: 'softwerkskammer/build/stylesheets/less',
         expand: true,
         flatten: true
       },

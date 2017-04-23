@@ -42,7 +42,7 @@ mixin activityform(activity, groups, editorNames, participantNames)
             #map.hidden-print(style='width: ' + '100%' + '; height: ' + '420px')
           .form-group
             label.control-label(for='assignedGroup') #{t('groups.group')}:
-            select#assignedGroup.form-control(name='assignedGroup')
+            select#assignedGroup.form-control.enhance(name='assignedGroup')
               for group in groups
                 option(value=group.id, selected = (activity.assignedGroup() != undefined && activity.assignedGroup() == group.id)) #{group.longName}
       .row
@@ -51,29 +51,28 @@ mixin activityform(activity, groups, editorNames, participantNames)
             -var resource = activity.veranstaltung()
             .row
               .col-xs-3
-                +controlLabel('anzahl', t('activities.count'), t('activities.tooltip.count'))
+                .form-group
+                  +controlLabel('resources[limits]', t('activities.count'), t('activities.tooltip.count'))
+                  input.form-control(name='resources[limits]', value=resource.limit(), type='text', placeholder=t('activities.unlimited'))
               .col-xs-3
-                +controlLabel('registrierung', t('activities.registration'), t('activities.tooltip.registration'))
+                .form-group
+                  +controlLabel('resources[isRegistrationOpen]', t('activities.registration'), t('activities.tooltip.registration'))
+                  select.form-control.enhance(name='resources[isRegistrationOpen]')
+                    option(value='yes', selected=(resource.isRegistrationOpen())) #{t('activities.possible')}
+                    option(value='no', selected=(!resource.isRegistrationOpen())) #{t('activities.impossible')}
               .col-xs-3
-                +controlLabel('registrierung', t('activities.deregistration'), t('activities.tooltip.deregistration'))
+                .form-group
+                  +controlLabel('resources[canUnsubscribe]', t('activities.deregistration'), t('activities.tooltip.deregistration'))
+                  select.form-control.enhance(name='resources[canUnsubscribe]')
+                    option(value='yes', selected=resource.canUnsubscribe()) #{t('activities.possible')}
+                    option(value='no', selected=!resource.canUnsubscribe()) #{t('activities.impossible')}
               .col-xs-3
-                +controlLabel('registrierung', t('activities.waitinglist'), t('activities.tooltip.waitinglist'))
+                .form-group
+                  +controlLabel('resources[hasWaitinglist]', t('activities.waitinglist'), t('activities.tooltip.waitinglist'))
+                  select.form-control.enhance(name='resources[hasWaitinglist]')
+                    option(value='yes', selected=resource.hasWaitinglist()) #{t('general.yes')}
+                    option(value='no', selected=!resource.hasWaitinglist()) #{t('general.no')}
             +hidden('resources[names]', name)
-            .row.form-group
-              .col-xs-3
-                input.form-control(name='resources[limits]', value=resource.limit(), type='text', placeholder=t('activities.unlimited'))
-              .col-xs-3
-                select.form-control(name='resources[isRegistrationOpen]')
-                  option(value='yes', selected=(resource.isRegistrationOpen())) #{t('activities.possible')}
-                  option(value='no', selected=(!resource.isRegistrationOpen())) #{t('activities.impossible')}
-              .col-xs-3
-                select.form-control(name='resources[canUnsubscribe]')
-                  option(value='yes', selected=resource.canUnsubscribe()) #{t('activities.possible')}
-                  option(value='no', selected=!resource.canUnsubscribe()) #{t('activities.impossible')}
-              .col-xs-3
-                select.form-control(name='resources[hasWaitinglist]')
-                  option(value='yes', selected=resource.hasWaitinglist()) #{t('general.yes')}
-                  option(value='no', selected=!resource.hasWaitinglist()) #{t('general.no')}
 
       .row
         .col-md-12
