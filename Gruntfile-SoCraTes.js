@@ -7,7 +7,7 @@ module.exports = function (grunt) {
     'socrates/public/clientscripts/global.js': [
       'node_modules/jquery/dist/jquery.js',
       'node_modules/guillotine/js/jquery.guillotine.js',
-      'node_modules/select2/dist/js/select2.js',
+      'node_modules/select2/dist/js/select2.full.js',
       'node_modules/autonumeric/autonumeric.js',
       'node_modules/bootstrap/dist/js/bootstrap.js',
       'node_modules/bootstrap-datepicker/js/bootstrap-datepicker.js',
@@ -37,7 +37,7 @@ module.exports = function (grunt) {
       'node_modules/datatables.net-bs/css/dataTables.bootstrap.css',
       'softwerkskammer/frontend/3rd_party_css/dataTables.fontAwesome.css',
       'node_modules/select2/dist/css/select2.css',
-      'node_modules/select2-bootstrap-theme/dist/select2-bootstrap.css',
+      'socrates/build/stylesheets/less/build-select2-bootstrap.less',
       'softwerkskammer/frontend/3rd_party_css/dataTables.fontAwesome.css',
       'node_modules/guillotine/css/jquery.guillotine.css',
       'socrates/build/stylesheets/less/socrates.less'
@@ -97,8 +97,14 @@ module.exports = function (grunt) {
         expand: true,
         flatten: true
       },
+      bootstrapSelect2LESS: {
+        src: 'node_modules/select2-bootstrap-theme/src/select2-bootstrap.less',
+        dest: 'socrates/build/stylesheets/less',
+        expand: true,
+        flatten: true
+      },
       customLESS: {
-        src: ['socrates/frontend/less/*', 'softwerkskammer/frontend/less/bootstrap-markdown-patched.less'],
+        src: ['socrates/frontend/less/*', 'softwerkskammer/frontend/less/bootstrap-markdown-patched.less', 'softwerkskammer/frontend/less/build-select2-bootstrap.less'],
         dest: 'socrates/build/stylesheets/less',
         expand: true,
         flatten: true

@@ -104,7 +104,11 @@ function surroundEmail(email) {
 
     $('.enhance').each(function () {
       /* eslint no-console: 0 */
-      $(this).select2({theme: 'bootstrap'});
+      $(this).select2({
+        width: null,
+        containerCssClass: ':all:',
+        minimumResultsForSearch: 20
+      });
     });
 
     $('.trim-text').on('blur', function () {
@@ -160,4 +164,5 @@ function surroundEmail(email) {
   $(document).ready(extendDataTables);
   $(document).ready(createLinks);
   $(document).ready(initTooltipsAndHovers);
+  $.fn.select2.defaults.set( 'theme', 'bootstrap' );
 }());
