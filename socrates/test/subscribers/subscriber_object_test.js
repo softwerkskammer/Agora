@@ -85,10 +85,11 @@ describe('Subscriber', () => {
       expect(registeredSubscriber.isDiversity()).to.be.true();
     });
 
-    it('should consider a non-male pronoun an indicator for diversity', () => {
+    it('should not consider a non-male pronoun an indicator for diversity', () => {
+      registeredSubscriber.state.country = 'DE';
       registeredSubscriber.addon().state.tShirtSize = '';
       registeredSubscriber.addon().state.pronoun = 'She';
-      expect(registeredSubscriber.isDiversity()).to.be.true();
+      expect(registeredSubscriber.isDiversity()).to.be.false();
     });
   });
 });
