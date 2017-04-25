@@ -43,6 +43,10 @@ class Subscriber {
     return this.addon().ladiesTShirt() || !this.livesInGermany();
   }
 
+  diversityAdmissionStatus() {
+    return this.isDiversity() ? 'yes' : this.addon().hasNonMalePronoun() ? 'check' : '';
+  }
+
   addon() {
     /*eslint no-underscore-dangle: 0*/
     if (!this.state._addon) {

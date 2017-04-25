@@ -91,5 +91,18 @@ describe('Subscriber', () => {
       registeredSubscriber.addon().state.pronoun = 'She';
       expect(registeredSubscriber.isDiversity()).to.be.false();
     });
+
+    it('should automatically admit diversity applicants', () => {
+      registeredSubscriber.state.country = 'US';
+      registeredSubscriber.addon().state.tShirtSize = '';
+      expect(registeredSubscriber.diversityAdmissionStatus()).to.equal('yes');
+    });
+
+    it('should advise checking of applicants with non-male pronouns', () => {
+      registeredSubscriber.state.country = 'DE';
+      registeredSubscriber.addon().state.tShirtSize = '';
+      registeredSubscriber.addon().state.pronoun = 'She';
+      expect(registeredSubscriber.diversityAdmissionStatus()).to.equal('check');
+    });
   });
 });
