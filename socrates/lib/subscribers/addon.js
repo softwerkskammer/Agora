@@ -32,10 +32,8 @@ class Addon {
     return this.state.pronoun;
   }
 
-  hasNonMalePronoun() {
-    const pr = this.state.pronoun ? this.state.pronoun.replace(/[.,|\s/]/g, '').toLowerCase() : '';
-    const valuesConsideredMale = ['hehishim', 'he', 'er', 'm', 'guy', 'dude'];
-    return pr.length > 0 && valuesConsideredMale.filter(val => val === pr).length === 0;
+  hasCustomPronoun() {
+    return !!this.state.pronoun && this.state.pronoun.trim().length > 0;
   }
 
   needsAssistance() {

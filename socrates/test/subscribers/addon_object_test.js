@@ -57,57 +57,22 @@ describe('Subscriber\'s Addon', () => {
     expect(subscriber.addon().billingAddressLines()).to.eql([]);
   });
 
-  describe('evaluates whether someone entered a non-male preferred pronoun', () => {
-    it('recognizes male values', () => {
-      const subscriber = new Subscriber();
-      const addon = subscriber.addon();
-      addon.state.pronoun = 'he';
-      expect(addon.hasNonMalePronoun()).to.be.false();
-      addon.state.pronoun = 'er';
-      expect(addon.hasNonMalePronoun()).to.be.false();
-      addon.state.pronoun = 'm';
-      expect(addon.hasNonMalePronoun()).to.be.false();
-      addon.state.pronoun = 'guy';
-      expect(addon.hasNonMalePronoun()).to.be.false();
-      addon.state.pronoun = 'dude';
-      expect(addon.hasNonMalePronoun()).to.be.false();
-      addon.state.pronoun = 'He';
-      expect(addon.hasNonMalePronoun()).to.be.false();
-      addon.state.pronoun = 'He/His/Him';
-      expect(addon.hasNonMalePronoun()).to.be.false();
-      addon.state.pronoun = 'he/His/him';
-      expect(addon.hasNonMalePronoun()).to.be.false();
-      addon.state.pronoun = 'hE';
-      expect(addon.hasNonMalePronoun()).to.be.false();
-      addon.state.pronoun = 'he,his,him';
-      expect(addon.hasNonMalePronoun()).to.be.false();
-      addon.state.pronoun = 'He,His,Him';
-      expect(addon.hasNonMalePronoun()).to.be.false();
-      addon.state.pronoun = 'He/ His, Him';
-      expect(addon.hasNonMalePronoun()).to.be.false();
-    });
+  it('indicates whether somebody entered a pronoun', () => {
+    const subscriber = new Subscriber();
+    const addon = subscriber.addon();
+    addon.state.pronoun = null;
+    expect(addon.hasCustomPronoun()).to.be.false();
+    addon.state.pronoun = undefined;
+    expect(addon.hasCustomPronoun()).to.be.false();
+    addon.state.pronoun = false;
+    expect(addon.hasCustomPronoun()).to.be.false();
+    addon.state.pronoun = '';
+    expect(addon.hasCustomPronoun()).to.be.false();
+    addon.state.pronoun = ' ';
+    expect(addon.hasCustomPronoun()).to.be.false();
 
-    it('recognizes non-male values', () => {
-      const subscriber = new Subscriber();
-      const addon = subscriber.addon();
-      addon.state.pronoun = 'Anything else';
-      expect(addon.hasNonMalePronoun()).to.be.true();
-    });
-
-    it('assumes non-values are not an indicator of non-male-ness', () => {
-      const subscriber = new Subscriber();
-      const addon = subscriber.addon();
-      addon.state.pronoun = null;
-      expect(addon.hasNonMalePronoun()).to.be.false();
-      addon.state.pronoun = undefined;
-      expect(addon.hasNonMalePronoun()).to.be.false();
-      addon.state.pronoun = false;
-      expect(addon.hasNonMalePronoun()).to.be.false();
-      addon.state.pronoun = '';
-      expect(addon.hasNonMalePronoun()).to.be.false();
-      addon.state.pronoun = ' ';
-      expect(addon.hasNonMalePronoun()).to.be.false();
-    });
+    addon.state.pronoun = 'Anything else';
+    expect(addon.hasCustomPronoun()).to.be.true();
   });
 
 });

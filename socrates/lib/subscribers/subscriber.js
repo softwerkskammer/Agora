@@ -44,7 +44,7 @@ class Subscriber {
   }
 
   diversityAdmissionStatus() {
-    return this.isDiversity() ? 'yes' : this.addon().hasNonMalePronoun() ? 'check' : '';
+    return this.isDiversity() ? 'yes' : this.addon().hasCustomPronoun() ? 'check' : '';
   }
 
   addon() {
