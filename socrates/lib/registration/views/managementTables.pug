@@ -285,7 +285,7 @@ block content
                       td #{line.subscriber.country()}
                       td #{line.addon.pronoun()}
                       td #{formatList(registrationReadModel.roomTypesOf(line.member.id()))}
-                      td #{line.subscriber.isDiversity() ? 'yes' : ''}
+                      td #{line.subscriber.diversityAdmissionStatus()}
                       td: +fromWaitinglistToParticipant(roomType, line.member.nickname())
             hr
         .tab-pane#waitinglist

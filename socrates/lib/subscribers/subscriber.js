@@ -40,7 +40,11 @@ class Subscriber {
   }
 
   isDiversity() {
-    return this.addon().ladiesTShirt() || this.addon().hasNonMalePronoun() || !this.livesInGermany();
+    return this.addon().ladiesTShirt() || !this.livesInGermany();
+  }
+
+  diversityAdmissionStatus() {
+    return this.isDiversity() ? 'yes' : this.addon().hasNonMalePronoun() ? 'check' : '';
   }
 
   addon() {
