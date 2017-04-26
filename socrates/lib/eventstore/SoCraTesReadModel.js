@@ -25,10 +25,10 @@ class SoCraTesReadModel {
     this._endTimeInMillis = undefined;
     this._quota = {};
 
-    this.update(events);
+    this.process(events);
   }
 
-  update(events) {
+  process(events) {
     // these are our projections :-)
     this._url = R.reduce(processUrl, this._url, events);
     this._startTimeInMillis = R.reduce(processStartTime, this._startTimeInMillis, events);

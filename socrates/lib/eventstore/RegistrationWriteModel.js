@@ -59,10 +59,10 @@ class RegistrationWriteModel {
     this._waitinglistReservationsBySessionId = {};
     this._waitinglistParticipantsByMemberId = {};
 
-    this.update(events);
+    this.process(events);
   }
 
-  update(events) {
+  process(events) {
     this._participantsByMemberId = R.reduce(processParticipantsByMemberId, this._participantsByMemberId, events);
     this._waitinglistReservationsBySessionId = R.reduce(processWaitinglistReservationsBySessionId, this._waitinglistReservationsBySessionId, events);
     this._waitinglistParticipantsByMemberId = R.reduce(processWaitinglistParticipantsByMemberId, this._waitinglistParticipantsByMemberId, events);

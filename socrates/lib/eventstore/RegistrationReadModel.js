@@ -45,10 +45,10 @@ class RegistrationReadModel {
     this._waitinglistParticipantsByMemberIdFor = {};
     this._durations = [];
 
-    this.update(events);
+    this.process(events);
   }
 
-  update(events) {
+  process(events) {
     // core data:
     this._participantsByMemberId = R.reduce(processParticipantsByMemberId, this._participantsByMemberId, events);
     this._waitinglistParticipantsByMemberId = R.reduce(processWaitinglistParticipantsByMemberId, this._waitinglistParticipantsByMemberId, events);
