@@ -42,10 +42,10 @@ class RoomsReadModel {
       this._participantsIn[roomType] = [];
     });
 
-    this.update(events);
+    this.process(events);
   }
 
-  update(events) {
+  process(events) {
     roomOptions.allIds().forEach(roomType => {
       this._roomPairsFor[roomType] = R.reduce(R.partial(projectRoomPairs, [roomType]), this._roomPairsFor[roomType], events);
       this._participantsIn[roomType] = R.reduce(R.partial(projectParticpantsInRoom, [roomType]), this._participantsIn[roomType], events);

@@ -161,7 +161,7 @@ module.exports = {
 
         if (event.event === e.DESIRED_ROOM_TYPES_WERE_CHANGED) {
           const bookingdetails = roomOptions.nightsUntilFor(event.duration);
-          bookingdetails.desiredRooms = params.newDesiredRoomTypes.map(name => roomOptions.waitinglistInformationFor(name));
+          bookingdetails.desiredRooms = params.newDesiredRoomTypes.map(name => roomOptions.roomInformationFor(name));
           args.handleSuccess = () => notifications.changedWaitinglist(member, bookingdetails);
         }
         saveCommandProcessor(args);

@@ -120,18 +120,6 @@ describe('Notifications', () => {
       stubRegistrationListEmailAddress(supermanEmail);
     });
 
-    it('creates a meaningful text and subject for immediate registrants', () => {
-      notifications.newParticipant(hans, roomOptions.informationFor('junior', 3));
-      expect(transport.sendMail.calledTwice).to.be(true);
-      const options = transport.sendMail.firstCall.args[0];
-      expect(options.bcc).to.eql(hansmail);
-      expect(options.subject).to.equal('SoCraTes Registration Confirmation');
-      expect(options.html).to.contain('junior room (exclusively)');
-      expect(options.html).to.contain('<b>3</b>  nights');
-      expect(options.html).to.not.contain('If you want to stay longer, please tell us by replying to this e-mail');
-      expect(options.from).to.be('"SoCraTes Notifications" <' + supermanEmail + '>');
-    });
-
     it('creates a meaningful text and subject for registrants coming from the waitinglist', () => {
       const bookingdetails = roomOptions.informationFor('junior', 3);
       bookingdetails.fromWaitinglist = true;
@@ -140,6 +128,8 @@ describe('Notifications', () => {
       const options = transport.sendMail.firstCall.args[0];
       expect(options.bcc).to.eql(hansmail);
       expect(options.subject).to.equal('SoCraTes Registration Confirmation');
+      expect(options.html).to.contain('junior room (exclusively)');
+      expect(options.html).to.contain('<b>3</b>  nights');
       expect(options.html).to.contain('If you want to stay longer, please tell us in your reply');
       expect(options.from).to.be('"SoCraTes Notifications" <' + supermanEmail + '>');
     });
@@ -209,31 +199,29 @@ describe('Notifications', () => {
     });
 
     it('waitinglist - creates a meaningful text and subject', () => {
-      const details = Object.assign({desiredRooms: [roomOptions.waitinglistInformationFor('junior'),
-        roomOptions.waitinglistInformationFor('bed_in_double')]}, roomOptions.nightsUntilFor(3));
-      notifications.changedWaitinglist(hans, details);
+      notifications.changedWaitinglist(hans, {desiredRooms: [{room: 'spacious room'}, {room: 'beautiful room'}], nights: 17, until: 'next week'});
       expect(transport.sendMail.calledTwice).to.be(true);
       const options = transport.sendMail.firstCall.args[0];
       expect(options.bcc).to.eql(hansmail);
       expect(options.subject).to.equal('SoCraTes Waitinglist Change of Room Option');
-      expect(options.html).to.contain('bed in a double room');
-      expect(options.html).to.contain('<b>3</b>');
-      expect(options.html).to.contain('sunday morning');
+      expect(options.html).to.contain('spacious room');
+      expect(options.html).to.contain('beautiful room');
+      expect(options.html).to.contain('<b>17</b>');
+      expect(options.html).to.contain('next week');
       expect(options.html).to.contain('We will inform you as soon as you got a spot through the lottery or from the waitinglist (in case you registered after the lottery deadline).');
       expect(options.from).to.be('"SoCraTes Notifications" <' + supermanEmail + '>');
     });
 
     it('waitinglist - sends a meaningful mail to admins', () => {
-      const details = Object.assign({desiredRooms: [roomOptions.waitinglistInformationFor('junior'),
-        roomOptions.waitinglistInformationFor('bed_in_double')]}, roomOptions.nightsUntilFor(3));
-      notifications.changedWaitinglist(hans, details);
+      notifications.changedWaitinglist(hans, {desiredRooms: [{room: 'spacious room'}, {room: 'beautiful room'}], nights: 17, until: 'next week'});
       expect(transport.sendMail.calledTwice).to.be(true);
       const options = transport.sendMail.secondCall.args[0];
       expect(options.bcc).to.contain(supermanEmail);
       expect(options.subject).to.equal('Change in SoCraTes Waitinglist - Resource');
-      expect(options.html).to.contain('junior room (exclusively)');
-      expect(options.html).to.contain('<b>3</b>');
-      expect(options.html).to.contain('sunday morning');
+      expect(options.html).to.contain('spacious room');
+      expect(options.html).to.contain('beautiful room');
+      expect(options.html).to.contain('<b>17</b>');
+      expect(options.html).to.contain('next week');
       expect(options.html).to.contain('Gassenhauer');
       expect(options.from).to.be('"SoCraTes Notifications" <' + null + '>');
     });
@@ -246,33 +234,29 @@ describe('Notifications', () => {
     });
 
     it('creates a meaningful text and subject', () => {
-      const details = Object.assign({desiredRooms: [roomOptions.waitinglistInformationFor('junior'),
-        roomOptions.waitinglistInformationFor('bed_in_double')]}, roomOptions.nightsUntilFor(3));
-      notifications.newWaitinglistEntry(hans, details);
+      notifications.newWaitinglistEntry(hans, {desiredRooms: [{room: 'spacious room'}, {room: 'beautiful room'}], nights: 17, until: 'next week'});
       expect(transport.sendMail.calledTwice).to.be(true);
       const options = transport.sendMail.firstCall.args[0];
       expect(options.bcc).to.eql(hansmail);
       expect(options.subject).to.equal('SoCraTes Waitinglist Confirmation');
-      expect(options.html).to.contain('junior room (exclusively)');
-      expect(options.html).to.contain('bed in a double room');
-      expect(options.html).to.contain('<b>3</b>');
-      expect(options.html).to.contain('sunday morning');
+      expect(options.html).to.contain('spacious room');
+      expect(options.html).to.contain('beautiful room');
+      expect(options.html).to.contain('<b>17</b>');
+      expect(options.html).to.contain('next week');
       expect(options.html).to.contain('We will inform you as soon as you got a spot through the lottery or from the waitinglist (in case you registered after the lottery deadline).');
       expect(options.from).to.be('"SoCraTes Notifications" <' + supermanEmail + '>');
     });
 
     it('sends a meaningful mail to admins', () => {
-      const details = Object.assign({desiredRooms: [roomOptions.waitinglistInformationFor('junior'),
-        roomOptions.waitinglistInformationFor('bed_in_double')]}, roomOptions.nightsUntilFor(3));
-      notifications.newWaitinglistEntry(hans, details);
+      notifications.newWaitinglistEntry(hans, {desiredRooms: [{room: 'spacious room'}, {room: 'beautiful room'}], nights: 17, until: 'next week'});
       expect(transport.sendMail.calledTwice).to.be(true);
       const options = transport.sendMail.secondCall.args[0];
       expect(options.bcc).to.contain(supermanEmail);
       expect(options.subject).to.equal('New SoCraTes Waitinglist Entry');
-      expect(options.html).to.contain('junior room (exclusively)');
-      expect(options.html).to.contain('bed in a double room');
-      expect(options.html).to.contain('<b>3</b>');
-      expect(options.html).to.contain('sunday morning');
+      expect(options.html).to.contain('spacious room');
+      expect(options.html).to.contain('beautiful room');
+      expect(options.html).to.contain('<b>17</b>');
+      expect(options.html).to.contain('next week');
       expect(options.html).to.contain('Gassenhauer');
       expect(options.from).to.be('"SoCraTes Notifications" <' + null + '>');
     });

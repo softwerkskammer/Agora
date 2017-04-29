@@ -153,7 +153,7 @@ module.exports = {
     eventStoreFromCache.updateEvents(events);
 
     // update all models:
-    R.values(cache.mget([SOCRATES_READ_MODEL, REGISTRATION_READ_MODEL, ROOMS_READ_MODEL, REGISTRATION_WRITE_MODEL].map(R.partial(keyFor, [url])))).forEach(model => model.update(events));
+    R.values(cache.mget([SOCRATES_READ_MODEL, REGISTRATION_READ_MODEL, ROOMS_READ_MODEL, REGISTRATION_WRITE_MODEL].map(R.partial(keyFor, [url])))).forEach(model => model.process(events));
 
     eventstore.saveEventStore(eventStoreFromCache, callback);
   }

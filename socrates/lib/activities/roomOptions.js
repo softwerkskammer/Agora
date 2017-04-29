@@ -33,7 +33,7 @@ module.exports = {
   },
 
   informationFor: function informationFor(id, duration) {
-    return Object.assign(this.waitinglistInformationFor(id), this.nightsUntilFor(duration));
+    return Object.assign(this.roomInformationFor(id), this.nightsUntilFor(duration));
   },
 
   nightsUntilFor: function durationFor(duration) {
@@ -56,7 +56,7 @@ module.exports = {
     return rooms.some(room => room.id === roomType);
   },
 
-  waitinglistInformationFor: function waitinglistInformationFor(id) {
+  roomInformationFor: function waitinglistInformationFor(id) {
     return {room: rooms.find(room => room.id === id).display};
   }
 };

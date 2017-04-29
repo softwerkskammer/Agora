@@ -68,40 +68,45 @@ describe('Subscriber', () => {
   });
 
   describe('evaluates diversity status', () => {
-    it('should not consider anyone living in Germany to be diversity by default', () => {
-      registeredSubscriber.addon().state.tShirtSize = '';
+    it('does not consider anyone living in Germany to be diversity by default', () => {
       registeredSubscriber.state.country = 'DE';
+      registeredSubscriber.addon().state.tShirtSize = '';
+      registeredSubscriber.addon().state.pronoun = '';
       expect(registeredSubscriber.isDiversity()).to.be.false();
     });
 
-    it('should consider living outside of Germany an indicator for diversity', () => {
-      registeredSubscriber.addon().state.tShirtSize = '';
+    it('considers living outside of Germany an indicator for diversity', () => {
       registeredSubscriber.state.country = 'US';
+      registeredSubscriber.addon().state.tShirtSize = '';
+      registeredSubscriber.addon().state.pronoun = '';
       expect(registeredSubscriber.isDiversity()).to.be.true();
     });
 
-    it('should consider ladies t-shirts an indicator for diversity', () => {
+    it('considers ladies t-shirts an indicator for diversity', () => {
+      registeredSubscriber.state.country = 'DE';
       registeredSubscriber.addon().state.tShirtSize = 'Ladies';
+      registeredSubscriber.addon().state.pronoun = '';
       expect(registeredSubscriber.isDiversity()).to.be.true();
     });
 
-    it('should not consider a non-male pronoun an indicator for diversity', () => {
+    it('does not consider a pronoun an indicator for diversity', () => {
       registeredSubscriber.state.country = 'DE';
       registeredSubscriber.addon().state.tShirtSize = '';
-      registeredSubscriber.addon().state.pronoun = 'She';
+      registeredSubscriber.addon().state.pronoun = 'Something';
       expect(registeredSubscriber.isDiversity()).to.be.false();
     });
 
-    it('should automatically admit diversity applicants', () => {
+    it('automatically admits foreign applicants as diversity', () => {
       registeredSubscriber.state.country = 'US';
       registeredSubscriber.addon().state.tShirtSize = '';
+      registeredSubscriber.addon().state.pronoun = '';
       expect(registeredSubscriber.diversityAdmissionStatus()).to.equal('yes');
     });
 
-    it('should advise checking of applicants with non-male pronouns', () => {
+    it('advises checking of applicants with custom pronouns', () => {
       registeredSubscriber.state.country = 'DE';
       registeredSubscriber.addon().state.tShirtSize = '';
-      registeredSubscriber.addon().state.pronoun = 'She';
+      registeredSubscriber.addon().state.pronoun = 'Something';
       expect(registeredSubscriber.diversityAdmissionStatus()).to.equal('check');
     });
   });

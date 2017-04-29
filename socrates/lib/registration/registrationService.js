@@ -58,7 +58,7 @@ module.exports = {
             // error and success handling as indicated by the event:
             if (waitinglistRegistrationEventMsg === eventConstants.WAITINGLIST_PARTICIPANT_WAS_REGISTERED) {
               const bookingdetails = roomOptions.nightsUntilFor(waitinglistRegistrationEvent.duration);
-              bookingdetails.desiredRooms = registrationTuple.desiredRoomTypes.map(roomType => roomOptions.waitinglistInformationFor(roomType));
+              bookingdetails.desiredRooms = registrationTuple.desiredRoomTypes.map(roomType => roomOptions.roomInformationFor(roomType));
               socratesNotifications.newWaitinglistEntry(memberID, bookingdetails);
               return callback(null);
             }

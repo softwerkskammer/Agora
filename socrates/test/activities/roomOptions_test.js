@@ -69,10 +69,10 @@ describe('Room Options', () => {
 
   describe('for a room\'s waitinglist', () => {
     it('returns the correct room name for each room selection', () => {
-      expect(roomOptions.waitinglistInformationFor('single').room).to.be('single room');
-      expect(roomOptions.waitinglistInformationFor('bed_in_double').room).to.be('bed in a double room');
-      expect(roomOptions.waitinglistInformationFor('bed_in_junior').room).to.be('bed in a junior room');
-      expect(roomOptions.waitinglistInformationFor('junior').room).to.be('junior room (exclusively)');
+      expect(roomOptions.roomInformationFor('single').room).to.be('single room');
+      expect(roomOptions.roomInformationFor('bed_in_double').room).to.be('bed in a double room');
+      expect(roomOptions.roomInformationFor('bed_in_junior').room).to.be('bed in a junior room');
+      expect(roomOptions.roomInformationFor('junior').room).to.be('junior room (exclusively)');
     });
   });
 
