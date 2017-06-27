@@ -1,0 +1,90 @@
+[
+  {
+    "name": "CodeFreeze",
+    "url": "http://www.codefreeze.fi/",
+    "startdate": "2017-01-15",
+    "enddate": "2017-01-19",
+    "location": "Kiilopää, Finland"
+  },
+  {
+    "name": "SoCraTes Conference Switzerland",
+    "url": "http://socrates-ch.org/",
+    "startdate": "2017-03-09",
+    "enddate": "2017-03-12",
+    "location": "Ftan, Switzerland"
+  },
+  {
+    "name": "SoCraTes Canaries",
+    "url": "https://www.socracan.com",
+    "startdate": "2017-04-06",
+    "enddate": "2017-04-09",
+    "location": "Gran Canaria, Spain"
+  },
+  {
+    "name": "I T.A.K.E. Unconference",
+    "url": "http://itakeunconf.com/",
+    "startdate": "2017-05-11",
+    "enddate": "2017-04-12",
+    "location": "Bucharest, Romania"
+  },
+  {
+    "name": "SoCraTes Italy",
+    "url": "http://socrates-it.github.io/",
+    "startdate": "2017-05-25",
+    "enddate": "2017-05-27",
+    "location": "Rimini, Italy"
+  },
+  {
+    "name": "SoCraTes UK",
+    "url": "http://socratesuk.org/",
+    "startdate": "2017-06-15",
+    "enddate": "2017-06-18",
+    "location": "Dorking, England"
+  },
+  {
+    "name": "SoCraTes Chile",
+    "url": "https://www.socrates-conference.cl/",
+    "startdate": "2016-07-01",
+    "location": "Santiago de Chile"
+  },
+  {
+    "name": "SoCraTes Day Switzerland",
+    "url": "http://socrates-day.ch/",
+    "startdate": "2017-09-15",
+    "location": "Zurich, Switzerland"
+  },
+  {
+    "name": "SoCraTes BE",
+    "url": "http://socratesbe.org",
+    "startdate": "2017-11-09",
+    "enddate": "2017-11-12",
+    "location": "La Roche-en-Ardenne, Belgium"
+  },
+  {
+    "name": "JS CraftCamp",
+    "url": "http://jscraftcamp.org",
+    "startdate": "2017-07-21",
+    "enddate": "2017-07-22",
+    "location": "Munich, Germany"
+  },
+  {
+    "name": "SoCraTes France",
+    "url": "http://socrates-fr.github.io",
+    "startdate": "2017-10-26",
+    "enddate": "2017-10-29",
+    "location": "Rochegude, France"
+  },
+  {
+    "name": "SoCraTes Days Linz",
+    "url": "http://socrates-conference.at/",
+    "startdate": "2017-10-20",
+    "enddate": "2017-10-21",
+    "location": "Linz, Austria"
+  },
+  {
+    "name": "Software Craftsmanship Unconference",
+    "url": "http://scunconf.com/",
+    "startdate": "2017-07-20",
+    "location": "Atlanta, GA, USA"
+  }
+]
