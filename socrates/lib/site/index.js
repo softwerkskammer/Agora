@@ -13,6 +13,7 @@ const eventstoreService = beans.get('eventstoreService');
 const mailsenderService = beans.get('mailsenderService');
 const socratesConstants = beans.get('socratesConstants');
 const sponsorpairs = require('./sponsorpairs');
+const partnerconferences = require('./partnerconferences-sorted');
 
 const app = misc.expressAppIn(__dirname);
 
@@ -29,7 +30,7 @@ app.get('/', (req, res, next) => {
         roommate: roomsReadModel.roommateFor('bed_in_double', memberId) || roomsReadModel.roommateFor('bed_in_junior', memberId)
       };
 
-      res.render('index', {sponsors: sponsorpairs(), registration});
+      res.render('index', {sponsors: sponsorpairs(), registration, partnerconferences: partnerconferences()});
     });
   });
 });

@@ -64,71 +64,12 @@ block content
               hr
               h4 Partner Conferences
           .row
-            .col-sm-6
-              h5
-                +extlink('http://www.codefreeze.fi/', 'CodeFreeze')
-                br
-                small 15 - 19 Jan 2017 , Kiilopää, Finland
-            .col-sm-6
-              h5
-                +extlink('http://socrates-ch.org/', 'SoCraTes Conference Switzerland')
-                br
-                small 9 - 12 Mar 2017, Ftan, Switzerland
-            .col-sm-6
-              h5
-                +extlink('https://www.socracan.com', 'SoCraTes Canaries')
-                br
-                small 6 - 9 Apr 2017, Gran Canaria, Spain
-            .col-sm-6
-              h5
-                +extlink('http://itakeunconf.com/', 'I T.A.K.E. Unconference')
-                br
-                small 11 - 12 May 2017, Bucharest, Romania
-            .col-sm-6
-              h5
-                +extlink('http://socrates-it.github.io/', 'SoCraTes Italy')
-                br
-                small 25 - 27 May 2017, Rimini, Italy
-            .col-sm-6
-              h5
-                +extlink('http://socratesuk.org/', 'SoCraTes UK')
-                br
-                small 15 - 18 June 2017, Dorking, England
-            .col-sm-6
-              h5
-                +extlink('https://www.socrates-conference.cl/', 'SoCraTes Chile')
-                br
-                small 1 July 2016, Santiago de Chile
-            .col-sm-6
-              h5
-                +extlink('http://socrates-day.ch/', 'SoCraTes Day Switzerland')
-                br
-                small September 2017, Zurich, Switzerland
-            .col-sm-6
-              h5
-                +extlink('http://socratesbe.org', 'SoCraTes BE')
-                br
-                small 9 - 12 Nov 2017, La Roche-en-Ardenne, Belgium
-            .col-sm-6
-              h5
-                +extlink('http://jscraftcamp.org', 'JS CraftCamp')
-                br
-                small 21 - 22 July 2017, Munich, Germany
-            .col-sm-6
-              h5
-                +extlink('http://socrates-fr.github.io', 'SoCraTes France')
-                br
-                small 26 - 29 Oct 2017, Rochegude, France
-            .col-sm-6
-              h5
-                +extlink('http://socrates-conference.at/', 'SoCraTes Days Linz')
-                br
-                small 20-21 Oct 2017, Linz, Austria
-            .col-sm-6
-              h5
-                +extlink('http://http://scunconf.com/', 'Software Craftsmanship Unconference')
-                br
-                small 14 July 2017, Atlanta, GA, USA
+            each partner in partnerconferences
+              .col-sm-6
+                h5
+                  +extlink(partner.url, partner.name)
+                  br
+                  small #{partner.datestring} #{partner.location}
     .logocolumn.col-sm-4.col-md-3.col-lg-4.col-md-offset-1.col-lg-offset-0
       .sidebar
         .page-header
