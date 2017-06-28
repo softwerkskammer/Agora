@@ -30,7 +30,7 @@ describe('Waitinglist application', () => {
     request(app)
       .get('/activity')
       .expect(200)
-      .expect(/<h2>Activity\'s Title/)
+      .expect(/<h2>Activity's Title/)
       .expect(/<small> Warteliste/)
       .expect(/activities\/activity/)
       .expect(/Für die gewählten Wartelisteneinträge /).expect(/title/, done);

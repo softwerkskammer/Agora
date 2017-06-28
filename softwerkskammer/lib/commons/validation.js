@@ -51,10 +51,10 @@ module.exports = {
     const validator = new Validator();
     validator.check(group.id, 'Name ist ein Pflichtfeld.').notEmpty();
     validator.check(group.id, 'Name muss mindestens 2 und höchstens 20 Zeichen enthalten.').len(2, 20);
-    validator.check(group.id, 'Name darf nur Buchstaben, Zahlen, Bindestrich und Unterstrich enthalten.').regex(/^[\w\-]+$/i);
+    validator.check(group.id, 'Name darf nur Buchstaben, Zahlen, Bindestrich und Unterstrich enthalten.').regex(/^[\w-]+$/i);
     validator.check(group.emailPrefix, 'Präfix für E-Mails ist ein Pflichtfeld.').notEmpty();
     validator.check(group.emailPrefix, 'Präfix für E-Mails muss mindestens 5 und höchstens 15 Zeichen enthalten.').len(5, 15);
-    validator.check(group.emailPrefix, 'Präfix für E-Mails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten.').regex(/^[a-z0-9 \-]+$/i);
+    validator.check(group.emailPrefix, 'Präfix für E-Mails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten.').regex(/^[a-z0-9 -]+$/i);
     validator.check(group.longName, 'Titel ist ein Pflichtfeld.').notEmpty();
     validator.check(group.color, 'Farbe ist ein Pflichtfeld.').notEmpty();
     validator.check(group.description, 'Beschreibung ist ein Pflichtfeld.').notEmpty();

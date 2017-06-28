@@ -1,9 +1,8 @@
 'use strict';
 
-const partners = require('./partners.json');
 const moment = require('moment-timezone');
 
-function sortAndFormatPartners() {
+function sortAndFormatPartners(partners) {
   function datestringFor(startdate, enddate) {
     moment.locale('en-GB');
     if (enddate) {

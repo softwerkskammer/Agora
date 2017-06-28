@@ -12,11 +12,11 @@ var groups_validator;
     // DO NOT FORGET TO KEEP THIS FILE IN SYNC WITH /lib/commons/validation.js
 
     $.validator.addMethod('alnumdashblank', function (value, element) {
-      return this.optional(element) || /^[a-z0-9 \-]+$/i.test(value);
+      return this.optional(element) || /^[a-z0-9 -]+$/i.test(value);
     }, contentsOfPrefixForEMail);
 
     $.validator.addMethod('alnumdashunderscore', function (value, element) {
-      return this.optional(element) || /^[a-z0-9_\-]+$/i.test(value);
+      return this.optional(element) || /^[a-z0-9_-]+$/i.test(value);
     }, contentsOfAlphanumeric);
 
     groups_validator = $('#groupform').validate({

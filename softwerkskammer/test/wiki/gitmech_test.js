@@ -264,9 +264,9 @@ describe('the gitmech module', () => {
           gitmechCommand('message', 'author', err => {
             const argument = stub.firstCall.args[0];
             if (argument[0] === commandName) {
-              expect(argument[1]).to.match(/\'?.\'/);
+              expect(argument[1]).to.match(/'?.'/);
               if (argument.length === 3) {
-                expect(argument[2]).to.match(/\'?.\'/);
+                expect(argument[2]).to.match(/'?.'/);
               }
             }
             done(err);
@@ -280,7 +280,7 @@ describe('the gitmech module', () => {
             if (argument[0] === 'commit') {
               expect(argument[1]).to.be('--author=\'author\'');
               expect(argument[3]).to.be('\'message\'');
-              expect(argument[4]).to.match(/\'?.\'/);
+              expect(argument[4]).to.match(/'?.'/);
             }
             done(err);
           });

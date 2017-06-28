@@ -150,7 +150,7 @@ describe('Notifications', () => {
     ];
     notifications.wikiChanges(changes, err => {
       const options = transport.sendMail.firstCall.args[0];
-      expect(options.html).to.contain('<h3>Wiki \"A\"</h3>\n    <hr>\n    <h3>Wiki \"C\"</h3>\n    <hr>\n    <h3>Wiki \"Z\"</h3>');
+      expect(options.html).to.contain('<h3>Wiki "A"</h3>\n    <hr>\n    <h3>Wiki "C"</h3>\n    <hr>\n    <h3>Wiki "Z"</h3>');
       done(err);
     });
   });

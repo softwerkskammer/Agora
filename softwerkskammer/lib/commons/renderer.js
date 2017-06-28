@@ -37,7 +37,7 @@ function evalTags(text, subdir) {
 
   // Yields the content with the rendered [[bracket tags]]
   // The rules are the same for Gollum https://github.com/github/gollum
-  const matches = result.match(/(.?)\[\[(.+?)\]\]([^\[]?)/g);
+  const matches = result.match(/(.?)\[\[(.+?)\]\]([^[]?)/g);
   if (matches) {
     for (let match of matches) {
       const tag = /(.?)\[\[(.+?)\]\](.?)/.exec(match.trim());

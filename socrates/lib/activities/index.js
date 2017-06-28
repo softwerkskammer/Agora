@@ -14,7 +14,7 @@ const validation = beans.get('validation');
 const statusmessage = beans.get('statusmessage');
 const roomOptions = beans.get('roomOptions');
 
-const activitiesService = beans.get('activitiesService');  // for fetching the SoCraTes activity from SWK
+const activitiesService = beans.get('activitiesService'); // for fetching the SoCraTes activity from SWK
 const Activity = beans.get('activity'); // for creating a new activity for SWK
 const activitystore = beans.get('activitystore'); // for storing the SoCraTes activity in SWK
 

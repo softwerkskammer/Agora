@@ -5,7 +5,7 @@
   function highlightCurrentSection() {
     var result = URI.parse(window.location.href); // full URL
     var selections = $('[data-nav]').filter(function () {
-      return new RegExp('^\/' + $(this).attr('data-nav')).test(result.path);
+      return new RegExp('^/' + $(this).attr('data-nav')).test(result.path);
     });
     (selections.length > 0 ? selections : $('[data-nav-index]')).first().addClass('active');
   }
@@ -13,7 +13,7 @@
   function twitterUtil() {
     /* eslint no-underscore-dangle: 0 */
     if (window.__twitterIntentHandler) { return; }
-    var intentRegex = /twitter\.com(\:\d{2,4})?\/intent\/(\w+)/,
+    var intentRegex = /twitter\.com(:\d{2,4})?\/intent\/(\w+)/,
       windowOptions = 'scrollbars=yes,resizable=yes,toolbar=no,location=yes',
       width = 550,
       height = 420,

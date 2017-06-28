@@ -8,7 +8,7 @@ function contentsToObject(contents, year) {
   if (!contents) { return {}; }
 
   function titleAndLinkToObject(element) {
-    const titleAndLink = element.replace(/[\[\)]/g, '').split(/\]\s*\(/);
+    const titleAndLink = element.replace(/[[)]/g, '').split(/\]\s*\(/);
     if (titleAndLink.length === 2) {
       return titleAndLink;
     }

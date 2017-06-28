@@ -30,7 +30,7 @@ function createConfiguration() {
     '/wiki/socrates.*/|' +
     '/payment|' +
     'dashboard',
-    securedBySuperuserURLPattern: '^\/administration\/',
+    securedBySuperuserURLPattern: '^/administration/',
     secret: 'secret',
     sessionkey: 'softwerkskammer.org',
     beans: new Beans(configdir + 'beans.json'),
