@@ -11,7 +11,7 @@ class Diff {
 
     function leftDiffLineNumber(id, line) {
       if (line.slice(0, 2) === '@@') {
-        const li = line.match(/\-(\d+)/)[1];
+        const li = line.match(/-(\d+)/)[1];
         ldln = parseInt(li, 10);
         return '...';
       }

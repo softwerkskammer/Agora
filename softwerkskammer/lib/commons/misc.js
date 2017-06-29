@@ -10,7 +10,7 @@ const imageExtensions = R.flatten(
 );
 
 function regexEscape(string) {
-  return string.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+  return string.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&');
 }
 
 function asWholeWordEscaped(string) {

@@ -74,7 +74,7 @@ describe('Replace long numbers from text', () => {
   });
 
   it('does not replace text with single brackets, slashes, plus or minus signs', () => {
-    expect(fieldHelpers.replaceLongNumbers('text - text + text (text) \/ text')).to.equal('text - text + text (text) \/ text');
+    expect(fieldHelpers.replaceLongNumbers('text - text + text (text) / text')).to.equal('text - text + text (text) / text');
   });
 
   it('does not replace years', () => {

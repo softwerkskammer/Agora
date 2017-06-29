@@ -1,15 +1,22 @@
 'use strict';
 
-const partners = require('./partners.json');
 const moment = require('moment-timezone');
 
-function sortAndFormatPartners() {
+function sortAndFormatPartners(partners) {
   function datestringFor(startdate, enddate) {
     moment.locale('en-GB');
+    const start = moment(startdate);
     if (enddate) {
-      return moment(startdate).format('D') + ' - ' + moment(enddate).format('LL');
+      const end = moment(enddate);
+      if (start.month() === end.month()) {
+        return start.format('D') + ' - ' + end.format('LL');
+      } else if (start.year() === end.year()) {
+        return start.format('D MMMM') + ' - ' + end.format('LL');
+      } else {
+        return start.format('LL') + ' - ' + end.format('LL');
+      }
     }
-    return moment(startdate).format('LL');
+    return start.format('LL');
   }
 
   const parsedPartners = partners.map(

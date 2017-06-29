@@ -112,7 +112,7 @@ describe('Members application', () => {
       .get('/hada')
       .expect(200)
       .expect(/<img src="https:\/\/www\.gravatar\.com\/avatar\/5d60d4e28066df254d5452f92c910092\?d=mm&amp;s=200"/, (err, res) => {
-        expect(res.text).to.not.contain('<input id="input-file" type="file" accept="image\/\*" name="image"');
+        expect(res.text).to.not.contain('<input id="input-file" type="file" accept="image/*" name="image"');
         done(err);
       });
   });

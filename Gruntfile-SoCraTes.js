@@ -8,7 +8,6 @@ module.exports = function (grunt) {
       'node_modules/jquery/dist/jquery.js',
       'node_modules/guillotine/js/jquery.guillotine.js',
       'node_modules/select2/dist/js/select2.full.js',
-      'node_modules/autonumeric/autonumeric.js',
       'node_modules/bootstrap/dist/js/bootstrap.js',
       'node_modules/bootstrap-datepicker/js/bootstrap-datepicker.js',
       'node_modules/bootstrap-markdown/js/bootstrap-markdown.js',

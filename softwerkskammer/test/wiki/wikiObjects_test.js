@@ -124,7 +124,7 @@ describe('BlogPost', () => {
   it('can parse links inside the teaser', () => {
     function parse(post) { return new Blogpost('blog_2013-02-01LeanCoffeeTest.md', post); }
 
-    expect(parse('# Dummy\n\n[Some Link](http://www.google.de)').teaser).is('<p><a href=\"http://www.google.de\">Some Link</a></p>\n');
+    expect(parse('# Dummy\n\n[Some Link](http://www.google.de)').teaser).is('<p><a href="http://www.google.de">Some Link</a></p>\n');
 
   });
 
