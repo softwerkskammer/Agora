@@ -3,7 +3,36 @@
 const expect = require('must-dist');
 
 const partnerconferences = require('../../lib/site/partnerconferences-sorted');
-const partners = require('./partnersForTest.json');
+const partners = [
+    {
+      name: 'regular one day',
+      url: 'http://scunconf.com/',
+      startdate: '2017-07-20',
+      location: 'Atlanta, GA, USA'
+    },
+    {
+      name: 'regular two day',
+      url: 'http://www.socrates-conference.de/',
+      startdate: '2017-01-15',
+      enddate: '2017-01-19',
+      location: 'somewhere, Germany'
+    },
+    {
+      name: 'end of month to begin of month',
+      url: 'http://scunconf.com/',
+      startdate: '2017-07-31',
+      enddate: '2017-08-02',
+      location: 'anywhere, world'
+    },
+    {
+      name: 'end of year to begin of year',
+      url: 'http://scunconf.com/',
+      startdate: '2017-12-31',
+      enddate: '2018-01-02',
+      location: 'anywhere, world'
+    }
+  ]
+;
 
 describe('partnerconferences', () => {
 
