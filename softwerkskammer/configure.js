@@ -12,7 +12,7 @@ function createConfiguration() {
   conf.addProperties({
     adminListName: 'admins',
     port: '17124',
-    mongoURL: 'mongodb://administrator:Matrix3Reloaded5@localhost:27017/swk?authSource=admin',
+    mongoURL: 'mongodb://localhost:27017/swk',
     publicUrlPrefix: 'http://localhost:17124',
     securedByLoginURLPattern: '/activityresults|' +
     '/gallery|' +
