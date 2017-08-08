@@ -371,6 +371,10 @@ block content
                   th Nickname
                   th Vorname
                   th Nachname
+                  th Pronom
+                  th Hilfe
+                  th Helfer
+                  th Diät
                   th Bemerkung
               tbody
                 for line in addonLines
@@ -378,6 +382,10 @@ block content
                     td: +linkedMember(line.member.nickname())
                     td #{line.member.firstname()}
                     td #{line.member.lastname()}
+                    td #{line.addon.pronoun()}
+                    td #{line.addon.needsAssistance()}
+                    td #{line.addon.canProvideAssistance()}
+                    td #{line.addon.diet()}
                     td #{line.addon.remarks()}
           hr
         .tab-pane#addresses

@@ -18,7 +18,7 @@ function createConfiguration() {
   conf.addProperties({
     adminListName: 'admins', // needed for member loading
     port: '17224',
-    mongoURL: 'mongodb://localhost:27017/swk',
+    mongoURL: 'mongodb://administrator:Matrix3Reloaded5@localhost:27017/swk?authSource=admin',
     publicUrlPrefix: 'http://localhost:17224',
     securedByLoginURLPattern: '^/wiki|' +
     '^/mailsender|' +
