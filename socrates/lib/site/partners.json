@@ -54,6 +54,12 @@
     "location": "Zurich, Switzerland"
   },
   {
+    "name": "SoCraTes Day Berlin",
+    "url": "https://socrates-day-berlin-2017.eventbrite.com",
+    "startdate": "2017-10-07",
+    "location": "Berlin, Germany"
+  },
+  {
     "name": "SoCraTes BE",
     "url": "http://socratesbe.org",
     "startdate": "2017-11-09",
