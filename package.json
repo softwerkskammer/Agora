@@ -43,7 +43,7 @@
     "express-session": "1.15.3",
     "ezmlm-node": "1.2.3",
     "font-awesome": "4.7.0",
-    "fullcalendar": "3.3.1",
+    "fullcalendar": "3.5.0",
     "glob": "7.1.2",
     "guillotine": "1.3.1",
     "i18next": "8.4.2",
