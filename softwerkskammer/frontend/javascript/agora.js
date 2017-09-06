@@ -14,6 +14,7 @@ function initParameterisedCalendar(id, date) {
       right: isForActivities ? 'prev,today,next' : ''
     },
     timezone: 'Europe/Berlin',
+    displayEventTime: false,
     events: isForActivities ? '/activities/eventsForSidebar' : '/wiki/eventsFor',
     eventMouseover: function (event) {
       var day = event.start.day();
@@ -34,11 +35,7 @@ function initParameterisedCalendar(id, date) {
         this.calendar.select(displayedActivityStart, displayedActivityEnd);
       }
     },
-    bootstrap: true,
-    buttonIcons: {
-      prev: 'fa-caret-left',
-      next: 'fa-caret-right'
-    },
+    themeSystem: 'bootstrap3',
     aspectRatio: 1.2,
     height: 'auto',
     views: {

@@ -15,7 +15,7 @@ module.exports = function (grunt) {
     'node_modules/moment-timezone/moment-timezone.js',
     'node_modules/drmonty-smartmenus/js/jquery.smartmenus.js',
     'softwerkskammer/build/javascript/jquery.smartmenus.bootstrap-patched.js',
-    'softwerkskammer/build/javascript/fullcalendar-patched.js',
+    'node_modules/fullcalendar/dist/fullcalendar.js',
     'node_modules/tinycolor2/tinycolor.js',
     'node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
     'node_modules/jquery-validation/dist/jquery.validate.js',
@@ -167,14 +167,6 @@ module.exports = function (grunt) {
           'softwerkskammer/build/javascript/jquery.smartmenus.bootstrap-patched.js': 'node_modules/drmonty-smartmenus/js/jquery.smartmenus.bootstrap.js'
         }
       },
-      fullcalendar: {
-        options: {
-          patch: 'softwerkskammer/frontend/3rd_party_js/fullcalendar.js.patch'
-        },
-        files: {
-          'softwerkskammer/build/javascript/fullcalendar-patched.js': 'node_modules/fullcalendar/dist/fullcalendar.js'
-        }
-      }
     },
     eslint: {
       options: {quiet: true},
