@@ -210,9 +210,7 @@ app.post('/submit', (req, res, next) => {
   async.parallel(
     [
       callback => {
-        // we need this helper function (in order to have a closure?!)
-        const validityChecker = (url, cb) => { activitiesService.isValidUrl(reservedURLs, url, cb); };
-        validation.checkValidity(req.body.previousUrl.trim(), req.body.url.trim(), validityChecker, req.i18n.t('validation.url_not_available'), callback);
+        validation.checkValidity(req.body.previousUrl.trim(), req.body.url.trim(), R.partial(activitiesService.isValidUrl, [reservedURLs]), req.i18n.t('validation.url_not_available'), callback);
       },
       callback => {
         const errors = validation.isValidForActivity(req.body);
