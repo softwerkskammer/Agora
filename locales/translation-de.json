@@ -42,6 +42,8 @@
     "past": "Vergangene",
     "possible": "möglich",
     "previous_gdcr": "Vergangene GDCRs",
+    "recent": "Letzte",
+    "recent_activities": "$t(activities.recent) $t(activities.activities)",
     "register_until": "Kann sich registrieren bis",
     "registration": "Anmeldung",
     "registration_not_here": "Anmeldung ist nicht über die Softwerkskammer möglich.",
