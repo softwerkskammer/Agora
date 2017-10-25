@@ -301,11 +301,11 @@ function addToWaitinglist(body, req, res, next) {
 }
 
 app.post('/addToWaitinglist', (req, res, next) => {
-  // in case the call was redirected via login, we get called with "get"
   addToWaitinglist(req.body, req, res, next);
 });
 
 app.get('/addToWaitinglist', (req, res, next) => {
+  // in case the call was redirected via login, we get called with "get"
   const body = req.session.previousBody;
   if (!body) { return next(); }
   delete req.session.previousBody;
