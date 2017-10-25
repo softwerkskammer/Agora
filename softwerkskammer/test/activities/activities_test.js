@@ -626,6 +626,9 @@ describe('Activity application', () => {
         .expect(/<option value="group">The name of the group with editors/)
         .end(done);
     });
+  });
+
+  describe('User subscription', () => {
 
     it('adds the current user to the list of participants, captures a success message in the session and redirects to the activity on subscribe', done => {
       sinon.stub(activitiesService, 'addVisitorTo').callsFake((userId, activityUrl, timestamp, callback) => { callback(null); });
@@ -679,5 +682,68 @@ describe('Activity application', () => {
         .end(done);
     });
 
+    it('displays a 404 when trying to subscribe to an activity via GET request', done => {
+
+      request(createApp({member: member1}))
+        .get('/subscribe')
+        .expect(404)
+        .end(done);
+    });
   });
+
+  describe('User unsubscription', () => {
+
+    it('removes the current user from the list of participants, captures a success message in the session and redirects to the activity on subscribe', done => {
+      sinon.stub(activitiesService, 'removeVisitorFrom').callsFake((userId, activityUrl, callback) => { callback(null); });
+
+      let session;
+      const sessionCaptureCallback = (s) => { session = s; };
+
+      request(createApp({member: member1, sessionCaptureCallback}))
+        .post('/unsubscribe')
+        .type('form')
+        .send({url: 'myActivity'})
+        .expect(302)
+        .expect('Found. Redirecting to /activities/myActivity')
+        .end(function (err) {
+          expect(session.statusmessage.type).to.be('alert-success');
+          expect(session.statusmessage.title).to.be('message.title.save_successful');
+          expect(session.statusmessage.text).to.be('message.content.activities.participation_removed');
+          done(err);
+        });
+    });
+
+    it('captures the unsubscribe service status title and status message in the session and redirects to the activity', done => {
+      sinon.stub(activitiesService, 'removeVisitorFrom').callsFake((userId, activityUrl, callback) => { callback(null, 'Status Title', 'Status Text'); });
+
+      let session;
+      const sessionCaptureCallback = (s) => { session = s; };
+
+      request(createApp({member: member1, sessionCaptureCallback}))
+        .post('/unsubscribe')
+        .type('form')
+        .send({url: 'myActivity'})
+        .expect(302)
+        .expect('Found. Redirecting to /activities/myActivity')
+        .end(function (err) {
+          expect(session.statusmessage.type).to.be('alert-danger');
+          expect(session.statusmessage.title).to.be('Status Title');
+          expect(session.statusmessage.text).to.be('Status Text');
+          done(err);
+        });
+    });
+
+    it('displays a 500 with the error message if there is an error from the service', done => {
+      sinon.stub(activitiesService, 'removeVisitorFrom').callsFake((userId, activityUrl, callback) => { callback(new Error('Oops...')); });
+
+      request(createApp({member: member1}))
+        .post('/unsubscribe')
+        .type('form')
+        .send({url: 'myActivity'})
+        .expect(500)
+        .expect(/Error: Oops.../)
+        .end(done);
+    });
+  });
+
 });
