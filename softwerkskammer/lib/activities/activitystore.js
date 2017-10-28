@@ -96,6 +96,17 @@ module.exports = {
     }, {startUnix: 1}, R.partial(toActivityList, [callback]));
   },
 
+  pastActivitiesForGroupIds: function pastActivitiesForGroupIds(groupIds, callback) {
+    const start = moment().unix();
+
+    persistence.listByField({
+      $and: [
+        {endUnix: {$lt: start}},
+        {assignedGroup: {$in: groupIds}}
+      ]
+    }, {startUnix: -1}, R.partial(toActivityList, [callback]));
+  },
+
   activitiesForGroupIdsAndRegisteredMemberId: function activitiesForGroupIdsAndRegisteredMemberId(groupIds, memberId, upcoming, callback) {
     function map() {
       /* eslint no-underscore-dangle: 0 */

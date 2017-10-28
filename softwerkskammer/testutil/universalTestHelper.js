@@ -10,7 +10,7 @@ module.exports = function universalTestHelper(defaultLanguage) {
     const initI18N = beans.get('initI18N');
 
     return {
-      createApp: params => { /* id, member, middlewares, baseurl, secureByMiddlewares, sessionID */
+      createApp: params => { /* id, member, middlewares, baseurl, secureByMiddlewares, sessionID, sessionCaptureCallback */
         const atts = params || {};
         const app = express();
         app.locals.pretty = true;
@@ -32,6 +32,12 @@ module.exports = function universalTestHelper(defaultLanguage) {
         }
         if (atts.user) {
           app.use(userStub(atts.user));
+        }
+        if (atts.sessionCaptureCallback) {
+          app.use((req, res, next) => {
+            atts.sessionCaptureCallback(req.session);
+            next();
+          });
         }
         app.use(beans.get('accessrights'));
         (atts.secureByMiddlewares || []).forEach(middleware => {

@@ -45,6 +45,8 @@
     "past": "Past",
     "possible": "possible",
     "previous_gdcr": "Previous GDCRs",
+    "recent": "Recent",
+    "recent_activities": "$t(activities.recent) $t(activities.activities)",
     "register_until": "Can register until",
     "registration": "Subscription",
     "registration_is_full": "Subscription for the selected room type is no longer possible because all spots are taken. Please try again with a different room type.",

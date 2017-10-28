@@ -159,14 +159,10 @@ app.post('/submit', (req, res, next) => {
   async.parallel(
     [
       callback => {
-        // we need this helper function (in order to have a closure?!)
-        const validityChecker = (nickname, cb) => membersService.isValidNickname(nickname, cb);
-        validation.checkValidity(req.body.previousNickname, req.body.nickname, validityChecker, req.i18n.t('validation.nickname_not_available'), callback);
+        validation.checkValidity(req.body.previousNickname, req.body.nickname, membersService.isValidNickname, req.i18n.t('validation.nickname_not_available'), callback);
       },
       callback => {
-        // we need this helper function (in order to have a closure?!)
-        const validityChecker = (email, cb) => membersService.isValidEmail(email, cb);
-        validation.checkValidity(req.body.previousEmail, req.body.email, validityChecker, req.i18n.t('validation.duplicate_email'), callback);
+        validation.checkValidity(req.body.previousEmail, req.body.email, membersService.isValidEmail, req.i18n.t('validation.duplicate_email'), callback);
       },
       callback => {
         const errors = validation.isValidForMember(req.body);

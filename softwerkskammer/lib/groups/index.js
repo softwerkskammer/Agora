@@ -3,6 +3,7 @@
 const conf = require('simple-configure');
 const beans = conf.get('beans');
 const async = require('async');
+const R = require('ramda');
 
 const misc = beans.get('misc');
 const groupsService = beans.get('groupsService');
@@ -105,15 +106,19 @@ app.get('/:groupname', (req, res, next) => {
       if (err1) { return next(err1); }
       activitystore.upcomingActivitiesForGroupIds([group.id], (err2, activities) => {
         if (err2) { return next(err2); }
-        const registeredUserId = req && req.user ? req.user.member.id() : undefined;
-        res.render('get', {
-          group,
-          users: group.members,
-          userIsGroupMember: groupsAndMembers.memberIsInMemberList(registeredUserId, group.members),
-          organizers: group.organizers,
-          blogposts,
-          webcalURL: conf.get('publicUrlPrefix').replace('http', 'webcal') + '/activities/icalForGroup/' + group.id,
-          upcomingGroupActivities: activities || []
+        activitystore.pastActivitiesForGroupIds([group.id], (err3, pastActivities) => {
+          if (err3) { return next(err3); }
+          const registeredUserId = req && req.user ? req.user.member.id() : undefined;
+          res.render('get', {
+            group,
+            users: group.members,
+            userIsGroupMember: groupsAndMembers.memberIsInMemberList(registeredUserId, group.members),
+            organizers: group.organizers,
+            blogposts,
+            webcalURL: conf.get('publicUrlPrefix').replace('http', 'webcal') + '/activities/icalForGroup/' + group.id,
+            upcomingGroupActivities: activities || [],
+            recentGroupActivities: pastActivities ? R.take(5, pastActivities) : []
+          });
         });
       });
     });
