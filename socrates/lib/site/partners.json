@@ -2,15 +2,15 @@
   {
     "name": "CodeFreeze",
     "url": "http://www.codefreeze.fi/",
-    "startdate": "2017-01-15",
-    "enddate": "2017-01-19",
+    "startdate": "2018-01-15",
+    "enddate": "2018-01-17",
     "location": "Kiilopää, Finland"
   },
   {
     "name": "SoCraTes Conference Switzerland",
     "url": "http://socrates-ch.org/",
-    "startdate": "2017-03-09",
-    "enddate": "2017-03-12",
+    "startdate": "2018-03-15",
+    "enddate": "2018-03-18",
     "location": "Ftan, Switzerland"
   },
   {
@@ -23,13 +23,13 @@
   {
     "name": "I T.A.K.E. Unconference",
     "url": "http://itakeunconf.com/",
-    "startdate": "2017-05-11",
-    "enddate": "2017-05-12",
+    "startdate": "2017-06-07",
+    "enddate": "2017-06-08",
     "location": "Bucharest, Romania"
   },
   {
     "name": "SoCraTes Italy",
-    "url": "http://socrates-it.github.io/",
+    "url": "http://www.socrates-conference.it/",
     "startdate": "2017-05-25",
     "enddate": "2017-05-27",
     "location": "Rimini, Italy"
