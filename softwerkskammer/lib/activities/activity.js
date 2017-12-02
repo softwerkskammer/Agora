@@ -142,7 +142,7 @@ class Activity {
   }
 
   blogEntryUrl() {
-    return `${this.assignedGroup()}/blog_${this.startMoment().format('YYYY-MM-DD')}_${Renderer.normalize(this.url())}`;
+    return `${this.assignedGroup()}/blog_${this.startMoment().format('YYYY-MM-DD')}_${Renderer.normalize(this.title())}`;
   }
 
   // Resources

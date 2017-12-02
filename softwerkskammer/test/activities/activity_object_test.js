@@ -66,24 +66,35 @@ describe('Activity', () => {
   });
 
   describe('blogEntryUrl', () => {
-    it('uses group id, date, and url to compose url', () => {
+    it('uses group id, date, and title to compose url', () => {
       const activity = new Activity({
         assignedGroup: 'mygroup',
-        url: 'my-activity',
+        title: 'my-activity',
         startUnix: moment('20171120', 'YYYYMMDD').unix()
       });
 
       expect(activity.blogEntryUrl()).to.equal('mygroup/blog_2017-11-20_my-activity');
+
     });
 
-    it('replaces special characters in url with same characters', () => {
+    it('uses lower cased title', () => {
       const activity = new Activity({
         assignedGroup: 'mygroup',
-        url: 'my activityÄÖÜ',
+        title: 'Myactivity',
         startUnix: moment('20171120', 'YYYYMMDD').unix()
       });
 
-      expect(activity.blogEntryUrl()).to.equal('mygroup/blog_2017-11-20_my-activityaou');
+      expect(activity.blogEntryUrl()).to.equal('mygroup/blog_2017-11-20_myactivity');
+    });
+
+    it('replaces special characters in title with same characters', () => {
+      const activity = new Activity({
+        assignedGroup: 'mygroup',
+        title: '74. my activityÄÖÜ',
+        startUnix: moment('20171120', 'YYYYMMDD').unix()
+      });
+
+      expect(activity.blogEntryUrl()).to.equal('mygroup/blog_2017-11-20_74-my-activityaou');
     });
   });
 });
