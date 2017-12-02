@@ -76,14 +76,14 @@ describe('Activity', () => {
       expect(activity.blogEntryUrl()).to.equal('mygroup/blog_2017-11-20_my-activity');
     });
 
-    it('replaces whitespaces in url with hyphens', () => {
+    it('replaces special characters in url with same characters', () => {
       const activity = new Activity({
         assignedGroup: 'mygroup',
-        url: 'my activity',
+        url: 'my activityÄÖÜ',
         startUnix: moment('20171120', 'YYYYMMDD').unix()
       });
 
-      expect(activity.blogEntryUrl()).to.equal('mygroup/blog_2017-11-20_my-activity');
+      expect(activity.blogEntryUrl()).to.equal('mygroup/blog_2017-11-20_my-activityaou');
     });
   });
 });
