@@ -2,6 +2,8 @@
 
 const expect = require('must-dist');
 
+const moment = require('moment');
+
 const Activity = require('../../testutil/configureForTest').get('beans').get('activity');
 
 // TODO Activity.fillFromUI with null/undefined in startDate, startTime, endDate, endTime
@@ -61,6 +63,28 @@ describe('Activity', () => {
       url: 'myURL'
     });
     expect(activity.colorFrom(null)).to.equal('#353535');
+  });
+
+  describe('blogEntryUrl', () => {
+    it('uses group id, date, and url to compose url', () => {
+      const activity = new Activity({
+        assignedGroup: 'mygroup',
+        url: 'my-activity',
+        startUnix: moment('20171120', 'YYYYMMDD').unix()
+      });
+
+      expect(activity.blogEntryUrl()).to.equal('mygroup/blog_2017-11-20_my-activity');
+    });
+
+    it('replaces whitespaces in url with hyphens', () => {
+      const activity = new Activity({
+        assignedGroup: 'mygroup',
+        url: 'my activity',
+        startUnix: moment('20171120', 'YYYYMMDD').unix()
+      });
+
+      expect(activity.blogEntryUrl()).to.equal('mygroup/blog_2017-11-20_my-activity');
+    });
   });
 });
 
