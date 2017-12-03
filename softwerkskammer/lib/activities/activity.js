@@ -141,6 +141,10 @@ class Activity {
     this.group = groups.find(group => group.id === this.assignedGroup());
   }
 
+  blogEntryUrl() {
+    return `${this.assignedGroup()}/blog_${this.startMoment().format('YYYY-MM-DD')}_${Renderer.normalize(this.title())}`;
+  }
+
   // Resources
 
   resources() {

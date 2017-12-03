@@ -12,6 +12,7 @@
     "address_suffix": "Adress-Suffix",
     "already_registered": "SoCraTes only",
     "billing_address": "Rechnungsanschrift",
+    "blog_entry": "Blogartikel zur Aktivität",
     "count": "Anzahl",
     "count_participants_interval": "(0){Bislang gibt es keine Teilnahmezusagen.};(1){Bislang hat ein Mitglied seine Teilnahme zugesagt.};(2-inf){Bislang haben {{count}} Mitglieder ihre Teilnahme zugesagt.}",
     "create": "Aktivität anlegen",

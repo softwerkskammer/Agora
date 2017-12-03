@@ -12,6 +12,7 @@
     "address_suffix": "Address-Suffix",
     "already_registered": "You are already registered.",
     "billing_address": "Billing address",
+    "blog_entry": "Blog article for activity",
     "count": "Count",
     "count_participants_interval": "(0){So far, there are no participants.};(1){So far, there is one participant.};(2-inf){So far, there are {{count}} participants.}",
     "create": "Create activity",
