@@ -226,7 +226,8 @@ module.exports = function (grunt) {
           slow: 100,
           mask: '**/*.js',
           root: 'softwerkskammer/lib',
-          reporter: 'dot'
+          reporter: 'dot',
+          mochaOptions: ['--exit']
         }
       },
       testApp: {
@@ -237,7 +238,8 @@ module.exports = function (grunt) {
           slow: 100,
           mask: '**/*.js',
           root: 'softwerkskammer/lib',
-          reporter: 'dot'
+          reporter: 'dot',
+          mochaOptions: ['--exit']
         }
       },
       test: {
@@ -252,7 +254,8 @@ module.exports = function (grunt) {
           check: {
             lines: 80,
             statements: 76
-          }
+          },
+          mochaOptions: ['--exit']
         }
       }
     },
