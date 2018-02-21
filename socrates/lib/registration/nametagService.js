@@ -49,11 +49,13 @@ module.exports = {
       '\n' +
       '\\newcommand{\\nametag}[3]{%\n' +
       '  \\parbox[t]{' + tags.colWidth + '}{\\rule[0mm]{0mm}{' + tags.tagHeight + '}%\n' +
-      '    \\hspace{10mm}' +
+      '    \\hspace{5mm}' +
       '    \\begin{minipage}[b]{' + tags.colWidth + '}%\n' +
-      '      {\\Huge \\textbf{#1}}\\\\[5mm]%\n' +
-      '      {\\large #2}\\\\[5mm]%\n' +
-      '    {\\Large \\textbf{\\texttt{#3}}}\\\\[' + tags.bottomMargin + ']%\n' +
+
+      '      \\\\{\\Huge \\textbf{#1}}\\\\[3mm]%\n' +
+      '      {\\large #2}\\\\[3mm]%\n' +
+          ' {\\Large \\texttt{#3}}\\\\    {\\Small        \\texttt{Pronoun:}\\\\        \\qquad\\texttt{Languages: }    }\\\\' +
+      '[' + tags.bottomMargin + ']%\n' +
       ' \\end{minipage}}}%\n' +
       '\n' +
       '\n' +
