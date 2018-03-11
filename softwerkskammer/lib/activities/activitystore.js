@@ -141,7 +141,6 @@ module.exports = {
     const parameters = {out: {inline: 1}, scope: {memberId, groupIds}, query, jsMode: true};
 
     persistence.mapReduce(map, reduce, parameters, (err, collection) => {
-      if (err && err.errmsg === 'ns doesn\'t exist') { return callback(null, []); } // no mongostore available -> nevermind
       if (err) { return callback(err); }
       if (!collection || collection.length === 0) {
         return callback(null, []);

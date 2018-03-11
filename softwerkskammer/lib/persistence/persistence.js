@@ -80,7 +80,14 @@ module.exports = function (collectionName) {
     mapReduce: function mapReduce(map, reduce, options, callback) {
       performInDB((err, db) => {
         if (err) { return callback(err); }
-        db.collection(collectionName).mapReduce(map, reduce, options, callback);
+        db.listCollections({name: collectionName}).toArray((err1, names) => {
+          if (err1) { callback(err1); }
+          if (names.length === 0) {
+            callback(null, []);
+          } else {
+            db.collection(collectionName).mapReduce(map, reduce, options, callback);
+          }
+        });
       });
     },
 

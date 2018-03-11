@@ -299,4 +299,19 @@ describe('The persistence store', () => {
       });
     });
   });
+
+  describe('when collection does not exist', () => {
+    beforeEach(clearStore);
+
+    describe('mapReduce', () => {
+      it('returns empty array', done => {
+        const R = require('ramda');
+        persistence.mapReduce(() => 'nothing', R.identity, {out: {inline: 1}}, (err, result) => {
+          expect(err).to.not.exist();
+          expect(result).to.be.empty();
+          done();
+        });
+      });
+    });
+  });
 });
