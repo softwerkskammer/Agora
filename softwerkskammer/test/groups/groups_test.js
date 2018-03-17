@@ -12,6 +12,8 @@ const Group = beans.get('group');
 const Activity = beans.get('activity');
 const fakeListAdapter = beans.get('fakeListAdapter');
 const fieldHelpers = beans.get('fieldHelpers');
+const wikiObjects = beans.get('wikiObjects');
+const wikiService = beans.get('wikiService');
 
 const createApp = require('../../testutil/testHelper')('groupsApp').createApp;
 
@@ -198,6 +200,24 @@ describe('Groups application', () => {
         .expect(/Zweite Aktivität/, done);
     });
 
+  });
+
+  describe('group feed', () => {
+    it('renders blog posts as XML', done => {
+      sinon.stub(wikiService, 'getBlogpostsForGroup').callsFake((groupid, callback) => {
+        callback(null, [
+          new wikiObjects.Blogpost('blog_2018-01-02_foo', '#Foo\n\nTeaser 1'),
+          new wikiObjects.Blogpost('blog_2018-02-03_bar', '#Bar\n\nTeaser 2')
+        ]);
+      });
+      request(createApp())
+        .get('/GroupA/feed')
+        .expect('Content-Type', /xml/)
+        .expect(200)
+        .expect(/Foo/).expect(/Teaser 1/).expect(/blog_2018-01-02_foo/)
+        .expect(/Bar/).expect(/Teaser 2/).expect(/blog_2018-02-03_bar/)
+        .expect(/<\/feed>\s*$/, done);
+    });
   });
 
   describe('group creation', () => {

@@ -4,6 +4,10 @@ include ../../wiki/views/wiki-mixins
 include ../../activities/views/activities-mixins
 include ../../../../commonComponents/pug/formComponents
 
+block head
+  if (blogposts.length > 0)
+    link(rel='alternate', type='application/atom+xml', href=blogpostsFeedUrl)
+
 block title
     | #{group.longName}
 
@@ -58,7 +62,7 @@ block content
         h4 #{t('activities.recent_activities')}:
         +activityList(recentGroupActivities)
       if (blogposts.length > 0)
-         +blogposts-panel(blogposts)
+         +blogposts-panel(blogposts, blogpostsFeedUrl)
 
 block scripts
   +tagCloudScript(users, group.color)

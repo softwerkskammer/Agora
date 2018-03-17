@@ -4,6 +4,7 @@ const conf = require('simple-configure');
 const beans = conf.get('beans');
 const async = require('async');
 const R = require('ramda');
+const Feed = require('feed');
 
 const misc = beans.get('misc');
 const groupsService = beans.get('groupsService');
@@ -115,12 +116,46 @@ app.get('/:groupname', (req, res, next) => {
             userIsGroupMember: groupsAndMembers.memberIsInMemberList(registeredUserId, group.members),
             organizers: group.organizers,
             blogposts,
+            blogpostsFeedUrl: req.originalUrl + '/feed',
             webcalURL: conf.get('publicUrlPrefix').replace('http', 'webcal') + '/activities/icalForGroup/' + group.id,
             upcomingGroupActivities: activities || [],
             recentGroupActivities: pastActivities ? R.take(5, pastActivities) : []
           });
         });
       });
+    });
+  });
+});
+
+app.get('/:groupname/feed', (req, res, next) => {
+
+  groupsAndMembers.getGroupAndMembersForList(req.params.groupname, (err, group) => {
+    if (err || !group) { return next(err); }
+    wikiService.getBlogpostsForGroup(req.params.groupname, (err1, blogposts) => {
+      if (err1) { return next(err1); }
+
+      const updated = blogposts.length > 0 ? blogposts[0].date().toDate() : undefined;
+      const baseUrl = req.protocol + '://' + req.get('host');
+
+      const feed = new Feed({
+        id: baseUrl + req.originalUrl,
+        title: group.longName + ' - ' + req.i18n.t('wiki.blogposts'),
+        updated: updated,
+        generator: 'Agora'
+      });
+
+      blogposts.forEach(post => {
+        feed.addItem({
+          title: post.title,
+          id: post.name,
+          link: baseUrl + post.url(),
+          content: post.renderBody(),
+          date: post.date().toDate(),
+        });
+      });
+
+      res.type('application/atom+xml');
+      res.send(feed.atom1());
     });
   });
 });
