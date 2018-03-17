@@ -133,7 +133,7 @@ module.exports = {
   lsdirs: function lsdirs(callback) {
     if (!workTree) { return callback(null, []); } // to make it run on dev systems
     return gitExec.command(['ls-tree', '--name-only', '-d', 'HEAD'], (err, data) => {
-      if (err || !data) { return callback(err); }
+      if (err) { return callback(err); }
       return callback(null, dataToLines(data));
     });
   },
