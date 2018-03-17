@@ -425,9 +425,9 @@ describe('the gitmech module', () => {
     it('"lsdirs" - converts the data to an array of single non empty lines', done => {
       sinon.stub(gitExec, 'command').callsFake((args, callback) => {
         if (args[0] === 'ls-tree') {
-          callback(null, 'andex.md\n' +
+          callback(null, 'andex\n' +
             '\n' +
-            'andreastest.md');
+            'andreastest');
         }
       });
       Git.lsdirs((err, lines) => {
@@ -437,12 +437,25 @@ describe('the gitmech module', () => {
       });
     });
 
-    it('"lsdirs" - handles errors correct', done => {
+    it('"lsdirs" - handles errors correctly', done => {
       sinon.stub(gitExec, 'command').callsFake((args, callback) => {
         if (args[0] === 'ls-tree') { callback(new Error()); }
       });
       Git.lsdirs(err => {
         expect(err).to.exist();
+        done();
+      });
+    });
+
+    it('"lsdirs" - converts the data to an array of single non empty lines', done => {
+      sinon.stub(gitExec, 'command').callsFake((args, callback) => {
+        if (args[0] === 'ls-tree') {
+          callback(null, '');
+        }
+      });
+      Git.lsdirs((err, lines) => {
+        expect(err).to.not.exist();
+        expect(lines).to.be.empty();
         done();
       });
     });
