@@ -41,6 +41,7 @@ class Blogpost {
     this.name = name;
     this.title = Renderer.firstTokentextOf(post).replace(/^(#|\s)*/, '');
     this.teaser = Renderer.secondTokentextOf(post);
+    this.post = post;
 
     const match = name.match(BLOG_ENTRY_REGEX);
     this.datestring = match && match[1];
@@ -56,6 +57,8 @@ class Blogpost {
   date() { return moment(this.datestring, 'YYYY-MM-DD'); }
 
   pureName() { return this.title; }
+
+  renderBody() { return Renderer.titleAndRenderedTail(this.post).body; }
 }
 
 class FileWithChangelist {

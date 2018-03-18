@@ -1,5 +1,10 @@
-mixin blogposts-panel(posts)
-  h4 #{t('wiki.blogposts')}:
+mixin blogposts-panel(posts, feedUrl)
+  div
+    .btn-group.pull-right
+      a.btn.btn-default.btn-xs(href=feedUrl)
+        i.fa.fa-rss
+        | &nbsp;#{t('wiki.subscribe')}
+    h4 #{t('wiki.blogposts')}:
   each post in posts
     .panel.panel-default
       .panel-heading
