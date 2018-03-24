@@ -139,7 +139,9 @@ app.get('/:groupname/feed', (req, res, next) => {
 
       const feed = new Feed({
         id: baseUrl + req.originalUrl,
-        title: group.longName + ' - ' + req.i18n.t('wiki.blogposts'),
+        title: [res.locals.siteTitle, group.longName, req.i18n.t('wiki.blogposts')].join(' - '),
+        favicon: baseUrl + '/favicon.ico',
+        image: baseUrl + res.locals.siteLogoPath,
         updated: updated,
         generator: 'Agora'
       });
