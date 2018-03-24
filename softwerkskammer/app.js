@@ -50,6 +50,11 @@ module.exports = {
     app.use(bodyparser.urlencoded({extended: true}));
     app.use(compress());
     app.use(express.static(path.join(__dirname, 'public'), {maxAge: 600 * 1000})); // ten minutes
+    app.use((req, res, next) => {
+      res.locals.siteTitle = 'SWK';
+      res.locals.siteLogoPath = '/img/apple-touch-icon-152x152-precomposed.png';
+      next();
+    });
 
     app.use(beans.get('expressSessionConfigurator'));
     app.use(beans.get('passportInitializer'));
