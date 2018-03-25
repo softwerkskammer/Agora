@@ -135,7 +135,7 @@ app.get('/:groupname/feed', (req, res, next) => {
       if (err1) { return next(err1); }
 
       const updated = blogposts.length > 0 ? blogposts[0].date().toDate() : undefined;
-      const baseUrl = req.protocol + '://' + req.get('host');
+      const baseUrl = conf.get('publicUrlPrefix');
 
       const feed = new Feed({
         id: baseUrl + req.originalUrl,
