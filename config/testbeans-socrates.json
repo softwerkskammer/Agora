@@ -1,4 +1,0 @@
-{
-  "subscribersPersistence": {"module": "./softwerkskammer/teststubs/testpersistence"},
-  "eventstorePersistence": {"module": "./softwerkskammer/teststubs/testpersistence"}
-}

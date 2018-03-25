@@ -1,8 +1,0 @@
-{
-  "publicUrlPrefix": "http://localhost:17224",
-  "secret": "secret",
-  "domainname": "socrates-conference.de",
-  "sessionkey": "socrates-conference.de",
-  "registrationOpensAt": "2015-04-28T19:00:00+0200",
-  "nametags": "orcana"
-}

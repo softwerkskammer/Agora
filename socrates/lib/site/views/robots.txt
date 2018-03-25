@@ -1,8 +1,0 @@
-User-agent: *
-Disallow: /clientscripts/
-Disallow: /fonts/
-Disallow: /img/
-Disallow: /logos/
-Disallow: /static/
-Disallow: /stylesheets/
-Disallow: /loginDialog/
