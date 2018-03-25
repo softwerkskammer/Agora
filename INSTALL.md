@@ -52,7 +52,7 @@ To set up the built-in wiki follow [these instructions for Softwerkskammer](soft
 
 ### Configuring the server
 
-Configuration for Softwerkskammer and SoCraTes:
+Configuration for Softwerkskammer:
 
 * Copy the logging configuration file `config-examples/winston-config.json` to `config/winston-config.json`, and adapt the paths if you like.
 * Copy the mailsender configuration file `config-examples/mailsender-config.json` to `config/mailsender-config.json`. Without setting up a proper server sending mails won't work but this configuration is sufficient to be able to start both the softwerkskammer and socrates app.
@@ -83,26 +83,11 @@ is to use a mail server, you have access to. The configuration should look like:
 }
 </code></pre>
 
-For SoCraTes admin notifications, update also:
-
-###### config/socrates-mailsender-config.json
-
-<pre><code>
-{
-  "infoListEmailAddress": "mail address to send infos",
-  "registrationListEmailAddress": "mail address to send registrations",
-  "notificationListEmailAddress": "mail address to send other notifications"
-}
-</code></pre>
-
-you can use the same address for all of them.
-
 ### Running the server
 
 * Open a shell in *REPO*
 * If your installation is fresh, run the db initialization script:
    * In any case, run `node softwerkskammer/initialDBSetup`
-   * For socrates, run `node socrates/initialDBSetup`
 * If your installation is fresh or you changed anything:
    * Run `npm test` (this creates the CSS files and other static contents and performs eslint checking)
 
@@ -112,13 +97,7 @@ Now you can decide which app you want to start:
     * `node start-softwerkskammer` - will start the server
     * Now go to your local machine, open a browser and use `http://localhost:17124`
 
-* Start socrates
-    * Start softwerkskammer (because it acts as SSO server for socrates)
-    * `./build-socrates.sh` in order to build some css, js etc.
-    * `node start-socrates` will start the server
-    * Now go to your local machine, open a browser and use `http://localhost:17224`
-
-* The ports `17124` and `17224` are the defaults and can be changed via the command line option `--port` or via the environment option 'port' to any desired value
+* The port `17124` is the default and can be changed via the command line option `--port` or via the environment option 'port' to any desired value
 * If your installation is fresh, you should create an account for yourself by registering.
   * The default setup assumes you are running on localhost for authentication. If you are using a different hostname, you have to edit the configuration file `config-examples/server-config.json`. Follow the instructions in there.
 
@@ -126,18 +105,14 @@ Now you can decide which app you want to start:
 
 Not all features can be accessed without login. Some can only be accessed when you are superuser.
 
-Access for Softwerkskammer and SoCraTes:
+Access for Softwerkskammer:
 
-* Log in to the application (Softwerkskammer or SoCraTes or both). Be aware that Google and Github cannot be used out of the box. Therefore, you should use an OpenID provider such as Stack Exchange, XLogon (https://my.xlogon.net/)
+* Log in to the application. Be aware that Google and Github cannot be used out of the box. Therefore, you should use an OpenID provider such as Stack Exchange, XLogon (https://my.xlogon.net/)
   or you can choose one from this list: http://openid.net/get-an-openid/
 
 * To access certain admin features, you may want to become superuser. This step will make you superuser of both applications at once.
   In order to do this, open `mongo swk`, display all member information via `db.memberstore.find().pretty()` and search for your entry. Select the string after `id`, create a copy of `config-examples/authentication-config.json`
   and add your id to the `superuser` array.
-
-Access for SoCraTes:
-
-* Copy the `config-examples/socrates-server-config.json` to`config/socrates-server-config.json`.
 
 ### Mac OS
 
