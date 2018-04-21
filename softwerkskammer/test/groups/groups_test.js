@@ -264,4 +264,98 @@ describe('Groups application', () => {
     });
   });
 
+  describe('group submission', () => {
+    describe('of an invalid group', () => {
+      it('displays an error', done => {
+        request(createApp({id: 'someMember'}))
+          .post('/submit')
+          .send('id=errorgroup')
+          .expect(200)
+          .expect(/<h2>Fehlgeschlagen<small> Validierung<\/small><\/h2>/, done);
+      });
+    });
+
+    describe('of a new group', () => {
+      let createdList;
+      let savedGroup;
+      let memberId;
+      let subscribedMemberInfo;
+
+      before(() => {
+        createdList = null;
+        savedGroup = null;
+
+        sinon.stub(fakeListAdapter, 'createList').callsFake((groupid, emailPrefix, callback) => {
+          createdList = {groupid, emailPrefix};
+          callback();
+        });
+
+        sinon.stub(groupsPersistence, 'save').callsFake((group, callback) => {
+          savedGroup = group;
+          callback();
+        });
+
+        sinon.stub(groupsAndMembersService, 'updateAdminlistSubscriptions').callsFake((id, callback) => {
+          memberId = id;
+          callback();
+        });
+      });
+
+      after(() => {
+        sinon.restore();
+      });
+
+      beforeEach(() => {
+        createdList = null;
+        savedGroup = null;
+        memberId = null;
+        subscribedMemberInfo = null;
+      });
+
+      it('saves the whole group info to the database and redirects to the new group\'s page', done => {
+        request(createApp({id: 'someMember'}))
+          .post('/submit')
+          .send('id=newgroup&emailPrefix=SONEW&longName=ANewGroup&color=#AABBCC&description=WeLoveIt&type=Regionalgruppe&organizers=someMember')
+          .expect(302)
+          .expect(/Found. Redirecting to \/groups\/newgroup/, err => {
+            expect(savedGroup).to.eql(new Group({
+              id: 'newgroup', longName: 'ANewGroup', description: 'WeLoveIt', type: 'Regionalgruppe',
+              emailPrefix: 'SONEW', color: '#AABBCC', organizers: ['someMember'], mapX: undefined, mapY: undefined, shortName: undefined
+            }));
+            done(err);
+          });
+      });
+
+      it('creates a new list for the group', done => {
+        request(createApp({id: 'someMember'}))
+          .post('/submit')
+          .send('id=newgroup&emailPrefix=SONEW&longName=ANewGroup&color=#AABBCC&description=WeLoveIt&type=Regionalgruppe&organizers=someMember')
+          .end(err => {
+            expect(createdList).to.eql({groupid: 'newgroup', emailPrefix: 'SONEW'});
+            done(err);
+          });
+      });
+
+      it('adds the current user to the admins list', done => {
+        request(createApp({id: 'someMember'}))
+          .post('/submit')
+          .send('id=newgroup&emailPrefix=SONEW&longName=ANewGroup&color=#AABBCC&description=WeLoveIt&type=Regionalgruppe&organizers=someMember')
+          .end(err => {
+            expect(memberId).to.eql('someMember');
+            done(err);
+          });
+      });
+
+      xit('adds the current user to the group', done => {
+        request(createApp({id: 'someMember'}))
+          .post('/submit')
+          .send('id=newgroup&emailPrefix=SONEW&longName=ANewGroup&color=#AABBCC&description=WeLoveIt&type=Regionalgruppe&organizers=someMember')
+          .end(err => {
+            expect(subscribedMemberInfo).to.eql({subscribedMember: 'someMember', subscribedGroup: 'newgroup'});
+            done(err);
+          });
+      });
+    });
+  });
+
 });
