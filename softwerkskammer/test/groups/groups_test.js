@@ -1,12 +1,14 @@
 'use strict';
 
 const request = require('supertest');
+const expect = require('must-dist');
 const sinon = require('sinon').sandbox.create();
 
 const beans = require('../../testutil/configureForTest').get('beans');
 const groupsPersistence = beans.get('groupsPersistence');
 const membersPersistence = beans.get('membersPersistence');
 const membersService = beans.get('membersService');
+const groupsAndMembersService = beans.get('groupsAndMembersService');
 const activitystore = beans.get('activitystore');
 const Group = beans.get('group');
 const Activity = beans.get('activity');
@@ -299,6 +301,11 @@ describe('Groups application', () => {
           memberId = id;
           callback();
         });
+
+        sinon.stub(groupsAndMembersService, 'subscribeMemberToGroup').callsFake((member, groupid, callback) => {
+          subscribedMemberInfo = {subscribedMemberId: member.id(), subscribedGroupId: groupid};
+          callback();
+        });
       });
 
       after(() => {
@@ -346,12 +353,12 @@ describe('Groups application', () => {
           });
       });
 
-      xit('adds the current user to the group', done => {
+      it('adds the current user to the group', done => {
         request(createApp({id: 'someMember'}))
           .post('/submit')
           .send('id=newgroup&emailPrefix=SONEW&longName=ANewGroup&color=#AABBCC&description=WeLoveIt&type=Regionalgruppe&organizers=someMember')
           .end(err => {
-            expect(subscribedMemberInfo).to.eql({subscribedMember: 'someMember', subscribedGroup: 'newgroup'});
+            expect(subscribedMemberInfo).to.eql({subscribedMemberId: 'someMember', subscribedGroupId: 'newgroup'});
             done(err);
           });
       });

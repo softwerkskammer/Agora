@@ -8,6 +8,7 @@ const Feed = require('feed');
 
 const misc = beans.get('misc');
 const groupsService = beans.get('groupsService');
+const groupstore = beans.get('groupstore');
 const wikiService = beans.get('wikiService');
 const Group = beans.get('group');
 const groupsAndMembers = beans.get('groupsAndMembersService');
@@ -20,10 +21,20 @@ function groupSubmitted(req, res, next) {
   const group = new Group(req.body);
   groupsService.isGroupValid(group, errors => {
     if (errors.length !== 0) { return res.render('../../../views/errorPages/validationError', {errors}); }
-    groupsAndMembers.saveGroup(group, err => {
-      if (err) { return next(err); }
-      statusmessage.successMessage('message.title.save_successful', 'message.content.groups.saved').putIntoSession(req);
-      res.redirect('/groups/' + group.id);
+    groupstore.getGroup(group.id, (err1, existingGroup) => {
+      if (err1) { return next(err1); }
+      groupsAndMembers.saveGroup(group, err2 => {
+        if (err2) { return next(err2); }
+        statusmessage.successMessage('message.title.save_successful', 'message.content.groups.saved').putIntoSession(req);
+        if (!existingGroup) {
+          groupsAndMembers.subscribeMemberToGroup(req.user.member, group.id, err3 => {
+            if (err3) { return next(err3); }
+            res.redirect('/groups/' + group.id);
+          });
+        } else {
+          res.redirect('/groups/' + group.id);
+        }
+      });
     });
   });
 }
