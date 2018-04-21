@@ -114,12 +114,14 @@ module.exports = {
               function subscribe(list, cb) {
                 listAdapter.addUserToList(userMail, list, cb);
               }
+
               async.each(listsToSubscribe, subscribe, funCallback);
             },
             funCallback => {
               function unsubscribe(list, cb) {
                 listAdapter.removeUserFromList(oldUserMail, list, cb);
               }
+
               async.each(listsToUnsubscribe, unsubscribe, funCallback);
             }
           ],
