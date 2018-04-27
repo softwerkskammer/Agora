@@ -103,7 +103,6 @@ function surroundEmail(email) {
     });
 
     $('.enhance').each(function () {
-      /* eslint no-console: 0 */
       $(this).select2({
         width: null,
         containerCssClass: ':all:',
