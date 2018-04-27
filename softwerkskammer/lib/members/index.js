@@ -12,7 +12,6 @@ const membersService = beans.get('membersService');
 const memberstore = beans.get('memberstore');
 const groupsAndMembersService = beans.get('groupsAndMembersService');
 const groupsService = beans.get('groupsService');
-const groupstore = beans.get('groupstore');
 const activitiesService = beans.get('activitiesService');
 const misc = beans.get('misc');
 const statusmessage = beans.get('statusmessage');
@@ -84,8 +83,6 @@ app.get('/new', (req, res, next) => {
   async.parallel(
     {
       allGroups: callback => groupsService.getAllAvailableGroups(callback),
-      alle: callback => groupstore.getGroup('alle', callback),
-      commercial: callback => groupstore.getGroup('commercial', callback),
       allTags: callback => tagsFor(callback)
     },
     (err, results) => {
@@ -93,8 +90,8 @@ app.get('/new', (req, res, next) => {
       const allGroups = results.allGroups;
       res.render('edit', {
         member: new Member().initFromSessionUser(req.user),
-        regionalgroups: groupsService.combineSubscribedAndAvailableGroups([results.alle, results.commercial], Group.regionalsFrom(allGroups)),
-        themegroups: groupsService.combineSubscribedAndAvailableGroups([results.alle, results.commercial], Group.thematicsFrom(allGroups)),
+        regionalgroups: groupsService.combineSubscribedAndAvailableGroups([], Group.regionalsFrom(allGroups)),
+        themegroups: groupsService.combineSubscribedAndAvailableGroups([], Group.thematicsFrom(allGroups)),
         tags: results.allTags
       });
     }
