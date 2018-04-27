@@ -20,7 +20,7 @@ function wordList(members, groupingFunction) {
   const rawInterests = misc.compact(R.flatten(members.map(member => member.interestsForSelect2())));
   const groupedInterests = R.groupBy(groupingFunction, rawInterests);
   R.keys(groupedInterests).forEach(interest => {
-    const mainWord = (R.last, R.toPairs(R.countBy(R.identity, groupedInterests[interest]))).reduce(R.maxBy(R.last))[0];
+    const mainWord = R.toPairs(R.countBy(R.identity, groupedInterests[interest])).reduce(R.maxBy(R.last))[0];
     result.push({text: mainWord, weight: groupedInterests[interest].length, html: {class: 'interestify'}});
   });
   return result;
