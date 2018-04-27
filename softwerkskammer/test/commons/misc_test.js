@@ -217,9 +217,9 @@ describe('validate function', () => {
     });
   });
 
-  it('works with two null values', done => {
+  it('returns false when the current value is null', done => {
     misc.validate(null, null, undefined, result => {
-      expect(result).to.equal('true');
+      expect(result).to.equal('false');
       done();
     });
   });

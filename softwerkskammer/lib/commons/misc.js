@@ -81,12 +81,13 @@ module.exports = {
   },
 
   validate: function validate(currentValue, previousValue, validator, callback) {
-    if (currentValue) { currentValue = currentValue.trim(); }
+    if (!currentValue) { return callback('false'); }
+
+    currentValue = currentValue.trim();
     if (previousValue) { previousValue = previousValue.trim(); }
 
-    if (previousValue === currentValue) {
-      return callback('true');
-    }
+    if (previousValue === currentValue) { return callback('true'); }
+
     validator(currentValue, (err, result) => {
       if (err) { return callback('false'); }
       callback(result.toString());

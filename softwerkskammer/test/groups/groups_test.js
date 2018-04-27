@@ -112,11 +112,11 @@ describe('Groups application', () => {
         .expect(/true/, done);
     });
 
-    it('allows an empty groupname', done => {
+    it('does not allow an empty groupname', done => {
       request(createApp())
         .get('/checkgroupname?id=')
         .expect(200)
-        .expect(/true/, done);
+        .expect(/false/, done);
     });
   });
 
@@ -143,11 +143,11 @@ describe('Groups application', () => {
         .expect(/true/, done);
     });
 
-    it('allows an empty prefix', done => {
+    it('does not allow an empty prefix', done => {
       request(createApp())
         .get('/checkemailprefix?emailPrefix=')
         .expect(200)
-        .expect(/true/, done);
+        .expect(/false/, done);
     });
   });
 
