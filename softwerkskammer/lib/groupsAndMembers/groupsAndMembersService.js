@@ -164,11 +164,11 @@ module.exports = {
     });
   },
 
-  saveGroup: function saveGroup(newGroup, callback) {
+  saveGroup: function saveGroup(group, callback) {
     const self = this;
-    groupsService.createOrSaveGroup(newGroup, (err, existingGroup) => {
+    groupsService.createOrSaveGroup(group, (err, existingGroup) => {
       if (err) { return callback(err); }
-      async.each(Group.organizersOnlyInOneOf(newGroup, existingGroup), (memberID, cb) => {
+      async.each(Group.organizersOnlyInOneOf(group, existingGroup), (memberID, cb) => {
         self.updateAdminlistSubscriptions(memberID, cb);
       });
       callback();

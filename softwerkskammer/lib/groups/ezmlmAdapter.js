@@ -6,10 +6,10 @@ const ezmlm = require('ezmlm-node')(conf.get('fullyQualifiedHomeDir'), conf.get(
 
 module.exports = {
 
-  createList: function createList(list, prefix, callback) {
-    ezmlm.createListNamed(list, ezmlm.defaultOptions, prefix, err => {
+  createList: function createList(listname, prefix, callback) {
+    ezmlm.createListNamed(listname, ezmlm.defaultOptions, prefix, err => {
       if (err) { return callback(err); }
-      ezmlm.replyToList(list, callback);
+      ezmlm.replyToList(listname, callback);
     });
   },
 
@@ -29,19 +29,19 @@ module.exports = {
     });
   },
 
-  getUsersOfList: function getUsersOfList(list, callback) {
-    ezmlm.usersOfList(list, callback);
+  getUsersOfList: function getUsersOfList(listname, callback) {
+    ezmlm.usersOfList(listname, callback);
   },
 
-  addUserToList: function addUserToList(email, list, callback) {
-    ezmlm.subscribeUserToList(email.toLowerCase(), list, callback);
+  addUserToList: function addUserToList(email, listname, callback) {
+    ezmlm.subscribeUserToList(email.toLowerCase(), listname, callback);
   },
 
-  removeUserFromList: function removeUserFromList(email, list, callback) {
-    ezmlm.unsubscribeUserFromList(email.toLowerCase(), list, callback);
+  removeUserFromList: function removeUserFromList(email, listname, callback) {
+    ezmlm.unsubscribeUserFromList(email.toLowerCase(), listname, callback);
   },
 
-  archivedMails: function archivedMails(list, maxAgeInDays, callback) {
-    ezmlm.archivedMails(list, maxAgeInDays, callback);
+  archivedMails: function archivedMails(listname, maxAgeInDays, callback) {
+    ezmlm.archivedMails(listname, maxAgeInDays, callback);
   }
 };

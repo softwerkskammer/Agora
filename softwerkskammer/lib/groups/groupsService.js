@@ -89,8 +89,8 @@ module.exports = {
     });
   },
 
-  addUserToList: function addUserToList(userMail, list, callback) {
-    listAdapter.addUserToList(userMail, list, callback);
+  addUserToList: function addUserToList(userMail, listname, callback) {
+    listAdapter.addUserToList(userMail, listname, callback);
   },
 
   removeUserFromList: function removeUserFromList(userMail, list, callback) {

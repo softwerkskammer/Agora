@@ -217,10 +217,10 @@ describe('Groups Service (createOrSaveGroup)', () => {
     createListSpy = sinon.stub(listAdapter, 'createList').callsFake((listname, prefix, callback) => { callback(); });
     saveGroupSpy = sinon.stub(groupstore, 'saveGroup').callsFake((group, callback) => { callback(null); });
 
-    sinon.stub(groupstore, 'getGroup').callsFake((name, callback) => {
-      if (name === 'groupa') {
+    sinon.stub(groupstore, 'getGroup').callsFake((groupname, callback) => {
+      if (groupname === 'groupa') {
         callback(null, GroupA);
-      } else if (name === 'groupb') {
+      } else if (groupname === 'groupb') {
         callback(null, GroupB);
       } else {
         callback(null, null);
@@ -316,12 +316,12 @@ describe('Groups Service (allGroupColors)', () => {
 
 describe('Groups Service (isGroupNameAvailable)', () => {
   before(() => {
-    sinon.stub(groupstore, 'getGroup').callsFake((name, callback) => {
-      if (name === 'GroupA') {
+    sinon.stub(groupstore, 'getGroup').callsFake((groupname, callback) => {
+      if (groupname === 'GroupA') {
         callback(null, GroupA);
-      } else if (name === 'GroupB') {
+      } else if (groupname === 'GroupB') {
         callback(null, GroupB);
-      } else if (name === 'Err') {
+      } else if (groupname === 'Err') {
         callback(new Error('Err'));
       } else {
         callback(null, null);

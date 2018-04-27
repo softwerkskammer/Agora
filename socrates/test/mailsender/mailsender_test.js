@@ -55,7 +55,7 @@ describe('SoCraTes mailsender application', () => {
 
     sinon.stub(eventstore, 'getEventStore').callsFake((url, callback) => callback(null, new GlobalEventStore()));
 
-    sinon.stub(groupstore, 'getGroup').callsFake((group, callback) => callback());
+    sinon.stub(groupstore, 'getGroup').callsFake((groupname, callback) => callback());
     sinon.stub(memberstore, 'getMembersForIds').callsFake((members, callback) => callback(null, []));
     sinon.stub(memberstore, 'getMemberForId').callsFake((memberId, callback) => callback(null, socratesMember));
     sinon.stub(memberstore, 'getMember').callsFake((member, callback) => callback(null, socratesMember));
