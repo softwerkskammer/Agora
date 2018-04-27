@@ -1,18 +1,10 @@
 'use strict';
 
-const moment = require('moment-timezone');
-const jwt = require('jwt-simple');
-
 const conf = require('simple-configure');
 const beans = conf.get('beans');
 const membersService = beans.get('membersService');
-const jwtSecret = conf.get('jwtSecret');
 
 function createUserObject(req, authenticationId, profile, done) {
-  if (req.session.callingAppReturnTo) { // we're invoked from another app -> don't add a member to the session
-    const user = {authenticationId: {userId: authenticationId, profile}};
-    return done(null, user);
-  }
   process.nextTick(membersService.findMemberFor(req.user, authenticationId, (err, member) => {
     if (err) { return done(err); }
     if (!member) { return done(null, {authenticationId, profile}); }
@@ -55,25 +47,5 @@ module.exports = {
       };
 
     createUserObject(req, 'https://plus.google.com/' + sub, minimalProfile, done);
-  },
-
-  redirectToCallingApp: function redirectToCallingApp(req, res) {
-    const returnTo = req.session.callingAppReturnTo;
-    delete req.session.callingAppReturnTo;
-    const jwtObject = {
-      userId: req.user.authenticationId.userId,
-      profile: req.user.authenticationId.profile,
-      returnTo,
-      expires: moment().add(5, 'seconds').toJSON()
-    };
-    const jwtToken = jwt.encode(jwtObject, jwtSecret);
-    if (req.session.currentAgoraUser) { // restore current member info:
-      req._passport.session.user = req.session.currentAgoraUser;
-      delete req.session.currentAgoraUser;
-    } else { // log out:
-      delete req._passport.session.user;
-    }
-    res.redirect(conf.get('socratesURL') + '/auth/loggedIn' + '?id_token=' + jwtToken);
   }
-
 };

@@ -35,9 +35,7 @@ function createConfiguration() {
     sessionkey: 'softwerkskammer.org',
     beans: new Beans(configdir + 'beans.json'),
     emaildomainname: 'localhost',
-    softwerkskammerURL: 'http://localhost:17124',
-    socratesURL: 'http://localhost:17224',
-    jwtSecret: 'my_very_secret',
+    socratesURL: 'http://socrates-conference.de',
     reservedActivityURLs: '^socrates-|^gdcr$|^upcoming$|^past$|^ical$|^eventsForSidebar$|^new$|^newLike$|^edit$|^submit$|^checkurl$|^subscribe$|^unsubscribe$|^addToWaitinglist$|^removeFromWaitinglist$|\\+'
 
   });
