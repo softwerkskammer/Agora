@@ -1,18 +1,30 @@
 'use strict';
 
+const sinon = require('sinon').sandbox.create();
 const expect = require('must-dist');
 
 const conf = require('../../testutil/configureForTest');
 const beans = conf.get('beans');
 
 const authenticationService = beans.get('authenticationService');
+const membersPersistence = beans.get('membersPersistence');
 
 describe('Authentication Service', () => {
 
   describe('- where member cannot be found -', () => {
 
+    beforeEach(() => {
+      sinon.stub(membersPersistence, 'getByField').callsFake((id, callback) => {
+        callback(null, null);
+      });
+    });
+
+    afterEach(() => {
+      sinon.restore();
+    });
+
     it('createUserObjectFromGooglePlus creates a user object with profile information', done => {
-      const req = {session: {callingAppReturnTo: true}};
+      const req = {};
       const sub = '12345678';
       const jwtClaims = {};
       const profile = {
@@ -44,13 +56,11 @@ describe('Authentication Service', () => {
       };
       authenticationService.createUserObjectFromGooglePlus(req, undefined, sub, profile, jwtClaims, undefined, undefined, undefined, (err, user) => {
         expect(user).to.eql({
-          authenticationId: {
-            userId: 'https://plus.google.com/12345678',
-            profile: {
-              emails: [{value: 'hans.dampf@mail.com', type: 'account'}],
-              name: {familyName: 'Dampf', givenName: 'Hans'},
-              profileUrl: 'https://plus.google.com/+HansDampf'
-            }
+          authenticationId: 'https://plus.google.com/12345678',
+          profile: {
+            emails: [{value: 'hans.dampf@mail.com', type: 'account'}],
+            name: {familyName: 'Dampf', givenName: 'Hans'},
+            profileUrl: 'https://plus.google.com/+HansDampf'
           }
         });
         done(err);
@@ -58,7 +68,7 @@ describe('Authentication Service', () => {
     });
 
     it('createUserObjectFromGithub creates a user object with profile information', done => {
-      const req = {session: {callingAppReturnTo: true}};
+      const req = {};
       const profile = {
         id: '123456',
         displayName: 'Hans Dampf',
@@ -106,14 +116,12 @@ describe('Authentication Service', () => {
       };
       authenticationService.createUserObjectFromGithub(req, undefined, undefined, profile, (err, user) => {
         expect(user).to.eql({
-          authenticationId: {
-            userId: 'github:123456',
-            profile: {
-              emails: [null],
-              profileUrl: 'https://github.com/HansDampf',
-              _json: {
-                blog: 'http://hans-dampf.de'
-              }
+          authenticationId: 'github:123456',
+          profile: {
+            emails: [null],
+            profileUrl: 'https://github.com/HansDampf',
+            _json: {
+              blog: 'http://hans-dampf.de'
             }
           }
         });
@@ -122,7 +130,7 @@ describe('Authentication Service', () => {
     });
 
     it('createUserObjectFromOpenId creates a user object with profile information', done => {
-      const req = {session: {callingAppReturnTo: true}};
+      const req = {};
       const profile = {
         name: {familyName: 'Dampf', givenName: 'Hans'},
         profileUrl: 'https://mywebsite.com/HansDampf',
@@ -133,16 +141,15 @@ describe('Authentication Service', () => {
         }
       };
       authenticationService.createUserObjectFromOpenID(req, 'my-authentication', profile, (err, user) => {
-        expect(user).to.eql({
-          authenticationId: {
-            userId: 'my-authentication',
+        expect(user).to.eql(
+          {
+            authenticationId: 'my-authentication',
             profile: {
-              name: {familyName: 'Dampf', givenName: 'Hans'},
               emails: [{}],
+              name: {familyName: 'Dampf', givenName: 'Hans'},
               profileUrl: 'https://mywebsite.com/HansDampf'
             }
-          }
-        });
+          });
         done(err);
       });
     });
