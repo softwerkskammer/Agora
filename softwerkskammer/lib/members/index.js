@@ -127,28 +127,32 @@ app.post('/delete', (req, res, next) => {
   const nicknameOfEditMember = req.body.nickname;
   groupsAndMembersService.getMemberWithHisGroups(nicknameOfEditMember, (err, member) => {
     if (err || !member) { return next(err); }
+
+    function unsubFunction(groupname, callback) {
+      groupsAndMembersService.unsubscribeMemberFromGroup(member, groupname, callback);
+    }
+
     if (!res.locals.accessrights.canDeleteMember(member)) {
       return res.redirect('/members/' + encodeURIComponent(member.nickname()));
     }
-    if (R.isEmpty(member.subscribedGroups)) {
-      return memberstore.isSoCraTesSubscriber(member.id(), (err1, isSubscriber) => {
-        if (!err && isSubscriber) {
-          member.state.socratesOnly = true;
-          return memberstore.saveMember(member, err2 => {
-            if (err2) { return next(err2); }
-            statusmessage.successMessage('message.title.save_successful', 'message.content.members.saved').putIntoSession(req);
-            res.redirect('/members/' + encodeURIComponent(member.nickname()));
-          });
+    if (!R.isEmpty(member.subscribedGroups)) {
+      return async.each(member.subscribedGroups, unsubFunction, (err1) => {
+        if (err1) {
+          statusmessage.errorMessage('message.title.problem', 'message.content.members.hasSubscriptions').putIntoSession(req);
+          return res.redirect('/members/edit/' + encodeURIComponent(member.nickname()));
         }
-        memberstore.removeMember(member, err2 => {
+        return memberstore.removeMember(member, err2 => {
           if (err2) { return next(err2); }
           statusmessage.successMessage('message.title.save_successful', 'message.content.members.deleted').putIntoSession(req);
           res.redirect('/members/');
         });
       });
     }
-    statusmessage.errorMessage('message.title.problem', 'message.content.members.hasSubscriptions').putIntoSession(req);
-    res.redirect('/members/edit/' + encodeURIComponent(member.nickname()));
+    return memberstore.removeMember(member, err2 => {
+      if (err2) { return next(err2); }
+      statusmessage.successMessage('message.title.save_successful', 'message.content.members.deleted').putIntoSession(req);
+      res.redirect('/members/');
+    });
   });
 });
 
