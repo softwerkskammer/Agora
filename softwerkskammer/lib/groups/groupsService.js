@@ -89,8 +89,8 @@ module.exports = {
     });
   },
 
-  addUserToList: function addUserToList(userMail, list, callback) {
-    listAdapter.addUserToList(userMail, list, callback);
+  addUserToList: function addUserToList(userMail, listname, callback) {
+    listAdapter.addUserToList(userMail, listname, callback);
   },
 
   removeUserFromList: function removeUserFromList(userMail, list, callback) {
@@ -114,12 +114,14 @@ module.exports = {
               function subscribe(list, cb) {
                 listAdapter.addUserToList(userMail, list, cb);
               }
+
               async.each(listsToSubscribe, subscribe, funCallback);
             },
             funCallback => {
               function unsubscribe(list, cb) {
                 listAdapter.removeUserFromList(oldUserMail, list, cb);
               }
+
               async.each(listsToUnsubscribe, unsubscribe, funCallback);
             }
           ],
@@ -142,6 +144,7 @@ module.exports = {
   },
 
   isEmailPrefixAvailable: function isEmailPrefixAvailable(prefix, callback) {
+    if (!prefix) { callback(null, false); }
     groupstore.getGroupForPrefix(prefix.trim(), (err, group) => callback(err, group === null));
   },
 

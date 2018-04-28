@@ -19,8 +19,8 @@ module.exports = {
     persistence.listByIds(lists, {longName: 1}, R.partial(toGroupList, [callback]));
   },
 
-  getGroup: function getGroup(name, callback) {
-    persistence.getById(misc.toLowerCaseRegExp(name), R.partial(toGroup, [callback]));
+  getGroup: function getGroup(groupname, callback) {
+    persistence.getById(misc.toLowerCaseRegExp(groupname), R.partial(toGroup, [callback]));
   },
 
   getGroupForPrefix: function getGroupForPrefix(prefix, callback) {
