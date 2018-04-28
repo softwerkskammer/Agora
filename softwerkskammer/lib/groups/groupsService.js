@@ -144,7 +144,7 @@ module.exports = {
   },
 
   isEmailPrefixAvailable: function isEmailPrefixAvailable(prefix, callback) {
-    if (!prefix) { callback(null, false); }
+    if (!prefix) { return callback(null, false); }
     groupstore.getGroupForPrefix(prefix.trim(), (err, group) => callback(err, group === null));
   },
 
