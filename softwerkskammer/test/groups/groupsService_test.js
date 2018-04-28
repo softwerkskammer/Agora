@@ -408,9 +408,6 @@ describe('Groups Service (isEmailPrefixAvailable)', () => {
   });
 
   it('returns false for an empty prefix', done => {
-    sinon.stub(groupstore, 'getGroupForPrefix').callsFake((prefix, callback) => {
-      callback(null, null);
-    });
     groupsService.isEmailPrefixAvailable('', (err, result) => {
       expect(result).to.be(false);
       done(err);
