@@ -19,9 +19,7 @@ node_modules/
 
 config/*.json*
 !config/beans.json
-!config/beans-socrates.json
 !config/testbeans.json
-!config/testbeans-socrates.json
 !config/testbeansWithDB.json
 
 dev-goodies

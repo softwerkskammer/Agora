@@ -37,28 +37,14 @@ function createProviderAuthenticationRoutes(app1, provider) {
     return passport.authenticate(provider, {successReturnToOrRedirect: '/', failureRedirect: '/login'});
   }
 
-  function setReturnOnSuccess(req, res, next) {
-    if (req.session.returnTo === undefined) {
-      req.session.returnTo = req.query.returnTo || '/';
-    }
+  function setLoginCookieOnSuccess(req, res, next) {
     res.cookie('loginChoice', loginChoiceCookieFor(decodeURIComponent(req.url)), { maxAge: 1000 * 60 * 60 * 24 * 365, httpOnly: true }); // expires: Date
     next();
   }
 
-  app1.get('/' + provider, setReturnOnSuccess, authenticate());
+  app1.get('/' + provider, setLoginCookieOnSuccess, authenticate());
   app1.get('/' + provider + '/callback', authenticate());
 
-  function setReturnViaIdentityProviderOnSuccess(req, res, next) {
-    req.session.returnTo = '/auth/idp_return_point';
-    req.session.callingAppReturnTo = req.query.returnTo || '/';
-    if (req.user && req.user.member) { // save current member info -> restore it later
-      req.session.currentAgoraUser = {authenticationId: req.user.authenticationId};
-    }
-    next();
-  }
-
-  app1.get('/idp/' + provider, setReturnViaIdentityProviderOnSuccess, authenticate());
-  app1.get('/idp_return_point', authenticationService.redirectToCallingApp);
 }
 
 function setupOpenID(app1) {
