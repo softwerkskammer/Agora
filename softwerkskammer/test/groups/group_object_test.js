@@ -105,6 +105,14 @@ it('should generate a list for the organizers based on members, only one in orga
   expect(checkedOrganizers[1].checked).to.be(false);
 });
 
+it('generates a transparent label for subscription checkboxes', () => {
+  const group = new Group({id: 'NeuePlattform', longName: 'Neue Plattform', emailPrefix: 'NP'});
+
+  const labeltext = group.displaynameInSubscriptionList();
+
+  expect(labeltext).to.equal('Neue Plattform [NP] - neueplattform');
+});
+
 describe('answers that a', () => {
 
   it('memberId is one of its organizers', () => {

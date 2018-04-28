@@ -312,6 +312,7 @@
     "edit_socrates_softwerkskammer": "SoCraTes only",
     "email": "E-Mail",
     "firstname": "Vorname",
+    "group_explanation": "Hier kannst Du einstellen, von welchen Gruppen Du Einladungen und Informationen erhalten willst. Jede Gruppe hat im Hintergrund eine Mailingliste.",
     "group_membership": "Gruppenmitgliedschaft",
     "has": "Die Softwerkskammer hat",
     "has_by_interests": "Mit diesem Schlagwort gibt es",

@@ -323,6 +323,7 @@
     "edit_socrates_softwerkskammer": "Here you find the information from your Softwerkskammer account that is used by SoCraTes. If you change anything here, it is changed in Softwerkskammer as well.",
     "email": "E-mail",
     "firstname": "First name",
+    "group_explanation": "Here you can select which groups you'd like to receive information from. These will be invitations to events or general discussions. Each of our groups has its own mailing list.",
     "group_membership": "Group Membership",
     "has": "Softwerkskammer has",
     "has_by_interests": "For this phrase we have",

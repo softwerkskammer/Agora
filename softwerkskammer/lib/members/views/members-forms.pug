@@ -17,6 +17,7 @@ mixin memberform(member, regionalgroups, themegroups, tags)
       .row
         .col-md-12
           legend #{t('members.group_membership')}
+          p #{t('members.group_explanation')}
           +groupCheckboxes('newSubscriptions', regionalgroups, themegroups)
       .row
         .col-md-12

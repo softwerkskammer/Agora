@@ -68,12 +68,12 @@ mixin groupCheckboxes(checkboxName, regionalgroups, themegroups)
       +controlLabel(t('groups.regional'), t('groups.regional'))
       .form-group
         each markedGroup in regionalgroups
-          +checkboxWithDescription(checkboxName, markedGroup.group.longName, markedGroup.selected, markedGroup.group.descriptionHTMLFiltered('img'), markedGroup.group.id)
+          +checkboxWithDescription(checkboxName, markedGroup.group.displaynameInSubscriptionList(), markedGroup.selected, markedGroup.group.descriptionHTMLFiltered('img'), markedGroup.group.id)
     .col-md-6
       +controlLabel(t('groups.themed'), t('groups.themed'))
       .form-group
         each markedGroup in themegroups
-          +checkboxWithDescription(checkboxName, markedGroup.group.longName, markedGroup.selected, markedGroup.group.descriptionHTMLFiltered('img'), markedGroup.group.id)
+          +checkboxWithDescription(checkboxName, markedGroup.group.displaynameInSubscriptionList(), markedGroup.selected, markedGroup.group.descriptionHTMLFiltered('img'), markedGroup.group.id)
 
 mixin submitButtons(submitTextToken)
   .btn-group.pull-right

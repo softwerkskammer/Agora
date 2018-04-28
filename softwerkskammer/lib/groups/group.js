@@ -51,6 +51,10 @@ class Group {
     return !!this.organizers && this.organizers.indexOf(memberId) > -1;
   }
 
+  displaynameInSubscriptionList() {
+    return this.longName + ' [' + this.emailPrefix + '] - ' + this.id;
+  }
+
   // Helper functions (static) -> look for a better place to implement
   static regionalsFrom(groups) {
     return groups.filter(group => group.type === regionalgruppe);
@@ -61,12 +65,13 @@ class Group {
   }
 
   static allTypes() {
-    return [ themengruppe, regionalgruppe ];
+    return [themengruppe, regionalgruppe];
   }
 
   static organizersOnlyInOneOf(groupA, groupB) {
     return R.symmetricDifference(!groupA ? [] : groupA.organizers, !groupB ? [] : groupB.organizers);
   }
+
 }
 
 module.exports = Group;
