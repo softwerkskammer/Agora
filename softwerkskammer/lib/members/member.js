@@ -15,7 +15,7 @@ class Member {
     ['nickname', 'firstname', 'lastname', 'email', 'location', 'profession', 'reference', 'customAvatar'].forEach(property => {
       if (object.hasOwnProperty(property) && object[property]) { this.state[property] = object[property].trim(); }
     });
-    ['notifyOnWikiChanges', 'socratesOnly'].forEach(property => {
+    ['notifyOnWikiChanges'].forEach(property => {
       this.state[property] = !!object[property];
     });
     if (object.twitter) {
@@ -35,7 +35,7 @@ class Member {
     return this.firstname() + ' ' + this.lastname();
   }
 
-  initFromSessionUser(sessionUser, socratesOnly) {
+  initFromSessionUser(sessionUser) {
     /* eslint no-underscore-dangle: 0 */
     // this is THE ONLY VALID WAY to create and initialize a new user in real life (not tests)
     if (!sessionUser || this.id()) {
@@ -57,7 +57,6 @@ class Member {
         this.state.site += (this.site() ? ', ' : '') + fieldHelpers.addPrefixTo('http://', profile._json.blog, 'https://');
       }
     }
-    this.state.socratesOnly = !!socratesOnly;
     return this;
   }
 
@@ -185,10 +184,6 @@ class Member {
 
   isSuperuser() {
     return Member.isSuperuser(this.id());
-  }
-
-  socratesOnly() {
-    return this.state.socratesOnly;
   }
 
   fillSubscribedGroups(groupNamesWithEmails, groups) {

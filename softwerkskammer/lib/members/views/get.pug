@@ -18,7 +18,6 @@ block content
             -var deleteoptions = {url: '/members/delete', params: {nickname: member.nickname()}}
             +reallyDeleteModalPost('members.delete', deleteoptions)
         h2
-          | !{(member.socratesOnly() ? '<img src="https://www.socrates-conference.de/img/socrates_no_text_40.png">&nbsp;' : '')}
           | #{member.nickname()}
           small
             if (member.isContactperson())

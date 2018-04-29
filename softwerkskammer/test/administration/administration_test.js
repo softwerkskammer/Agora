@@ -8,7 +8,6 @@ const beans = require('../../testutil/configureForTest').get('beans');
 const memberstore = beans.get('memberstore');
 const Member = beans.get('member');
 const dummymember = new Member({id: 'memberID', nickname: 'hada', email: 'a@b.c', site: 'http://my.blog', firstname: 'Hans', lastname: 'Dampf', authentications: []});
-const socratesmember = new Member({id: 'socID', nickname: 'soci', email: 'soc@ra.tes', site: '', firstname: 'Frank', lastname: 'Pink', socratesOnly: true, authentications: []});
 
 const groupsService = beans.get('groupsService');
 const membersService = beans.get('membersService');
@@ -43,16 +42,13 @@ describe('Administration application', () => {
     sinon.restore();
   });
 
-  it('shows the table for members including socrates only members', done => {
+  it('shows the table for members', done => {
     sinon.stub(memberstore, 'allMembers').callsFake(callback => callback(null, [dummymember]));
-    sinon.stub(memberstore, 'socratesOnlyMembers').callsFake(callback => callback(null, [socratesmember]));
     appWithSuperuser
       .get('/memberTable')
       .expect(200)
       .expect(/<h2>Verwaltung<small> Mitglieder/)
-      .expect(/a@b\.c/)
-      .expect(/img src="https:\/\/www.socrates-conference.de\/img\/favicon\.ico"/)
-      .expect(/soc@ra\.tes/, done);
+      .expect(/a@b\.c/, done);
   });
 
   it('shows the table for members and groups', done => {

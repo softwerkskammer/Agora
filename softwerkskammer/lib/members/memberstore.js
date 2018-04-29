@@ -24,11 +24,7 @@ function toMemberList(callback, err, result) {
 
 module.exports = {
   allMembers: function allMembers(callback) {
-    persistence.listByField({'socratesOnly': false}, {lastname: 1, firstname: 1}, R.partial(toMemberList, [callback]));
-  },
-
-  socratesOnlyMembers: function socratesOnlyMembers(callback) {
-    persistence.listByField({'socratesOnly': true}, {lastname: 1, firstname: 1}, R.partial(toMemberList, [callback]));
+    persistence.listByField({}, {lastname: 1, firstname: 1}, R.partial(toMemberList, [callback]));
   },
 
   superUsers: function superUsers(callback) {

@@ -96,7 +96,6 @@ describe('fillFromUI', () => {
     expect(member.site()).not.to.exist();
     expect(member.reference()).not.to.exist();
     expect(member.notifyOnWikiChanges()).to.be.false();
-    expect(member.socratesOnly()).to.be.false();
   });
 
   it('trims the contents of all fields', () => {
@@ -112,8 +111,7 @@ describe('fillFromUI', () => {
       site: ' www.mypage.de ',
       reference: ' A friend ',
       customAvatar: ' avatar-url ',
-      notifyOnWikiChanges: ' X ',
-      socratesOnly: 'yes'
+      notifyOnWikiChanges: ' X '
     };
     const member = new Member().fillFromUI(record);
     expect(member.nickname()).to.equal('testNick');
@@ -128,7 +126,6 @@ describe('fillFromUI', () => {
     expect(member.reference()).to.equal('A friend');
     expect(member.customAvatar()).to.equal('avatar-url');
     expect(member.notifyOnWikiChanges()).to.be.true();
-    expect(member.socratesOnly()).to.be.true();
   });
 
 });
@@ -159,23 +156,6 @@ describe('Member twitter field autocorrection', () => {
     expect(member.site()).to.equal('https://twitter');
   });
 
-});
-
-describe('filling socratesOnly from UI', () => {
-  it('sets socratesOnly to false if the field is not provided from UI', () => {
-    const member = new Member().fillFromUI({});
-    expect(member.socratesOnly()).to.be.false();
-  });
-
-  it('sets socratesOnly to false if empty string is provided from UI', () => {
-    const member = new Member().fillFromUI({socratesOnly: ''});
-    expect(member.socratesOnly()).to.be.false();
-  });
-
-  it('sets socratesOnly to true if true is provided from UI', () => {
-    const member = new Member().fillFromUI({socratesOnly: true});
-    expect(member.socratesOnly()).to.be.true();
-  });
 });
 
 describe('display functionalities', () => {

@@ -41,37 +41,6 @@ function addGroupsToMember(member, callback) {
   });
 }
 
-function updateAndSaveSubmittedMember(self, sessionUser, memberformData, accessrights, notifyNewMemberRegistration, updateSubscriptions, callback) {
-  self.getMemberWithHisGroups(memberformData.previousNickname, (err, persistentMember) => {
-    if (err) { return callback(err); }
-    if (persistentMember && !accessrights.canEditMember(persistentMember)) {
-      return callback(null);
-    }
-    const member = persistentMember || new Member().initFromSessionUser(sessionUser);
-    const oldEmail = persistentMember ? member.email() : memberformData.previousEmail;
-    member.addAuthentication(memberformData.id);
-    if (accessrights.isSuperuser()) { member.addAuthentication(memberformData.additionalAuthentication); }
-    member.fillFromUI(memberformData);
-    member.state.socratesOnly = !updateSubscriptions && !member.location(); // SoCraTes creates members with "false", Softwerkskammer with "true"
-    memberstore.saveMember(member, err1 => {
-      if (err1) { return callback(err1); }
-      if (!sessionUser.member || sessionUser.member.id() === member.id()) {
-        sessionUser.member = member;
-        delete sessionUser.profile;
-      }
-
-      const subscriptions = misc.toArray(memberformData.newSubscriptions);
-      if (!persistentMember) { // new member
-        notifyNewMemberRegistration(member, subscriptions);
-      }
-      if (updateSubscriptions) {
-        return self.updateSubscriptions(member, oldEmail, subscriptions, err2 => callback(err2, member.nickname()));
-      }
-      return callback(null, member.nickname());
-    });
-  });
-}
-
 function groupsWithExtraEmailAddresses(members, groupNamesWithEmails) {
   const result = [];
   const allEmailAddresses = members.map(member => member.email().toLowerCase());
@@ -199,12 +168,31 @@ module.exports = {
     });
   },
 
-  updateAndSaveSubmittedMemberWithoutSubscriptions: function updateAndSaveSubmittedMemberWithoutSubscriptions(sessionUser, memberformData, accessrights, notifyNewMemberRegistration, callback) {
-    updateAndSaveSubmittedMember(this, sessionUser, memberformData, accessrights, notifyNewMemberRegistration, false, callback);
-  },
-
   updateAndSaveSubmittedMemberWithSubscriptions: function updateAndSaveSubmittedMemberWithSubscriptions(sessionUser, memberformData, accessrights, notifyNewMemberRegistration, callback) {
-    updateAndSaveSubmittedMember(this, sessionUser, memberformData, accessrights, notifyNewMemberRegistration, true, callback);
+    this.getMemberWithHisGroups(memberformData.previousNickname, (err, persistentMember) => {
+      if (err) { return callback(err); }
+      if (persistentMember && !accessrights.canEditMember(persistentMember)) {
+        return callback(null);
+      }
+      const member = persistentMember || new Member().initFromSessionUser(sessionUser);
+      const oldEmail = persistentMember ? member.email() : memberformData.previousEmail;
+      member.addAuthentication(memberformData.id);
+      if (accessrights.isSuperuser()) { member.addAuthentication(memberformData.additionalAuthentication); }
+      member.fillFromUI(memberformData);
+      memberstore.saveMember(member, err1 => {
+        if (err1) { return callback(err1); }
+        if (!sessionUser.member || sessionUser.member.id() === member.id()) {
+          sessionUser.member = member;
+          delete sessionUser.profile;
+        }
+
+        const subscriptions = misc.toArray(memberformData.newSubscriptions);
+        if (!persistentMember) { // new member
+          notifyNewMemberRegistration(member, subscriptions);
+        }
+        return this.updateSubscriptions(member, oldEmail, subscriptions, err2 => callback(err2, member.nickname()));
+      });
+    });
   }
 
 };

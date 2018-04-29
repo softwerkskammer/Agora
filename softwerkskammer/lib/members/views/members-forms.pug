@@ -8,7 +8,6 @@ mixin memberform(member, regionalgroups, themegroups, tags)
         .col-md-12
           h2
             if (accessrights.isRegistered())
-              | !{(member.socratesOnly() ? '<img src="https://www.socrates-conference.de/img/socrates_no_text_40.png">&nbsp;' : '')}
               | #{member.nickname()}
             else
               | #{t('members.new')}
@@ -32,7 +31,6 @@ mixin memberform(member, regionalgroups, themegroups, tags)
           +hidden('previousNickname', member.nickname())
           +hidden('previousEmail', accessrights.isRegistered() ? member.email() : '')
           +hidden('created', member.created())
-          +hidden('socratesOnly', false)
           +text('nickname', t('members.nickname'), member.nickname())
           +text('firstname', t('members.firstname'), member.firstname())
           +text('lastname', t('members.lastname'), member.lastname())

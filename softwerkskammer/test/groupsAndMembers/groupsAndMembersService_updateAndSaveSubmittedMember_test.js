@@ -138,43 +138,5 @@ describe('Groups and Members Service', () => {
       });
 
     });
-
-    describe('called from SoCraTes', () => {
-      beforeEach(() => {
-        sinon.stub(memberstore, 'saveMember').callsFake((anyMember, callback) => { callback(null); });
-        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups').callsFake((nickname, callback) => { callback(null, member); });
-        sinon.stub(groupsAndMembersService, 'updateSubscriptions').callsFake((anyMember, oldEmail, subscriptions, callback) => { callback(null); });
-      });
-
-      it('does _not_ set to SoCraTes only if the member seems to be a Softwerkskammer member', done => {
-        member.state.location = 'Karlsruhe';
-        const sessionUser = {profile: {}};
-        accessrights.canEditMember = () => true;
-        expect(member.socratesOnly()).to.be(false); // just to be sure
-
-        groupsAndMembersService.updateAndSaveSubmittedMemberWithoutSubscriptions(sessionUser, memberformData, accessrights, undefined, (err, nickname) => {
-          expect(nickname).to.equal('nick in memberform');
-          expect(sessionUser.member).to.equal(member);
-          expect(sessionUser.hasOwnProperty('profile')).to.be.false();
-          expect(member.socratesOnly()).to.be(false);
-          delete member.state.location;
-          done(err);
-        });
-      });
-
-      it('does set to SoCraTes only if the member does not appear like a Softwerkskammer member', done => {
-        const sessionUser = {profile: {}};
-        accessrights.canEditMember = () => true;
-        expect(member.socratesOnly()).to.be(false); // just to be sure
-
-        groupsAndMembersService.updateAndSaveSubmittedMemberWithoutSubscriptions(sessionUser, memberformData, accessrights, undefined, (err, nickname) => {
-          expect(nickname).to.equal('nick in memberform');
-          expect(sessionUser.member).to.equal(member);
-          expect(sessionUser.hasOwnProperty('profile')).to.be.false();
-          expect(member.socratesOnly()).to.be(true);
-          done(err);
-        });
-      });
-    });
   });
 });

@@ -1,7 +1,6 @@
 'use strict';
 
 const async = require('async');
-const R = require('ramda');
 
 const beans = require('simple-configure').get('beans');
 const membersService = beans.get('membersService');
@@ -18,10 +17,7 @@ const app = misc.expressAppIn(__dirname);
 app.get('/memberTable', (req, res, next) => {
   memberstore.allMembers((err, members) => {
     if (err) { return next(err); }
-    memberstore.socratesOnlyMembers((err1, socMembers) => {
-      if (err1) { return next(err1); }
-      res.render('memberTable', {members: R.unionWith(R.eqBy(m => m.id()), members, socMembers)});
-    });
+      res.render('memberTable', {members});
   });
 });
 
