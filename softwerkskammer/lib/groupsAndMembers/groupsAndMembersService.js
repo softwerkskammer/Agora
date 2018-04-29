@@ -168,7 +168,7 @@ module.exports = {
     });
   },
 
-  updateAndSaveSubmittedMemberWithSubscriptions: function updateAndSaveSubmittedMemberWithSubscriptions(sessionUser, memberformData, accessrights, notifyNewMemberRegistration, callback) {
+  updateAndSaveSubmittedMember: function updateAndSaveSubmittedMember(sessionUser, memberformData, accessrights, notifyNewMemberRegistration, callback) {
     this.getMemberWithHisGroups(memberformData.previousNickname, (err, persistentMember) => {
       if (err) { return callback(err); }
       if (persistentMember && !accessrights.canEditMember(persistentMember)) {

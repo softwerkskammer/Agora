@@ -23,7 +23,7 @@ function memberSubmitted(req, res, next) {
     notifications.newMemberRegistered(member, subscriptions);
   }
 
-  groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(req.user, req.body, res.locals.accessrights, notifyNewMemberRegistration, (err, nickname) => {
+  groupsAndMembersService.updateAndSaveSubmittedMember(req.user, req.body, res.locals.accessrights, notifyNewMemberRegistration, (err, nickname) => {
     if (err) { return next(err); }
 
     if (nickname) {
