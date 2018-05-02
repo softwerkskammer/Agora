@@ -128,15 +128,15 @@ app.post('/delete', (req, res, next) => {
   groupsAndMembersService.getMemberWithHisGroups(nicknameOfEditMember, (err, member) => {
     if (err || !member) { return next(err); }
 
-    function unsubFunction(groupname, callback) {
-      groupsAndMembersService.unsubscribeMemberFromGroup(member, groupname, callback);
+    function unsubFunction(group, callback) {
+      groupsAndMembersService.unsubscribeMemberFromGroup(member, group.id, callback);
     }
 
     if (!res.locals.accessrights.canDeleteMember(member)) {
       return res.redirect('/members/' + encodeURIComponent(member.nickname()));
     }
     if (!R.isEmpty(member.subscribedGroups)) {
-      return async.each(member.subscribedGroups, unsubFunction, (err1) => {
+      return async.each(member.subscribedGroups, unsubFunction, err1 => {
         if (err1) {
           statusmessage.errorMessage('message.title.problem', 'message.content.members.hasSubscriptions').putIntoSession(req);
           return res.redirect('/members/edit/' + encodeURIComponent(member.nickname()));
