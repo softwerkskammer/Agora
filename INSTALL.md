@@ -48,7 +48,7 @@ We propose to install grunt-cli globally via the -g option of npm. To find out m
 
 ### The built-in wiki
 
-To set up the built-in wiki follow [these instructions for Softwerkskammer](softwerkskammer/lib/wiki/README.md) and [these instructions for SoCraTes](socrates/lib/wiki/README.md)
+To set up the built-in wiki follow [these instructions for Softwerkskammer](softwerkskammer/lib/wiki/README.md)
 
 ### Configuring the server
 
