@@ -12,13 +12,32 @@ Your node.js ships npm in a suitable version.
 
 Some modules are compiled during the installation. Therefore some additional software must be installed.
 
-### Git
+On Mac OS you can use Homebrew (https://brew.sh/) to install binary dependencies.
 
+On Windows there are currently issues when running the tests:
+* most tests that verify pathnames will fail because of the ` \ ` used by Windows as a separator
+* furthermore all tests that need imagemagick will fail as there is no binary version for Windows available
+
+### Git
 * Git must be in the system path.
+
+
+    brew install git
 
 ### MongoDB
 
 * Install MongoDB (Version 2.4 or greater) [http://www.mongodb.org/downloads](http://www.mongodb.org/downloads)
+* Install and run mongodb (with default settings, i.e. no security - definitely do not do this in production!):
+
+
+    brew install mongodb
+    sudo mkdir -p /data/db
+    sudo chown 777 /data/db
+    mongod
+
+
+### ImageMagick
+    brew install imagemagick
 
 ### Grunt-CLI
 
@@ -48,7 +67,7 @@ We propose to install grunt-cli globally via the -g option of npm. To find out m
 
 ### The built-in wiki
 
-To set up the built-in wiki follow [these instructions for Softwerkskammer](softwerkskammer/lib/wiki/README.md) and [these instructions for SoCraTes](socrates/lib/wiki/README.md)
+To set up the built-in wiki follow [these instructions for Softwerkskammer](softwerkskammer/lib/wiki/README.md)
 
 ### Configuring the server
 
@@ -113,25 +132,3 @@ Access for Softwerkskammer:
 * To access certain admin features, you may want to become superuser. This step will make you superuser of both applications at once.
   In order to do this, open `mongo swk`, display all member information via `db.memberstore.find().pretty()` and search for your entry. Select the string after `id`, create a copy of `config-examples/authentication-config.json`
   and add your id to the `superuser` array.
-
-### Mac OS
-
-You can use Homebrew (https://brew.sh/) to install binary dependencies:
-
-* Install and run mongodb (with default settings, i.e. no security - definitely do not do this in production!):
-
-        brew install mongodb
-        sudo mkdir -p /data/db
-        sudo chown 777 /data/db
-        mongod
-
-* Install ImageMagick:
-
-        brew install imagemagick
-
-### Windows Systems
-
-Currently there are issues when running the tests:
-* most tests that verify pathnames will fail because of the ` \ ` used by Windows as a separator
-* furthermore all tests that need imagemagick will fail as there is no binary version for Windows available
-

@@ -9,7 +9,7 @@
 .idea/jsLibraryMappings.xml
 .idea/modules.xml
 .idea/workspace.xml
-.idea/*.iml
+*.iml
 
 .vagrant
 
