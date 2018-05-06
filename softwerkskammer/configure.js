@@ -27,7 +27,6 @@ function createConfiguration() {
     '/addToWaitinglist|' +
     '/addon|' +
     '/submitAddon|' +
-    '/wiki/socrates.*/|' +
     '/payment|' +
     'dashboard',
     securedBySuperuserURLPattern: '^/administration/',

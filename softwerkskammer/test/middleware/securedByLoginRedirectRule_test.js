@@ -47,25 +47,6 @@ describe('SecuredByLoginURLRedirect Rule (mailarchive)', () => {
 
 });
 
-describe('SecuredByLoginURLRedirect Rule (wiki/socrates.*)', () => {
-
-  it('secures wiki/socrates2013', () => {
-    const url = 'http://host/wiki/socrates2013/';
-    expect(securedByLoginURLRegex.test(url)).to.be(true);
-  });
-
-  it('secures wiki/socrates2014', () => {
-    const url = 'http://host/wiki/socrates2014/';
-    expect(securedByLoginURLRegex.test(url)).to.be(true);
-  });
-
-  it('secures wiki/socrates2014orga', () => {
-    const url = 'http://host/wiki/socrates2014orga/';
-    expect(securedByLoginURLRegex.test(url)).to.be(true);
-  });
-
-});
-
 describe('SecuredByLoginURLRedirect Rule (*/new)', () => {
 
   it('secures URLs with activities/new', () => {
