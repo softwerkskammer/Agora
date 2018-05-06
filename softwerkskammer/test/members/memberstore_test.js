@@ -6,7 +6,6 @@ const sinon = require('sinon').sandbox.create();
 
 const beans = require('../../testutil/configureForTest').get('beans');
 const persistence = beans.get('membersPersistence');
-const subscriberPersistence = beans.get('subscribersPersistence');
 const store = beans.get('memberstore');
 const Member = beans.get('member');
 
@@ -161,13 +160,4 @@ describe('Members store', () => {
       done(err);
     });
   });
-
-  it('tells that some user is a socrates subscriber', done => {
-    sinon.stub(subscriberPersistence, 'getById').callsFake((memberId, callback) => { callback(null, {}); });
-    store.isSoCraTesSubscriber('id', (err, isSubscriber) => {
-      expect(isSubscriber).to.be(true);
-      done(err);
-    });
-  });
-
 });

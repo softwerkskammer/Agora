@@ -6,7 +6,6 @@ const conf = require('simple-configure');
 const beans = conf.get('beans');
 const R = require('ramda');
 const persistence = beans.get('membersPersistence');
-const subscriberPersistence = beans.get('subscribersPersistence');
 const Member = beans.get('member');
 const misc = beans.get('misc');
 const naturalCmp = require('underscore.string/naturalCmp');
@@ -82,10 +81,6 @@ module.exports = {
       logger.info('Member removed:' + JSON.stringify(member));
       callback(err);
     });
-  },
-
-  isSoCraTesSubscriber: function isSoCraTesSubscriber(id, callback) {
-    subscriberPersistence.getById(id, (err, subscriber) => callback(err, !!subscriber));
   }
 };
 
