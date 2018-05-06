@@ -13,7 +13,7 @@ const ActivityResult = beans.get('activityresult');
 
 const MEMBER_ID = 'memberID';
 
-describe('SoCraTes activityresults application', () => {
+describe('Activityresults application', () => {
   afterEach(() => {
     sinon.restore();
   });

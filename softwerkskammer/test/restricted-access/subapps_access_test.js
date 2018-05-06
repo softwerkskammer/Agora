@@ -25,7 +25,6 @@ describe('Security for normal visitors does not allow to access ', () => {
       '/activities/addons/someActivity',
       '/activities/payment/someActivity',
       '/activities/paymentReceived/someActivity',
-      '/activityresults/socrates',
       '/gallery/some-image',
       '/groups/new',
       '/groups/edit/GroupA',
