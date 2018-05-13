@@ -10,7 +10,7 @@ const CONFLICTING_VERSIONS = conf.get('beans').get('constants').CONFLICTING_VERS
 const DBSTATE = {OPEN: 'OPEN', CLOSED: 'CLOSED', OPENING: 'OPENING'};
 let ourDBConnectionState = DBSTATE.CLOSED;
 
-module.exports = function (collectionName) {
+module.exports = function persistenceFunc(collectionName) {
   let persistence;
 
   function logInfo(logMessage) {
