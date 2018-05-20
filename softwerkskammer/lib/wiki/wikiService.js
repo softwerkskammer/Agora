@@ -18,7 +18,7 @@ function replaceNonExistentNicknames(metadataList, callback) {
   function replaceNickPotentially(metadata, cb) {
     memberstore.getMember(metadata.author, (err, member) => {
       if (err || !member) {
-        metadata.author = 'N.N.';
+        metadata.author = null;
       }
       cb(null, metadata);
     });

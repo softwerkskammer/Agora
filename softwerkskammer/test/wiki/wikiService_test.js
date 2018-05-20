@@ -350,7 +350,7 @@ describe('Wiki Service (replaceNonExistentNicknames)', () => {
 
     wikiService.replaceNonExistentNicknames(metadatas, (err, updatedMetadatas) => {
       expect(updatedMetadatas[0].author).to.be('known');
-      expect(updatedMetadatas[1].author).to.be('N.N.');
+      expect(updatedMetadatas[1].author).to.be(null);
       done();
     });
   });
