@@ -124,35 +124,20 @@ app.get('/edit/:nickname', (req, res, next) => {
 });
 
 app.post('/delete', (req, res, next) => {
-  const nicknameOfEditMember = req.body.nickname;
-  groupsAndMembersService.getMemberWithHisGroups(nicknameOfEditMember, (err, member) => {
-    if (err || !member) { return next(err); }
-
-    function unsubFunction(group, callback) {
-      groupsAndMembersService.unsubscribeMemberFromGroup(member, group.id, callback);
+  const nickname = req.body.nickname;
+  if (!res.locals.accessrights.canDeleteMemberByNickname(nickname)) {
+    return res.redirect('/members/' + encodeURIComponent(nickname));
+  }
+  groupsAndMembersService.removeMember(nickname, err => {
+    if (err) {
+      if (err.message !== 'hasSubscriptions') {
+        return next(err);
+      }
+      statusmessage.errorMessage('message.title.problem', 'message.content.members.hasSubscriptions').putIntoSession(req);
+      return res.redirect('/members/edit/' + encodeURIComponent(nickname));
     }
-
-    if (!res.locals.accessrights.canDeleteMember(member)) {
-      return res.redirect('/members/' + encodeURIComponent(member.nickname()));
-    }
-    if (!R.isEmpty(member.subscribedGroups)) {
-      return async.each(member.subscribedGroups, unsubFunction, err1 => {
-        if (err1) {
-          statusmessage.errorMessage('message.title.problem', 'message.content.members.hasSubscriptions').putIntoSession(req);
-          return res.redirect('/members/edit/' + encodeURIComponent(member.nickname()));
-        }
-        return memberstore.removeMember(member, err2 => {
-          if (err2) { return next(err2); }
-          statusmessage.successMessage('message.title.save_successful', 'message.content.members.deleted').putIntoSession(req);
-          res.redirect('/members/');
-        });
-      });
-    }
-    return memberstore.removeMember(member, err2 => {
-      if (err2) { return next(err2); }
-      statusmessage.successMessage('message.title.save_successful', 'message.content.members.deleted').putIntoSession(req);
-      res.redirect('/members/');
-    });
+    statusmessage.successMessage('message.title.save_successful', 'message.content.members.deleted').putIntoSession(req);
+    res.redirect('/members/');
   });
 });
 

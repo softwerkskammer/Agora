@@ -141,7 +141,7 @@ module.exports = {
     membersService.superuserEmails((err, superusers) => {
       if (err) { return callback(err); }
       message.setTo(superusers);
-      sendMail(message, 'E-Mail zum Austrittswunsch', callback);
+      sendMail(message, 'E-Mail', callback);
     });
   }
 

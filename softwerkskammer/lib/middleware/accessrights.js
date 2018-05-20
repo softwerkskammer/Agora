@@ -55,8 +55,16 @@ module.exports = function accessrights(req, res, next) {
       return this.isSuperuser() && !this.isMember(member);
     },
 
+    canDeleteMemberByNickname: function canDeleteMemberByNickname(nickname) {
+      return this.isSuperuser() && !this.isNickname(nickname);
+    },
+
     isMember: function isMember(member) {
       return this.isRegistered() && this.memberId() === member.id();
+    },
+
+    isNickname: function isNickname(nickname) {
+      return this.isRegistered() && this.member().nickname() === nickname;
     },
 
     canViewGroupDetails: function canViewGroupDetails() {

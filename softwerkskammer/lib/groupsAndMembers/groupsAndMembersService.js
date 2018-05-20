@@ -51,20 +51,81 @@ function groupsWithExtraEmailAddresses(members, groupNamesWithEmails) {
   return result;
 }
 
-module.exports = {
-  getMemberWithHisGroups: function getMemberWithHisGroups(nickname, callback) {
-    memberstore.getMember(nickname, (err, member) => {
-      if (err) { return callback(err); }
-      addGroupsToMember(member, callback);
-    });
-  },
+function getMemberWithHisGroups(nickname, callback) {
+  memberstore.getMember(nickname, (err, member) => {
+    if (err) { return callback(err); }
+    addGroupsToMember(member, callback);
+  });
+}
 
-  getMemberWithHisGroupsByMemberId: function getMemberWithHisGroupsByMemberId(memberID, callback) {
-    memberstore.getMemberForId(memberID, (err, member) => {
-      if (err) { return callback(err); }
-      addGroupsToMember(member, callback);
+function getMemberWithHisGroupsByMemberId(memberID, callback) {
+  memberstore.getMemberForId(memberID, (err, member) => {
+    if (err) { return callback(err); }
+    addGroupsToMember(member, callback);
+  });
+}
+function updateAdminlistSubscriptions(memberID, callback) {
+  getMemberWithHisGroupsByMemberId(memberID, (err1, member) => {
+    if (err1) { return callback(err1); }
+    const adminListName = conf.get('adminListName');
+    groupsService.getMailinglistUsersOfList(adminListName, (err2, emailAddresses) => {
+      if (err2) { return callback(err2); }
+      const isInAdminList = (emailAddresses || []).includes(member.email());
+      if (member.isContactperson() && !isInAdminList) {
+        return groupsService.addUserToList(member.email(), adminListName, callback);
+      }
+      if (!member.isContactperson() && isInAdminList) {
+        return groupsService.removeUserFromList(member.email(), adminListName, callback);
+      }
+      callback();
     });
-  },
+  });
+}
+
+function unsubscribeMemberFromGroup(member, groupname, callback) {
+  groupsService.removeUserFromList(member.email(), groupname, err => {
+    if (err) { return callback(err); }
+    updateAdminlistSubscriptions(member.id(), callback);
+  });
+}
+
+function removeMember(nickname, callback) {
+  getMemberWithHisGroups(nickname, (err, member) => {
+    if (err || !member) { return callback(err); }
+
+    function unsubFunction(group, cb) {
+      unsubscribeMemberFromGroup(member, group.id, cb);
+    }
+
+    if (!R.isEmpty(member.subscribedGroups)) {
+      return async.each(member.subscribedGroups, unsubFunction, err1 => {
+        if (err1) {
+          return callback(new Error('hasSubscriptions'));
+        }
+        return memberstore.removeMember(member, err2 => {
+          if (err2) {
+            return callback(err2);
+          }
+          callback(null);
+        });
+      });
+    }
+    return memberstore.removeMember(member, err2 => {
+      if (err2) {
+        return callback(err2);
+      }
+      callback(null);
+    });
+  });
+
+}
+
+module.exports = {
+  getMemberWithHisGroups,
+
+  removeMember,
+
+  getMemberWithHisGroupsByMemberId,
 
   getAllMembersWithTheirGroups: function getAllMembersWithTheirGroups(callback) {
     groupsService.getAllAvailableGroups((err, groups) => {
@@ -115,23 +176,7 @@ module.exports = {
     return members.some(member => member.id() === id);
   },
 
-  updateAdminlistSubscriptions: function updateAdminlistSubscriptions(memberID, callback) {
-    this.getMemberWithHisGroupsByMemberId(memberID, (err1, member) => {
-      if (err1) { return callback(err1); }
-      const adminListName = conf.get('adminListName');
-      groupsService.getMailinglistUsersOfList(adminListName, (err2, emailAddresses) => {
-        if (err2) { return callback(err2); }
-        const isInAdminList = (emailAddresses || []).includes(member.email());
-        if (member.isContactperson() && !isInAdminList) {
-          return groupsService.addUserToList(member.email(), adminListName, callback);
-        }
-        if (!member.isContactperson() && isInAdminList) {
-          return groupsService.removeUserFromList(member.email(), adminListName, callback);
-        }
-        callback();
-      });
-    });
-  },
+  updateAdminlistSubscriptions,
 
   saveGroup: function saveGroup(group, callback) {
     const self = this;
@@ -160,13 +205,7 @@ module.exports = {
     });
   },
 
-  unsubscribeMemberFromGroup: function unsubscribeMemberFromGroup(member, groupname, callback) {
-    const self = this;
-    groupsService.removeUserFromList(member.email(), groupname, err => {
-      if (err) { return callback(err); }
-      self.updateAdminlistSubscriptions(member.id(), callback);
-    });
-  },
+  unsubscribeMemberFromGroup,
 
   updateAndSaveSubmittedMember: function updateAndSaveSubmittedMember(sessionUser, memberformData, accessrights, notifyNewMemberRegistration, callback) {
     this.getMemberWithHisGroups(memberformData.previousNickname, (err, persistentMember) => {
