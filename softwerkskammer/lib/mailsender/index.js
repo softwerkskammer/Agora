@@ -6,6 +6,7 @@ const misc = beans.get('misc');
 const validation = beans.get('validation');
 const statusmessage = beans.get('statusmessage');
 const mailsenderService = beans.get('mailsenderService');
+const groupsAndMembersService = beans.get('groupsAndMembersService');
 const Message = beans.get('message');
 
 function messageSubmitted(req, res, next) {
@@ -35,14 +36,6 @@ function messageSubmitted(req, res, next) {
   res.redirect(req.body.successURL);
 }
 
-function resignmentSubmitted(req, res) {
-  /* eslint handle-callback-err: 0 */
-  const markdown = '**' + req.i18n.t('mailsender.why-resign') + '**\n' + req.body.why + '\n\n**' + req.i18n.t('mailsender.notes-resign') + '**\n' + req.body.notes;
-  return mailsenderService.sendResignment(markdown, req.user.member, (err, statusmsg) => {
-    statusmsg.putIntoSession(req);
-    res.redirect('/members/' + req.user.member.nickname());
-  });
-}
 
 const app = misc.expressAppIn(__dirname);
 
@@ -73,6 +66,30 @@ app.get('/resign/:nickname', (req, res) => {
   res.render('compose-resign', {nickname: req.params.nickname});
 });
 
-app.post('/resign', resignmentSubmitted);
+app.post('/resign', (req, res, next) => {
+    const nickname = req.body.nickname;
+    if (req.user.member.nickname() !== nickname) {
+      return res.redirect('/members/' + encodeURIComponent(nickname));
+    }
+    groupsAndMembersService.removeMember(nickname, err => {
+      if (err) {
+        if (err.message !== 'hasSubscriptions') {
+          return next(err);
+        }
+        statusmessage.errorMessage('message.title.problem', 'message.content.members.hasSubscriptions').putIntoSession(req);
+        return res.redirect('/members/edit/' + encodeURIComponent(nickname));
+      }
+      const markdown = '**' + req.i18n.t('mailsender.why-resign') + '**\n' + req.body.why + '\n\n**' + req.i18n.t('mailsender.notes-resign') + '**\n' + req.body.notes;
+      return mailsenderService.sendResignment(markdown, req.user.member, (err1) => {
+        if (err1) { return next(err1); }
+        statusmessage.successMessage('message.title.save_successful', 'message.content.members.deleted').putIntoSession(req);
+        req.logout();
+        res.redirect('/goodbye.html');
+      });
+    });
+
+
+  }
+);
 
 module.exports = app;
