@@ -4,6 +4,7 @@ const sinon = require('sinon').sandbox.create();
 const expect = require('must-dist');
 const beans = require('../../testutil/configureForTest').get('beans');
 const wikiService = beans.get('wikiService');
+const memberstore = beans.get('memberstore');
 const moment = require('moment-timezone');
 const Git = beans.get('gitmech');
 
@@ -310,6 +311,47 @@ describe('Wiki Service (daily digest)', () => {
         expect(err).to.exist();
         done();
       });
+    });
+  });
+});
+
+describe('Wiki Service (replaceNonExistentNicknames)', () => {
+  let metadatas;
+  beforeEach(() => {
+    metadatas = [
+      {
+        'name': 'craftsmanswap/index.md',
+        'hashRef': 'HEAD',
+        'fullhash': 'baa6d36a37f0f04e1e88b4b57f0d89893789686c',
+        'author': 'known',
+        'datestring': '2014-04-30 17:25:48 +0200',
+        'comment': 'no comment'
+      },
+      {
+        'name': 'craftsmanswap/blog_vonmorgen.md',
+        'hashRef': '370dd3c',
+        'fullhash': '370dd3ce2e09fe74a78be8f8a10d36e7a3d8975b',
+        'author': 'unknown',
+        'datestring': '2014-02-13 08:26:01 +0100',
+        'comment': 'no comment'
+      }
+    ];
+
+    sinon.stub(memberstore, 'getMember').callsFake((nick, callback) => {
+      if (nick === 'known') {
+        return callback(null, {}); // we just need existence here
+      }
+      callback();
+    });
+
+  });
+
+  it('updates the entries author if not found in memberstore', (done) => {
+
+    wikiService.replaceNonExistentNicknames(metadatas, (err, updatedMetadatas) => {
+      expect(updatedMetadatas[0].author).to.be('known');
+      expect(updatedMetadatas[1].author).to.be(null);
+      done();
     });
   });
 });

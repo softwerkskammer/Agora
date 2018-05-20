@@ -19,7 +19,10 @@ mixin memberlist(members, organizers)
             a(href='/mailsender/contactMember/' + encodeURIComponent(member.nickname()), title=t('mailsender.write')): span.label(style='background-color: #DF5353') #{t('groups.contact')}
 
 mixin linkedMember(nickname)
-  a(href='/members/' + encodeURIComponent(nickname)) #{nickname}
+  if nickname
+    a(href='/members/' + encodeURIComponent(nickname)) #{nickname}
+  else
+    | N.N.
 
 mixin tagCloud()
   #tag-cloud
