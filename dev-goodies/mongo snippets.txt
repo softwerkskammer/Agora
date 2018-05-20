@@ -31,6 +31,9 @@ db.subscriberstore.update({id: /git/}, {$unset: {"participations": "" }})
 -- delete the country information of a subscriber whose id matches /git/
 db.subscriberstore.update({id: /git/}, {$unset: {"country": "" }})
 
+-- delete the socratesOnly field for all members:
+db.memberstore.update({}, {$unset: {socratesOnly: ""}}, {multi: true})
+
 -- set to "FR" the country information of a subscriber whose id matches /git/
 db.subscriberstore.update({id: "github:436499"}, {$set: {"country": "FR" }})
 
@@ -38,18 +41,18 @@ db.subscriberstore.update({id: "github:436499"}, {$set: {"country": "FR" }})
 db.subscriberstore.update({id: /xlogon/}, {$unset: {"participations.2015.payment.paymentReceived": "" }})
 
 -- update a registration in a specific room
-db.activitystore.update({title: 'SoCraTes 2015', "resources.single._registeredMembers": {$elemMatch: {memberId: "github:450708"}}}, 
+db.activitystore.update({title: 'SoCraTes 2015', "resources.single._registeredMembers": {$elemMatch: {memberId: "github:450708"}}},
 {$set: {"resources.single._registeredMembers.$.memberId": "github:450708"}})
 
 -- update the memberID in a visited resource
 db.activitystore.update({"url" : "neue_aktion", 'resources.Veranstaltung._registeredMembers.memberId':"github:450708" }, {$set: {'resources.Veranstaltung._registeredMembers.$.memberId': "github:450701"}})
 
 -- update the memberID of an old participation
-db.activitystore.update({title: 'SoCraTes 2015', "resources.Veranstaltung._registeredMembers": {$elemMatch: {memberId: "https://plus.google.com/107567018887823415314"}}}, 
+db.activitystore.update({title: 'SoCraTes 2015', "resources.Veranstaltung._registeredMembers": {$elemMatch: {memberId: "https://plus.google.com/107567018887823415314"}}},
 {$set: {"resources.Veranstaltung._registeredMembers.$.memberId": "https://www.google.com/accounts/o8/id?id=AItOawk2YPWtNTkbyqESdg1mLOg6XF4Y_NlAeak"}})
 
 -- update the memberID of a current (event-based) participation
-db.eventstore.update({"url" : "socrates-2016", "events": {$elemMatch: {"memberId" : "https://plus.google.com/107567018887823415314"}}}, 
+db.eventstore.update({"url" : "socrates-2016", "events": {$elemMatch: {"memberId" : "https://plus.google.com/107567018887823415314"}}},
 {$set: {"events.$.memberId": "https://www.google.com/accounts/o8/id?id=AItOawk2YPWtNTkbyqESdg1mLOg6XF4Y_NlAeak"}})
 
 -- delete all avatardata in members
