@@ -3,12 +3,10 @@
 const beans = require('simple-configure').get('beans');
 const async = require('async');
 const R = require('ramda');
-const moment = require('moment-timezone');
 
 const wikiService = beans.get('wikiService');
 const groupsAndMembersService = beans.get('groupsAndMembersService');
 const activitiesService = beans.get('activitiesService');
-const mailarchiveService = beans.get('mailarchiveService');
 
 function groupsByColumns(groups = [], linesPerGroup) {
   const result = [
@@ -43,9 +41,7 @@ module.exports = {
         const basicHeightPerSection = 1;
         const postsByGroup = {};
         const changesByGroup = {};
-        const mailsByGroup = {};
         const linesPerGroup = {};
-        const oneMonthAgo = moment().subtract(1, 'months');
         async.each(member.subscribedGroups || [], (group, cb) => {
           linesPerGroup[group.id] = basicHeight;
           wikiService.getBlogpostsForGroup(group.id, (err2, blogposts) => {
@@ -56,13 +52,7 @@ module.exports = {
               if (err3) { return cb(err3); }
               changesByGroup[group.id] = metadatas;
               linesPerGroup[group.id] = linesPerGroup[group.id] + basicHeightPerSection + metadatas.length;
-              mailarchiveService.unthreadedMailsYoungerThan(group.id, oneMonthAgo.unix(), function (err4, mails) {
-                if (mails) {
-                  mailsByGroup[group.id] = mails;
-                  linesPerGroup[group.id] = linesPerGroup[group.id] + basicHeightPerSection + mails.length;
-                }
-                cb(err4);
-              });
+              cb();
             });
           });
         }, err2 => {
@@ -71,7 +61,7 @@ module.exports = {
             activities,
             postsByGroup,
             changesByGroup,
-            mailsByGroup,
+            mailsByGroup: [],
             groupsPerColumn: groupsByColumns(member.subscribedGroups, linesPerGroup)
           });
         });

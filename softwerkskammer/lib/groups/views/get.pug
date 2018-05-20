@@ -19,10 +19,6 @@ block content
           a.btn.btn-default(href='/wiki/' + group.id + '/')
             i.fa.fa-book.fa-fw
             | &nbsp;#{t('wiki.wiki')}
-          if (accessrights.canViewGroupDetails(group))
-            a.btn.btn-default(href='/mailarchive/list/threaded/' + group.id, title=t('mailarchive.archive'))
-              i.fa.fa-archive.fa-fw
-              | &nbsp;#{t('mailarchive.archive')}
           a.btn.btn-default(href=webcalURL, title=t('activities.export_subscribe')): i.fa.fa-calendar.fa-fw
           if (accessrights.canEditGroup(group))
             a.btn.btn-default(href='/groups/edit/' + group.id, title=t('general.edit')): i.fa.fa-edit

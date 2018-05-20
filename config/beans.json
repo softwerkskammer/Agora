@@ -6,7 +6,6 @@
   "dashboardApp": {"module": "./softwerkskammer/lib/dashboard"},
   "groupsApp": {"module": "./softwerkskammer/lib/groups"},
   "galleryApp": {"module": "./softwerkskammer/lib/gallery"},
-  "mailarchiveApp": {"module": "./softwerkskammer/lib/mailarchive"},
   "mailsenderApp": {"module": "./softwerkskammer/lib/mailsender"},
   "membersApp": {"module": "./softwerkskammer/lib/members"},
   "paymentApp": {"module": "./softwerkskammer/lib/payment"},
@@ -23,7 +22,6 @@
   "groupsAndMembersService": {"module": "./softwerkskammer/lib/groupsAndMembers/groupsAndMembersService"},
   "icalService": {"module": "./softwerkskammer/lib/activities/icalService"},
   "galleryService": {"module": "./softwerkskammer/lib/gallery/galleryService"},
-  "mailarchiveService": {"module": "./softwerkskammer/lib/mailarchive/mailarchiveService"},
   "mailsenderService": {"module": "./softwerkskammer/lib/mailsender/mailsenderService"},
   "membersService": {"module": "./softwerkskammer/lib/members/membersService"},
   "paymentService": {"module": "./softwerkskammer/lib/payment/paymentService"},
@@ -51,10 +49,6 @@
     "module": "./softwerkskammer/lib/persistence/persistence",
     "constructorArgs": { "collectionName": "groupstore" }
   },
-  "mailsPersistence": {
-    "module": "./softwerkskammer/lib/persistence/persistence",
-    "constructorArgs": { "collectionName": "mailsstore" }
-  },
   "membersPersistence": {
     "module": "./softwerkskammer/lib/persistence/persistence",
     "constructorArgs": { "collectionName": "memberstore" }
@@ -71,10 +65,8 @@
   "activity": {"module": "./softwerkskammer/lib/activities/activity"},
   "socratesActivity": {"module": "./softwerkskammer/lib/activities/socratesActivity"},
   "activityresult": {"module": "./softwerkskammer/lib/activityresults/activityresult"},
-  "archivedMail": {"module": "./softwerkskammer/lib/mailarchive/archivedMail"},
   "gitDiff": {"module": "./softwerkskammer/lib/wiki/gitDiff"},
   "group": {"module": "./softwerkskammer/lib/groups/group"},
-  "mailThread": {"module": "./softwerkskammer/lib/mailarchive/mailThread"},
   "member": {"module": "./softwerkskammer/lib/members/member"},
   "message": {"module": "./softwerkskammer/lib/mailsender/message"},
   "paymentInfo": {"module": "./softwerkskammer/lib/payment/paymentInfo"},
