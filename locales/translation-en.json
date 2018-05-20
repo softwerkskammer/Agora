@@ -290,7 +290,7 @@
     "resign_info": [
       "p We are sorry that you want to leave.",
       "p We are respecting this. We would be thankful if you answered the following questions.",
-      "p Sending this form will trigger an e-mail to the administators.",
+      "p Sending this form will trigger an e-mail to the administrators.",
       "p: b This action will delete your user data from our database and end all subscriptions to groups / mailinglists."
     ],
     "send": "Send",
