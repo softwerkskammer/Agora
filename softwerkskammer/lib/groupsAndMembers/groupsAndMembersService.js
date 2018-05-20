@@ -57,12 +57,11 @@ module.exports = {
 
   removeMember: function removeMember(nickname, callback) {
     this.getMemberWithHisGroups(nickname, (err, member) => {
-      const self = this;
       if (err || !member) { return callback(err); }
 
-      function unsubFunction(group, cb) {
-        self.unsubscribeMemberFromGroup(member, group.id, cb);
-      }
+      const unsubFunction = (group, cb) => {
+        this.unsubscribeMemberFromGroup(member, group.id, cb);
+      };
 
       async.each(member.subscribedGroups, unsubFunction, err1 => {
         if (err1) {
