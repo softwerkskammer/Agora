@@ -279,7 +279,8 @@
     "resign_info": [
       "p Schade, dass Du aus der Softwerkskammer austreten möchtest.",
       "p Wir respektieren diesen Wunsch. Es wäre schön, wenn Du Dir noch die Zeit nimmst, die untenstehenden Fragen zu beantworten.",
-      "p Das Senden dieses Formulars schickt eine E-Mail an uns Administratoren."
+      "p Das Senden dieses Formulars schickt eine E-Mail an uns Administratoren.",
+      "p: b Diese Aktion löscht Deinen User aus unseren Daten und beendet alle Gruppen/Mailinglist-Zugehörigkeiten."
     ],
     "send": "Senden",
     "subject": "Betreff",
