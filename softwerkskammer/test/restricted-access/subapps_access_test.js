@@ -28,6 +28,7 @@ describe('Security for normal visitors does not allow to access ', () => {
       '/gallery/some-image',
       '/groups/new',
       '/groups/edit/GroupA',
+      '/mailsender/something',
       '/invitation',
       '/members/',
       '/members/new',
