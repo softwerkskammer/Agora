@@ -68,18 +68,14 @@ describe('Members application with DB', () => {
   });
 
   describe('allMembers', () => {
-    const swkMember = new Member({id: 'id1', socratesOnly: false});
-    const socMember = new Member({id: 'id2', socratesOnly: true});
+    const swkMember = new Member({id: 'id1'});
     beforeEach(done => { // if this fails, you need to start your mongo DB
       persistence.drop(() => {
-        memberstore.saveMember(swkMember, err => {
-          if (err) { done(err); }
-          memberstore.saveMember(socMember, err1 => { done(err1); });
-        });
+        memberstore.saveMember(swkMember, done);
       });
     });
 
-    it('finds only members that are not "socratesOnly"', done => {
+    it('finds all members', done => {
       memberstore.allMembers((err, members) => {
         expect(members).to.have.length(1);
         expect(members[0].id()).is('id1');

@@ -321,8 +321,8 @@ describe('Groups Service (isGroupNameAvailable)', () => {
         callback(null, GroupA);
       } else if (groupname === 'GroupB') {
         callback(null, GroupB);
-      } else if (groupname === 'Err') {
-        callback(new Error('Err'));
+      } else if (groupname === 'ErrorGroup') {
+        callback(new Error('Ouch! Something bad happened...'));
       } else {
         callback(null, null);
       }
@@ -334,7 +334,7 @@ describe('Groups Service (isGroupNameAvailable)', () => {
   });
 
   it('handles Errors', done => {
-    groupsService.isGroupNameAvailable('Err', err => {
+    groupsService.isGroupNameAvailable('ErrorGroup', err => {
       expect(err).to.exist();
       done();
     });
@@ -356,7 +356,15 @@ describe('Groups Service (isGroupNameAvailable)', () => {
     });
   });
 
-  it('rejects groupnames that contain special characters', done => {
+  it('returns an error when the group fetching is not successful', function (done) {
+    groupsService.isGroupNameAvailable('ErrorGroup', function (err, result) {
+      expect(result).to.be(false);
+      expect(err).to.not.be(null);
+      done(); // we expect an error
+    });
+  });
+
+  it('rejects groupnames that contain special characters', function (done) {
     expect(groupsService.isReserved('Sch adar')).to.be(true);
     expect(groupsService.isReserved('Sch/adar')).to.be(true);
     expect(groupsService.isReserved('Schad\nar')).to.be(true);

@@ -14,8 +14,5 @@ module.exports = function redirectRuleForNewUser(req, res, next) {
     return res.redirect('/members/new');
   }
 
-  if (member.socratesOnly() && !/\/members\/edit/.test(req.originalUrl)) {
-    return res.redirect('/members/edit/' + encodeURIComponent(member.nickname()));
-  }
   next();
 };

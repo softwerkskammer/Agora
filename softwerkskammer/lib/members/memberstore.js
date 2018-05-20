@@ -6,7 +6,6 @@ const conf = require('simple-configure');
 const beans = conf.get('beans');
 const R = require('ramda');
 const persistence = beans.get('membersPersistence');
-const subscriberPersistence = beans.get('subscribersPersistence');
 const Member = beans.get('member');
 const misc = beans.get('misc');
 const naturalCmp = require('underscore.string/naturalCmp');
@@ -24,11 +23,7 @@ function toMemberList(callback, err, result) {
 
 module.exports = {
   allMembers: function allMembers(callback) {
-    persistence.listByField({'socratesOnly': false}, {lastname: 1, firstname: 1}, R.partial(toMemberList, [callback]));
-  },
-
-  socratesOnlyMembers: function socratesOnlyMembers(callback) {
-    persistence.listByField({'socratesOnly': true}, {lastname: 1, firstname: 1}, R.partial(toMemberList, [callback]));
+    persistence.listByField({}, {lastname: 1, firstname: 1}, R.partial(toMemberList, [callback]));
   },
 
   superUsers: function superUsers(callback) {
@@ -86,10 +81,6 @@ module.exports = {
       logger.info('Member removed:' + JSON.stringify(member));
       callback(err);
     });
-  },
-
-  isSoCraTesSubscriber: function isSoCraTesSubscriber(id, callback) {
-    subscriberPersistence.getById(id, (err, subscriber) => callback(err, !!subscriber));
   }
 };
 

@@ -31,7 +31,7 @@ describe('Groups and Members Service', () => {
       it('returns an error when the member loading caused an error', done => {
         sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups').callsFake((nickname, callback) => { callback(new Error('some error')); });
 
-        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(undefined, {previousNickname: 'nick'}, accessrights, undefined, (err, nickname) => {
+        groupsAndMembersService.updateAndSaveSubmittedMember(undefined, {previousNickname: 'nick'}, accessrights, undefined, (err, nickname) => {
           expect(err.message).to.equal('some error');
           expect(nickname).to.be.undefined();
           done();
@@ -42,7 +42,7 @@ describe('Groups and Members Service', () => {
         sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups').callsFake((nickname, callback) => { callback(null, null); });
         sinon.stub(memberstore, 'saveMember').callsFake((anyMember, callback) => { callback(new Error('some error')); });
 
-        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(undefined, {previousNickname: 'nick'}, accessrights, undefined, (err, nickname) => {
+        groupsAndMembersService.updateAndSaveSubmittedMember(undefined, {previousNickname: 'nick'}, accessrights, undefined, (err, nickname) => {
           expect(err.message).to.equal('some error');
           expect(nickname).to.be.undefined();
           done();
@@ -54,7 +54,7 @@ describe('Groups and Members Service', () => {
         accessrights.canEditMember = () => true;
         sinon.stub(memberstore, 'saveMember').callsFake((anyMember, callback) => { callback(new Error('some error')); });
 
-        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(undefined, memberformData, accessrights, undefined, (err, nickname) => {
+        groupsAndMembersService.updateAndSaveSubmittedMember(undefined, memberformData, accessrights, undefined, (err, nickname) => {
           expect(err.message).to.equal('some error');
           expect(nickname).to.be.undefined();
           done();
@@ -75,7 +75,7 @@ describe('Groups and Members Service', () => {
         const sessionUser = {authenticationId: 'member authentication id'};
         accessrights.canEditMember = () => true;
 
-        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(sessionUser, memberformData, accessrights, () => { return; },
+        groupsAndMembersService.updateAndSaveSubmittedMember(sessionUser, memberformData, accessrights, () => { return; },
           (err, nickname) => {
             expect(nickname).to.equal('nick in memberform');
             expect(sessionUser.member.id()).to.equal('member authentication id');
@@ -93,7 +93,7 @@ describe('Groups and Members Service', () => {
       });
 
       it('returns null when we are not allowed to edit the member', done => {
-        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(undefined, memberformData, accessrights, undefined, (err, nickname) => {
+        groupsAndMembersService.updateAndSaveSubmittedMember(undefined, memberformData, accessrights, undefined, (err, nickname) => {
           expect(err).to.be.null();
           expect(nickname).to.be.undefined();
           done();
@@ -104,7 +104,7 @@ describe('Groups and Members Service', () => {
         const sessionUser = {profile: {}};
         accessrights.canEditMember = () => true;
 
-        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(sessionUser, memberformData, accessrights, undefined, (err, nickname) => {
+        groupsAndMembersService.updateAndSaveSubmittedMember(sessionUser, memberformData, accessrights, undefined, (err, nickname) => {
           expect(nickname).to.equal('nick in memberform');
           expect(sessionUser.member).to.equal(member);
           expect(sessionUser.hasOwnProperty('profile')).to.be.false();
@@ -117,7 +117,7 @@ describe('Groups and Members Service', () => {
         const sessionUser = {member: differentMemberWithSameId};
         accessrights.canEditMember = () => true;
 
-        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(sessionUser, memberformData, accessrights, undefined, (err, nickname) => {
+        groupsAndMembersService.updateAndSaveSubmittedMember(sessionUser, memberformData, accessrights, undefined, (err, nickname) => {
           expect(nickname).to.equal('nick in memberform');
           expect(sessionUser.member).to.equal(member);
           expect(sessionUser.member).to.not.equal(differentMemberWithSameId);
@@ -130,51 +130,13 @@ describe('Groups and Members Service', () => {
         const sessionUser = {member: anotherMember};
         accessrights.canEditMember = () => true;
 
-        groupsAndMembersService.updateAndSaveSubmittedMemberWithSubscriptions(sessionUser, memberformData, accessrights, undefined, (err, nickname) => {
+        groupsAndMembersService.updateAndSaveSubmittedMember(sessionUser, memberformData, accessrights, undefined, (err, nickname) => {
           expect(nickname).to.equal('nick in memberform');
           expect(sessionUser.member).to.equal(anotherMember);
           done(err);
         });
       });
 
-    });
-
-    describe('called from SoCraTes', () => {
-      beforeEach(() => {
-        sinon.stub(memberstore, 'saveMember').callsFake((anyMember, callback) => { callback(null); });
-        sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups').callsFake((nickname, callback) => { callback(null, member); });
-        sinon.stub(groupsAndMembersService, 'updateSubscriptions').callsFake((anyMember, oldEmail, subscriptions, callback) => { callback(null); });
-      });
-
-      it('does _not_ set to SoCraTes only if the member seems to be a Softwerkskammer member', done => {
-        member.state.location = 'Karlsruhe';
-        const sessionUser = {profile: {}};
-        accessrights.canEditMember = () => true;
-        expect(member.socratesOnly()).to.be(false); // just to be sure
-
-        groupsAndMembersService.updateAndSaveSubmittedMemberWithoutSubscriptions(sessionUser, memberformData, accessrights, undefined, (err, nickname) => {
-          expect(nickname).to.equal('nick in memberform');
-          expect(sessionUser.member).to.equal(member);
-          expect(sessionUser.hasOwnProperty('profile')).to.be.false();
-          expect(member.socratesOnly()).to.be(false);
-          delete member.state.location;
-          done(err);
-        });
-      });
-
-      it('does set to SoCraTes only if the member does not appear like a Softwerkskammer member', done => {
-        const sessionUser = {profile: {}};
-        accessrights.canEditMember = () => true;
-        expect(member.socratesOnly()).to.be(false); // just to be sure
-
-        groupsAndMembersService.updateAndSaveSubmittedMemberWithoutSubscriptions(sessionUser, memberformData, accessrights, undefined, (err, nickname) => {
-          expect(nickname).to.equal('nick in memberform');
-          expect(sessionUser.member).to.equal(member);
-          expect(sessionUser.hasOwnProperty('profile')).to.be.false();
-          expect(member.socratesOnly()).to.be(true);
-          done(err);
-        });
-      });
     });
   });
 });

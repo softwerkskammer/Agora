@@ -67,11 +67,7 @@
     "module": "./softwerkskammer/lib/persistence/persistence",
     "constructorArgs": { "collectionName": "sympastore" }
   },
-  "subscribersPersistence": {
-    "module": "./softwerkskammer/lib/persistence/persistence",
-    "constructorArgs": { "collectionName": "subscriberstore" }
-  },
-  
+
   "activity": {"module": "./softwerkskammer/lib/activities/activity"},
   "socratesActivity": {"module": "./softwerkskammer/lib/activities/socratesActivity"},
   "activityresult": {"module": "./softwerkskammer/lib/activityresults/activityresult"},
@@ -95,7 +91,7 @@
   "misc": {"module": "./softwerkskammer/lib/commons/misc"},
   "notifications": {"module": "./softwerkskammer/lib/notifications"},
   "validation": {"module": "./softwerkskammer/lib/commons/validation"},
-  
+
   "accessrights": {"module": "./softwerkskammer/lib/middleware/accessrights"},
   "addCsrfTokenToLocals": {"module": "./softwerkskammer/lib/middleware/addCsrfTokenToLocals"},
   "detectBrowser": {"module": "./softwerkskammer/lib/middleware/detectBrowser"},
@@ -106,7 +102,7 @@
   "handle404": {"module": "./softwerkskammer/lib/middleware/handle404"},
   "handle500": {"module": "./softwerkskammer/lib/middleware/handle500"},
   "initI18N": {
-    "module": "./softwerkskammer/lib/middleware/initI18N", 
+    "module": "./softwerkskammer/lib/middleware/initI18N",
     "constructorArgs": { "languages": "de,en" }
   },
   "mailtransport": {"module": "./softwerkskammer/lib/mailsender/mailtransport"},

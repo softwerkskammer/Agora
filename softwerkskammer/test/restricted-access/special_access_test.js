@@ -71,84 +71,13 @@ describe('redirection to registration page for authenticated but not yet registe
 
 });
 
-describe('redirection to registration page for "SoCraTes only members"', () => {
-
-  function checkFor(urlAndRedirect) {
-    const req = {
-      originalUrl: urlAndRedirect.url,
-      user: {
-        member: {
-          socratesOnly: () => true,
-          nickname: () => 'nick'
-        }
-      }
-    };
-    const res = {
-      redirect: sinon.spy()
-    };
-    const next = sinon.spy();
-    redirectRuleForNewUser(req, res, next);
-    expect(res.redirect.calledWith('/members/edit/nick')).to.equal(urlAndRedirect.redirect);
-    expect(next.called).to.not.equal(urlAndRedirect.redirect);
-  }
-
-  it('(almost) generally happens', () => {
-    checkFor({url: '/something', redirect: true});
-  });
-
-  it('happens for /something/new', () => {
-    checkFor({url: '/something/new', redirect: true});
-  });
-
-  it('does not happen for /members/new', () => {
-    checkFor({url: '/members/new', redirect: false});
-  });
-
-  it('does not happen for /members/edit', () => {
-    checkFor({url: '/members/edit', redirect: false});
-  });
-
-  it('happens for /something/submit', () => {
-    checkFor({url: '/something/submit', redirect: true});
-  });
-
-  it('does not happen for members/submit', () => {
-    checkFor({url: '/members/submit', redirect: false});
-  });
-
-  it('does not happen for /members/checknickname', () => {
-    checkFor({url: '/members/checknickname', redirect: false});
-  });
-
-  it('does not happen for /auth/logout', () => {
-    checkFor({url: '/auth/logout', redirect: false});
-  });
-
-  it('does not happen for frontend scripts', () => {
-    checkFor({url: '/clientscripts/', redirect: false});
-  });
-
-  it('does not happen for frontend stylesheets', () => {
-    checkFor({url: '/stylesheets/', redirect: false});
-  });
-
-  it('does not happen for frontend fonts', () => {
-    checkFor({url: '/fonts/', redirect: false});
-  });
-
-  it('does not happen for frontend images', () => {
-    checkFor({url: '/img/', redirect: false});
-  });
-
-});
-
 describe('redirection to registration page for registered users', () => {
 
   it('does not happen', () => {
     const req = {
       originalUrl: '/members',
       user: {
-        member: {socratesOnly: () => false}
+        member: {}
       }
     };
     const next = sinon.spy();

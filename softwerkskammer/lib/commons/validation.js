@@ -40,13 +40,6 @@ module.exports = {
     return validator.getErrors();
   },
 
-  isValidForSoCraTesMember: function isValidForSoCraTesMember(memberInput) {
-    const validator = new Validator();
-    checkCommonMemberFields(validator, memberInput);
-    validator.check(memberInput.country, 'validation.country_valid').notEmpty();
-    return validator.getErrors();
-  },
-
   isValidGroup: function isValidGroup(group) {
     const validator = new Validator();
     validator.check(group.id, 'Name ist ein Pflichtfeld.').notEmpty();
