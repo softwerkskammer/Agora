@@ -1,6 +1,5 @@
 extends ../../../views/layoutOnlyMain
 include ../../activities/views/activities-mixins
-include ../../mailarchive/views/mailheader-mixin
 
 block scripts
   script.
@@ -36,13 +35,6 @@ mixin my_groups
             .panel-body.collapse.in(id=panelid)
               +wikichangesOrBlogs(postsByGroup[group.id], panelid, 'blogs', t('wiki.blogposts'))
               +wikichangesOrBlogs(changesByGroup[group.id], panelid, 'changes', t('wiki.changes'))
-              if (mailsByGroup[group.id].length > 0)
-                h5
-                  a.chevron(data-toggle='collapse', data-target='#' + panelid + ' .mails')
-                    i.fa.fa-toggle-down.fa-fw.blog
-                    | &nbsp;#{t('mailarchive.recent')}
-                .mails.collapse.in
-                  +mailIndex(mailsByGroup[group.id])
 
 mixin my_activities
   .panel.panel-default

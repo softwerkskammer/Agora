@@ -38,15 +38,6 @@ describe('SecuredByLoginURLRedirect Rule (members)', () => {
 
 });
 
-describe('SecuredByLoginURLRedirect Rule (mailarchive)', () => {
-
-  it('secures members/', () => {
-    const url = 'http://host/mailarchive/';
-    expect(securedByLoginURLRegex.test(url)).to.be(true);
-  });
-
-});
-
 describe('SecuredByLoginURLRedirect Rule (*/new)', () => {
 
   it('secures URLs with activities/new', () => {

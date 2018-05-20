@@ -22,7 +22,6 @@ function createConfiguration() {
     '/edit|' +
     '/submit|' +
     '/subscribe|' +
-    '/mailarchive|' +
     '/invitation|' +
     '/addToWaitinglist|' +
     '/addon|' +

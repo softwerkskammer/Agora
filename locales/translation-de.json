@@ -267,15 +267,6 @@
     "x_coord": "X-Koord.",
     "y_coord": "Y-Koord."
   },
-  "mailarchive": {
-    "archive": "Mailarchiv",
-    "emails": "E-Mails",
-    "no_emails": "Keine E-Mails",
-    "open_as_distinct_page": "Als eigene Seite öffnen",
-    "recent": "$t(mailarchive.archive) - Neueste",
-    "threaded": "Threaded",
-    "unthreaded": "Flat"
-  },
   "mailsender": {
     "contents": "Inhalt",
     "copy_to_self": "Eine Kopie an mich senden",

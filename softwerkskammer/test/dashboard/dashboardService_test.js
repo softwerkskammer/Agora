@@ -5,12 +5,9 @@ const beans = require('../../testutil/configureForTest').get('beans');
 const sinon = require('sinon').sandbox.create();
 const expect = require('must-dist');
 
-const moment = require('moment-timezone');
-
 const wikiService = beans.get('wikiService');
 const groupsAndMembersService = beans.get('groupsAndMembersService');
 const activitiesService = beans.get('activitiesService');
-const mailarchiveService = beans.get('mailarchiveService');
 
 const dashboardService = beans.get('dashboardService');
 
@@ -53,7 +50,6 @@ describe('Dashboard Service', () => {
       expect(result.activities).to.contain(activity2);
       expect(result.postsByGroup).to.be.empty();
       expect(result.changesByGroup).to.be.empty();
-      expect(result.mailsByGroup).to.be.empty();
       done(err);
     });
   });
@@ -72,16 +68,11 @@ describe('Dashboard Service', () => {
     });
   });
 
-  describe('wiki and mailarchive', () => {
+  describe('wiki', () => {
     const CRASH_BLOG = 'crash blogs';
     const CRASH_CHANGE = 'crash changes';
-    const CRASH_MAILS = 'crash mails';
     const blogs = ['blog1', 'blog2'];
     const changedFiles = ['change1', 'change2'];
-    const mail1 = {name: 'mail1', time: moment()};
-    const mail2 = {name: 'mail2', time: moment()};
-    const veryOldMail = {name: 'mail3', time: moment().subtract(12, 'months')};
-    const mails = [mail1, mail2];
 
     beforeEach(() => {
       sinon.stub(wikiService, 'getBlogpostsForGroup').callsFake((groupid, callback) => {
@@ -95,12 +86,6 @@ describe('Dashboard Service', () => {
           return callback(new Error());
         }
         callback(null, changedFiles);
-      });
-      sinon.stub(mailarchiveService, 'unthreadedMailsYoungerThan').callsFake((groupid, age, callback) => {
-        if (groupid === CRASH_MAILS) {
-          return callback(new Error());
-        }
-        callback(null, mails);
       });
     });
 
@@ -119,19 +104,6 @@ describe('Dashboard Service', () => {
       });
     });
 
-    it('collects mail information, revoking old mails', done => {
-      member.subscribedGroups = [
-        {id: 'group'}
-      ];
-      dashboardService.dataForDashboard('nick', (err, result) => {
-        expect(result.mailsByGroup).to.have.keys(['group']);
-        expect(result.mailsByGroup.group).to.contain(mail1);
-        expect(result.mailsByGroup.group).to.contain(mail2);
-        expect(result.mailsByGroup.group).not.to.contain(veryOldMail);
-        done(err);
-      });
-    });
-
     it('handles the error when searching blogposts crashes', done => {
       member.subscribedGroups = [
         {id: CRASH_BLOG}
@@ -145,16 +117,6 @@ describe('Dashboard Service', () => {
     it('handles the error when searching wiki changes crashes', done => {
       member.subscribedGroups = [
         {id: CRASH_CHANGE}
-      ];
-      dashboardService.dataForDashboard('nick', err => {
-        expect(err).to.exist();
-        done();
-      });
-    });
-
-    it('handles the error when searching wiki changes crashes', done => {
-      member.subscribedGroups = [
-        {id: CRASH_MAILS}
       ];
       dashboardService.dataForDashboard('nick', err => {
         expect(err).to.exist();
