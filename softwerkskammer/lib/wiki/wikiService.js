@@ -2,16 +2,31 @@
 const Fs = require('fs');
 const Path = require('path');
 const R = require('ramda');
+const async = require('async');
 const eventsToObject = require('./eventsToObject');
 const beans = require('simple-configure').get('beans');
 const misc = beans.get('misc');
 const Git = beans.get('gitmech');
 const wikiObjects = beans.get('wikiObjects');
+const memberstore = beans.get('memberstore');
 const FileWithChangelist = wikiObjects.FileWithChangelist;
 const DirectoryWithChangedFiles = wikiObjects.DirectoryWithChangedFiles;
 const Diff = beans.get('gitDiff');
-const async = require('async');
 const logger = require('winston').loggers.get('application');
+
+function replaceNonExistentNicknames(metadataList, callback) {
+  function replaceNickPotentially(metadata, cb) {
+    memberstore.getMember(metadata.author, (err, member) => {
+      if (err || !member) {
+        metadata.author = 'N.N.';
+      }
+      cb(null, metadata);
+    });
+  }
+  async.map(metadataList, replaceNickPotentially, (err, changedMetadataList) => {
+    callback(err, changedMetadataList);
+  });
+}
 
 module.exports = {
 
@@ -64,11 +79,13 @@ module.exports = {
     });
   },
 
+  replaceNonExistentNicknames,
+
   pageHistory: function pageHistory(completePageName, callback) {
     Git.readFile(completePageName + '.md', 'HEAD', err => {
       if (err) { return callback(err); }
       Git.log(completePageName + '.md', 'HEAD', 30, (ignoredErr, metadata) => {
-        callback(null, metadata);
+        replaceNonExistentNicknames(metadata, callback);
       });
     });
   },
