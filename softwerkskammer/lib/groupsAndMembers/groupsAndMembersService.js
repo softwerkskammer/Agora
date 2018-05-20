@@ -47,12 +47,20 @@ module.exports = {
     });
   },
 
+  unsubscribeMemberFromGroup: function unsubscribeMemberFromGroup(member, groupname, callback) {
+    groupsService.removeUserFromList(member.email(), groupname, err => {
+      if (err) { return callback(err); }
+      this.updateAdminlistSubscriptions(member.id(), callback);
+    });
+  },
+
   removeMember: function removeMember(nickname, callback) {
     this.getMemberWithHisGroups(nickname, (err, member) => {
+      const self = this
       if (err || !member) { return callback(err); }
 
       function unsubFunction(group, cb) {
-        this.unsubscribeMemberFromGroup(member, group.id, cb);
+        self.unsubscribeMemberFromGroup(member, group.id, cb);
       }
 
       async.each(member.subscribedGroups, unsubFunction, err1 => {
@@ -170,13 +178,6 @@ module.exports = {
 
   subscribeMemberToGroup: function subscribeMemberToGroup(member, groupname, callback) {
     groupsService.addUserToList(member.email(), groupname, err => {
-      if (err) { return callback(err); }
-      this.updateAdminlistSubscriptions(member.id(), callback);
-    });
-  },
-
-  unsubscribeMemberFromGroup: function unsubscribeMemberFromGroup(member, groupname, callback) {
-    groupsService.removeUserFromList(member.email(), groupname, err => {
       if (err) { return callback(err); }
       this.updateAdminlistSubscriptions(member.id(), callback);
     });
