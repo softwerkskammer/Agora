@@ -39,12 +39,6 @@ function groupsWithExtraEmailAddresses(members, groupNamesWithEmails) {
   return result;
 }
 
-function getMemberWithHisGroupsByMemberId(memberID, callback) {
-  memberstore.getMemberForId(memberID, (err, member) => {
-    if (err) { return callback(err); }
-    addGroupsToMember(member, callback);
-  });
-}
 
 module.exports = {
   getMemberWithHisGroups: function getMemberWithHisGroups(nickname, callback) {
@@ -79,7 +73,12 @@ module.exports = {
     });
   },
 
-  getMemberWithHisGroupsByMemberId,
+  getMemberWithHisGroupsByMemberId: function getMemberWithHisGroupsByMemberId(memberID, callback) {
+    memberstore.getMemberForId(memberID, (err, member) => {
+      if (err) { return callback(err); }
+      addGroupsToMember(member, callback);
+    });
+  },
 
   getAllMembersWithTheirGroups: function getAllMembersWithTheirGroups(callback) {
     groupsService.getAllAvailableGroups((err, groups) => {
@@ -139,7 +138,7 @@ module.exports = {
   },
 
   updateAdminlistSubscriptions: function updateAdminlistSubscriptions(memberID, callback) {
-    getMemberWithHisGroupsByMemberId(memberID, (err1, member) => {
+    this.getMemberWithHisGroupsByMemberId(memberID, (err1, member) => {
       if (err1) { return callback(err1); }
       const adminListName = conf.get('adminListName');
       groupsService.getMailinglistUsersOfList(adminListName, (err2, emailAddresses) => {
@@ -159,7 +158,7 @@ module.exports = {
   saveGroup: function saveGroup(group, callback) {
     groupsService.createOrSaveGroup(group, (err, existingGroup) => {
       if (err) { return callback(err); }
-      async.each(Group.organizersOnlyInOneOf(group, existingGroup), this.updateAdminlistSubscriptions, callback);
+      async.each(Group.organizersOnlyInOneOf(group, existingGroup), this.updateAdminlistSubscriptions.bind(this), callback);
     });
   },
 
