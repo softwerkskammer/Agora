@@ -61,7 +61,6 @@ module.exports = {
             activities,
             postsByGroup,
             changesByGroup,
-            mailsByGroup: [],
             groupsPerColumn: groupsByColumns(member.subscribedGroups, linesPerGroup)
           });
         });

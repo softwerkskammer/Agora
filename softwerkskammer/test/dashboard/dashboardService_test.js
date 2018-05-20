@@ -50,7 +50,6 @@ describe('Dashboard Service', () => {
       expect(result.activities).to.contain(activity2);
       expect(result.postsByGroup).to.be.empty();
       expect(result.changesByGroup).to.be.empty();
-      expect(result.mailsByGroup).to.be.empty();
       done(err);
     });
   });
@@ -69,7 +68,7 @@ describe('Dashboard Service', () => {
     });
   });
 
-  describe('wiki and mailarchive', () => {
+  describe('wiki', () => {
     const CRASH_BLOG = 'crash blogs';
     const CRASH_CHANGE = 'crash changes';
     const blogs = ['blog1', 'blog2'];
