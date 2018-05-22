@@ -2,7 +2,7 @@
 
 const moment = require('moment-timezone');
 const expect = require('must-dist');
-const sinon = require('sinon').sandbox.create();
+const sinon = require('sinon').createSandbox();
 
 const beans = require('../../testutil/configureForTestWithDB').get('beans');
 const persistence = beans.get('activitiesPersistence');

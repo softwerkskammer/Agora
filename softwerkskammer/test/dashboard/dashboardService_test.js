@@ -2,7 +2,7 @@
 
 const beans = require('../../testutil/configureForTest').get('beans');
 
-const sinon = require('sinon').sandbox.create();
+const sinon = require('sinon').createSandbox();
 const expect = require('must-dist');
 
 const wikiService = beans.get('wikiService');

@@ -4,7 +4,7 @@ const chado = require('chado');
 const cb = chado.callback;
 const verify = chado.verify;
 
-const sinon = require('sinon').sandbox.create();
+const sinon = require('sinon').createSandbox();
 const expect = require('must-dist');
 
 const conf = require('../../testutil/configureForTest');

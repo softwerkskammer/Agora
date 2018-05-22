@@ -1,6 +1,6 @@
 'use strict';
 
-const sinon = require('sinon').sandbox.create();
+const sinon = require('sinon').createSandbox();
 const beans = require('../../testutil/configureForTest').get('beans');
 
 const expect = require('must-dist');

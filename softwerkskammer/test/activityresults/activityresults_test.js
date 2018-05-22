@@ -1,6 +1,6 @@
 'use strict';
 const request = require('supertest');
-const sinon = require('sinon').sandbox.create();
+const sinon = require('sinon').createSandbox();
 const expect = require('must-dist');
 
 const beans = require('../../testutil/configureForTest').get('beans');

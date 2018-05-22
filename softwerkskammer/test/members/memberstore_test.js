@@ -2,7 +2,7 @@
 
 const expect = require('must-dist');
 
-const sinon = require('sinon').sandbox.create();
+const sinon = require('sinon').createSandbox();
 
 const beans = require('../../testutil/configureForTest').get('beans');
 const persistence = beans.get('membersPersistence');

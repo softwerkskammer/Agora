@@ -36,7 +36,7 @@ function setCustomAvatarImageInMember(member, callback) {
     }
     fs.readFile(result, function (err1, data) {
       member.setAvatarData({
-        image: 'data:' + mimetypes.lookup(result) + ';base64,' + new Buffer(data).toString('base64'),
+        image: 'data:' + mimetypes.lookup(result) + ';base64,' + Buffer.from(data).toString('base64'),
         hasNoImage: false
       });
       callback(err1);

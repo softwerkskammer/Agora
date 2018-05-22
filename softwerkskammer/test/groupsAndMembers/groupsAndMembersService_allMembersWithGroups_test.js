@@ -4,7 +4,7 @@ const chado = require('chado');
 const cb = chado.callback;
 const assume = chado.assume;
 
-const sinon = require('sinon').sandbox.create();
+const sinon = require('sinon').createSandbox();
 
 const beans = require('../../testutil/configureForTest').get('beans');
 
