@@ -45,11 +45,11 @@ describe('Renderer', () => {
     });
 
     it('should render source code', () => {
-      expect(Renderer.render('```javascript \n ```')).to.match(/class="lang-javascript"/);
+      expect(Renderer.render('```javascript \n ```')).to.match(/class="language-javascript"/);
     });
 
     it('should render source code even if language not found, instead of crashing', () => {
-      expect(Renderer.render('```unknown \n ```')).to.match(/class="lang-unknown"/);
+      expect(Renderer.render('```unknown \n ```')).to.match(/class="language-unknown"/);
     });
 
     it('should get along with "null" or "undefined" input', () => {

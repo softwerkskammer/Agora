@@ -1,7 +1,7 @@
 'use strict';
 const expect = require('must-dist');
 const httpRequest = require('request');
-const sinon = require('sinon').sandbox.create();
+const sinon = require('sinon').createSandbox();
 const conf = require('../testutil/configureForTest');
 const beans = conf.get('beans');
 const groupsService = beans.get('groupsService');

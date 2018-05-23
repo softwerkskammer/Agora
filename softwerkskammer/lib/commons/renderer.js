@@ -15,7 +15,7 @@ function normalize(str) {
     .replace(/[öÖòóÒÓôÔ]/gi, 'o')
     .replace(/[üÜùúÙÚûÛ]/gi, 'u')
     .replace(/ß/g, 's');
-  return iconv.decode(new Buffer(withoutUmlauts, 'utf-8'), 'utf8').trim().replace(/\s/g, '-').replace(/\//g, '-').replace(/[^a-zA-Z0-9\- _]/g, '').toLowerCase();
+  return iconv.decode(Buffer.from(withoutUmlauts, 'utf-8'), 'utf8').trim().replace(/\s/g, '-').replace(/\//g, '-').replace(/[^a-zA-Z0-9\- _]/g, '').toLowerCase();
 }
 
 marked.setOptions({
@@ -78,7 +78,7 @@ module.exports = {
   },
   secondTokentextOf: function secondTokentextOf(content, subdir) {
     if (content === undefined || content === null) { return undefined; }
-    const tokens = marked.lexer(evalTags(content, subdir));
+    const tokens = marked.lexer(evalTags(content, subdir)).filter(tok => tok.type !== 'space');
     return tokens[1] && tokens[1].text !== undefined && tokens[1].text !== null
       ? marked(evalTags(tokens[1].text, subdir)) : undefined;
   },
