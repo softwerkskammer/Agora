@@ -8,7 +8,7 @@ html
       .col-md-12
         p #{t('authentication.authentication_text')}
         if (loginChoice.oidc || loginChoice.gh || loginChoice.se || loginChoice.provider)
-          p.bg-success #{t('authentication.authentication_text_green')}  
+          p.bg-success #{t('authentication.authentication_text_green')}
     .row
       .col-md-4
         a.btn.btn-block(class=(loginChoice.oidc ? 'btn-success' : 'btn-default'), href='/auth/openidconnect?returnTo=' + encodeURIComponent(returnUrl))
@@ -25,7 +25,7 @@ html
     .row
       .col-md-12
         form(action='/auth/openid', method='get')
-          p &nbsp; 
+          p &nbsp;
           input(type='hidden', name='returnTo', value=returnUrl)
           .panel(class=(loginChoice.provider ? 'panel-success' : 'panel-default'))
             .panel-heading
@@ -36,3 +36,16 @@ html
                 input.form-control.bg-success#openid_identifier(type='text', name='openid_identifier', value=(loginChoice.provider ? loginChoice.provider : ''))
                 .input-group-btn
                   button.btn(class=(loginChoice.provider ? 'btn-success' : 'btn-default'), type='submit') #{t('authentication.authenticate')}
+    .row
+      .col-md-12
+        form(action='/auth/magiclinkmail', method='get')
+          p &nbsp;
+          .panel(class=('panel-default'))
+            .panel-heading
+              .panel-title
+                a(href='#magicLinkInput', data-toggle='collapse') #{t('authentication.magic_link')}:
+            #magicLinkInput.collapse.panel-collapse(class=('btn-default'))
+              .input-group(class=('btn-default'))
+                input.form-control.bg-success#magicLinkEmail(type='text', name='magic_link_email', value=(''), placeholder='myaddress@example.com')
+                .input-group-btn
+                  button.btn(class=('btn-default'), type='submit') #{t('authentication.magic_link_request')}

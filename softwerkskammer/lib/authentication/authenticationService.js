@@ -26,13 +26,13 @@ module.exports = {
 
   createUserObjectFromGithub: function (req, accessToken, refreshToken, githubProfile, done) {
     const minimalProfile = githubProfile &&
-        {
-          emails: [githubProfile._json.email],
-          profileUrl: githubProfile.profileUrl,
-          _json: {
-            blog: githubProfile._json && githubProfile._json.blog
-          }
-        };
+      {
+        emails: [githubProfile._json.email],
+        profileUrl: githubProfile.profileUrl,
+        _json: {
+          blog: githubProfile._json && githubProfile._json.blog
+        }
+      };
 
     createUserObject(req, githubProfile.provider + ':' + githubProfile.id, minimalProfile, done);
   },
@@ -41,11 +41,15 @@ module.exports = {
     /* eslint no-underscore-dangle: 0 */
     const googleProfile = profile._json;
     const minimalProfile = googleProfile && {
-        emails: googleProfile.emails && [googleProfile.emails[0]],
-        name: googleProfile.name,
-        profileUrl: googleProfile.url
-      };
+      emails: googleProfile.emails && [googleProfile.emails[0]],
+      name: googleProfile.name,
+      profileUrl: googleProfile.url
+    };
 
     createUserObject(req, 'https://plus.google.com/' + sub, minimalProfile, done);
+  },
+
+  createUserObjectFromMagicLink: function (req, authenticationId, done) {
+    createUserObject(req, authenticationId, {}, done);
   }
 };

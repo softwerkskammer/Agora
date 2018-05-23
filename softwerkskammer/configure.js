@@ -34,8 +34,8 @@ function createConfiguration() {
     beans: new Beans(configdir + 'beans.json'),
     emaildomainname: 'localhost',
     socratesURL: 'http://socrates-conference.de',
-    reservedActivityURLs: '^socrates-|^gdcr$|^upcoming$|^past$|^ical$|^eventsForSidebar$|^new$|^newLike$|^edit$|^submit$|^checkurl$|^subscribe$|^unsubscribe$|^addToWaitinglist$|^removeFromWaitinglist$|\\+'
-
+    reservedActivityURLs: '^socrates-|^gdcr$|^upcoming$|^past$|^ical$|^eventsForSidebar$|^new$|^newLike$|^edit$|^submit$|^checkurl$|^subscribe$|^unsubscribe$|^addToWaitinglist$|^removeFromWaitinglist$|\\+',
+    magicLinkSecret: 'Locally? What do you expect?'
   });
 
   // then, add properties from config files:

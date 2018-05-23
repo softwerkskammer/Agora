@@ -113,6 +113,18 @@ module.exports = {
     });
   },
 
+  sendMagicLinkToMember: function sendMagicLinkToMember(member, token, callback) {
+    const baseUrl = conf.get('publicUrlPrefix');
+    const link = baseUrl + '/auth/magiclink/callback?token=' + encodeURIComponent(token);
+    const messageData = {
+      markdown: 'Liebes Softwerkskammer-Mitglied,\n\n [zum Einloggen bitte klicken](' + link + ') \n\n oder den Link in den Browser kopieren: \n\n' + link + '\n\n',
+      subject: 'Magic Link für die Softwerkskammer',
+      sendCopyToSelf: true
+    };
+    const message = new Message(messageData, member);
+    sendMail(message, 'E-Mail', callback);
+  },
+
   sendRegistrationAllowed: function sendRegistrationAllowed(member, activity, waitinglistEntry, callback) {
     const activityFullUrl = misc.toFullQualifiedUrl('activities', encodeURIComponent(activity.url()));
     const markdownGerman = 'Für die Veranstaltung ["' + activity.title() + '"](' + activityFullUrl + ') sind wieder Plätze frei.\n\nDu kannst Dich bis ' +
