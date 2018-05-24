@@ -85,7 +85,7 @@ block content
         -var wikis = Object.keys(modifiedWikiFiles).sort()
         each wiki in wikis
           h4
-            = wiki
+            =wiki
           ul
             each file in modifiedWikiFiles[wiki]
               li: a(href='/wiki/' + wiki + '/' + encodeURIComponent(file)) #{file}
