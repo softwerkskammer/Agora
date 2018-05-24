@@ -10,6 +10,7 @@ const membersService = beans.get('membersService');
 const memberstore = beans.get('memberstore');
 const groupsService = beans.get('groupsService');
 const groupsAndMembersService = beans.get('groupsAndMembersService');
+const wikiService = beans.get('wikiService');
 const activitiesService = beans.get('activitiesService');
 const notifications = beans.get('notifications');
 let dummymember;
@@ -48,7 +49,13 @@ describe('Members application', () => {
     sinon.stub(activitiesService, 'getPastActivitiesOfMember').callsFake((member, callback) => {
       callback(null, []);
     });
+    sinon.stub(activitiesService, 'getOrganizedOrEditedActivitiesOfMember').callsFake((member, callback) => {
+      callback(null, []);
+    });
     sinon.stub(groupsService, 'getAllAvailableGroups').callsFake(callback => {
+      callback(null, []);
+    });
+    sinon.stub(wikiService, 'listFilesModifiedByMember').callsFake((nickname, callback) => {
       callback(null, []);
     });
   });
