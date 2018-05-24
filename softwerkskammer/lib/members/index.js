@@ -13,6 +13,7 @@ const memberstore = beans.get('memberstore');
 const groupsAndMembersService = beans.get('groupsAndMembersService');
 const groupsService = beans.get('groupsService');
 const activitiesService = beans.get('activitiesService');
+const wikiService = beans.get('wikiService');
 const misc = beans.get('misc');
 const statusmessage = beans.get('statusmessage');
 const notifications = beans.get('notifications');
@@ -205,11 +206,16 @@ app.get('/:nickname', (req, res, next) => {
     activitiesService.getPastActivitiesOfMember(member, (err1, pastActivities) => {
       if (err1) { return next(err1); }
       activitiesService.getOrganizedOrEditedActivitiesOfMember(member, (err2, organizedOrEditedActivities) => {
-        res.render('get', {
-          member,
-          pastActivities,
-          organizedOrEditedActivities,
-          subscribedGroups
+        if (err2) { return next(err2); }
+        wikiService.listFilesModifiedByMember(member.nickname(), (err3, modifiedWikiFiles) => {
+          if (err3) { return next(err3); }
+          res.render('get', {
+            member,
+            pastActivities,
+            organizedOrEditedActivities,
+            subscribedGroups,
+            modifiedWikiFiles
+          });
         });
       });
     });

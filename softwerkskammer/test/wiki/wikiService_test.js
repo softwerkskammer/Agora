@@ -360,7 +360,11 @@ describe('Wiki Service (listFilesModifiedByMember)', () => {
   beforeEach(() => {
 
     sinon.stub(Git, 'lsFilesModifiedByMember').callsFake((nickname, callback) => {
-      callback(null, ['wiki1/file1.md', 'wiki1/file2.md', 'wiki1/file3.md', 'wiki2/file1.md', 'wiki3/file1.md', 'wiki3/file2.md']);
+      callback(null, [
+        'dummyfile', // we want to ignore this one because it is not in a wiki
+        'wiki1/file1.md', 'wiki1/file3.md', 'wiki1/file2.md', // multiple entries, unsorted
+        'wiki2/file1.md', // single entry
+        'wiki3/file1.md', 'wiki3/file1.md', 'wiki3/file2.md', 'wiki3/file1.md']); // duplicate entries, unsorted
     });
 
   });

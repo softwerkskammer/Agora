@@ -79,6 +79,18 @@ block content
       h3 #{t('members.organizer_or_editor_of')}
       +activityList(organizedOrEditedActivities)
 
+  .row
+    .col-md-12
+      h3 #{t('members.wikipages_edited')}
+        -var wikis = Object.keys(modifiedWikiFiles).sort()
+        each wiki in wikis
+          h4
+            = wiki
+          ul
+            each file in modifiedWikiFiles[wiki]
+              li: a(href='/wiki/' + wiki + '/' + encodeURIComponent(file)) #{file}
+
+
 
 block scripts
   +avatarscript
