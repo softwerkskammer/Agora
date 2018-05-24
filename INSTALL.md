@@ -74,22 +74,22 @@ To set up the built-in wiki follow [these instructions for Softwerkskammer](soft
 Configuration for Softwerkskammer:
 
 * Copy the logging configuration file `config-examples/winston-config.json` to `config/winston-config.json`, and adapt the paths if you like.
-* Copy the mailsender configuration file `config-examples/mailsender-config.json` to `config/mailsender-config.json`. Without setting up a proper server sending mails won't work but this configuration is sufficient to be able to start both the softwerkskammer and socrates app.
+* Copy the mailsender configuration file `config-examples/mailsender-config.json` to `config/mailsender-config.json`. Without setting up a proper server sending mails won't work but this configuration is sufficient to be able to start the softwerkskammer app.
 
 #### Mailserver settings
 if you want to be able to send mails, you need to configure the mail sender. One way to achieve a running configuration
-is to use a mail server, you have access to. The configuration should look like:
+is to use a mail server you have access to. The configuration should look like this:
 
 ###### config/mailsender-config.json
 
 <pre><code>
 {
  "transport-options": {
-   "host": "server host name i.e. smtp.yourdomain.com",
-   "port": the port you use connect to the server to send mails i.e. 25 or 465,
+   "host": "server host name e.g. smtp.yourdomain.com",
+   "port": the port you use to connect to the server to send mails e.g. 25 or 465,
    "secure": false,
    "auth": {
-     "user": "the user to log in your mail server",
+     "user": "the user to log in to your mail server",
      "pass": "the password"
    },
    "debug": "true",

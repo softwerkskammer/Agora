@@ -96,6 +96,8 @@
   },
   "authentication": {
     "alternative_url": "(optional) Eingabe der URL eines alternativen OpenID Providers",
+    "magic_link": "Authentifizierungsmethode vergessen? Hier gibt's einen Magic Link",
+    "magic_link_request": "Magic Link anfordern",
     "authenticate": "Authentifizieren",
     "authentication": "Authentifizierung",
     "authentication_text": "Du kannst Dich über einen der untenstehenden Dienste authentifizieren. Im Anschluss bitten wir Dich, einige persönliche Daten einzugeben.",

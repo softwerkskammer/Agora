@@ -2,11 +2,17 @@
 'use strict';
 
 const passport = require('passport');
+const jwt = require('jsonwebtoken');
+const MagicLinkStrategy = require('./magicLinkStrategy');
+
 const logger = require('winston').loggers.get('authorization');
 
 const conf = require('simple-configure');
 const beans = conf.get('beans');
 const authenticationService = beans.get('authenticationService');
+const mailsenderService = beans.get('mailsenderService');
+const memberstore = beans.get('memberstore');
+const statusmessage = beans.get('statusmessage');
 const misc = beans.get('misc');
 
 const urlPrefix = conf.get('publicUrlPrefix');
@@ -31,19 +37,19 @@ function loginChoiceCookieFor(url) {
   return {};
 }
 
-function createProviderAuthenticationRoutes(app1, provider) {
+function createProviderAuthenticationRoutes(app1, strategyName) {
 
   function authenticate() {
-    return passport.authenticate(provider, {successReturnToOrRedirect: '/', failureRedirect: '/login'});
+    return passport.authenticate(strategyName, {successReturnToOrRedirect: '/', failureRedirect: '/login'});
   }
 
   function setLoginCookieOnSuccess(req, res, next) {
-    res.cookie('loginChoice', loginChoiceCookieFor(decodeURIComponent(req.url)), { maxAge: 1000 * 60 * 60 * 24 * 365, httpOnly: true }); // expires: Date
+    res.cookie('loginChoice', loginChoiceCookieFor(decodeURIComponent(req.url)), {maxAge: 1000 * 60 * 60 * 24 * 365, httpOnly: true}); // expires: Date
     next();
   }
 
-  app1.get('/' + provider, setLoginCookieOnSuccess, authenticate());
-  app1.get('/' + provider + '/callback', authenticate());
+  app1.get('/' + strategyName, setLoginCookieOnSuccess, authenticate());
+  app1.get('/' + strategyName + '/callback', authenticate());
 
 }
 
@@ -113,6 +119,48 @@ function setupGooglePlus(app1) {
   }
 }
 
+function setupMagicLink(app1) {
+
+  const strategy = new MagicLinkStrategy({
+      secret: conf.get('magicLinkSecret'),
+      tokenName: 'token',
+      tokenProblemRedirect: '/' // 'tokenProblem.html'
+    },
+    authenticationService.createUserObjectFromMagicLink
+  );
+
+  passport.use(strategy);
+  createProviderAuthenticationRoutes(app1, strategy.name);
+
+  app1.get('/magiclinkmail', (req, res, next) => {
+    const email = req.query.magic_link_email && req.query.magic_link_email.trim();
+    if (!email) {
+
+      statusmessage.errorMessage('Keine Mailadresse für Magic Link', 'Bitte gib die Mailadresse eines Softwerkskammer-Mitglieds an!').putIntoSession(req, res);
+      return res.redirect('/');
+    }
+
+    memberstore.getMemberForEMail(email, (err, member) => {
+      if (err) { return next(err); }
+      if (!member) {
+        statusmessage.errorMessage('Kein Mitglied', 'Wir konnten die angegebene Mailadresse nicht finden. Bitte gib eine in der Softwerkskammer hinterlegte Mailadresse an!').putIntoSession(req, res);
+        return res.redirect('/');
+      }
+
+      jwt.sign({authenticationId: member.authentications()[0]}, conf.get('magicLinkSecret'), {expiresIn: '30 minutes'}, (err1, token) => {
+        if (err1) { return next(err1); }
+
+        mailsenderService.sendMagicLinkToMember(member, token, err2 => {
+          if (err2) { return next(err2); }
+
+          statusmessage.successMessage('Magic Link ist unterwegs', 'Wir haben Dir einen Magic Link geschickt. Er ist 30 Minuten lang gültig. Bitte prüfe auch Deinen Spamfolder, falls Du ihn nicht bekommst.').putIntoSession(req, res);
+          return res.redirect('/');
+        });
+      });
+    });
+  });
+}
+
 const app = misc.expressAppIn(__dirname);
 
 app.get('/logout', (req, res) => {
@@ -127,5 +175,6 @@ app.get('/logout', (req, res) => {
 setupOpenID(app);
 setupGithub(app);
 setupGooglePlus(app);
+setupMagicLink(app);
 
 module.exports = app;
