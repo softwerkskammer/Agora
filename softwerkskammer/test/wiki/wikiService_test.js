@@ -346,6 +346,10 @@ describe('Wiki Service (replaceNonExistentNicknames)', () => {
 
   });
 
+  afterEach(() => {
+    sinon.restore();
+  });
+
   it('updates the entries author if not found in memberstore', (done) => {
 
     wikiService.replaceNonExistentNicknames(metadatas, (err, updatedMetadatas) => {
@@ -364,9 +368,15 @@ describe('Wiki Service (listFilesModifiedByMember)', () => {
         'dummyfile', // we want to ignore this one because it is not in a wiki
         'wiki1/file1.md', 'wiki1/file3.md', 'wiki1/file2.md', // multiple entries, unsorted
         'wiki2/file1.md', // single entry
-        'wiki3/file1.md', 'wiki3/file1.md', 'wiki3/file2.md', 'wiki3/file1.md']); // duplicate entries, unsorted
+        'wiki3/file1.md', 'wiki3/file1.md', 'wiki3/file2.md', 'wiki3/file1.md', // duplicate entries, unsorted
+        '"global/CodeAndCakeM\\303\\274nster.md"' // in quotes, with unicode
+      ]);
     });
 
+  });
+
+  afterEach(() => {
+    sinon.restore();
   });
 
   it('returns the files modified by the member, grouped by wiki', (done) => {
@@ -375,6 +385,7 @@ describe('Wiki Service (listFilesModifiedByMember)', () => {
       expect(results.wiki1).to.eql(['file1', 'file2', 'file3']);
       expect(results.wiki2).to.eql(['file1']);
       expect(results.wiki3).to.eql(['file1', 'file2']);
+      expect(results.global).to.eql(['CodeAndCakeM\\303\\274nster']);
       done(err);
     });
   });
