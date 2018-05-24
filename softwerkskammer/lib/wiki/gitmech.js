@@ -143,5 +143,13 @@ module.exports = {
       if (err) { return callback(err); }
       return callback(null, dataToLines(data));
     });
+  },
+
+  lsFilesModifiedByMember: function lsblogposts(nickname, callback) {
+    // thanks to https://stackoverflow.com/questions/6349139/can-i-get-git-to-tell-me-all-the-files-one-user-has-modified
+    gitExec.command(['log', '--no-merges', '--author="' + nickname + '"', '--name-only', '--pretty=format:""'], (err, data) => {
+      if (err) { return callback(err); }
+      return callback(null, dataToLines(data).sort());
+    });
   }
 };
