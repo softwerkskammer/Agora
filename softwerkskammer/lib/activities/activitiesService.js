@@ -24,7 +24,7 @@ module.exports = {
       },
 
       (err, results) => {
-        if (err) { callback(err); }
+        if (err || !results.activities) { callback(err); }
         results.activities.forEach(activity => {
           activity.colorRGB = activity.colorFrom(results.groupColors);
           activity.groupFrom(results.groups); // sets the group object in activity
@@ -43,6 +43,12 @@ module.exports = {
 
   getPastActivitiesOfMember: function getPastActivitiesOfMember(member, callback) {
     const activitiesFetcher = R.partial(activitystore.activitiesForGroupIdsAndRegisteredMemberId, [[], member.id(), false]);
+
+    return this.getActivitiesForDisplay(activitiesFetcher, callback);
+  },
+
+  getOrganizedOrEditedActivitiesOfMember: function getOrganizedOrEditedActivitiesOfMember(member, callback) {
+    const activitiesFetcher = R.partial(activitystore.organizedOrEditedActivitiesForMemberId, [member.id()]);
 
     return this.getActivitiesForDisplay(activitiesFetcher, callback);
   },

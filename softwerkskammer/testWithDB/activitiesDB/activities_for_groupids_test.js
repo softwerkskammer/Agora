@@ -180,13 +180,13 @@ describe('Activity application with DB - shows activities for Group-Ids -', () =
 
 });
 
-describe('Activity application with DB - without activities -', () => {
+describe('Activity application with DB - activitiesForGroupIdsAndRegisteredMemberId without activities -', () => {
 
   beforeEach(done => { // if this fails, you need to start your mongo DB
     persistence.drop(done);
   });
 
-  it('returns an empty list if there are no activities at all', done => {
+  it('returns an empty list if there is no collection at all', done => {
 
     activitystore.activitiesForGroupIdsAndRegisteredMemberId([], 'unknownMemberId', true, (err, activities) => {
       expect(err).to.not.exist();

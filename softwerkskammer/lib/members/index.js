@@ -202,9 +202,16 @@ app.post('/deleteAvatarFor', (req, res, next) => {
 app.get('/:nickname', (req, res, next) => {
   groupsAndMembersService.getMemberWithHisGroups(req.params.nickname, (err, member, subscribedGroups) => {
     if (err || !member) { return next(err); }
-    activitiesService.getPastActivitiesOfMember(member, (err1, activities) => {
+    activitiesService.getPastActivitiesOfMember(member, (err1, pastActivities) => {
       if (err1) { return next(err1); }
-      res.render('get', {member, pastActivities: activities, subscribedGroups});
+      activitiesService.getOrganizedOrEditedActivitiesOfMember(member, (err2, organizedOrEditedActivities) => {
+        res.render('get', {
+          member,
+          pastActivities,
+          organizedOrEditedActivities,
+          subscribedGroups
+        });
+      });
     });
   });
 });
