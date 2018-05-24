@@ -211,7 +211,7 @@ module.exports = {
   listFilesModifiedByMember: function listFilesModifiedByMember(nickname, callback) {
     Git.lsFilesModifiedByMember(nickname, (err, files) => {
       const list = (err ? [] : files).map(f => { const parts = f.replace(/\.md/, '').split('/'); return {wiki: parts[0], page: parts[1]}; });
-      const results = R.groupBy(({wiki}) => wiki, list);
+      const results = R.map(arr => arr.map(f => f.page), R.groupBy(f => f.wiki, list));
       callback(null, results);
     });
   }

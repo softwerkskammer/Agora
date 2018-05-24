@@ -368,9 +368,9 @@ describe('Wiki Service (listFilesModifiedByMember)', () => {
   it('returns the files modified by the member, grouped by wiki', (done) => {
 
     wikiService.listFilesModifiedByMember('memberId', (err, results) => {
-      expect(results.wiki1).to.eql([{wiki: 'wiki1', page: 'file1'}, {wiki: 'wiki1', page: 'file2'}, {wiki: 'wiki1', page: 'file3'}]);
-      expect(results.wiki2).to.eql([{wiki: 'wiki2', page: 'file1'}]);
-      expect(results.wiki3).to.eql([{wiki: 'wiki3', page: 'file1'}, {wiki: 'wiki3', page: 'file2'}]);
+      expect(results.wiki1).to.eql(['file1', 'file2', 'file3']);
+      expect(results.wiki2).to.eql(['file1']);
+      expect(results.wiki3).to.eql(['file1', 'file2']);
       done(err);
     });
   });
