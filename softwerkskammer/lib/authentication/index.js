@@ -12,6 +12,7 @@ const beans = conf.get('beans');
 const authenticationService = beans.get('authenticationService');
 const mailsenderService = beans.get('mailsenderService');
 const memberstore = beans.get('memberstore');
+const statusmessage = beans.get('statusmessage');
 const misc = beans.get('misc');
 
 const urlPrefix = conf.get('publicUrlPrefix');
@@ -122,7 +123,8 @@ function setupMagicLink(app1) {
 
   const strategy = new MagicLinkStrategy({
       secret: conf.get('magicLinkSecret'),
-      tokenName: 'token'
+      tokenName: 'token',
+      tokenProblemRedirect: '/' // 'tokenProblem.html'
     },
     authenticationService.createUserObjectFromMagicLink
   );
@@ -130,22 +132,29 @@ function setupMagicLink(app1) {
   passport.use(strategy);
   createProviderAuthenticationRoutes(app1, strategy.name);
 
-  app1.get('/magiclinkmail', (req, res) => {
+  app1.get('/magiclinkmail', (req, res, next) => {
     const email = req.query.magic_link_email && req.query.magic_link_email.trim();
     if (!email) {
-      return res.redirect('magiclinkNoEmail.html');
+
+      statusmessage.errorMessage('Keine Mailadresse für Magic Link', 'Bitte gib die Mailadresse eines Softwerkskammer-Mitglieds an!').putIntoSession(req, res);
+      return res.redirect('/');
     }
 
     memberstore.getMemberForEMail(email, (err, member) => {
-      if (err || !member) {return res.redirect('magiclinkNoMember.html');}
+      if (err) { return next(err); }
+      if (!member) {
+        statusmessage.errorMessage('Kein Mitglied', 'Wir konnten die angegebene Mailadresse nicht finden. Bitte gib eine in der Softwerkskammer hinterlegte Mailadresse an!').putIntoSession(req, res);
+        return res.redirect('/');
+      }
 
       jwt.sign({authenticationId: member.authentications()[0]}, conf.get('magicLinkSecret'), {expiresIn: '30 minutes'}, (err1, token) => {
-        if (err1) { return res.redirect('magicLinkCreationProblem.html'); }
+        if (err1) { return next(err1); }
 
         mailsenderService.sendMagicLinkToMember(member, token, err2 => {
-          if (err2) { return res.redirect('magicLinkSendingProblem.html'); }
+          if (err2) { return next(err2); }
 
-          res.redirect('magiclinkConfirm.html');
+          statusmessage.successMessage('Magic Link ist unterwegs', 'Wir haben Dir einen Magic Link geschickt. Er ist 30 Minuten lang gültig. Bitte prüfe auch Deinen Spamfolder, falls Du ihn nicht bekommst.').putIntoSession(req, res);
+          return res.redirect('/');
         });
       });
     });

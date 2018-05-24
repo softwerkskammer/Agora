@@ -117,7 +117,7 @@ module.exports = {
     const baseUrl = conf.get('publicUrlPrefix');
     const link = baseUrl + '/auth/magiclink/callback?token=' + encodeURIComponent(token);
     const messageData = {
-      markdown: 'Liebes Softwerkskammer-Mitglied,\n\n [zum Einloggen bitte klicken](' + link + ') \n\n oder den Link in den Browser kopieren: \n\n' + link + '\n\n',
+      markdown: 'Liebes Softwerkskammer-Mitglied,\n\n [zum Einloggen bitte klicken](' + link + ') \n\n oder den Link in den Browser kopieren: \n\n' + link + '\n\n Der Link ist 30 Minuten lang gültig.',
       subject: 'Magic Link für die Softwerkskammer',
       sendCopyToSelf: true
     };
