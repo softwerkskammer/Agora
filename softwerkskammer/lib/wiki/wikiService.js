@@ -206,6 +206,16 @@ module.exports = {
     Git.readFile('alle/europaweite-veranstaltungen-' + year + '.md', 'HEAD', (err, contents) => {
       callback(null, err ? {} : eventsToObject(contents, year));
     });
+  },
+
+  listFilesModifiedByMember: function listFilesModifiedByMember(nickname, callback) {
+    Git.lsFilesModifiedByMember(nickname, (err, files) => {
+      const reallyAnArray = err || !files ? [] : files;
+      const filteredSortedUnique = R.uniq( reallyAnArray.filter(x => x.includes('/')).sort() );
+      const mapOfWikisToObjectLists = filteredSortedUnique.map(f => { const parts = f.replace(/\.md/, '').split('/'); return {wiki: parts[0], page: parts[1]}; });
+      const mapOfWikisToFilenameLists = R.map(arr => arr.map(f => f.page), R.groupBy(f => f.wiki, mapOfWikisToObjectLists));
+      callback(null, mapOfWikisToFilenameLists);
+    });
   }
 
 };

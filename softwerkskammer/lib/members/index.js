@@ -13,6 +13,7 @@ const memberstore = beans.get('memberstore');
 const groupsAndMembersService = beans.get('groupsAndMembersService');
 const groupsService = beans.get('groupsService');
 const activitiesService = beans.get('activitiesService');
+const wikiService = beans.get('wikiService');
 const misc = beans.get('misc');
 const statusmessage = beans.get('statusmessage');
 const notifications = beans.get('notifications');
@@ -202,9 +203,21 @@ app.post('/deleteAvatarFor', (req, res, next) => {
 app.get('/:nickname', (req, res, next) => {
   groupsAndMembersService.getMemberWithHisGroups(req.params.nickname, (err, member, subscribedGroups) => {
     if (err || !member) { return next(err); }
-    activitiesService.getPastActivitiesOfMember(member, (err1, activities) => {
+    activitiesService.getPastActivitiesOfMember(member, (err1, pastActivities) => {
       if (err1) { return next(err1); }
-      res.render('get', {member, pastActivities: activities, subscribedGroups});
+      activitiesService.getOrganizedOrEditedActivitiesOfMember(member, (err2, organizedOrEditedActivities) => {
+        if (err2) { return next(err2); }
+        wikiService.listFilesModifiedByMember(member.nickname(), (err3, modifiedWikiFiles) => {
+          if (err3) { return next(err3); }
+          res.render('get', {
+            member,
+            pastActivities,
+            organizedOrEditedActivities,
+            subscribedGroups,
+            modifiedWikiFiles
+          });
+        });
+      });
     });
   });
 });

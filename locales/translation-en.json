@@ -329,6 +329,7 @@
     "new": "New Member",
     "nickname": "Nickname",
     "notifyOnWikiChanges": "Notify on wiki changes",
+    "organizer_or_editor_of": "Organizer / Editor of:",
     "overview": "Members Overview",
     "participated_in": "Participated in:",
     "personal_data": "Personal Data",
@@ -340,7 +341,8 @@
     "send_email": "Send e-mail to {{firstname}} {{lastname}}",
     "twitter": "Twitter",
     "view": "View Profile",
-    "web": "Website / Blog"
+    "web": "Website / Blog",
+    "wikipages_edited": "Created or Edited Wiki-Pages"
   },
   "message": {
     "content": {

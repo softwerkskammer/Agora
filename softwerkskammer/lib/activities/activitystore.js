@@ -107,6 +107,15 @@ module.exports = {
     }, {startUnix: -1}, R.partial(toActivityList, [callback]));
   },
 
+  organizedOrEditedActivitiesForMemberId: function organizedOrEditedActivitiesForMemberId(memberId, callback) {
+    persistence.listByField({
+      $or: [
+        {owner: memberId},
+        {editorIds: memberId} // matches when the field equals the value or when the field is an array that contains the value
+      ]
+    }, {startUnix: -1}, R.partial(toActivityList, [callback]));
+  },
+
   activitiesForGroupIdsAndRegisteredMemberId: function activitiesForGroupIdsAndRegisteredMemberId(groupIds, memberId, upcoming, callback) {
     function map() {
       /* eslint no-underscore-dangle: 0 */

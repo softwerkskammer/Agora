@@ -318,6 +318,7 @@
     "new": "Neues Mitglied",
     "nickname": "Nickname",
     "notifyOnWikiChanges": "Benachrichtigen bei Änderungen im Wiki",
+    "organizer_or_editor_of": "Organisator / Editor von:",
     "overview": "Übersicht der Mitglieder",
     "participated_in": "Teilgenommen an:",
     "personal_data": "Persönliche Daten",
@@ -328,8 +329,9 @@
     "roommate": "SoCraTes only",
     "send_email": "Eine E-Mail an {{firstname}} {{lastname}} senden",
     "twitter": "Twitter",
-    "view": "SoCraTes only",
-    "web": "Website / Blog"
+    "view": "Profil ansehen",
+    "web": "Website / Blog",
+    "wikipages_edited": "Angelegte oder modifizierte Wikiseiten"
   },
   "message": {
     "content": {

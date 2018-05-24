@@ -27,10 +27,13 @@ mixin loginMenu(forInline)
       i.fa.fa-info-circle.fa-fw &nbsp;
       if accessrights.isRegistered()
         | #{user.member.nickname()}
-      else 
+      else
         | #{t('general.guest')}
     ul.dropdown-menu
       if accessrights.isRegistered()
+        li: a(href='/members/' + encodeURIComponent(user.member.nickname()))
+          i.fa.fa-eye.fa-fw
+          | &nbsp;#{t('members.view')}
         li: a(href='/members/edit/' + encodeURIComponent(user.member.nickname()))
           i.fa.fa-edit.fa-fw
           | &nbsp;#{t('members.edit')}

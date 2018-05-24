@@ -20,10 +20,6 @@ mixin memberform(member, regionalgroups, themegroups, tags)
           +groupCheckboxes('newSubscriptions', regionalgroups, themegroups)
       .row
         .col-md-12
-          legend #{t('general.settings')}
-          +checkbox('notifyOnWikiChanges', t('members.notifyOnWikiChanges'), member.notifyOnWikiChanges())
-      .row
-        .col-md-12
           legend #{t('members.personal_data')}
       .row
         .col-md-6
@@ -34,18 +30,26 @@ mixin memberform(member, regionalgroups, themegroups, tags)
           +text('nickname', t('members.nickname'), member.nickname())
           +text('firstname', t('members.firstname'), member.firstname())
           +text('lastname', t('members.lastname'), member.lastname())
-          +text('email', t('members.email'), member.email())
+          +textWithIcon('email', t('members.email'), member.email(), "fa-eye-slash")
           +twitter('twitter', t('members.twitter'), member.twitter())
         .col-md-6
           +text('location', t('members.location'), member.location())
           +text('profession', t('members.profession'), member.profession())
           +textWithTags('interests', t('members.interests'), member.interestsForSelect2(), tags)
           +text('site', t('members.web'), member.site())
-          +text('reference', t('members.reference'), member.reference())
+          +textWithIcon('reference', t('members.reference'), member.reference(), "fa-eye-slash")
+      .row
+        .col-md-12
+          legend
+            i.fa.fa-eye-slash.fa-fw
+            | #{' '}#{t('general.settings')}
+          +checkbox('notifyOnWikiChanges', t('members.notifyOnWikiChanges'), member.notifyOnWikiChanges())
       if (accessrights.isRegistered())
         .row
           .col-md-12
-            legend #{t('members.authenticated_via')}:
+            legend
+              i.fa.fa-eye-slash.fa-fw
+              | #{' '}#{t('members.authenticated_via')}:
             ul
               each auth in member.authentications()
                 li #{auth}

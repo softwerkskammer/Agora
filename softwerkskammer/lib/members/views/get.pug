@@ -71,8 +71,26 @@ block content
             if (group.organizers.indexOf(member.id()) > -1)
               span.label(style='background-color: #DF5353') #{t('groups.contact')}
 
+  .row
+    .col-md-6
       h3 #{t('members.participated_in')}
       +activityList(pastActivities)
+    .col-md-6
+      h3 #{t('members.organizer_or_editor_of')}
+      +activityList(organizedOrEditedActivities)
+
+  .row
+    .col-md-12
+      h3 #{t('members.wikipages_edited')}
+        -var wikis = Object.keys(modifiedWikiFiles).sort()
+        each wiki in wikis
+          h4
+            =wiki
+          ul
+            each file in modifiedWikiFiles[wiki]
+              li: a(href='/wiki/' + wiki + '/' + encodeURIComponent(file)) #{file}
+
+
 
 block scripts
   +avatarscript

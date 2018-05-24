@@ -355,3 +355,27 @@ describe('Wiki Service (replaceNonExistentNicknames)', () => {
     });
   });
 });
+
+describe('Wiki Service (listFilesModifiedByMember)', () => {
+  beforeEach(() => {
+
+    sinon.stub(Git, 'lsFilesModifiedByMember').callsFake((nickname, callback) => {
+      callback(null, [
+        'dummyfile', // we want to ignore this one because it is not in a wiki
+        'wiki1/file1.md', 'wiki1/file3.md', 'wiki1/file2.md', // multiple entries, unsorted
+        'wiki2/file1.md', // single entry
+        'wiki3/file1.md', 'wiki3/file1.md', 'wiki3/file2.md', 'wiki3/file1.md']); // duplicate entries, unsorted
+    });
+
+  });
+
+  it('returns the files modified by the member, grouped by wiki', (done) => {
+
+    wikiService.listFilesModifiedByMember('memberId', (err, results) => {
+      expect(results.wiki1).to.eql(['file1', 'file2', 'file3']);
+      expect(results.wiki2).to.eql(['file1']);
+      expect(results.wiki3).to.eql(['file1', 'file2']);
+      done(err);
+    });
+  });
+});

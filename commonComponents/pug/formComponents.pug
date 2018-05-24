@@ -5,6 +5,14 @@ mixin text(name, label, value, tooltip, placeholder, readonly)
     +controlLabel(name, label, tooltip)
     input.form-control.trim-text(id=name, type='text', name=name, value=value, placeholder=placeholder, disabled=readonly)
 
+mixin textWithIcon(name, label, value, icon, tooltip, placeholder, readonly)
+  .form-group
+    if (readonly)
+      +hidden(name, value)
+    i(class="fa fa-fw " + icon)
+    +controlLabel(name, label, tooltip)
+    input.form-control.trim-text(id=name, type='text', name=name, value=value, placeholder=placeholder, disabled=readonly)
+
 mixin textWithTags(name, label, value, tags)
   .form-group
     +controlLabel(name, label)
@@ -87,7 +95,7 @@ mixin memberSubmitButtons(submitText)
     else
       a.btn.btn-danger(href='/auth/logout', type='cancel') #{t('members.cancel')}
     button.btn.btn-primary(type='submit') #{submitText}
-    
+
 mixin hidden(name, value)
   input(type='hidden', name=name, value=value)
 
