@@ -10,6 +10,10 @@ const groupsAndMembersService = beans.get('groupsAndMembersService');
 const Message = beans.get('message');
 
 function messageSubmitted(req, res, next) {
+  if (req.body && req.body.massMailing && !res.locals.accessrights.isSuperuser()) {
+    return res.redirect('/login');
+  }
+
   const errors = validation.isValidMessage(req.body);
   if (errors.length !== 0) { return res.render('../../../views/errorPages/validationError', {errors}); }
 
@@ -21,6 +25,9 @@ function messageSubmitted(req, res, next) {
     res.redirect(req.body.successURL);
   }
 
+  if (req.body.massMailing === 'members') {
+    return mailsenderService.sendMailToAllMembers(message, processResult);
+  }
   const activityURL = req.body.successURL.replace('/activities/', '');
   if (req.body.toParticipants) {
     message.removeAllButFirstButton();
@@ -87,9 +94,13 @@ app.post('/resign', (req, res, next) => {
         res.redirect('/goodbye.html');
       });
     });
-
-
   }
 );
+
+// API only for superusers, not visible in user interface
+app.get('/massMailing', (req, res) => {
+  const message = new Message();
+  res.render('compose', {message, massMailing: true});
+});
 
 module.exports = app;

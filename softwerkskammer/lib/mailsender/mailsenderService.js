@@ -113,6 +113,15 @@ module.exports = {
     });
   },
 
+  sendMailToAllMembers: function sendMailToAllMembers(message, callback) {
+    const type = '$t(mailsender.notification)';
+    memberstore.allMembers((err, members) => {
+      if (err) { return callback(err, mailtransport.statusmessageForError(type, err)); }
+      message.setBccToMemberAddresses(members);
+      sendMail(message, type, callback);
+    });
+  },
+
   sendMagicLinkToMember: function sendMagicLinkToMember(member, token, callback) {
     const baseUrl = conf.get('publicUrlPrefix');
     const link = baseUrl + '/auth/magiclink/callback?token=' + encodeURIComponent(token);

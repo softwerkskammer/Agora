@@ -1,6 +1,6 @@
 include  ../../../../commonComponents/pug/formComponents
- 
-mixin mailform(message, regionalgroups, themegroups)
+
+mixin mailform(message, regionalgroups, themegroups, massMailing)
   form#mailform(action='/mailsender/send', method='post')
     +csrf
     fieldset
@@ -9,6 +9,8 @@ mixin mailform(message, regionalgroups, themegroups)
           +submitButtons('mailsender.send')
           legend
             | #{t('mailsender.write')}
+          if (massMailing)
+            +checkbox('massMailing', 'An alle Softwerkskammer-Mitglieder', false, 'members')
           if (regionalgroups)
             +groupCheckboxes('invitedGroups', regionalgroups, themegroups)
             h4 #{t('mailsender.others')}
