@@ -102,7 +102,7 @@ module.exports = function persistenceFunc(collectionName) {
       performInDB((err, db) => {
         if (err) { return callback(err); }
         const collection = db.collection(collectionName);
-        collection.update({id: storedId}, {$set: object}, {upsert: true}, err1 => {
+        collection.update({id: storedId}, object, {upsert: true}, err1 => {
           if (err1) { return callback(err1); }
           //logger.info(object.constructor.name + ' saved: ' + JSON.stringify(object));
           callback(null);
