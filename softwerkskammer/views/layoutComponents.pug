@@ -64,16 +64,12 @@ mixin languageEntry(forInline, lang, title, img)
         | &nbsp;#{title}
 
 mixin navbar-inside
-  .navbar-collapse.collapse.collapse-btom
+  .navbar-collapse.collapse-btom
     ul.nav.navbar-nav.navbar-right
-      +administrationMenu
-      li: a(href='/help.html') #{t('general.faq')}
+      li(data-agoranav='impressum'): a(href='/impressum.html') #{t('general.legal_notice')}
+      li(data-agoranav='wiki/hilfe'): a(href='/help.html') #{t('general.faq')}
       li: a(href='/credits.html') #{t('general.credits')}
-      li: a(href='/impressum.html') #{t('general.legal_notice')}
-  .navbar-header
-    a.btn.btn-default.navbar-toggle(data-toggle='collapse', data-target='.collapse-btom')
-      span.sr-only Toggle
-      i.fa.fa-bars.fa-lg
+      +administrationMenu
 
 mixin bottomNavbar
   .navbar.navbar-default.bottom.hidden-print.visible-xs
