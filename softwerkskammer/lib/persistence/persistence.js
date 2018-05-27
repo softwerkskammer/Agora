@@ -102,7 +102,7 @@ module.exports = function persistenceFunc(collectionName) {
       performInDB((err, db) => {
         if (err) { return callback(err); }
         const collection = db.collection(collectionName);
-        collection.update({id: storedId}, object, {upsert: true}, err1 => {
+        collection.update({id: storedId}, {$set: object}, {upsert: true}, err1 => {
           if (err1) { return callback(err1); }
           //logger.info(object.constructor.name + ' saved: ' + JSON.stringify(object));
           callback(null);
@@ -181,7 +181,8 @@ module.exports = function persistenceFunc(collectionName) {
 
       const MongoClient = require('mongodb').MongoClient;
       logInfo('Connecting to Mongo');
-      MongoClient.connect(conf.get('mongoURL'), (err, db) => {
+      MongoClient.connect(conf.get('mongoURL'), (err, client) => {
+        var db = client.db('swk');
         logInfo('In connect callback');
         if (err) {
           logInfo('An error occurred: ' + err);
