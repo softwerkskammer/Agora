@@ -112,9 +112,9 @@ is to use a mail server you have access to. The configuration should look like t
    * Run `npm test` (this creates the CSS files and other static contents and performs eslint checking)
 
 Now you can start Softwerkskammer:
-    * `node start-softwerkskammer` - will start the server
-    * Now go to your local machine, open a browser and use `http://localhost:17124`
 
+* `node start-softwerkskammer` - will start the server
+* Now go to your local machine, open a browser and use `http://localhost:17124`
 * The port `17124` is the default and can be changed via the command line option `--port` or via the environment option 'port' to any desired value
 * If your installation is fresh, you should create an account for yourself by registering.
   * The default setup assumes you are running on localhost for authentication. If you are using a different hostname, you have to edit the configuration file `config-examples/server-config.json`. Follow the instructions in there.
