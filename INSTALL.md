@@ -110,9 +110,7 @@ is to use a mail server you have access to. The configuration should look like t
 * If your installation is fresh or you changed anything:
    * Run `npm test` (this creates the CSS files and other static contents and performs eslint checking)
 
-Now you can decide which app you want to start:
-
-* Start softwerkskammer
+Now you can start Softwerkskammer:
     * `node start-softwerkskammer` - will start the server
     * Now go to your local machine, open a browser and use `http://localhost:17124`
 
