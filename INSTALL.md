@@ -29,11 +29,12 @@ On Windows there are currently issues when running the tests:
 * Install MongoDB (Version 2.4 or greater) [http://www.mongodb.org/downloads](http://www.mongodb.org/downloads)
 * Install and run mongodb (with default settings, i.e. no security - definitely do not do this in production!):
 
-
+```
     brew install mongodb
     sudo mkdir -p /data/db
     sudo chown 777 /data/db
     mongod
+```
 
 
 ### ImageMagick
