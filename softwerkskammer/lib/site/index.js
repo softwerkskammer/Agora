@@ -48,7 +48,7 @@ app.get('/impressum.html', (req, res) => {
 });
 
 app.get('/help.html', (req, res) => {
-  res.render('help');
+  res.redirect('/wiki/hilfe');
 });
 
 app.get('/credits.html', (req, res) => {
