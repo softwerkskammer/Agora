@@ -68,7 +68,8 @@ describe('Member initial filling', () => {
     expect(member.twitter()).not.to.exist();
     expect(member.location()).not.to.exist();
     expect(member.profession()).not.to.exist();
-    expect(member.interests()).not.to.exist();
+    expect(member.state.interests).not.to.exist();
+    expect(member.interests()).to.eql('');
     expect(member.site()).not.to.exist();
     expect(member.reference()).not.to.exist();
   });
@@ -92,7 +93,8 @@ describe('fillFromUI', () => {
     expect(member.twitter()).not.to.exist();
     expect(member.location()).not.to.exist();
     expect(member.profession()).not.to.exist();
-    expect(member.interests()).not.to.exist();
+    expect(member.state.interests).not.to.exist();
+    expect(member.interests()).to.eql('');
     expect(member.site()).not.to.exist();
     expect(member.reference()).not.to.exist();
     expect(member.notifyOnWikiChanges()).to.be.false();
@@ -126,6 +128,15 @@ describe('fillFromUI', () => {
     expect(member.reference()).to.equal('A friend');
     expect(member.customAvatar()).to.equal('avatar-url');
     expect(member.notifyOnWikiChanges()).to.be.true();
+  });
+
+  it('handles interests correctly - saving as string without blanks for legacy compatibilty - but displaying it with blanks', () => {
+    const record = {
+      interests: ['Everything', 'And more'],
+    };
+    const member = new Member().fillFromUI(record);
+    expect(member.state.interests).to.equal('Everything,And more');
+    expect(member.interests()).to.equal('Everything, And more');
   });
 
 });

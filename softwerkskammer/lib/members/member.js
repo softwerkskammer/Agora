@@ -143,11 +143,11 @@ class Member {
   }
 
   interests() {
-    return this.state.interests;
+    return this.interestsForSelect2().join(', ');
   }
 
   interestsForSelect2() {
-    return (this.interests() || '').split(',').map(s => s.trim());
+    return (this.state.interests || '').split(',').map(s => s.trim());
   }
 
   reference() {
