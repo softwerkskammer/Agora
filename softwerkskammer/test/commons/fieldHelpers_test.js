@@ -216,6 +216,17 @@ describe('parseToMomentUsingTimezone function', () => {
 
 });
 
+describe('meetupDateToActivityTimes', () => {
+  it('returns the start- and end date and time of an activity in readable format', () => {
+    const result = fieldHelpers.meetupDateToActivityTimes('2018-08-13', '19:30', 3 * 60 * 60 * 1000);
+
+    expect(result.startDate).to.equal('13.08.2018');
+    expect(result.startTime).to.equal('19:30');
+    expect(result.endDate).to.equal('13.08.2018');
+    expect(result.endTime).to.equal('22:30');
+  });
+});
+
 describe('formatNumberWithCurrentLocale', () => {
 
   it('formats for "de"', () => {

@@ -83,6 +83,19 @@ module.exports = {
     return undefined;
   },
 
+  meetupDateToActivityTimes: function meetupDateToActivityTimes(meetupStartDate, meetupStartTime, durationInMillis) {
+    const startPoint = moment.tz(meetupStartDate + ' ' + meetupStartTime, 'YYYY-MM-DD H:m', this.defaultTimezone());
+    const endPoint = startPoint.clone(); // moment is mutable, clone it first!
+    endPoint.add(durationInMillis, 'milliseconds');
+
+    return {
+      startDate: startPoint.format('DD.MM.YYYY'),
+      startTime: startPoint.format('HH:mm'),
+      endDate: endPoint.format('DD.MM.YYYY'),
+      endTime: endPoint.format('HH:mm')
+    };
+  },
+
   defaultTimezone: function defaultTimezone() {
     return 'Europe/Berlin';
   },
