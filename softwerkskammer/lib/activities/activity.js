@@ -69,6 +69,10 @@ class Activity {
     return this.state.editorIds || [];
   }
 
+  clonedFromMeetup() {
+    return !!this.state.clonedFromMeetup;
+  }
+
   fillFromUI(object, editorIds) {
     this.state.url = object.url;
 
@@ -82,6 +86,8 @@ class Activity {
     // currently we only support MEZ/MESZ for events
     this.state.startUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(object.startDate, object.startTime);
     this.state.endUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(object.endDate, object.endTime);
+
+    this.state.clonedFromMeetup = object.clonedFromMeetup;
 
     if (!this.id() || this.id() === 'undefined') {
       this.state.id = fieldHelpers.createLinkFrom([this.assignedGroup(), this.title(), this.startMoment()]);

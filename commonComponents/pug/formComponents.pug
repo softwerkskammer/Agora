@@ -52,8 +52,8 @@ mixin currency(name, label, value, tooltip, placeholder, readonly)
 mixin textareaPure(name, label, value, placeholder)
   +textareaInternal('form-control', '4', name, label, value, null, placeholder)
 
-mixin textarea(name, label, value, tooltip, placeholder)
-  +textareaInternal('md-textarea', '7', name, label, value, tooltip, placeholder)
+mixin textarea(name, label, value, tooltip, placeholder, readonly)
+  +textareaInternal('md-textarea', '7', name, label, value, tooltip, placeholder, readonly)
 
 mixin hightextarea(name, label, value, tooltip, placeholder)
   +textareaInternal('md-textarea', '15', name, label, value, tooltip, placeholder)
@@ -99,15 +99,15 @@ mixin memberSubmitButtons(submitText)
 mixin hidden(name, value)
   input(type='hidden', name=name, value=value)
 
-mixin date(name, label, value, tooltip)
+mixin date(name, label, value, tooltip, readonly)
   .form-group
     +controlLabel(name, label, tooltip)
-    input.form-control.datepicker(id=name, type='text', name=name, value=value)
+    input.form-control.datepicker(id=name, type='text', name=name, value=value, disabled=readonly)
 
-mixin time(name, value)
+mixin time(name, value, readonly)
   .form-group
     label.control-label(for=name) &nbsp;
-    input.form-control.timepicker(id=name, type='text', name=name, value=value)
+    input.form-control.timepicker(id=name, type='text', name=name, value=value, disabled=readonly)
 
 mixin colorPicker(name, value)
   .form-group
@@ -134,10 +134,10 @@ mixin controlLabel(name, label, tooltip)
     -else
       | #{label}:
 
-mixin textareaInternal(classname, rowCount, name, label, value, tooltip, placeholder)
+mixin textareaInternal(classname, rowCount, name, label, value, tooltip, placeholder, readonly)
   .form-group
     +controlLabel(name, label, tooltip)
-    textarea(class=classname, id=name, rows=rowCount, type='text', name=name, placeholder=placeholder) #{value}
+    textarea(class=classname, id=name, rows=rowCount, type='text', name=name, placeholder=placeholder, disabled=readonly) #{value}
 
 mixin reallyDeleteModalPost(header, options, extraclasses)
   +reallyDeleteModalOnly(header, options)

@@ -38,6 +38,7 @@ module.exports = {
               startTime: meetupDate.startTime,
               endDate: meetupDate.endDate,
               endTime: meetupDate.endTime,
+              clonedFromMeetup: true,
               meetupRSVPCount: meetup.yes_rsvp_count
             }), cb2);
           }, cb);

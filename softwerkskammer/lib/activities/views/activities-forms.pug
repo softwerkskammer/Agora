@@ -19,32 +19,32 @@ mixin activityform(activity, groups, editorNames, participantNames)
             a(href='/wiki/hilfe/activities-hilfe') #{t('activities.helplink')} 
       .row
         .col-md-6
-          +text('title', t('activities.title'), activity.title(), t('activities.tooltip.title'))
+          +text('title', t('activities.title'), activity.title(), t('activities.tooltip.title'), '', activity.clonedFromMeetup())
           .row
             .col-xs-6(style='padding-right:5px')
               .col-xs-6(style='padding-left:0px;padding-right:3px')
-                +date('startDate', t('activities.start'), activity.startMoment().locale(language).format('L'), t('activities.tooltip.start'))
+                +date('startDate', t('activities.start'), activity.startMoment().locale(language).format('L'), t('activities.tooltip.start'), activity.clonedFromMeetup())
               .col-xs-6(style='padding-left:3px;padding-right:0px')
-                +time('startTime', activity.startMoment().locale(language).format('LT'))
+                +time('startTime', activity.startMoment().locale(language).format('LT'), activity.clonedFromMeetup())
             .col-xs-6(style='padding-left:5px')
               .col-xs-6(style='padding-left:0px;padding-right:3px')
-                +date('endDate', t('activities.end'), activity.endMoment().locale(language).format('L'), t('activities.tooltip.end'))
+                +date('endDate', t('activities.end'), activity.endMoment().locale(language).format('L'), t('activities.tooltip.end'), activity.clonedFromMeetup())
               #dates.col-xs-6(style='padding-left:3px;padding-right:0px')
-                +time('endTime', activity.endMoment().locale(language).format('LT'))
-          +textarea('description', t('general.description'), activity.description())
-          +textarea('direction', t('activities.directions'), activity.direction())
+                +time('endTime', activity.endMoment().locale(language).format('LT'), activity.clonedFromMeetup())
+          +textarea('description', t('general.description'), activity.description(), '', '', activity.clonedFromMeetup())
+          +textarea('direction', t('activities.directions'), activity.direction(), '', '', activity.clonedFromMeetup())
           +editableMultiselect('editorIds', t('activities.editors'), editorNames, participantNames)
         .col-md-6
           .form-group
             +controlLabel('url', t('activities.address_suffix'), t('activities.tooltip.address_suffix'))
-            input.form-control#url(type='text', name='url', value=activity.url())
-          +text('location', t('activities.location'), activity.location())
+            input.form-control#url(type='text', name='url', value=activity.url(), disabled=activity.clonedFromMeetup())
+          +text('location', t('activities.location'), activity.location(), '', '', activity.clonedFromMeetup())
           .form-group
             +controlLabel('preview', 'Preview')
             #map.hidden-print(style='width: ' + '100%' + '; height: ' + '420px')
           .form-group
             label.control-label(for='assignedGroup') #{t('groups.group')}:
-            select#assignedGroup.form-control.enhance(name='assignedGroup')
+            select#assignedGroup.form-control.enhance(name='assignedGroup', disabled=activity.clonedFromMeetup())
               for group in groups
                 option(value=group.id, selected = (activity.assignedGroup() != undefined && activity.assignedGroup() == group.id)) #{group.longName}
       .row
