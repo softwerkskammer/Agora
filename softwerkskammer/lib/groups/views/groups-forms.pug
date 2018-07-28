@@ -44,6 +44,7 @@ mixin groupform(group, allTypes, organizersChecked)
             .col-md-6
               +text('mapY', t('groups.y_coord'), group.mapY, t('groups.tooltip.y_coord'))
           +text('shortName', t('groups.map_label'), group.shortName, t('groups.tooltip.map_label'))
+          +text('meetupURL', t('groups.meetupURL_label'), group.meetupURL, t('groups.tooltip.meetupURL_label'))
       .row
         .col-md-12
           if group.id
