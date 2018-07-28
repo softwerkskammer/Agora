@@ -242,11 +242,11 @@ class Activity {
     const resource = this.resourceNamed(resourceName);
     const memberIds = resource.registeredMembers();
     return this.participants
-               .filter(participant => memberIds.some(memberId => memberId === participant.id()))
-               .map(member => {
-                 member.registeredAt = resource.registrationDateOf(member.id());
-                 return member;
-               });
+      .filter(participant => memberIds.some(memberId => memberId === participant.id()))
+      .map(member => {
+        member.registeredAt = resource.registrationDateOf(member.id());
+        return member;
+      });
   }
 }
 
