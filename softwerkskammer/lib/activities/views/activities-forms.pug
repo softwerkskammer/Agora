@@ -15,8 +15,11 @@ mixin activityform(activity, groups, editorNames, participantNames)
               | #{t('activities.edit')}
             else
               | #{t('activities.create')}
-          p #{t('activities.helptext')} 
-            a(href='/wiki/hilfe/activities-hilfe') #{t('activities.helplink')} 
+          if (activity.clonedFromMeetup())
+            p #{t('activities.cloned_from_meetup_text')}
+          else
+            p #{t('activities.helptext')}
+              a(href='/wiki/hilfe/activities-hilfe') #{t('activities.helplink')}
       .row
         .col-md-6
           +text('title', t('activities.title'), activity.title(), t('activities.tooltip.title'), '', activity.clonedFromMeetup())
