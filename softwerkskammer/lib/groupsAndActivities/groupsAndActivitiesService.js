@@ -26,25 +26,31 @@ module.exports = {
           async.each(body, (meetup, cb2) => {
 
             const meetupDate = fieldHelpers.meetupDateToActivityTimes(meetup.local_date, meetup.local_time, meetup.duration);
+            const activityUrl = 'meetup-' + meetup.id;
 
-            activitystore.saveActivity(new Activity().fillFromUI({
-              url: 'meetup-' + meetup.id,
-              title: meetup.name,
-              description: meetup.description,
-              assignedGroup: group.id,
-              location: meetup.venue.name + ', ' + meetup.venue.address_1 + ', ' + meetup.venue.city,
-              direction: '',
-              startDate: meetupDate.startDate,
-              startTime: meetupDate.startTime,
-              endDate: meetupDate.endDate,
-              endTime: meetupDate.endTime,
-              clonedFromMeetup: true,
-              meetupRSVPCount: meetup.yes_rsvp_count
-            }), cb2);
-          }, cb);
+            activitystore.getActivity(activityUrl, (err3, persistentActivity) => {
+              if (err3) { return cb2(err3); }
+              const activity = persistentActivity || new Activity();
+
+              activitystore.saveActivity(activity.fillFromUI({
+                url: activityUrl,
+                title: meetup.name,
+                description: meetup.description,
+                assignedGroup: group.id,
+                location: meetup.venue.name + ', ' + meetup.venue.address_1 + ', ' + meetup.venue.city,
+                direction: '',
+                startDate: meetupDate.startDate,
+                startTime: meetupDate.startTime,
+                endDate: meetupDate.endDate,
+                endTime: meetupDate.endTime,
+                clonedFromMeetup: true,
+                meetupRSVPCount: meetup.yes_rsvp_count
+              }), cb2); // saveActivity
+            });
+          }, cb); // async.each (body)
         });
 
-      }, callback);
+      }, callback); // async.each (groups)
     });
   }
 };
