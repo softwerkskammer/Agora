@@ -165,22 +165,6 @@ describe('killHtmlHead', () => {
   });
 });
 
-describe('readableDate function', () => {
-
-  it('converts a unix timestamp to a German Date', () => {
-    const unixtimestamp = 1375056000;
-    const result = fieldHelpers.readableDate(unixtimestamp);
-    expect(result).to.equal('29.07.2013');
-  });
-
-  it('converts a unix timestamp to a German Date', () => {
-    const unixtimestamp = 1388448000;
-    const result = fieldHelpers.readableDate(unixtimestamp);
-    expect(result).to.equal('31.12.2013');
-  });
-
-});
-
 describe('parseToMomentUsingTimezone function', () => {
 
   it('parses past time in winter', () => {

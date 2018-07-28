@@ -66,10 +66,6 @@ module.exports = {
     return text;
   },
 
-  readableDate: function readableDate(unixtimestamp) {
-    return moment.unix(unixtimestamp).utc().format('DD.MM.YYYY');
-  },
-
   parseToUnixUsingDefaultTimezone: function parseToUnixUsingDefaultTimezone(dateString, timeString) {
     const result = this.parseToMomentUsingDefaultTimezone(dateString, timeString);
     return result ? result.unix() : undefined;
