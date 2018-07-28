@@ -15,6 +15,7 @@ class Group {
       this.description = object.description;
       this.type = object.type;
       this.emailPrefix = object.emailPrefix;
+      this.meetupURL = object.meetupURL;
       this.color = object.color;
       this.organizers = misc.toArray(object.organizers);
       this.mapX = object.mapX;
@@ -53,6 +54,15 @@ class Group {
 
   displaynameInSubscriptionList() {
     return this.longName + ' [' + this.emailPrefix + '] - ' + this.id;
+  }
+
+  meetupUrlName() {
+    if (this.meetupURL) {
+      const strippedURL = misc.stripTrailingSlash(this.meetupURL);
+      return strippedURL.substr(strippedURL.lastIndexOf('/') + 1);
+    } else {
+      return null;
+    }
   }
 
   // Helper functions (static) -> look for a better place to implement

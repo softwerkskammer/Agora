@@ -105,6 +105,10 @@ module.exports = {
 
   startsWith: function startsWith(string, start) {
     return string.indexOf(start) === 0;
+  },
+
+  stripTrailingSlash: function stripTrailingSlash(str) {
+    return str.substr(-1) === '/' ? str.substr(0, str.length - 1) : str;
   }
 };
 

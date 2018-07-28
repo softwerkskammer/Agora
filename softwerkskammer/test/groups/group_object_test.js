@@ -160,3 +160,35 @@ describe('delivers the symmetric difference of organizers to', () => {
 
 });
 
+describe('returns the meetup :urlname from the given meetup URL', () => {
+  it('returns null when no meetup URL is given', () => {
+    const group = new Group({id: 'group'});
+
+    expect(group.meetupUrlName()).to.eql(null);
+  });
+
+  it('behaves shit-in shit-out when the meetup URL is malformed', () => {
+    const group = new Group({id: 'group', meetupURL: 'https://www.meetup.com/de-DE//'});
+
+    expect(group.meetupUrlName()).to.eql('');
+  });
+
+  it('can handle an URL with trailing slash', () => {
+    const group = new Group({id: 'group', meetupURL: 'https://www.meetup.com/de-DE/Softwerkskammer-Karlsruhe/'});
+
+    expect(group.meetupUrlName()).to.eql('Softwerkskammer-Karlsruhe');
+  });
+
+  it('can handle an URL without trailing slash', () => {
+    const group = new Group({id: 'group', meetupURL: 'https://www.meetup.com/de-DE/Softwerkskammer-Karlsruhe'});
+
+    expect(group.meetupUrlName()).to.eql('Softwerkskammer-Karlsruhe');
+  });
+
+  it('can handle an URL in different languages', () => {
+    const group = new Group({id: 'group', meetupURL: 'https://www.meetup.com/en-US/Softwerkskammer-Karlsruhe/'});
+
+    expect(group.meetupUrlName()).to.eql('Softwerkskammer-Karlsruhe');
+  });
+
+});
