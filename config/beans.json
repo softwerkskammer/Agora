@@ -19,6 +19,7 @@
   "calendarService": {"module": "./softwerkskammer/lib/activities/calendarService"},
   "dashboardService": {"module": "./softwerkskammer/lib/dashboard/dashboardService"},
   "groupsService": {"module": "./softwerkskammer/lib/groups/groupsService"},
+  "groupsAndActivitiesService": {"module": "./softwerkskammer/lib/groupsAndActivities/groupsAndActivitiesService"},
   "groupsAndMembersService": {"module": "./softwerkskammer/lib/groupsAndMembers/groupsAndMembersService"},
   "icalService": {"module": "./softwerkskammer/lib/activities/icalService"},
   "galleryService": {"module": "./softwerkskammer/lib/gallery/galleryService"},
