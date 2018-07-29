@@ -73,6 +73,10 @@ class Activity {
     return !!this.state.clonedFromMeetup;
   }
 
+  meetupRSVPCount() {
+    return this.state.meetupRSVPCount || 0;
+  }
+
   fillFromUI(object, editorIds) {
     this.state.url = object.url;
 
@@ -88,6 +92,7 @@ class Activity {
     this.state.endUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(object.endDate, object.endTime);
 
     this.state.clonedFromMeetup = object.clonedFromMeetup;
+    this.state.meetupRSVPCount = object.meetupRSVPCount;
 
     if (!this.id() || this.id() === 'undefined') {
       this.state.id = fieldHelpers.createLinkFrom([this.assignedGroup(), this.title(), this.startMoment()]);
