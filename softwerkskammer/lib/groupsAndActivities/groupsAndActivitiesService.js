@@ -15,42 +15,41 @@ function meetupFetchActivitiesURLFor(urlname) {
 }
 
 module.exports = {
-  cloneActivitiesFromMeetup: function cloneActivitiesFromMeetup(callback) {
+  cloneActivitiesFromMeetupForGroup: function cloneActivitiesFromMeetupForGroup(group, callback) {
+    request(meetupFetchActivitiesURLFor(group.meetupUrlName()), {json: true}, (err, res, body) => {
+      if (err) {return callback(err); }
+      async.each(body, (meetup, cb) => {
 
-    groupstore.getGroupsWithMeetupURL((err, groups) => {
+        const meetupDate = fieldHelpers.meetupDateToActivityTimes(meetup.local_date, meetup.local_time, meetup.duration);
+        const activityUrl = 'meetup-' + meetup.id;
 
-      if (err) { return callback(err); }
-      async.each(groups, (group, cb) => {
-        request(meetupFetchActivitiesURLFor(group.meetupUrlName()), {json: true}, (err2, res, body) => {
-          if (err2) {return cb(err2); }
-          async.each(body, (meetup, cb2) => {
+        activitystore.getActivity(activityUrl, (err2, persistentActivity) => {
+          if (err2) { return cb(err2); }
+          const activity = persistentActivity || new Activity();
 
-            const meetupDate = fieldHelpers.meetupDateToActivityTimes(meetup.local_date, meetup.local_time, meetup.duration);
-            const activityUrl = 'meetup-' + meetup.id;
-
-            activitystore.getActivity(activityUrl, (err3, persistentActivity) => {
-              if (err3) { return cb2(err3); }
-              const activity = persistentActivity || new Activity();
-
-              activitystore.saveActivity(activity.fillFromUI({
-                url: activityUrl,
-                title: meetup.name,
-                description: meetup.description,
-                assignedGroup: group.id,
-                location: meetup.venue.name + ', ' + meetup.venue.address_1 + ', ' + meetup.venue.city,
-                direction: '',
-                startDate: meetupDate.startDate,
-                startTime: meetupDate.startTime,
-                endDate: meetupDate.endDate,
-                endTime: meetupDate.endTime,
-                clonedFromMeetup: true,
-                meetupRSVPCount: meetup.yes_rsvp_count
-              }), cb2); // saveActivity
-            });
-          }, cb); // async.each (body)
+          activitystore.saveActivity(activity.fillFromUI({
+            url: activityUrl,
+            title: meetup.name,
+            description: meetup.description,
+            assignedGroup: group.id,
+            location: meetup.venue.name + ', ' + meetup.venue.address_1 + ', ' + meetup.venue.city,
+            direction: '',
+            startDate: meetupDate.startDate,
+            startTime: meetupDate.startTime,
+            endDate: meetupDate.endDate,
+            endTime: meetupDate.endTime,
+            clonedFromMeetup: true,
+            meetupRSVPCount: meetup.yes_rsvp_count
+          }), cb); // saveActivity
         });
+      }, callback); // async.each (body)
+    });
+  },
 
-      }, callback); // async.each (groups)
+  cloneActivitiesFromMeetup: function cloneActivitiesFromMeetup(callback) {
+    groupstore.getGroupsWithMeetupURL((err, groups) => {
+      if (err) { return callback(err); }
+      async.each(groups, this.cloneActivitiesFromMeetupForGroup, callback);
     });
   }
 };

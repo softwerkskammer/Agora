@@ -12,6 +12,7 @@ const groupstore = beans.get('groupstore');
 const wikiService = beans.get('wikiService');
 const Group = beans.get('group');
 const groupsAndMembers = beans.get('groupsAndMembersService');
+const groupsAndActivitiesService = beans.get('groupsAndActivitiesService');
 const activitystore = beans.get('activitystore');
 const statusmessage = beans.get('statusmessage');
 
@@ -78,6 +79,17 @@ app.get('/edit/:groupname', (req, res, next) => {
     const organizersChecked = realGroup.checkedOrganizers(realGroup.members);
     res.render('edit', {group: realGroup, allTypes: Group.allTypes(), organizersChecked});
   });
+});
+
+app.post('/clone-from-meetup-for-group', (req, res, next) => {
+  groupstore.getGroup(req.body.groupname, (err, group) => {
+    if (err || !group) { return next(err); }
+    groupsAndActivitiesService.cloneActivitiesFromMeetupForGroup(group, (err2) => {
+      if (err2) { return next(err2); }
+      res.redirect('/groups/' + req.body.groupname);
+    });
+  });
+
 });
 
 app.get('/checkgroupname', (req, res) => {

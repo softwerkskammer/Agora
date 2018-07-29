@@ -254,6 +254,7 @@
     "join": "Gruppe beitreten",
     "leave": "Gruppe verlassen",
     "map_label": "Label in Karte",
+    "meetup_clone_title": "Kopiert existierende Events von Meetup.",
     "meetupURL_label": "Meetup-URL (falls für diese Gruppe erforderlich)",
     "more": "mehr lesen…",
     "new": "Neue Gruppe",
