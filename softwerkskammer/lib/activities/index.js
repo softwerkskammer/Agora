@@ -14,7 +14,7 @@ const icalService = beans.get('icalService');
 const groupsService = beans.get('groupsService');
 const activitystore = beans.get('activitystore');
 const memberstore = beans.get('memberstore');
-const groupsAndActivitiesService = beans.get('groupsAndActivitiesService');
+const meetupActivitiesService = beans.get('meetupActivitiesService');
 
 const Activity = beans.get('activity');
 const Group = beans.get('group');
@@ -231,7 +231,7 @@ app.post('/submit', (req, res, next) => {
 });
 
 app.post('/clone-from-meetup', (req, res, next) => {
-  groupsAndActivitiesService.cloneActivitiesFromMeetup((err) => {
+  meetupActivitiesService.cloneActivitiesFromMeetup((err) => {
     if (err) { return next(err); }
     res.redirect('/activities');
   });
