@@ -14,6 +14,7 @@ const icalService = beans.get('icalService');
 const groupsService = beans.get('groupsService');
 const activitystore = beans.get('activitystore');
 const memberstore = beans.get('memberstore');
+const meetupActivitiesService = beans.get('meetupActivitiesService');
 
 const Activity = beans.get('activity');
 const Group = beans.get('group');
@@ -91,6 +92,7 @@ function renderGdcrFor(gdcrDay, res, next) {
     });
   });
 }
+
 app.get('/gdcr2013', (req, res, next) => renderGdcrFor('2013-12-14', res, next));
 
 app.get('/gdcr2014', (req, res, next) => renderGdcrFor('2014-11-15', res, next));
@@ -228,6 +230,13 @@ app.post('/submit', (req, res, next) => {
   );
 });
 
+app.post('/clone-from-meetup', (req, res, next) => {
+  meetupActivitiesService.cloneActivitiesFromMeetup((err) => {
+    if (err) { return next(err); }
+    res.redirect('/activities');
+  });
+});
+
 app.get('/checkurl', (req, res) => misc.validate(req.query.url, req.query.previousUrl, R.partial(activitiesService.isValidUrl, [reservedURLs]), res.end));
 
 app.get('/:url', (req, res, next) => {
@@ -265,6 +274,7 @@ function subscribe(body, req, res, next) {
     res.redirect('/activities/' + encodeURIComponent(activityUrl));
   });
 }
+
 app.post('/subscribe', (req, res, next) => subscribe(req.body, req, res, next));
 
 app.get('/subscribe', (req, res, next) => {

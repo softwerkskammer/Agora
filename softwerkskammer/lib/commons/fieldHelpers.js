@@ -66,10 +66,6 @@ module.exports = {
     return text;
   },
 
-  readableDate: function readableDate(unixtimestamp) {
-    return moment.unix(unixtimestamp).utc().format('DD.MM.YYYY');
-  },
-
   parseToUnixUsingDefaultTimezone: function parseToUnixUsingDefaultTimezone(dateString, timeString) {
     const result = this.parseToMomentUsingDefaultTimezone(dateString, timeString);
     return result ? result.unix() : undefined;
@@ -85,6 +81,19 @@ module.exports = {
       return moment.tz(dateString + ' ' + timeStringOrDefault, 'D.M.YYYY H:m', timezoneName);
     }
     return undefined;
+  },
+
+  meetupDateToActivityTimes: function meetupDateToActivityTimes(meetupStartDate, meetupStartTime, durationInMillis) {
+    const startPoint = moment.tz(meetupStartDate + ' ' + meetupStartTime, 'YYYY-MM-DD H:m', this.defaultTimezone());
+    const endPoint = startPoint.clone(); // moment is mutable, clone it first!
+    endPoint.add(durationInMillis, 'milliseconds');
+
+    return {
+      startDate: startPoint.format('DD.MM.YYYY'),
+      startTime: startPoint.format('HH:mm'),
+      endDate: endPoint.format('DD.MM.YYYY'),
+      endTime: endPoint.format('HH:mm')
+    };
   },
 
   defaultTimezone: function defaultTimezone() {

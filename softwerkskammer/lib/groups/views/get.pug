@@ -15,13 +15,18 @@ block content
   .row
     .col-md-12
       .page-header
-        .btn-group.pull-right
-          a.btn.btn-default(href='/wiki/' + group.id + '/')
-            i.fa.fa-book.fa-fw
-            | &nbsp;#{t('wiki.wiki')}
-          a.btn.btn-default(href=webcalURL, title=t('activities.export_subscribe')): i.fa.fa-calendar.fa-fw
-          if (accessrights.canEditGroup(group))
-            a.btn.btn-default(href='/groups/edit/' + group.id, title=t('general.edit')): i.fa.fa-edit
+        form(role='form', method='POST', action='clone-from-meetup-for-group/')
+          +csrf
+          +hidden('groupname', group.id)
+          .btn-group.pull-right
+            a.btn.btn-default(href='/wiki/' + group.id + '/')
+              i.fa.fa-book.fa-fw
+              | &nbsp;#{t('wiki.wiki')}
+            a.btn.btn-default(href=webcalURL, title=t('activities.export_subscribe')): i.fa.fa-calendar.fa-fw
+            if (accessrights.canEditGroup(group))
+              if (group.meetupUrlName())
+                button.btn.btn-default(type='submit', title=t('groups.meetup_clone_title')): i.fa.fa-meetup.fa-fw
+              a.btn.btn-default(href='/groups/edit/' + group.id, title=t('general.edit')): i.fa.fa-edit
         h2 #{group.longName}
           small #{group.type}
       p

@@ -50,6 +50,8 @@ block content
       .hidden-print
         if (allowsRegistration)
           p #{t('activities.count_participants_interval', { postProcess: 'interval', count: activity.participants.length })}
+        if (activity.clonedFromMeetup())
+          p (#{t('activities.count_participants_meetup_interval', {postProcess: 'interval', count: activity.meetupRSVPCount()})})
         +subscriptionButtons(activity, resourceRegistrationRenderer)
         if (accessrights.isRegistered() && activity.participants.length > 0)
           h4 #{t('activities.accepted_by')}:

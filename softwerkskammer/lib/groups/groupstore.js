@@ -27,6 +27,14 @@ module.exports = {
     persistence.getByField({emailPrefix: misc.toLowerCaseRegExp(prefix)}, R.partial(toGroup, [callback]));
   },
 
+  getGroupsWithMeetupURL: function getGroupsWithMeetupURL(callback) {
+    persistence.listByField(
+      {meetupURL: {$exists: true, $nin: ['', null, undefined]}},
+      {},
+      R.partial(toGroupList, [callback])
+    );
+  },
+
   saveGroup: function saveGroup(group, callback) {
     delete group.members; // we do not want to persist the group members
     persistence.save(group, callback);

@@ -26,7 +26,8 @@ module.exports = {
         canUnsubscribe: function () { return ''; },
         hasWaitinglist: function () { return ''; }
       };
-    }
+    },
+    clonedFromMeetup: function () { return false; }
   },
   groups: [],
   group: {},
