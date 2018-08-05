@@ -41,4 +41,5 @@ local
 
 test.html
 
-docker/.local-openid
+docker/local-openid/
+docker/mongo/

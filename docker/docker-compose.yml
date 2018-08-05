@@ -1,16 +1,21 @@
 # https://docs.docker.com/compose/compose-file/
 version: '3'
 services:
-  local-mongo:
-    image: mongo:3.7.9
+  local-mongo: # https://github.com/docker-library/docs/blob/master/mongo/README.md
+    image: mongo:4.0.0
+    volumes:
+      - ./mongo/:/data/
     ports:
       - "27017:27017"
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: root
+#      MONGO_INITDB_ROOT_PASSWORD: example
   local-openid:
     build:
       context: .
       dockerfile: local-openid.docker
     image: local-openid
     volumes:
-      - ./.local-openid/:/root/.local-openid
+      - ./local-openid/:/root/.local-openid
     ports:
       - "4567:4567"   #=> OpenId Provider Url will be http://localhost:4567/
