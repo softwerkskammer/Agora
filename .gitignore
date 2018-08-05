@@ -40,3 +40,5 @@ softwerkskammer/version.pug
 local
 
 test.html
+
+docker/.local-openid
