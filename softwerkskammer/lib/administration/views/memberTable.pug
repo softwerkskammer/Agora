@@ -38,7 +38,7 @@ block content
               tr
                 td: a.btn-sm(href='/members/edit/' + encodeURIComponent(member.nickname())): i.fa.fa-edit.fa-fw
                 td #{member.created()}
-                td +linkedMember(member.nickname())
+                td: +linkedMember(member.nickname())
                 td #{member.firstname()}
                 td #{member.lastname()}
                 td #{member.location()}
