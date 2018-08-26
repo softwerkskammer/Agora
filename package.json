@@ -99,20 +99,20 @@
   },
   "devDependencies": {
     "chado": "0.3.1",
-    "grunt": "1.0.2",
-    "grunt-cli": "1.2.0",
+    "grunt": "1.0.3",
+    "grunt-cli": "1.3.1",
     "grunt-contrib-clean": "1.1.0",
     "grunt-contrib-copy": "1.0.0",
-    "grunt-contrib-less": "1.4.1",
+    "grunt-contrib-less": "2.0.0",
     "grunt-contrib-pug": "1.0.0",
-    "grunt-contrib-uglify": "3.3.0",
-    "grunt-eslint": "20.1.0",
+    "grunt-contrib-uglify": "3.4.0",
+    "grunt-eslint": "21.0.0",
     "grunt-karma": "2.0.0",
     "grunt-mocha-istanbul": "5.0.2",
     "grunt-patcher": "1.0.0",
     "grunt-puglint": "1.0.0",
     "istanbul": "0.4.5",
-    "karma": "2.0.2",
+    "karma": "3.0.0",
     "karma-coverage": "1.1.2",
     "karma-html2js-preprocessor": "1.1.0",
     "karma-mocha": "1.3.0",
@@ -122,13 +122,13 @@
     "mocha": "5.2.0",
     "must-dist": "0.12.0",
     "phantomjs-prebuilt": ">2.1.5",
-    "proxyquire": "2.0.1",
-    "sinon": "5.0.7",
+    "proxyquire": "2.1.0",
+    "sinon": "6.1.5",
     "supertest": "3.1.0"
   },
   "scripts": {
     "start": "node start-softwerkskammer",
     "test": "grunt tests",
-    "prepublish": "git log -1 --pretty=\"format:a(href='https://github.com/softwerkskammer/Agora/commit/%H', target='_blank')%n i.fa.fa-github.fa-fw%n | &nbsp;Version: %h\" > softwerkskammer/version.pug"
+    "prepare": "git log -1 --pretty=\"format:a(href='https://github.com/softwerkskammer/Agora/commit/%H', target='_blank')%n i.fa.fa-github.fa-fw%n | &nbsp;Version: %h\" > softwerkskammer/version.pug"
   }
 }
