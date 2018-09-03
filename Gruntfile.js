@@ -56,7 +56,8 @@ module.exports = function (grunt) {
       'softwerkskammer/build/stylesheets/less/bootstrap.less',
       'node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
       'softwerkskammer/build/stylesheets/less/bootstrap-markdown-patched.less',
-      'node_modules/font-awesome/css/font-awesome.css',
+      'node_modules/@fortawesome/fontawesome-free/css/all.css',
+      'node_modules/@fortawesome/fontawesome-free/css/v4-shims.css',
       'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
       'node_modules/drmonty-smartmenus/css/jquery.smartmenus.bootstrap.css',
       'node_modules/datatables.net-bs/css/dataTables.bootstrap.css',
@@ -73,7 +74,7 @@ module.exports = function (grunt) {
     clean: {
       build: ['softwerkskammer/build', 'softwerkskammer/frontendtests/fixtures/*.html'],
       coverage: ['softwerkskammer/coverage', 'softwerkskammer/coverageWithDB', 'softwerkskammer/karma-coverage'],
-      public: ['softwerkskammer/public/clientscripts', 'softwerkskammer/public/fonts', 'softwerkskammer/public/img/bootstrap-colorpicker', 'softwerkskammer/public/images', 'softwerkskammer/public/stylesheets'],
+      public: ['softwerkskammer/public/clientscripts', 'softwerkskammer/public/fonts', 'softwerkskammer/public/webfonts', 'softwerkskammer/public/img/bootstrap-colorpicker', 'softwerkskammer/public/images', 'softwerkskammer/public/stylesheets'],
       options: {force: true}
     },
     copy: {
@@ -126,8 +127,8 @@ module.exports = function (grunt) {
         flatten: true
       },
       fontawesomeFONTS: {
-        src: 'node_modules/font-awesome/fonts/*',
-        dest: 'softwerkskammer/public/fonts',
+        src: 'node_modules/@fortawesome/fontawesome-free/webfonts/*',
+        dest: 'softwerkskammer/public/webfonts',
         expand: true,
         flatten: true
       },
