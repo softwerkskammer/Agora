@@ -33,6 +33,7 @@ dev-goodies
 **/public/fonts
 **/public/images
 **/public/stylesheets
+**/public/webfonts
 
 softwerkskammer/chado-result.json
 softwerkskammer/public/img/bootstrap-colorpicker
