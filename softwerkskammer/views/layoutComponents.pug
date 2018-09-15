@@ -24,11 +24,11 @@ mixin administrationMenu
 mixin loginMenu(forInline)
   li.dropdown(class=forInline ? 'visible-xs': '')
     a(href='#')
-      i.fa.fa-info-circle.fa-fw &nbsp;
+      i.fa.fa-info-circle.fa-fw
       if accessrights.isRegistered()
-        | #{user.member.nickname()}
+        | &nbsp;#{user.member.nickname()}
       else
-        | #{t('general.guest')}
+        | &nbsp;#{t('general.guest')}
     ul.dropdown-menu
       if accessrights.isRegistered()
         li: a(href='/members/' + encodeURIComponent(user.member.nickname()))
