@@ -35,7 +35,7 @@ function initParameterisedCalendar(id, date) {
         this.calendar.select(displayedActivityStart, displayedActivityEnd);
       }
     },
-    themeSystem: 'bootstrap3',
+    themeSystem: 'bootstrap4',
     aspectRatio: 1.2,
     height: 'auto',
     views: {

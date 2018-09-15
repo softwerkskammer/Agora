@@ -39,7 +39,6 @@
     "csurf": "1.9.0",
     "datatables.net": "1.10.19",
     "datatables.net-bs": "1.10.19",
-    "drmonty-smartmenus": "0.9.7",
     "express": "4.16.3",
     "express-session": "1.15.6",
     "ezmlm-node": "1.2.3",
@@ -88,6 +87,7 @@
     "serve-favicon": "2.5.0",
     "simple-configure": "0.1.6",
     "simple-timepicker": "1.1.1",
+    "smartmenus": "1.1.0",
     "stripe": "6.8.0",
     "tinycolor2": "1.4.1",
     "tinygradient": "0.4.0",
@@ -131,6 +131,6 @@
   "scripts": {
     "start": "node start-softwerkskammer",
     "test": "grunt tests",
-    "prepare": "git log -1 --pretty=\"format:a(href='https://github.com/softwerkskammer/Agora/commit/%H', target='_blank')%n i.fa.fa-github.fa-fw%n | &nbsp;Version: %h\" > softwerkskammer/version.pug"
+    "prepare": "git log -1 --pretty=\"format:a.dropdown-item.nav-link(href='https://github.com/softwerkskammer/Agora/commit/%H', target='_blank')%n i.fa.fa-github.fa-fw%n | &nbsp;Version: %h\" > softwerkskammer/version.pug"
   }
 }

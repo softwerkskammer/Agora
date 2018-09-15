@@ -7,14 +7,15 @@ module.exports = function (grunt) {
     'node_modules/guillotine/js/jquery.guillotine.js',
     'node_modules/select2/dist/js/select2.full.js',
     'node_modules/autonumeric/dist/autonumeric.min.js',
+    'node_modules/popper.js/dist/umd/popper.js',
     'node_modules/bootstrap/dist/js/bootstrap.js',
     'node_modules/bootstrap-datepicker/js/bootstrap-datepicker.js',
     'node_modules/bootstrap-markdown/js/bootstrap-markdown.js',
     'node_modules/bootstrap-markdown/locale/bootstrap-markdown.de.js',
     'node_modules/moment/moment.js',
     'node_modules/moment-timezone/moment-timezone.js',
-    'node_modules/drmonty-smartmenus/js/jquery.smartmenus.js',
-    'softwerkskammer/build/javascript/jquery.smartmenus.bootstrap-patched.js',
+    'node_modules/smartmenus/dist/jquery.smartmenus.js',
+    'node_modules/smartmenus/dist/addons/bootstrap-4/jquery.smartmenus.bootstrap-4.js',
     'node_modules/fullcalendar/dist/fullcalendar.js',
     'node_modules/tinycolor2/tinycolor.js',
     'node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
@@ -54,12 +55,12 @@ module.exports = function (grunt) {
     'softwerkskammer/public/stylesheets/screen.css': [
       'node_modules/fullcalendar/dist/fullcalendar.css',
       'softwerkskammer/build/stylesheets/sass/out/bootstrap.css',
+      'node_modules/smartmenus/dist/addons/bootstrap-4/jquery.smartmenus.bootstrap-4.css',
       'node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
       'softwerkskammer/build/stylesheets/sass/out/bootstrap-markdown-patched.css',
       'node_modules/@fortawesome/fontawesome-free/css/all.css',
       'node_modules/@fortawesome/fontawesome-free/css/v4-shims.css',
       'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
-      'node_modules/drmonty-smartmenus/css/jquery.smartmenus.bootstrap.css',
       'node_modules/datatables.net-bs/css/dataTables.bootstrap.css',
       'softwerkskammer/frontend/3rd_party_css/dataTables.fontAwesome.css',
       'node_modules/select2/dist/css/select2.css',
@@ -134,16 +135,6 @@ module.exports = function (grunt) {
         expand: true,
         flatten: true
       }
-    },
-    patch: {
-      smartmenus: {
-        options: {
-          patch: 'softwerkskammer/frontend/3rd_party_js/jquery.smartmenus.bootstrap.js.patch'
-        },
-        files: {
-          'softwerkskammer/build/javascript/jquery.smartmenus.bootstrap-patched.js': 'node_modules/drmonty-smartmenus/js/jquery.smartmenus.bootstrap.js'
-        }
-      },
     },
     eslint: {
       options: {quiet: true},
@@ -303,10 +294,9 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-mocha-istanbul');
-  grunt.loadNpmTasks('grunt-patcher');
   grunt.loadNpmTasks('grunt-puglint');
 
-  grunt.registerTask('prepare', ['clean', 'copy', 'patch']);
+  grunt.registerTask('prepare', ['clean', 'copy']);
   grunt.registerTask('frontendtests', ['clean', 'prepare', 'sass', 'pug', 'cssmin', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once', 'istanbul_check_coverage:frontend']);
   grunt.registerTask('tests', ['eslint', 'puglint', 'frontendtests', 'mocha_istanbul', 'istanbul_check_coverage:server']);
   grunt.registerTask('deploy_development', ['prepare', 'sass', 'cssmin', 'uglify:development_de', 'uglify:development_en']);

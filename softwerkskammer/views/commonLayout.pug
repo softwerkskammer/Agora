@@ -43,15 +43,15 @@ html
       #cheatsheet.modal.bs-modal-lg.fade(tabindex='-1')
         .modal-dialog.modal-lg
           .modal-content
-      img.visible-print(src='/img/Softwerkskammer_Header.png', alt='Softwerkskammer', width='955')
-      p.visible-print &nbsp;
-      .navbar.navbar-default.navbar-fixed-top.hidden-print.hidden-xs(role='navigation')
+      img.d-none.d-print-block(src='/img/Softwerkskammer_Header.png', alt='Softwerkskammer', width='955')
+      p.d-none.d-print-block &nbsp;
+      nav.navbar.navbar-expand-sm.p-0.navbar-light.bg-light.fixed-top.d-none.d-sm-flex.d-print-none(role='navigation')
         +topNavbar
-      .navbar.navbar-default.navbar-top.hidden-print.visible-xs(role='navigation')
+      nav.navbar.pl-0.pt-0.navbar-light.bg-light.sticky-top.d-sm-none.d-block(role='navigation')
         +topNavbar('xs')
-  
-      .row.main
-        block specific
+      .container-fluid.p-0.p-md-auto
+        .row.main
+          block specific
       +bottomNavbar
   
 link(href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,400italic,600italic|PT+Serif+Caption:400,400italic|PT+Serif:400,700,400italic,700italic|Source+Code+Pro:400,600', rel='stylesheet', type='text/css')
