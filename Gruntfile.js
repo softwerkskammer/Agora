@@ -53,9 +53,9 @@ module.exports = function (grunt) {
   const filesForCss = {
     'softwerkskammer/public/stylesheets/screen.css': [
       'node_modules/fullcalendar/dist/fullcalendar.css',
-      'softwerkskammer/build/stylesheets/less/bootstrap.less',
+      'softwerkskammer/build/stylesheets/sass/out/bootstrap.css',
       'node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
-      'softwerkskammer/build/stylesheets/less/bootstrap-markdown-patched.less',
+      'softwerkskammer/build/stylesheets/sass/out/bootstrap-markdown-patched.css',
       'node_modules/@fortawesome/fontawesome-free/css/all.css',
       'node_modules/@fortawesome/fontawesome-free/css/v4-shims.css',
       'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
@@ -63,11 +63,10 @@ module.exports = function (grunt) {
       'node_modules/datatables.net-bs/css/dataTables.bootstrap.css',
       'softwerkskammer/frontend/3rd_party_css/dataTables.fontAwesome.css',
       'node_modules/select2/dist/css/select2.css',
-      'softwerkskammer/build/stylesheets/less/build-select2-bootstrap.less',
       'node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
       'node_modules/guillotine/css/jquery.guillotine.css',
       'node_modules/leaflet/dist/leaflet.css',
-      'softwerkskammer/build/stylesheets/less/agora.less'
+      'softwerkskammer/build/stylesheets/sass/out/agora.css'
     ]
   };
   grunt.initConfig({
@@ -109,32 +108,9 @@ module.exports = function (grunt) {
         expand: true,
         flatten: true
       },
-      bootstrapLESS: {
-        cwd: 'node_modules/bootstrap/less/',
-        src: ['**', '!variables.less'],
-        dest: 'softwerkskammer/build/stylesheets/less',
-        expand: true,
-        flatten: false
-      },
-      bootstrapCustomVariablesLESS: {
-        src: 'node_modules/bootstrap/less/variables.less',
-        dest: 'softwerkskammer/build/stylesheets/less/original-variables.less'
-      },
-      bootstrapMarkdownLESS: {
-        src: 'node_modules/bootstrap-markdown/less/*',
-        dest: 'softwerkskammer/build/stylesheets/less',
-        expand: true,
-        flatten: true
-      },
       fontawesomeFONTS: {
         src: 'node_modules/@fortawesome/fontawesome-free/webfonts/*',
         dest: 'softwerkskammer/public/webfonts',
-        expand: true,
-        flatten: true
-      },
-      bootstrapSelect2LESS: {
-        src: 'node_modules/select2-bootstrap-theme/src/select2-bootstrap.less',
-        dest: 'softwerkskammer/build/stylesheets/less',
         expand: true,
         flatten: true
       },
@@ -152,9 +128,9 @@ module.exports = function (grunt) {
         expand: true,
         flatten: false
       },
-      customLESS: {
-        src: 'softwerkskammer/frontend/less/*',
-        dest: 'softwerkskammer/build/stylesheets/less',
+      customSASS: {
+        src: 'softwerkskammer/frontend/sass/*',
+        dest: 'softwerkskammer/build/stylesheets/sass',
         expand: true,
         flatten: true
       }
@@ -183,16 +159,18 @@ module.exports = function (grunt) {
         singleRun: true
       }
     },
-    less: {
-      development: {
-        files: filesForCss
-      },
-      production: {
+    sass: {
+      dist: {
+        files: {
+          'softwerkskammer/build/stylesheets/sass/out/agora.css': 'softwerkskammer/build/stylesheets/sass/agora.scss',
+          'softwerkskammer/build/stylesheets/sass/out/bootstrap-markdown-patched.css': 'softwerkskammer/build/stylesheets/sass/bootstrap-markdown-patched.scss'
+        }
+      }
+    },
+    cssmin: {
+      target: {
         options: {
-          plugins: [
-            new (require('less-plugin-clean-css'))()
-          ],
-          report: 'min'
+          level: 2
         },
         files: filesForCss
       }
@@ -318,8 +296,9 @@ module.exports = function (grunt) {
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-pug');
-  grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-contrib-sassjs');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-karma');
@@ -328,12 +307,12 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-puglint');
 
   grunt.registerTask('prepare', ['clean', 'copy', 'patch']);
-  grunt.registerTask('frontendtests', ['clean', 'prepare', 'less:development', 'pug', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once', 'istanbul_check_coverage:frontend']);
+  grunt.registerTask('frontendtests', ['clean', 'prepare', 'sass', 'pug', 'cssmin', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once', 'istanbul_check_coverage:frontend']);
   grunt.registerTask('tests', ['eslint', 'puglint', 'frontendtests', 'mocha_istanbul', 'istanbul_check_coverage:server']);
-  grunt.registerTask('deploy_development', ['prepare', 'less:development', 'uglify:development_de', 'uglify:development_en']);
+  grunt.registerTask('deploy_development', ['prepare', 'sass', 'cssmin', 'uglify:development_de', 'uglify:development_en']);
 
   // Default task.
   grunt.registerTask('default', ['tests', 'uglify:development_en']);
 
-  grunt.registerTask('deploy_production', ['prepare', 'less:production', 'uglify:production_de', 'uglify:production_en']);
+  grunt.registerTask('deploy_production', ['prepare', 'sass', 'cssmin', 'uglify:production_de', 'uglify:production_en']);
 };

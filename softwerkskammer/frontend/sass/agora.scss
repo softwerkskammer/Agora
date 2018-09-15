@@ -1,5 +1,7 @@
 @import "variables";
-@import "mixins";
+@import "../../../../node_modules/bootstrap/scss/bootstrap";
+@import "../../../../node_modules/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.scss";
+@import "../../../../node_modules/select2-theme-bootstrap4/src/select2-bootstrap.scss";
 
 // adapt syntaxhighlighted code in textboxes to bootstrap *BEGIN*
 .syntaxhighlighter a,
@@ -12,11 +14,11 @@
 .syntaxhighlighter table thead,
 .syntaxhighlighter table caption,
 .syntaxhighlighter textarea {
-  font-family: @font-family-monospace !important;
+  font-family: $font-family-monospace !important;
 }
 
 .gutter {
-  .clearfix();
+  @include clearfix();
 }
 
 pre code {
@@ -181,7 +183,7 @@ a.group {
 }
 
 a.chevron {
-  color: @text-color;
+  color: theme-color("primary");
 }
 
 a.inherit-color {
@@ -239,7 +241,7 @@ a {
 }
 
 .photo-day > .photo-room:nth-child(odd) {
-  background-color: @table-bg-accent;
+  background-color: $table-accent-bg;
 }
 
 .select2-container--bootstrap {
