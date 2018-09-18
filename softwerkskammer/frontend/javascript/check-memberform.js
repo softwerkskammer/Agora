@@ -1,4 +1,4 @@
-/*global nicknameIsNotAvailable, contentsOfNickname, emailAlreadyTaken, selectTshirtSize*/
+/*global nicknameIsNotAvailable, contentsOfNickname, emailAlreadyTaken*/
 
 // THE ORIGINAL OF THIS FILE IS IN frontend/javascript
 
@@ -6,11 +6,7 @@ var member_validator;
 (function () {
   'use strict';
 
-  $.validator.addMethod('tShirtSelected', function () {
-    return $('#tShirtSizeMale').val() !== '' || $('#tShirtSizeFemale').val() !== '';
-  }, selectTshirtSize);
-
-  var initValidator = function () {
+  function initValidator () {
 
     // DO NOT FORGET TO KEEP THIS FILE IN SYNC WITH /lib/commons/validation.js
 
@@ -33,7 +29,6 @@ var member_validator;
           lastname: 'required',
           country: 'required',
           homeAddress: 'required',
-          tShirtSize: 'tShirtSelected',
           email: {
             required: true,
             email: true,
@@ -60,47 +55,26 @@ var member_validator;
           }
         },
         errorElement: 'span',
-        errorClass: 'help-block',
+        errorClass: 'help-block text-danger',
         highlight: function (element) {
-          /* istanbul ignore if */
-          if ($(element).attr('id') === 'tShirtSizeMale') {
-            $('#tShirtBox').parent().addClass('has-error');
-          /* istanbul ignore if */
-          } else if ($(element).hasClass('md-input')) {
-            $(element).parent().parent().addClass('has-error');
-          } else {
-            $(element).parent().addClass('has-error');
-          }
+          $(element).addClass('is-invalid');
         },
         unhighlight: function (element) {
-          /* istanbul ignore if */
-          if ($(element).attr('id') === 'tShirtSizeMale') {
-            $('#tShirtBox').parent().removeClass('has-error');
-            /* istanbul ignore if */
-          } else if ($(element).hasClass('md-input')) {
-            $(element).parent().parent().removeClass('has-error');
-          } else {
-            $(element).parent().removeClass('has-error');
-          }
+          $(element).removeClass('is-invalid');
         },
         errorPlacement: function (error, element) {
-          /* istanbul ignore if */
-          if (element.attr('id') === 'tShirtSizeMale') {
-            error.insertAfter('#tShirtBox');
-          } else if (element.attr('id') !== 'tShirtSizeFemale') {
-            error.insertAfter(element);
-          }
+          error.insertAfter(element);
         }
       }
     );
 
     member_validator.form();
 
-    var handler = function (each) {
+    function handler (each) {
       return function () {
         member_validator.element(each);
       };
-    };
+    }
 
     ['nickname', 'lastname', 'firstname', 'country', 'email', 'profession', 'location', 'reference', 'homeAddress'].forEach(
       function (name) {
@@ -109,6 +83,6 @@ var member_validator;
         $(each).keyup(handler(each));
       }
     );
-  };
+  }
   $(document).ready(initValidator);
 }());

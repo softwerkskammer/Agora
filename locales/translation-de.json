@@ -207,7 +207,7 @@
       "p Mach's gut - bis zum nächsten Mal!",
       "hr",
       "p.text-right Oder magst Du nochmal reinschauen? ",
-      "  a.btn.btn-primary(data-toggle='modal', data-target='#login', href='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))",
+      "  span.modaldialog.btn.btn-primary(data-toggle='modal', data-target='#login', data-link='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))",
       "    i.fa.fa-sign-in.fa-fw",
       "    | &nbsp;$t(general.login)"
     ],

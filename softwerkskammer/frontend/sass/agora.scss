@@ -46,10 +46,39 @@ pre code {
 
 .page-header {
   margin-top: 0px !important;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid rgb(222, 226, 230);
 }
 
-.page-header > h2 {
-  margin-top: 0px;
+h1 > small {
+  display: inline-block;
+  color: $text-muted;
+}
+
+h2 > small {
+  display: inline-block;
+  color: $text-muted;
+}
+
+h3 > small {
+  display: inline-block;
+  color: $text-muted;
+}
+
+h4 > small {
+  display: inline-block;
+  color: $text-muted;
+}
+
+h5 > small {
+  display: inline-block;
+  color: $text-muted;
+}
+
+h6 > small {
+  display: inline-block;
+  color: $text-muted;
 }
 
 // fullcalendar *BEGIN*

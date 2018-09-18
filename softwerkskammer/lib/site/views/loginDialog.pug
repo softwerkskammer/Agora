@@ -1,51 +1,47 @@
-doctype html
-html
-  .modal-header
-    button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
-    h3 #{t('authentication.authentication')}
-  .modal-body
-    .row
-      .col-md-12
-        p #{t('authentication.authentication_text')}
-        if (loginChoice.oidc || loginChoice.gh || loginChoice.se || loginChoice.provider)
-          p.bg-success #{t('authentication.authentication_text_green')}
-    .row
-      .col-md-4
-        a.btn.btn-block(class=(loginChoice.oidc ? 'btn-success' : 'btn-default'), href='/auth/openidconnect?returnTo=' + encodeURIComponent(returnUrl))
-          img(src='/img/googleplus.ico', alt='google', width='16', height='16')
-          | &nbsp;Google
-      .col-md-4
-        a.btn.btn-block(class=(loginChoice.gh ? 'btn-success' : 'btn-default'), href='/auth/github?returnTo=' + encodeURIComponent(returnUrl))
-          img(src='/img/github.ico', alt='github', width='16', height='16')
-          | &nbsp;Github
-      .col-md-4
-        a.btn.btn-block(class=(loginChoice.se ? 'btn-success' : 'btn-default'), href='/auth/openid?openid_identifier=' + encodeURIComponent('https://openid.stackexchange.com') + '&returnTo=' + encodeURIComponent(returnUrl))
-          img(src='/img/stackexchange.ico', alt='stackexchange', width='16', height='16')
-          | &nbsp;StackExchange
-    .row
-      .col-md-12
-        form(action='/auth/openid', method='get')
-          p &nbsp;
-          input(type='hidden', name='returnTo', value=returnUrl)
-          .panel(class=(loginChoice.provider ? 'panel-success' : 'panel-default'))
-            .panel-heading
-              .panel-title
-                a(href='#openIDinput', data-toggle='collapse') #{t('authentication.alternative_url')}:
-            #openIDinput.collapse.panel-collapse(class=(loginChoice.provider ? 'btn-success in' : 'btn-default'))
-              .input-group(class=(loginChoice.provider ? 'btn-success' : 'btn-default'))
-                input.form-control.bg-success#openid_identifier(type='text', name='openid_identifier', value=(loginChoice.provider ? loginChoice.provider : ''))
-                .input-group-btn
-                  button.btn(class=(loginChoice.provider ? 'btn-success' : 'btn-default'), type='submit') #{t('authentication.authenticate')}
-    .row
-      .col-md-12
-        form(action='/auth/magiclinkmail', method='get')
-          p &nbsp;
-          .panel(class=('panel-default'))
-            .panel-heading
-              .panel-title
-                a(href='#magicLinkInput', data-toggle='collapse') #{t('authentication.magic_link')}:
-            #magicLinkInput.collapse.panel-collapse(class=('btn-default'))
-              .input-group(class=('btn-default'))
-                input.form-control.bg-success#magicLinkEmail(type='text', name='magic_link_email', value=(''), placeholder='myaddress@example.com')
-                .input-group-btn
-                  button.btn(class=('btn-default'), type='submit') #{t('authentication.magic_link_request')}
+.modal-header
+  h3.modal-title #{t('authentication.authentication')}
+  button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+.modal-body
+  .row
+    .col-12
+      p #{t('authentication.authentication_text')}
+      if (loginChoice.oidc || loginChoice.gh || loginChoice.se || loginChoice.provider)
+        p.alert-success #{t('authentication.authentication_text_green')}
+  .row
+    .col-md-4
+      a.btn.btn-block(class=(loginChoice.oidc ? 'btn-success' : 'btn-light'), href='/auth/openidconnect?returnTo=' + encodeURIComponent(returnUrl))
+        img(src='/img/googleplus.ico', alt='google', width='16', height='16')
+        | &nbsp;Google
+    .col-md-4
+      a.btn.btn-block(class=(loginChoice.gh ? 'btn-success' : 'btn-light'), href='/auth/github?returnTo=' + encodeURIComponent(returnUrl))
+        img(src='/img/github.ico', alt='github', width='16', height='16')
+        | &nbsp;Github
+    .col-md-4
+      a.btn.btn-block(class=(loginChoice.se ? 'btn-success' : 'btn-light'), href='/auth/openid?openid_identifier=' + encodeURIComponent('https://openid.stackexchange.com') + '&returnTo=' + encodeURIComponent(returnUrl))
+        img(src='/img/stackexchange.ico', alt='stackexchange', width='16', height='16')
+        | &nbsp;StackExchange
+  .row
+    .col-12
+      form(action='/auth/openid', method='get')
+        p &nbsp;
+        input(type='hidden', name='returnTo', value=returnUrl)
+        .card.mb-2
+          h5.card-header.p-2(class=(loginChoice.provider ? 'alert-success' : 'bg-light'))
+            a.inherit-color(href='#openIDinput', data-toggle='collapse') #{t('authentication.alternative_url')}:
+          #openIDinput.collapse(class=(loginChoice.provider ? 'show' : ''))
+            .input-group
+              input.form-control#openid_identifier(type='text', name='openid_identifier', value=(loginChoice.provider ? loginChoice.provider : ''))
+              .input-group-append
+                button.btn(class=(loginChoice.provider ? 'btn-success' : 'btn-light'), type='submit') #{t('authentication.authenticate')}
+  .row
+    .col-12
+      form(action='/auth/magiclinkmail', method='get')
+        p &nbsp;
+        .card.mb-2
+          h5.card-header.p-2
+            a.inherit-color(href='#magicLinkInput', data-toggle='collapse') #{t('authentication.magic_link')}:
+          #magicLinkInput.collapse(class=('btn-default'))
+            .input-group
+              input.form-control#magicLinkEmail(type='text', name='magic_link_email', value=(''), placeholder='myaddress@example.com')
+              .input-group-append
+                button.btn.btn-light(type='submit') #{t('authentication.magic_link_request')}

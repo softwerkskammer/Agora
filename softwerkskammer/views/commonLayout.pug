@@ -17,7 +17,7 @@ html
     meta(property='og:type', content='website')
     meta(property='og:site_name', content='Softwerkskammer')
     block opengraph
-    
+
   body
     if (browserIsTooOld)
       .alert.alert-block.alert-warning
@@ -38,9 +38,9 @@ html
     else
       include layoutComponents
       #login.modal.fade(tabindex='-1')
-        .modal-dialog
+        .modal-dialog.modal-lg
           .modal-content
-      #cheatsheet.modal.bs-modal-lg.fade(tabindex='-1')
+      #cheatsheet.modal.fade(tabindex='-1')
         .modal-dialog.modal-lg
           .modal-content
       img.d-none.d-print-block(src='/img/Softwerkskammer_Header.png', alt='Softwerkskammer', width='955')
@@ -53,7 +53,7 @@ html
         .row.main
           block specific
       +bottomNavbar
-  
+
 link(href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,400italic,600italic|PT+Serif+Caption:400,400italic|PT+Serif:400,700,400italic,700italic|Source+Code+Pro:400,600', rel='stylesheet', type='text/css')
 if (language === 'de')
   script(src='/clientscripts/global_de.js')
@@ -65,4 +65,13 @@ if (!!calViewYear)
       var date = moment().year(#{calViewYear}).month(#{calViewMonth});
       $('#calendar').fullCalendar('gotoDate', date);
     });
+script.
+  $(document).ready(function () {
+    $('.modaldialog').click(function (e) {
+      var data = e.currentTarget.dataset;
+      var target = data.target;
+      var url = data.link;
+      $(target + ' .modal-content').load(url);
+    });
+  })
 block scripts

@@ -44,7 +44,7 @@ mixin loginMenu(forInline)
           i.fa.fa-ban.fa-fw
           | &nbsp;#{t('members.resign')}
       else
-        li: a.dropdown-item.nav-link(data-toggle='modal', data-target='#login', href='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))
+        li: .modaldialog.button.dropdown-item.nav-link(data-toggle='modal', data-target='#login', data-link='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))
           i.fa.fa-sign-in.fa-fw
           | &nbsp;#{t('general.login')}
       li: a.dropdown-item.nav-link(href='https://github.com/softwerkskammer/Agora/issues', title=t('general.what_does_not_work'), target='_blank')
@@ -66,7 +66,7 @@ mixin languageEntry(forInline, lang, title, img)
 
 mixin navbar-inside
   .navbar.navbar-collapse
-    ul.nav.navbar-nav.flex-row.ml-md-auto.d-flex.mr-3
+    ul.nav.navbar-nav.flex-row.ml-md-auto.d-flex.mr-3(data-sm-options='{ hideOnClick: false }')
       li.nav-item(data-agoranav='impressum'): a.nav-link(href='/impressum.html') #{t('general.legal_notice')}
       li.nav-item(data-agoranav='wiki/hilfe'): a.nav-link(href='/help.html') #{t('general.faq')}
       li.nav-item: a.nav-link(href='/credits.html') #{t('general.credits')}
@@ -94,7 +94,7 @@ mixin topNavbar(xs)
     i.fa.fa-bars.fa-lg
 
   .navbar-collapse.collapse.collapse-top
-    ul.nav.navbar-nav.flex-row
+    ul.nav.navbar-nav.flex-row(data-sm-options='{ hideOnClick: false }')
       li.nav-item(data-agoranav='dashboard'): a.nav-link(href='/dashboard')
         i.fa.fa-th-list.fa-fw
         span.d-none.d-md-inline &nbsp;#{t('dashboard.dashboard')}
@@ -125,6 +125,6 @@ mixin topNavbar(xs)
           i.fa.fa-user.fa-fw
           span.d-none.d-md-inline &nbsp;#{t('members.members')}
       +loginMenu(true)
-    ul.navbar-nav.flex-row.ml-md-auto.d-none.d-md-flex.mr-3
+    ul.navbar-nav.flex-row.ml-md-auto.d-none.d-md-flex.mr-3(data-sm-options='{ hideOnClick: false }')
       +loginMenu
 

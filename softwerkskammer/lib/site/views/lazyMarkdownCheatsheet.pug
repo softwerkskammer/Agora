@@ -1,80 +1,90 @@
-doctype html
-html
-  .modal-header
-    button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
-    h3 Markdown Cheatsheet
-  .modal-body
-    .row
-      .col-md-4
-        h3 Format Text
-        p Headers
-        pre.
-          # This is an &lt;h1&gt; tag
-          ## This is an &lt;h2&gt; tag
-          ###### This is an &lt;h6&gt; tag
-        p Text styles
-        pre.
-          *This text will be italic*
-          _This will also be italic_
-          **This text will be bold**
-          __This will also be bold__
-          *You **can** combine them*
-      .col-md-4
-        h3 Lists
-        p Unordered
-        pre.
-          * Item 1
-          * Item 2
-          * Item 2a
-          * Item 2b
-        p Ordered
-        pre.
-          1. Item 1
-          2. Item 2
-          3. Item 3
-             * Item 3a
-             * Item 3b
-      .col-md-4
-        h3 Miscellaneous
-        p Images
-        pre.
-          ![GitHub Logo](/images/logo.png)
-          Format: ![Alt Text](url)
-        p Links
-        pre.
-          http://github.com - automatic!
-          [GitHub](http://github.com)
-        p Blockquotes
-        pre.
-          As Kanye West said:
-          &gt; We're living the future so
-          &gt; the present is our past.
-    .row
-      .col-md-12
-        h3 Code Examples in Markdown
-    .row
-      .col-md-4
-        p Syntax highlighting with 
-          a(href='http://github.github.com/github-flavored-markdown/', title='GitHub Flavored Markdown', target='_blank') GFM
-        pre.
-          ```javascript
-          function fancyAlert(arg) {
-            if(arg) {
-              $.facebox({div:'#foo'})
+.modal-header
+  h3.modal-title Markdown Cheatsheet
+  button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+.modal-body
+  .row
+    .col-md-4.pr-1
+      .card
+        h4.card-header.p-1 Format Text
+        .card-body.p-1
+          h5.card-title Headers
+          pre.
+            # This is an &lt;h1&gt; tag
+            ## This is an &lt;h2&gt; tag
+            ###### This is an &lt;h6&gt; tag
+          h5.card-title Text styles
+          pre.
+            *This text will be italic*
+            _This will also be italic_
+            **This text will be bold**
+            __This will also be bold__
+            *You **can** combine them*
+    .col-md-3.px-1
+      .card
+        h4.card-header.p-1 Lists
+        .card-body.p-1
+          h5.card-title Unordered
+          pre.
+            * Item 1
+            * Item 2
+            * Item 2a
+            * Item 2b
+          h5.card-title Ordered
+          pre.
+            1. Item 1
+            2. Item 2
+            3. Item 3
+               * Item 3a
+               * Item 3b
+    .col-md-5.pl-1
+      .card
+        h4.card-header.p-1 Miscellaneous
+        .card-body.p-1
+          h5.card-title Images
+          pre.
+            ![GitHub Logo](/images/logo.png)
+            Format: ![Alt Text](url)
+          h5.card-title Links
+          pre.
+            http://github.com - automatic!
+            [GitHub](http://github.com)
+          h5.card-title Blockquotes
+          pre.
+            As Kanye West said:
+            &gt; We're living the future so
+            &gt; the present is our past.
+  .row
+    .col-md-12
+      h3 Code Examples in Markdown
+  .row
+    .col-md-4.pr-1
+      .card
+        .card-body.p-1
+          h5.card-title Syntax highlighting with&nbsp;
+            a(href='http://github.github.com/github-flavored-markdown/', title='GitHub Flavored Markdown', target='_blank') GFM
+          pre.
+            ```javascript
+            function fancyAlert(arg) {
+              if(arg) {
+                $.facebox({div:'#foo'})
+              }
             }
-          }
-          ```
-      .col-md-4
-        p Or, indent your code by a new line and 4 spaces
-        pre Here is a Python code example
-          | without syntax highlighting:
-          | &nbsp;
-          | def foo:
-          | if not bar:
-          | return true
-      .col-md-4
-        p Inline code for comments
-        pre.
-          I think you should use an
-          &lt;addr&gt; element here instead.
-                                  
+            ```
+    .col-md-4.px-1
+      .card
+        .card-body.p-1
+          h5.card-title Or, indent your code by a new line and 4 spaces
+          pre Here is a Python code example
+            | without syntax highlighting:
+            | &nbsp;
+            | def foo:
+            | if not bar:
+            | return true
+    .col-md-4.pl-1
+      .card
+        .card-body.p-1
+          h5.card-title Inline code for comments
+          pre.
+            I think you should use an
+            &lt;addr&gt; element here instead.
+                                

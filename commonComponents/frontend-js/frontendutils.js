@@ -60,7 +60,10 @@ function surroundEmail(email) {
               name: 'cmdHelp',
               title: help,
               icon: 'fa fa-question-circle',
-              callback: function () { $('#cheatsheet').modal({remote: '/cheatsheet.html'}); }
+              callback: function () {
+                $('#cheatsheet .modal-content').load('/cheatsheet.html');
+                $('#cheatsheet').modal();
+              }
             }]
           }]],
           onPreview: function (e) {
@@ -163,5 +166,5 @@ function surroundEmail(email) {
   $(document).ready(extendDataTables);
   $(document).ready(createLinks);
   $(document).ready(initTooltipsAndHovers);
-  $.fn.select2.defaults.set( 'theme', 'bootstrap' );
+  $.fn.select2.defaults.set('theme', 'bootstrap');
 }());

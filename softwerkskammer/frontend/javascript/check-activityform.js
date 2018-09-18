@@ -21,7 +21,7 @@ var activity_validator;
 
   });
 
-  var initValidator = function () {
+  function initValidator () {
 
     // DO NOT FORGET TO KEEP THIS FILE IN SYNC WITH /lib/commons/validation.js
 
@@ -62,19 +62,19 @@ var activity_validator;
         }
       },
       errorElement: 'span',
-      errorClass: 'help-block',
+      errorClass: 'help-block text-danger',
       highlight: function (element) {
         if ($(element).attr('name') === 'endDate' || $(element).attr('name') === 'endTime') {
-          $('#dates').parent().addClass('has-error');
+          $('#dates').parent().addClass('is-invalid');
         } else {
-          $(element).parent().addClass('has-error');
+          $(element).addClass('is-invalid');
         }
       },
       unhighlight: function (element) {
         if ($(element).attr('name') === 'endDate' || $(element).attr('name') === 'endTime') {
-          $('#dates').parent().removeClass('has-error');
+          $('#dates').parent().removeClass('is-invalid');
         } else {
-          $(element).parent().removeClass('has-error');
+          $(element).removeClass('is-invalid');
         }
       }
     });
@@ -85,11 +85,11 @@ var activity_validator;
 
     activity_validator.form();
 
-    var handler = function (each) {
+    function handler (each) {
       return function () {
         activity_validator.element(each);
       };
-    };
+    }
 
     ['#activityform [name=title]', '#activityform [name=assignedGroup]', '#activityform [name=location]', '#activityform [name=startDate]', '#activityform [name=startTime]',
       '#activityform [name=endDate]', '#activityform [name=endTime]', '#activityform [name=url]'].forEach(
@@ -98,7 +98,7 @@ var activity_validator;
         $(each).keyup(handler(each));
       }
     );
-  };
+  }
 
   $(document).ready(initValidator);
 }());

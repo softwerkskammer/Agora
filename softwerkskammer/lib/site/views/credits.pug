@@ -1,8 +1,8 @@
 extends ../../../views/layoutOnlyMain
 
 mixin defItem(title, url, text)
-  dt #{title}:
-  dd: a(href=url, target='_blank')
+  dt.col-3.text-truncate #{title}:
+  dd.col-9.mb-0: a(href=url, target='_blank')
     i.fa.fa-external-link
     | &nbsp;#{text}
 
@@ -10,18 +10,19 @@ block title
   | Credits
 block content
   .row
-    .col-md-4
-      .well
-        h3 Credits
-        p.
-          Diese Site ist freie Software und ihre Entstehung wäre ohne das Vorhandensein freier Software undenkbar. An dieser
-          Stelle möchten wir uns ausdrücklich bei allen bedanken, die ihre Arbeit uneigennützig zur freien Verwendung zulassen,
-          indem wir diese Arbeit hier erwähnen.
+    .col-lg-4
+      .card.bg-light
+        .card-body
+          h3.card-title Credits
+          p.card-text.
+            Diese Site ist freie Software und ihre Entstehung wäre ohne das Vorhandensein freier Software undenkbar. An dieser
+            Stelle möchten wir uns ausdrücklich bei allen bedanken, die ihre Arbeit uneigennützig zur freien Verwendung zulassen,
+            indem wir diese Arbeit hier erwähnen.
 
       h2 Backend
 
       h4 Infrastruktur / Framework / Middleware
-      dl.dl-horizontal
+      dl.row
         +defItem('Uberspace', 'http://uberspace.de', 'Webhoster')
         +defItem('Node.js', 'http://nodejs.org', 'Plattform')
         +defItem('Express', 'http://expressjs.com/api.html', 'Applikationsframework')
@@ -39,7 +40,7 @@ block content
         +defItem('ezmlm', 'https://github.com/leider/ezmlm-node', 'JavaScript adapter for ezmlm, the qmail based mailing list software')
 
       h4 Express Middleware
-      dl.dl-horizontal
+      dl.row
         +defItem('Body Parser', 'https://github.com/expressjs/body-parser', 'HTML-Form Aufbereitung')
         +defItem('Compression', 'https://github.com/expressjs/compression', 'Komprimieren der HTTP-Streams')
         +defItem('Cookie Parser', 'https://github.com/expressjs/cookie-parser', 'Notwendig für Sessionverwaltung')
@@ -49,17 +50,17 @@ block content
         +defItem('Morgan', 'https://github.com/expressjs/morgan', 'Für Logging')
         +defItem('Serve Static', 'https://github.com/expressjs/serve-static', 'Zum Übermitteln statischer Dateien')
 
-    .col-md-4
+    .col-lg-4
       h2 UI
       h4 Frontend Basis
-      dl.dl-horizontal
+      dl.row
         +defItem('Twitter Bootstrap', 'http://getbootstrap.com', 'UI Basis Framework')
         +defItem('JQuery', 'http://jquery.com', 'DOM Manipulation')
         +defItem('JQuery Validation', 'https://github.com/jzaefferer/jquery-validation', 'Frontend Validierung')
         +defItem('Font-Awesome', 'http://fortawesome.github.com/Font-Awesome/', 'Bessere Icons für Buttons etc.')
       
       h4 Frontend Widgets
-      dl.dl-horizontal
+      dl.row
         +defItem('Bootstrap-Markdown', 'http://toopay.github.com/bootstrap-markdown/', 'Markdown Editor für Textareas')
         +defItem('jQCloud', 'https://github.com/leider/jQCloud', 'Die [tag] Cloud')
         +defItem('Colorpicker for Bootstrap', 'https://github.com/mjolnic/bootstrap-colorpicker/', 'Farben auswählen im Bootstrap Stil')
@@ -77,7 +78,7 @@ block content
         +defItem('autonumeric', 'http://www.decorplanit.com/plugin/', 'Währungsformatierung')
 
       h4 Backend Rendering
-      dl.dl-horizontal
+      dl.row
         +defItem('Pug', 'https://pugjs.org', 'Template Engine')
         +defItem('Marked', 'https://github.com/chjj/marked', 'Markdown nach HTML')
         +defItem('Syntaxhighlighter', 'https://github.com/thlorenz/node-syntaxhighlighter', 'Syntax Highlighting in markdown')
@@ -87,9 +88,9 @@ block content
         +defItem('i18next', 'http://i18next.com/', 'Internationalisierung')
         +defItem('feed', 'https://github.com/jpmonette/feed', 'Erzeugung von Atom/RSS-Feeds')
 
-    .col-md-4
+    .col-lg-4
       h2 Allgemeine Bibliotheken
-      dl.dl-horizontal
+      dl.row
         +defItem('Async', 'https://github.com/caolan/async', 'Funktionale Erweiterungen, asynchron')
         +defItem('Lo-Dash "_"', 'http://lodash.com', 'Funktionale Erweiterungen, synchron')
         +defItem('Ramda', 'http://ramdajs.com', '"A practical functional library for Javascript programmers."')
@@ -97,7 +98,7 @@ block content
         +defItem('Moment', 'http://momentjs.com/', 'Datum und Uhrzeit leicht gemacht')
 
       h2 Dev/Build/Test
-      dl.dl-horizontal
+      dl.row
         +defItem('Grunt', 'http://gruntjs.com', 'Build-Runner')
         +defItem('ESLint (grunt)', 'https://github.com/sindresorhus/grunt-eslint', 'Grunt Integration für ESLint')
         +defItem('Puglint (grunt)', 'https://github.com/mrmlnc/grunt-puglint', 'Grunt Integration für pug-lint')

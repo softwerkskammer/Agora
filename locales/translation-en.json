@@ -212,7 +212,7 @@
       "p Take care - see you soon!",
       "hr",
       "p.text-right Or maybe you want to return? ",
-      "  a.btn.btn-primary(data-toggle='modal', data-target='#login', href='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))",
+      "  span.modaldialog.btn.btn-primary(data-toggle='modal', data-target='#login', data-link='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))",
       "    i.fa.fa-sign-in.fa-fw",
       "    | &nbsp;$t(general.login)"
     ],
