@@ -61,8 +61,7 @@ module.exports = function (grunt) {
       'node_modules/@fortawesome/fontawesome-free/css/all.css',
       'node_modules/@fortawesome/fontawesome-free/css/v4-shims.css',
       'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
-      'node_modules/datatables.net-bs/css/dataTables.bootstrap.css',
-      'softwerkskammer/frontend/3rd_party_css/dataTables.fontAwesome.css',
+      'node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css',
       'node_modules/select2/dist/css/select2.css',
       'node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
       'node_modules/guillotine/css/jquery.guillotine.css',
@@ -85,14 +84,8 @@ module.exports = function (grunt) {
         flatten: true
       },
       datatablesBootstrapAndGermanJS: {
-        src: ['node_modules/datatables.net-bs/js/dataTables*', 'softwerkskammer/frontend/3rd_party_js/dataTables*'],
+        src: ['node_modules/datatables.net-bs4/js/dataTables*', 'softwerkskammer/frontend/3rd_party_js/dataTables*'],
         dest: 'softwerkskammer/public/clientscripts',
-        expand: true,
-        flatten: true
-      },
-      datatablesImages: {
-        src: 'node_modules/datatables.net-dt/images/*',
-        dest: 'softwerkskammer/public/images/',
         expand: true,
         flatten: true
       },
@@ -102,12 +95,6 @@ module.exports = function (grunt) {
         dest: 'softwerkskammer/public/img/',
         expand: true,
         flatten: false
-      },
-      bootstrapFONTS: {
-        src: 'node_modules/bootstrap/dist/fonts/*',
-        dest: 'softwerkskammer/public/fonts',
-        expand: true,
-        flatten: true
       },
       fontawesomeFONTS: {
         src: 'node_modules/@fortawesome/fontawesome-free/webfonts/*',

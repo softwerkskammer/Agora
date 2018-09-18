@@ -219,6 +219,15 @@ a.inherit-color {
   color: inherit !important;
 }
 
+.control-label {
+  font-weight: bold;
+  margin-bottom: 0 !important;
+}
+
+legend {
+  font-weight: bold;  
+}
+
 .label.group {
   padding: .3em .4em .2em .4em;
   position: absolute;

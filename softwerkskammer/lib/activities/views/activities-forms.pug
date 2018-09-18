@@ -8,7 +8,7 @@ mixin activityform(activity, groups, editorNames, participantNames)
     +hidden('previousUrl', activity.url())
     fieldset
       .row
-        .col-md-12
+        .col-12
           +submitButtons('general.save')
           legend
             if (activity.id())
@@ -24,16 +24,18 @@ mixin activityform(activity, groups, editorNames, participantNames)
         .col-md-6
           +text('title', t('activities.title'), activity.title(), t('activities.tooltip.title'), '', activity.clonedFromMeetup())
           .row
-            .col-xs-6(style='padding-right:5px')
-              .col-xs-6(style='padding-left:0px;padding-right:3px')
-                +date('startDate', t('activities.start'), activity.startMoment().locale(language).format('L'), t('activities.tooltip.start'), activity.clonedFromMeetup())
-              .col-xs-6(style='padding-left:3px;padding-right:0px')
-                +time('startTime', activity.startMoment().locale(language).format('LT'), activity.clonedFromMeetup())
-            .col-xs-6(style='padding-left:5px')
-              .col-xs-6(style='padding-left:0px;padding-right:3px')
-                +date('endDate', t('activities.end'), activity.endMoment().locale(language).format('L'), t('activities.tooltip.end'), activity.clonedFromMeetup())
-              #dates.col-xs-6(style='padding-left:3px;padding-right:0px')
-                +time('endTime', activity.endMoment().locale(language).format('LT'), activity.clonedFromMeetup())
+            .col-6.pr-1
+              .row.mx-0
+                .col-6.pl-0.pr-1
+                  +date('startDate', t('activities.start'), activity.startMoment().locale(language).format('L'), t('activities.tooltip.start'), activity.clonedFromMeetup())
+                .col-6.px-1
+                  +time('startTime', activity.startMoment().locale(language).format('LT'), activity.clonedFromMeetup())
+            .col-6.pl-1
+              .row.mx-0
+                .col-6.px-1
+                  +date('endDate', t('activities.end'), activity.endMoment().locale(language).format('L'), t('activities.tooltip.end'), activity.clonedFromMeetup())
+                #dates.col-6.pl-1.pr-0  
+                  +time('endTime', activity.endMoment().locale(language).format('LT'), activity.clonedFromMeetup())
           +textarea('description', t('general.description'), activity.description(), '', '', activity.clonedFromMeetup())
           +textarea('direction', t('activities.directions'), activity.direction(), '', '', activity.clonedFromMeetup())
           +editableMultiselect('editorIds', t('activities.editors'), editorNames, participantNames)
@@ -55,23 +57,23 @@ mixin activityform(activity, groups, editorNames, participantNames)
           #resources
             -var resource = activity.veranstaltung()
             .row
-              .col-xs-3
+              .col-3
                 .form-group
                   +controlLabel('resources[limits]', t('activities.count'), t('activities.tooltip.count'))
                   input.form-control(name='resources[limits]', value=resource.limit(), type='text', placeholder=t('activities.unlimited'))
-              .col-xs-3
+              .col-3
                 .form-group
                   +controlLabel('resources[isRegistrationOpen]', t('activities.registration'), t('activities.tooltip.registration'))
                   select.form-control.enhance(name='resources[isRegistrationOpen]')
                     option(value='yes', selected=(resource.isRegistrationOpen())) #{t('activities.possible')}
                     option(value='no', selected=(!resource.isRegistrationOpen())) #{t('activities.impossible')}
-              .col-xs-3
+              .col-3
                 .form-group
                   +controlLabel('resources[canUnsubscribe]', t('activities.deregistration'), t('activities.tooltip.deregistration'))
                   select.form-control.enhance(name='resources[canUnsubscribe]')
                     option(value='yes', selected=resource.canUnsubscribe()) #{t('activities.possible')}
                     option(value='no', selected=!resource.canUnsubscribe()) #{t('activities.impossible')}
-              .col-xs-3
+              .col-3
                 .form-group
                   +controlLabel('resources[hasWaitinglist]', t('activities.waitinglist'), t('activities.tooltip.waitinglist'))
                   select.form-control.enhance(name='resources[hasWaitinglist]')

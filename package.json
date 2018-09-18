@@ -39,6 +39,7 @@
     "csurf": "1.9.0",
     "datatables.net": "1.10.19",
     "datatables.net-bs": "1.10.19",
+    "datatables.net-bs4": "1.10.19",
     "express": "4.16.3",
     "express-session": "1.15.6",
     "ezmlm-node": "1.2.3",

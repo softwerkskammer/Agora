@@ -84,8 +84,8 @@ mixin groupCheckboxes(checkboxName, regionalgroups, themegroups)
           +checkboxWithDescription(checkboxName, markedGroup.group.displaynameInSubscriptionList(), markedGroup.selected, markedGroup.group.descriptionHTMLFiltered('img'), markedGroup.group.id)
 
 mixin submitButtons(submitTextToken)
-  .btn-group.pull-right
-    a.btn.btn-default(href='javascript:history.back()', type='cancel') #{t('general.back')}
+  .btn-group.float-right
+    a.btn.btn-light(href='javascript:history.back()', type='cancel') #{t('general.back')}
     button.btn.btn-primary(type='submit') #{t(submitTextToken)}
 
 mixin memberSubmitButtons(submitText)

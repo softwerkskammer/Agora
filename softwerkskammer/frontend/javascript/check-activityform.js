@@ -65,14 +65,16 @@ var activity_validator;
       errorClass: 'help-block text-danger',
       highlight: function (element) {
         if ($(element).attr('name') === 'endDate' || $(element).attr('name') === 'endTime') {
-          $('#dates').parent().addClass('is-invalid');
+          $('#activityform [name=endDate]').addClass('is-invalid');
+          $('#activityform [name=endTime]').addClass('is-invalid');
         } else {
           $(element).addClass('is-invalid');
         }
       },
       unhighlight: function (element) {
         if ($(element).attr('name') === 'endDate' || $(element).attr('name') === 'endTime') {
-          $('#dates').parent().removeClass('is-invalid');
+          $('#activityform [name=endDate]').removeClass('is-invalid');
+          $('#activityform [name=endTime]').removeClass('is-invalid');
         } else {
           $(element).removeClass('is-invalid');
         }
