@@ -23,13 +23,13 @@ block content
     +csrf
     +hidden('activityUrl', activity.url())
     .row
-      .col-md-12
+      .col-12
         .page-header
-          h2 #{activity.title()}
-            small  #{t('activities.waitinglist')}
-            a.btn.pull-right.btn-default(href=activity.fullyQualifiedUrl()) Zurück
+          h2 #{activity.title()} #{' '}
+            small #{t('activities.waitinglist')}
+            a.btn.float-right.btn-light(href=activity.fullyQualifiedUrl()) Zurück
         .panel.scrollable-box
-          table.table.table-condensed.table-hover.table-striped#waitinglisttable
+          table.table.table-sm.table-hover.table-striped#waitinglisttable
             thead
               tr
                 th #{t('activities.select')}
@@ -56,9 +56,9 @@ block content
 
         .form-inline
           | #{t('activities.activate_registration_1')}
-          input.form-control#registrationValidForHours(type='text', name='registrationValidForHours', style='width: 50px;')
-          |  #{t('activities.activate_registration_2')}
-          button.btn.btn-primary.pull-right(type='submit') #{t('activities.save_and_notify')}
+          input.form-control.mx-2#registrationValidForHours(type='text', name='registrationValidForHours', style='width: 50px;')
+          | #{t('activities.activate_registration_2')}
+          button.btn.btn-primary.ml-2(type='submit') #{t('activities.save_and_notify')}
   if(accessrights.isSuperuser())
     hr
     form#waitinglistForm(action='/waitinglist/add', method='post')
@@ -70,4 +70,4 @@ block content
           input.form-control#nickname(type='text', name='nickname', placeholder=t('members.nickname'))
         .col-sm-4
         .col-sm-4
-          button.btn.btn-primary.pull-right(type='submit') #{t('general.add')}
+          button.btn.btn-primary.float-right(type='submit') #{t('general.add')}
