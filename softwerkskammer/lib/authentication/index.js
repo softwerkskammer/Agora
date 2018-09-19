@@ -43,12 +43,15 @@ function createProviderAuthenticationRoutes(app1, strategyName) {
     return passport.authenticate(strategyName, {successReturnToOrRedirect: '/', failureRedirect: '/login'});
   }
 
-  function setLoginCookieOnSuccess(req, res, next) {
-    res.cookie('loginChoice', loginChoiceCookieFor(decodeURIComponent(req.url)), {maxAge: 1000 * 60 * 60 * 24 * 365, httpOnly: true}); // expires: Date
+  function setReturnOnSuccess(req, res, next) {
+    if (req.session.returnTo === undefined) {
+      req.session.returnTo = req.query.returnTo || '/';
+    }
+    res.cookie('loginChoice', loginChoiceCookieFor(decodeURIComponent(req.url)), { maxAge: 1000 * 60 * 60 * 24 * 365, httpOnly: true }); // expires: Date
     next();
   }
 
-  app1.get('/' + strategyName, setLoginCookieOnSuccess, authenticate());
+  app1.get('/' + strategyName, setReturnOnSuccess, authenticate());
   app1.get('/' + strategyName + '/callback', authenticate());
 
 }

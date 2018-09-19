@@ -22,13 +22,13 @@ mixin administrationMenu
           | &nbsp; Interessen
 
 mixin loginMenu(forInline)
-  li.dropdown(class=forInline ? 'visible-xs' : '')
+  li.dropdown(class=forInline ? 'visible-xs': '')
     a(href='#')
-      i.fa.fa-info-circle.fa-fw &nbsp;
+      i.fa.fa-info-circle.fa-fw
       if accessrights.isRegistered()
-        | #{user.member.nickname()}
+        | &nbsp;#{user.member.nickname()}
       else
-        | #{t('general.guest')}
+        | &nbsp;#{t('general.guest')}
     ul.dropdown-menu
       if accessrights.isRegistered()
         li: a(href='/members/' + encodeURIComponent(user.member.nickname()))
@@ -57,7 +57,7 @@ mixin loginMenu(forInline)
     +languageEntry(forInline, 'de', 'auf Deutsch umschalten', 'Germany.png')
 
 mixin languageEntry(forInline, lang, title, img)
-  li(class=forInline ? 'visible-xs' : '')
+  li(class=forInline ? 'visible-xs': '')
     a.no-left-margin(href='/language/' + lang + '?currentUrl=' + encodeURIComponent(currentUrl), title=title)
       img.fa-fw(src='/img/flags/' + img, height='16', style='vertical-align: baseline;', alt='title')
       if(forInline)
