@@ -21,6 +21,8 @@ const fieldHelpers = beans.get('fieldHelpers');
 const createApp = require('../../testutil/testHelper')('administrationApp').createApp;
 
 describe('Administration application', () => {
+  /*eslint no-regex-spaces: 0 */
+
   const appWithSuperuser = request(createApp('superuserID'));
 
   const emptyActivity = new Activity({
@@ -47,7 +49,7 @@ describe('Administration application', () => {
     appWithSuperuser
       .get('/memberTable')
       .expect(200)
-      .expect(/<h2>Verwaltung<small> Mitglieder/)
+      .expect(/<h2>Verwaltung  <small> Mitglieder/)
       .expect(/a@b\.c/, done);
   });
 
@@ -58,7 +60,7 @@ describe('Administration application', () => {
     appWithSuperuser
       .get('/memberAndGroupTable')
       .expect(200)
-      .expect(/<h2>Verwaltung<small> Mitglieder und Gruppen/)
+      .expect(/<h2>Verwaltung  <small> Mitglieder und Gruppen/)
       .expect(/Hans Dampf/)
       .expect(/<dt>Überflüssig<\/dt>/)
       .expect(/<dd>peter\.pan@alice\.de<\/dd>/)
@@ -69,7 +71,7 @@ describe('Administration application', () => {
     appWithSuperuser
       .get('/groupTable')
       .expect(200)
-      .expect(/<h2>Verwaltung<small> Gruppen/)
+      .expect(/<h2>Verwaltung  <small> Gruppen/)
       .expect(/GRUPPO/, done);
   });
 
@@ -78,7 +80,7 @@ describe('Administration application', () => {
     appWithSuperuser
       .get('/activityTable')
       .expect(200)
-      .expect(/<h2>Verwaltung<small> Aktivitäten /)
+      .expect(/<h2>Verwaltung  <small> Aktivitäten /)
       .expect(/Title of the Activity/)
       .expect(/01\.01\.2013/, done);
   });
