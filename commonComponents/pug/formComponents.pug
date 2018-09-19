@@ -59,13 +59,13 @@ mixin hightextarea(name, label, value, tooltip, placeholder)
   +textareaInternal('md-textarea', '15', name, label, value, tooltip, placeholder)
 
 mixin checkboxWithDescription(name, label, checked, description, optionalValue)
-  .checkbox
-    label
-      input(type='checkbox', name=name, value=optionalValue, checked=(checked ? 'true' : undefined))
+  .form-check.abc-checkbox.abc-checkbox-success
+    input.form-check-input(type='checkbox', id=name + optionalValue, name=name, value=optionalValue, checked=(checked ? 'true' : undefined))
+    label.form-check-label(for=name + optionalValue)
       -if (description)
         span.popover-highlight(rel='tooltip-in-body', data-content=description) #{label}
       -else
-        | #{label}
+        | !{label}
 
 mixin checkbox(name, label, checked, optionalValue)
   +checkboxWithDescription(name, label, checked, undefined, optionalValue)
@@ -89,9 +89,9 @@ mixin submitButtons(submitTextToken)
     button.btn.btn-primary(type='submit') #{t(submitTextToken)}
 
 mixin memberSubmitButtons(submitText)
-  .btn-group.pull-right
+  .btn-group.float-right
     if (accessrights.isRegistered())
-      a.btn.btn-default(href='javascript:history.back()', type='cancel') #{t('general.back')}
+      a.btn.btn-light(href='javascript:history.back()', type='cancel') #{t('general.back')}
     else
       a.btn.btn-danger(href='/auth/logout', type='cancel') #{t('members.cancel')}
     button.btn.btn-primary(type='submit') #{submitText}
@@ -113,7 +113,8 @@ mixin colorPicker(name, value)
   .form-group
     +controlLabel(name, t('colors.color'))
     .input-group.c-picker
-      span.input-group-addon: i
+      span.input-group-append
+        span.input-group-text.colorpicker-input-addon: i
       input.form-control(id=name, type='text', name=name, value=value)
 
 mixin twitter(name, label, value)
@@ -149,8 +150,8 @@ mixin reallyDeleteModalOnly(header, options)
     .modal-dialog
       .modal-content
         .modal-header
+          h3.modal-title #{t(header)}
           button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
-          h3 #{t(header)}
         .modal-body
           p #{t('general.are_you_sure')}
           form(action=options.url, role='form', method='post')

@@ -5,7 +5,7 @@ mixin activitylist(activities)
     for activity in activities
       li
         a(href='/groups/' + activity.assignedGroup())
-          span.badge(style='background-color: ' + activity.colorRGB).text-white #{activity.groupName()}
+          span.badge.text-white(style='background-color: ' + activity.colorRGB) #{activity.groupName()}
         | &nbsp;
         span.popover-highlight(rel='tooltip-in-body', data-content=activity.descriptionHTML().substring(0,500))
           a(href=activity.fullyQualifiedUrl()) #{activity.title()}

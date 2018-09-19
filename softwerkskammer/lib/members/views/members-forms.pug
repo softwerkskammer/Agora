@@ -5,7 +5,7 @@ mixin memberform(member, regionalgroups, themegroups, tags)
     +csrf
     fieldset
       .row
-        .col-md-12
+        .col-12
           h2
             if (accessrights.isRegistered())
               | #{member.nickname()}

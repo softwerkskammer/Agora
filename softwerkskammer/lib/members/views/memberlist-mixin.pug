@@ -8,15 +8,15 @@ mixin memberlist(members, organizers)
         dt.col-4: .member
           +linkedMember(member.nickname())
           if (member.hasImage())
-            | &nbsp; <a href='#' rel='tooltip' data-content=#{member.nickname()} title='<div style="height: 128px;"><img src=#{member.avatarUrl(128)} width="128" height="128"/></div>' >
-            img.hidden-print(src=member.inlineAvatar(), width='16', height='16')
+            | &nbsp; <a href='#' rel='tooltip' data-content=#{member.nickname()} data-placement="right" title='<div style="height: 128px;"><img src=#{member.avatarUrl(128)} width="128" height="128"/></div>' >
+            img.d-print-none(src=member.inlineAvatar(), width='16', height='16')
             | </a>
-        dd.col-8 #{member.firstname()} #{member.lastname()}
+        dd.col-8.mb-0 #{member.firstname()} #{member.lastname()}
           if member.location()
             |, #{member.location()}
           | &nbsp;
           if (organizers && organizers.indexOf(member.id()) > -1)
-            a(href='/mailsender/contactMember/' + encodeURIComponent(member.nickname()), title=t('mailsender.write')): span.label(style='background-color: #DF5353') #{t('groups.contact')}
+            a(href='/mailsender/contactMember/' + encodeURIComponent(member.nickname()), title=t('mailsender.write')): span.badge.text-white(style='background-color: #DF5353') #{t('groups.contact')}
 
 mixin linkedMember(nickname)
   if nickname

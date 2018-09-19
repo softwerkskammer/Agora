@@ -9,11 +9,11 @@ block title
 
 block content
   .row
-    .col-md-12
+    .col-12
       .page-header
-        .btn-group.pull-right
+        .btn-group.float-right
           if (accessrights.canEditMember(member))
-            a.btn.btn-default(href='/members/edit/' + encodeURIComponent(member.nickname())): i.fa.fa-edit.fa-fw
+            a.btn.btn-light(href='/members/edit/' + encodeURIComponent(member.nickname())): i.fa.fa-edit.fa-fw
           if (accessrights.canDeleteMember(member))
             -var deleteoptions = {url: '/members/delete', params: {nickname: member.nickname()}}
             +reallyDeleteModalPost('members.delete', deleteoptions)
@@ -25,68 +25,68 @@ block content
             else
               | &nbsp;#{t('members.profile')}
   .row
-    .col-md-8
-      p
+    .col-lg-8
+      p.mb-1
         strong #{t('members.firstname')}:
         |  #{member.firstname()}
-      p
+      p.mb-1
         strong #{t('members.lastname')}:
         |  #{member.lastname()}
-      p
+      p.mb-1
         strong #{t('members.twitter')}:&nbsp;
         span.twitterify
           | #{member.twitter()}
-      p
+      p.mb-1
         strong #{t('members.location')}:
         |  #{member.location()}
-      p
+      p.mb-1
         strong #{t('members.profession')}:
         |  #{member.profession()}
-      p
+      p.mb-1
         strong #{t('members.interests')}:
         span.interestify  #{member.interests()}
-      p
+      p.mb-1
         strong #{t('members.web')}:&nbsp;
         span.urlify
           | #{member.site()}
 
       p &nbsp;
-    .col-md-4
+    .col-lg-4
       if(accessrights.canEditMember(member))
         +avatar(member)
       else
         div(style='width: 200px')
           img(src=member.avatarUrl())
   .row
-    .col-md-12
+    .col-12
       a.btn.btn-primary(href='/mailsender/contactMember/' + encodeURIComponent(member.nickname()))
         i.fa.fa-envelope
         | &nbsp;#{t('members.send_email', {firstname: member.firstname(), lastname: member.lastname()})}
 
-      h3 #{t('members.member_of')}:
-      ul
+      h3.mt-2 #{t('members.member_of')}:
+      ul.list-unstyled
         each group in member.subscribedGroups
           li
             strong: a(href='/groups/' + group.id) #{group.longName}&nbsp;
             if (group.organizers.indexOf(member.id()) > -1)
-              span.label(style='background-color: #DF5353') #{t('groups.contact')}
+              span.badge.text-white(style='background-color: #DF5353') #{t('groups.contact')}
 
   .row
-    .col-md-6
+    .col-6
       h3 #{t('members.participated_in')}
       +activityList(pastActivities)
-    .col-md-6
+    .col-6
       h3 #{t('members.organizer_or_editor_of')}
       +activityList(organizedOrEditedActivities)
 
   .row
-    .col-md-12
+    .col-12
       h3 #{t('members.wikipages_edited')}
         -var wikis = Object.keys(modifiedWikiFiles).sort()
         each wiki in wikis
           h4
             =wiki
-          ul
+          ul.list-unstyled
             each file in modifiedWikiFiles[wiki]
               li: a(href='/wiki/' + wiki + '/' + encodeURIComponent(file)) #{file}
 

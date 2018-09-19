@@ -1,11 +1,9 @@
-doctype html
-html
-  .modal-header
-    button.close(type='button', data-dismiss='modal', aria-hidden='true') #{t('general.close')}&nbsp;&times
-    if (!content)
-      h4 No Content
-    else
-      h4 #{t('wiki.wiki')} "#{subdir}"
-  .modal-body
-    if (content)
-      | !{content}
+.modal-header
+  if (!content)
+    h3.modal-title No Content
+  else
+    h3.modal-title #{t('wiki.wiki')} "#{subdir}"
+  button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+.modal-body
+  if (content)
+    | !{content}

@@ -140,8 +140,7 @@ module.exports = function (grunt) {
     sass: {
       dist: {
         files: {
-          'softwerkskammer/build/stylesheets/sass/out/agora.css': 'softwerkskammer/build/stylesheets/sass/agora.scss',
-          'softwerkskammer/build/stylesheets/sass/out/bootstrap-markdown-patched.css': 'softwerkskammer/build/stylesheets/sass/bootstrap-markdown-patched.scss'
+          'softwerkskammer/build/stylesheets/sass/out/agora.css': 'softwerkskammer/build/stylesheets/sass/agora.scss'
         }
       }
     },

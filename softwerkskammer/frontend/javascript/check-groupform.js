@@ -51,10 +51,18 @@ var groups_validator;
       errorElement: 'span',
       errorClass: 'help-block text-danger',
       highlight: function (element) {
-        $(element).addClass('is-invalid');
+        if ($(element).hasClass('md-input')) {
+          $(element).parent().parent().addClass('has-error');
+        } else {
+          $(element).addClass('is-invalid');
+        }
       },
       unhighlight: function (element) {
-        $(element).removeClass('is-invalid');
+        if ($(element).hasClass('md-input')) {
+          $(element).parent().parent().removeClass('has-error');
+        } else {
+          $(element).removeClass('is-invalid');
+        }
       }
     });
 

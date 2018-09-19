@@ -1,16 +1,16 @@
 mixin blogposts-panel(posts, feedUrl)
   div
-    .btn-group.pull-right
-      a.btn.btn-default.btn-xs(href=feedUrl)
+    .btn-group.float-right
+      a.btn.btn-sm.btn-light(href=feedUrl)
         i.fa.fa-rss
         | &nbsp;#{t('wiki.subscribe')}
     h4 #{t('wiki.blogposts')}:
   each post in posts
-    .panel.panel-default
-      .panel-heading
-        h1.panel-title #{post.title}
-          small.pull-right #{post.date().locale(language).format('LL')}
-      .panel-body
-        p !{post.teaser}
-          small.pull-right: a(href=post.url()) #{t('groups.more')}
+    .card.mb-2
+      .card-header
+        h5.card-title #{post.title}
+          small.float-right #{post.date().locale(language).format('LL')}
+      .card-body
+        .card-text !{post.teaser}
+        small.float-right: a(href=post.url()) #{t('groups.more')}
 

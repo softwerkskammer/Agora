@@ -5,12 +5,12 @@ block title
 
 block content
   .page-header
-    .btn-group.pull-right
-      a.btn.btn-default(href='javascript:history.back()', type='cancel') #{t('general.back')}
-    h2 #{t('wiki.comparison_of')} "#{pageName}"&nbsp;
+    .btn-group.float-right
+      a.btn.btn-light(href='javascript:history.back()', type='cancel') #{t('general.back')}
+    h1 #{t('wiki.comparison_of')} "#{pageName}"&nbsp;
       small #{t('wiki.in')} '#{subdir}'
 
-  table.compare.table.table-bordered.table-hover.table-condensed
+  table.compare.table.table-bordered.table-hover.table-sm
     each line in lines
       tr
         td.ln #{line.ldln}
