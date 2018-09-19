@@ -101,7 +101,9 @@ app.get('/gdcr2015', (req, res, next) => renderGdcrFor('2015-11-14', res, next))
 
 app.get('/gdcr2016', (req, res, next) => renderGdcrFor('2016-10-22', res, next));
 
-app.get('/gdcr', (req, res, next) => renderGdcrFor('2017-11-18', res, next));
+app.get('/gdcr2017', (req, res, next) => renderGdcrFor('2017-11-18', res, next));
+
+app.get('/gdcr', (req, res, next) => renderGdcrFor('2018-11-17', res, next));
 
 app.get('/upcoming', (req, res, next) => activitiesForDisplay(activitystore.upcomingActivities, next, res, req.i18n.t('activities.upcoming')));
 

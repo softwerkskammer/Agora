@@ -4,7 +4,7 @@ const conf = require('simple-configure');
 const beans = conf.get('beans');
 const async = require('async');
 const R = require('ramda');
-const Feed = require('feed');
+const Feed = require('feed').Feed;
 
 const misc = beans.get('misc');
 const groupsService = beans.get('groupsService');
