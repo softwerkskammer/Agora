@@ -28,11 +28,6 @@ pre code {
 
 // adapt syntaxhighlight *END*
 
-.bottom {
-  padding-top: 20px;
-  margin-bottom: 0px;
-}
-
 .navbar-brand.no-padding {
   padding-top: 0px;
   padding-bottom: 0px;
@@ -41,9 +36,9 @@ pre code {
   height: 60px;
 }
 
-.navbar-right {
-  margin-right: 0 !important;
-}
+//.navbar-right {
+  //margin-right: 0 !important;
+//}
 
 .page-header {
   margin-top: 0px !important;
@@ -185,20 +180,9 @@ h6 > small {
     max-width: 450px;
   }
 
-  .no-left-margin {
-    padding-left: 0px !important;
-  }
 }
 
 @media (max-width: 767px) {
-  .bottom {
-    padding-top: 0px;
-  }
-
-  .dl-horizontal dt {
-    margin-top: 12px;
-  }
-
   body {
     padding-top: 0px !important;
   }
@@ -286,3 +270,7 @@ a {
 .select2-container--bootstrap {
   width: inherit !important;
 }
+
+.nav-item.active {
+  background-color: $gray-400;
+}                                                                                                                

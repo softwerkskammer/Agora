@@ -1,25 +1,26 @@
 mixin administrationMenu
   if (accessrights.isSuperuser())
-    li.nav-item.dropdown(data-agoranav='administration')
-      a.nav-link.dropdown-toggle(href='#')
-        i.fa.fa-dashboard.fa-fw
-        | &nbsp;#{t('general.administration')}&nbsp;
-      ul.dropdown-menu
-        li: a.dropdown-item.nav-link(href='/administration/activityTable')
-          i.fa.fa-calendar.fa-fw
-          | &nbsp;#{t('activities.activities')}
-        li: a.dropdown-item.nav-link(href='/administration/groupTable')
-          i.fa.fa-group.fa-fw
-          | &nbsp;#{t('groups.groups')}
-        li: a.dropdown-item.nav-link(href='/administration/memberTable')
-          i.fa.fa-user.fa-fw
-          | &nbsp;#{t('members.members')}
-        li: a.dropdown-item.nav-link(href='/administration/memberAndGroupTable')
-          i.fa.fa-retweet.fa-fw
-          | &nbsp;#{t('members.members') + ' & ' + t('groups.groups')}
-        li: a.dropdown-item.nav-link(href='/administration/interests')
-          i.fa.fa-thumbs-o-up.fa-fw
-          | &nbsp; Interessen
+    ul.navbar-nav.ml-md-auto.mr-3(data-sm-options='{ hideOnClick: false }', data-sm-skip-collapsible-behavior="true")
+      li.nav-item.dropdown(data-agoranav='administration')
+        a.nav-link.dropdown-toggle(href='#')
+          i.fa.fa-dashboard.fa-fw
+          | &nbsp;#{t('general.administration')}&nbsp;
+        ul.dropdown-menu
+          li: a.dropdown-item.nav-link(href='/administration/activityTable')
+            i.fa.fa-calendar.fa-fw
+            | &nbsp;#{t('activities.activities')}
+          li: a.dropdown-item.nav-link(href='/administration/groupTable')
+            i.fa.fa-group.fa-fw
+            | &nbsp;#{t('groups.groups')}
+          li: a.dropdown-item.nav-link(href='/administration/memberTable')
+            i.fa.fa-user.fa-fw
+            | &nbsp;#{t('members.members')}
+          li: a.dropdown-item.nav-link(href='/administration/memberAndGroupTable')
+            i.fa.fa-retweet.fa-fw
+            | &nbsp;#{t('members.members') + ' & ' + t('groups.groups')}
+          li: a.dropdown-item.nav-link(href='/administration/interests')
+            i.fa.fa-thumbs-o-up.fa-fw
+            | &nbsp; Interessen
 
 mixin loginMenu(forInline)
   li.nav-item.dropdown(class=forInline ? 'd-sm-none': '')
@@ -58,19 +59,19 @@ mixin loginMenu(forInline)
 
 
 mixin languageEntry(forInline, lang, title, img)
-  li.nav-link(class=forInline ? 'd-sm-none': '')
-    a.ml-0(href='/language/' + lang + '?currentUrl=' + encodeURIComponent(currentUrl), title=title)
+  li.nav-item(class=forInline ? 'd-sm-none': '')
+    a.nav-link.ml-0(href='/language/' + lang + '?currentUrl=' + encodeURIComponent(currentUrl), title=title)
       img.fa-fw(src='/img/flags/' + img, height='16', style='vertical-align: baseline;', alt='title')
       if(forInline)
         | &nbsp;#{title}
 
 mixin navbar-inside
   .navbar.navbar-collapse
-    ul.nav.navbar-nav.flex-row.ml-md-auto.d-flex.mr-3(data-sm-options='{ hideOnClick: false }')
+    ul.nav.navbar-nav.md-auto.d-flex.mr-3(data-sm-options='{ hideOnClick: false }', data-sm-skip-collapsible-behavior="true")
       li.nav-item(data-agoranav='impressum'): a.nav-link(href='/impressum.html') #{t('general.legal_notice')}
       li.nav-item(data-agoranav='wiki/hilfe'): a.nav-link(href='/help.html') #{t('general.faq')}
       li.nav-item: a.nav-link(href='/credits.html') #{t('general.credits')}
-      +administrationMenu
+    +administrationMenu
 
 mixin bottomNavbar
   nav.navbar.navbar-expand-sm.p-0.navbar-light.bg-light.fixed-bottom.d-none.d-sm-flex
@@ -87,27 +88,27 @@ mixin notificationsBlock(notificationmessage)
     | #{t(contents.text, contents.additionalArguments)}
 
 mixin topNavbar(xs)
-  a.navbar-brand.no-padding(href='/')
+  a.navbar-brand.py-0(href='/')
     img(src='/img/SoftwerkskammerWappenLinks.png', alt='Softwerkskammer', width='234', height='60')
   a.navbar-toggler.d-inline.d-sm-none(data-toggle='collapse', data-target='.collapse-top')
     span.sr-only Toggle
     i.fa.fa-bars.fa-lg
 
-  .navbar-collapse.collapse.collapse-top
-    ul.nav.navbar-nav.flex-row(data-sm-options='{ hideOnClick: false }')
+  .navbar-collapse.collapse.collapse-top.align-self-end
+    ul.nav.navbar-nav(data-sm-options='{ hideOnClick: false }', data-sm-skip-collapsible-behavior="true")
       li.nav-item(data-agoranav='dashboard'): a.nav-link(href='/dashboard')
         i.fa.fa-th-list.fa-fw
-        span.d-none.d-md-inline &nbsp;#{t('dashboard.dashboard')}
+        span.d-sm-none.d-md-inline &nbsp;#{t('dashboard.dashboard')}
       li.nav-item(data-agoranav='activities'): a.nav-link(href='/activities/upcoming')
         i.fa.fa-calendar.fa-fw
-        span.d-none.d-md-inline &nbsp;#{t('activities.activities')}
+        span.d-sm-none.d-md-inline &nbsp;#{t('activities.activities')}
       li.nav-item(data-agoranav='groups'): a.nav-link(href='/groups')
         i.fa.fa-group.fa-fw
-        span.d-none.d-md-inline &nbsp;#{t('groups.groups')}
+        span.d-sm-none.d-md-inline &nbsp;#{t('groups.groups')}
       li.nav-item.dropdown(data-agoranav='wiki')
         a.nav-link.dropdown-toggle(href='#')
           i.fa.fa-book.fa-fw
-          span.d-none.d-md-inline &nbsp;#{t('wiki.wiki')}&nbsp;
+          span.d-sm-none.d-md-inline &nbsp;#{t('wiki.wiki')}&nbsp;
         ul.dropdown-menu
           if (structuredWikisubdirs)
             for wikisubdirs, key in structuredWikisubdirs
@@ -123,8 +124,8 @@ mixin topNavbar(xs)
       if (accessrights.isRegistered())
         li.nav-item(data-agoranav='members'): a.nav-link(href='/members')
           i.fa.fa-user.fa-fw
-          span.d-none.d-md-inline &nbsp;#{t('members.members')}
+          span.d-sm-none.d-md-inline &nbsp;#{t('members.members')}
       +loginMenu(true)
-    ul.navbar-nav.flex-row.ml-md-auto.d-none.d-md-flex.mr-3(data-sm-options='{ hideOnClick: false }')
+    ul.navbar-nav.ml-md-auto.d-none.d-md-flex.mr-3(data-sm-options='{ hideOnClick: false }', data-sm-skip-collapsible-behavior="true")
       +loginMenu
 
