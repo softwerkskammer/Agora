@@ -20,13 +20,13 @@ block content
           +hidden('groupname', group.id)
           .btn-group.float-right
             a.btn.btn-light(href='/wiki/' + group.id + '/')
-              i.fa.fa-book.fa-fw
+              i.far.fa-book.fa-fw
               | &nbsp;#{t('wiki.wiki')}
-            a.btn.btn-light(href=webcalURL, title=t('activities.export_subscribe')): i.fa.fa-calendar.fa-fw
+            a.btn.btn-light(href=webcalURL, title=t('activities.export_subscribe')): i.far.fa-calendar-alt.fa-fw
             if (accessrights.canEditGroup(group))
               if (group.meetupUrlName())
-                button.btn.btn-light(type='submit', title=t('groups.meetup_clone_title')): i.fa.fa-meetup.fa-fw
-              a.btn.btn-light(href='/groups/edit/' + group.id, title=t('general.edit')): i.fa.fa-edit
+                button.btn.btn-light(type='submit', title=t('groups.meetup_clone_title')): i.fab.fa-meetup.fa-fw
+              a.btn.btn-light(href='/groups/edit/' + group.id, title=t('general.edit')): i.fas.fa-edit
         h1 #{group.longName} #{' '}
           small #{group.type}
       p

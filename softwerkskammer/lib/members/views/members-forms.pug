@@ -41,14 +41,14 @@ mixin memberform(member, regionalgroups, themegroups, tags)
       .row
         .col-md-12
           legend
-            i.fa.fa-eye-slash.fa-fw
+            i.far.fa-eye-slash.fa-fw
             | #{' '}#{t('general.settings')}
           +checkbox('notifyOnWikiChanges', t('members.notifyOnWikiChanges'), member.notifyOnWikiChanges())
       if (accessrights.isRegistered())
         .row
           .col-md-12
             legend
-              i.fa.fa-eye-slash.fa-fw
+              i.far.fa-eye-slash.fa-fw
               | #{' '}#{t('members.authenticated_via')}:
             ul
               each auth in member.authentications()
@@ -57,7 +57,7 @@ mixin memberform(member, regionalgroups, themegroups, tags)
           .row
             .col-md-6
               a.btn.btn-primary(data-toggle='modal', data-target='#login', href='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))
-                i.fa.fa-plus-square.fa-fw
+                i.far.fa-plus-square.fa-fw
                 | &nbsp;#{t('members.authenticate')}
         if (accessrights.isSuperuser())
           .row

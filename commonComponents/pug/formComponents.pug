@@ -131,7 +131,7 @@ mixin controlLabel(name, label, tooltip)
   label.control-label(for=name)
     -if (tooltip)
       span.tooltiplabel(data-original-title=tooltip) #{label}:&nbsp;
-        i.fa.fa-question-circle
+        i.fas.fa-question-circle
     -else
       | #{label}:
 
@@ -161,12 +161,12 @@ mixin reallyDeleteModalOnly(header, options)
             .btn-group
               button.btn.btn-default(type='cancel', data-dismiss='modal', aria-hidden='true') #{t('general.No')}
               button.btn.btn-primary(type='submit')
-                i.fa.fa-trash-o.fa-fw &nbsp;
+                i.far.fa-trash-alt.fa-fw &nbsp;
                 | #{t('general.delete')}
 
 mixin reallyDeleteButtonOnly(header, options, extraclasses)
   -var theID = 'reallyDelete' + header.replace('\.', '')
   span.btn.btn-danger(data-toggle='modal', data-target='#' + theID, class=extraclasses)
-    i.fa.fa-trash-o.fa-fw
+    i.far.fa-trash-alt.fa-fw
     if (extraclasses)
       | &nbsp; #{t('general.delete')}

@@ -2,7 +2,7 @@ mixin blogposts-panel(posts, feedUrl)
   div
     .btn-group.float-right
       a.btn.btn-sm.btn-light(href=feedUrl)
-        i.fa.fa-rss
+        i.fas.fa-fw.fa-rss
         | &nbsp;#{t('wiki.subscribe')}
     h4 #{t('wiki.blogposts')}:
   each post in posts

@@ -36,6 +36,6 @@ block content
                     if (accessrights.canEditPhoto(photo))
                       span &nbsp;
                         a.float-right(href='/activityresults/' + activityResult.id() + '/photo/' + photo.id() + '/edit', title=t('general.edit'))
-                          i.fa.fa-fw.fa-edit
+                          i.fas.fa-fw.fa-edit
                     span.float-right #{photo.time().locale(language).format('LT')}
       hr

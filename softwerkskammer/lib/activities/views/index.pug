@@ -21,10 +21,10 @@ block content
                 a.dropdown-item(href='/activities/past') #{t('activities.past')}
                 a.dropdown-item(href='/activities') #{t('general.all')}
                 a.dropdown-item(href='/activities/gdcr') #{t('general.gdcr_activities')}
-            a.btn.btn-light(href=webcalURL, title=t('activities.export_subscribe')): i.fa.fa-calendar.fa-fw
+            a.btn.btn-light(href=webcalURL, title=t('activities.export_subscribe')): i.far.fa-calendar-alt.fa-fw
             if (accessrights.isSuperuser())
-              button.btn.btn-light(type='submit'): i.fa.fa-meetup.fa-fw
+              button.btn.btn-light(type='submit'): i.fab.fa-meetup.fa-fw
             if (accessrights.canCreateActivity())
-              a.btn.btn-light(href='new/', title=t('activities.new')): i.fa.fa-file-o.fa-fw
+              a.btn.btn-light(href='new/', title=t('activities.new')): i.far.fa-file.fa-fw
         h2 #{t('activities.activities')}
       +activityList(activities)

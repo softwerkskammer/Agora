@@ -59,7 +59,6 @@ module.exports = function (grunt) {
       'node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
       'softwerkskammer/build/stylesheets/sass/out/bootstrap-markdown-patched.css',
       'node_modules/@fortawesome/fontawesome-free/css/all.css',
-      'node_modules/@fortawesome/fontawesome-free/css/v4-shims.css',
       'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
       'node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css',
       'node_modules/select2/dist/css/select2.css',

@@ -30,7 +30,7 @@ block content
           tbody
             for activity in activities
               tr
-                td: a.btn-sm(href='/activities/edit/' + encodeURIComponent(activity.url())): i.fa.fa-edit.fa-fw
+                td: a.btn-sm(href='/activities/edit/' + encodeURIComponent(activity.url())): i.fas.fa-edit.fa-fw
                 td #{activity.title()}
                 td #{activity.url()}
                 td #{activity.startMoment().locale(language).format('L')}

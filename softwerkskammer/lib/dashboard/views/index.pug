@@ -33,9 +33,9 @@ mixin my_groups
           .card.mb-2
             h5.card-header(style='background-color: ' + group.color + '; color: #FFFFFF;')
               a.inherit-color.chevron(data-toggle='collapse', data-target='#' + panelid): b
-                i.fa.fa-toggle-down.fa-fw.blog
+                i.far.fa-caret-square-down.fa-fw.blog
                 | &nbsp;#{group.longName}
-              a.inherit-color(href='/groups/' + group.id): span.float-right: i.fa.fa-group.fa-fw.tooltipify(data-toggle='tooltip', title=t('groups.tooltip.gotogroup'))
+              a.inherit-color(href='/groups/' + group.id): span.float-right: i.fas.fa-users.fa-fw.tooltipify(data-toggle='tooltip', title=t('groups.tooltip.gotogroup'))
             .card-body.collapse.show(id=panelid)
               +wikichangesOrBlogs(postsByGroup[group.id], panelid, 'blogs', t('wiki.blogposts'))
               +wikichangesOrBlogs(changesByGroup[group.id], panelid, 'changes', t('wiki.changes'))
@@ -49,9 +49,9 @@ mixin my_activities
         -var angemeldet = (member && activity.allRegisteredMembers().indexOf(member.id()) > -1)
         li.list-group-item
           if (angemeldet)
-            i.fa.fa-check.fa-fw.text-success.tooltipify(data-toggle='tooltip', title=t('activities.tooltip.registered'))
+            i.fas.fa-check.fa-fw.text-success.tooltipify(data-toggle='tooltip', title=t('activities.tooltip.registered'))
           else
-            i.fa.fa-question.fa-fw.tooltipify(data-toggle='tooltip', title=t('activities.tooltip.unknown'))
+            i.fas.fa-question.fa-fw.tooltipify(data-toggle='tooltip', title=t('activities.tooltip.unknown'))
           | &nbsp; #{activity.startMoment().locale(language).format('L')} &nbsp;
           a(href=activity.fullyQualifiedUrl()) #{activity.title()}
           a.float-right(href='/groups/' + activity.assignedGroup())
@@ -61,11 +61,11 @@ mixin wikichangesOrBlogs(items, panelid, prefix, title)
   if (items.length > 0)
     h5.card-title.my-2
       a.chevron(data-toggle='collapse', data-target='#' + panelid + ' .' + prefix)
-        i.fa.fa-toggle-down.fa-fw.blog
+        i.far.fa-caret-square-down.fa-fw.blog
         | &nbsp;#{title}
     ul.list-group.list-group-flush(class=prefix + ' collapse show')
       each item in items
         li.list-group-item.py-0
           a.modaldialog(data-toggle='modal', data-target='#wikidialog', data-link=item.dialogUrl(), href='#') #{item.pureName()}
           small.float-right #{item.date().locale(language).format('L')}&nbsp;
-            a(href=item.url()): i.fa.fa-book.fa-fw.tooltipify(data-toggle='tooltip', title=t('wiki.tooltip.gotopage'))
+            a(href=item.url()): i.fas.fa-book.fa-fw.tooltipify(data-toggle='tooltip', title=t('wiki.tooltip.gotopage'))
