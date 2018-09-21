@@ -56,25 +56,25 @@ mixin paymentMoneyTransfer(paymentInfo, actionUrl, amount, id)
       if(amount)
         p
           b #{t('payment.amount')}:
-          span.amount.pull-right #{amount.toFixed(2).replace('.', ',')} €
+          span.amount.float-right #{amount.toFixed(2).replace('.', ',')} €
       p
         b #{t('payment.bic')}:
-        span.pull-right #{paymentInfo.bic()}
+        span.float-right #{paymentInfo.bic()}
       p
         b #{t('payment.iban')}:
-        span.pull-right #{paymentInfo.iban()}
+        span.float-right #{paymentInfo.iban()}
       p
         b #{t('payment.receiver')}:
-        span.pull-right #{paymentInfo.paymentReceiver()}
+        span.float-right #{paymentInfo.paymentReceiver()}
       if (amount)
         if (paymentInfo.paymentDone())
           if (paymentInfo.moneyTransferred())
-            b.pull-right #{t('payment.payment_done')}
+            b.float-right #{t('payment.payment_done')}
         else
           form.form-horizontal(action=actionUrl, method='post')
             +csrf
             +hidden('id', id)
-            button.btn.btn-primary.pull-right(type='submit') #{t('payment.transferred')}
+            button.btn.btn-primary.float-right(type='submit') #{t('payment.transferred')}
 
 mixin paymentCreditCard(paymentInfo, placeholder, actionUrl, amount, fee, description, id)
   .panel.panel-default
@@ -84,19 +84,19 @@ mixin paymentCreditCard(paymentInfo, placeholder, actionUrl, amount, fee, descri
         a(href='http://stripe.com'): .fa.fa-cc-stripe
     .panel-body
       #charge-error.alert.alert-danger
-      p.pull-right: img(src='/img/creditcards.png')
+      p.float-right: img(src='/img/creditcards.png')
       .clearfix
       if (paymentInfo.paymentDone())
         if (amount)
           p
             b #{t('payment.amount')}:
-            span.amount.pull-right #{amount} €
+            span.amount.float-right #{amount} €
         if (fee)
           p
             b #{t('payment.handling_fee')}:
-            span.fee.pull-right #{fee}
+            span.fee.float-right #{fee}
         if (paymentInfo.creditCardPaid())
-          b.pull-right #{t('payment.payment_done')}
+          b.float-right #{t('payment.payment_done')}
       else
         form#paymentform(action=actionUrl, method='post')
           +csrf
@@ -104,7 +104,7 @@ mixin paymentCreditCard(paymentInfo, placeholder, actionUrl, amount, fee, descri
           if (amount)
             p
               b #{t('payment.amount')}:
-              span.amount.pull-right #{amount} €
+              span.amount.float-right #{amount} €
               +hidden('amount', amount)
               +hidden('description', description)
           else
@@ -113,12 +113,12 @@ mixin paymentCreditCard(paymentInfo, placeholder, actionUrl, amount, fee, descri
           p
             b #{t('payment.handling_fee')}:
             if (fee)
-              span.fee.pull-right #{fee} €
+              span.fee.float-right #{fee} €
             else
-              span.fee.pull-right
+              span.fee.float-right
           if (paymentInfo.paymentDone())
             if (paymentInfo.creditCardPaid())
-              b.pull-right #{t('payment.payment_done')}
+              b.float-right #{t('payment.payment_done')}
           else
             p
             .form-group
@@ -133,4 +133,4 @@ mixin paymentCreditCard(paymentInfo, placeholder, actionUrl, amount, fee, descri
             .form-group
               label.control-label(for='year') #{t('payment.valid_until_year')}:
               input.form-control(type='text', data-stripe='exp-year', placeholder='YYYY')
-            button.btn.btn-primary.submit-button.pull-right(type='submit') #{t('payment.charge_credit_card')}
+            button.btn.btn-primary.submit-button.float-right(type='submit') #{t('payment.charge_credit_card')}
