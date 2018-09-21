@@ -145,12 +145,6 @@ h6 > small {
   margin-left: auto;
 }
 
-@media screen {
-  body {
-    padding-top: 75px;
-  }
-}
-
 @media print {
   .btn {
     display: none !important;
@@ -167,13 +161,8 @@ h6 > small {
 }
 
 @media (min-width: 768px) {
-  .navbar-nav > li > a {
-    padding-top: 10px;
-    padding-bottom: 8px;
-  }
-
   body {
-    padding-bottom: 50px;
+    padding-top: 75px;
   }
 
   .popover {
@@ -183,8 +172,12 @@ h6 > small {
 }
 
 @media (max-width: 767px) {
-  body {
-    padding-top: 0px !important;
+  .fixed-top {
+    position: relative !important;
+  }
+
+  .fixed-bottom {
+    position: relative !important;
   }
 }
 

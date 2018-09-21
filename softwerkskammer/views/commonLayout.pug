@@ -45,10 +45,8 @@ html
           .modal-content
       img.d-none.d-print-block(src='/img/Softwerkskammer_Header.png', alt='Softwerkskammer', width='955')
       p.d-none.d-print-block &nbsp;
-      nav.navbar.navbar-expand-sm.p-0.navbar-light.bg-light.fixed-top.d-none.d-sm-flex.d-print-none(role='navigation')
+      nav.navbar.navbar-expand-sm.p-0.navbar-light.bg-light.fixed-top.d-print-none(role='navigation')
         +topNavbar
-      nav.navbar.py-0.navbar-light.bg-light.sticky-top.d-sm-none.d-flex(role='navigation')
-        +topNavbar('xs')
       .container-fluid.p-0.p-md-auto
         .row.main
           block specific

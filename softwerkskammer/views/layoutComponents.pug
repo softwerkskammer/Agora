@@ -74,9 +74,7 @@ mixin navbar-inside
     +administrationMenu
 
 mixin bottomNavbar
-  nav.navbar.navbar-expand-sm.p-0.navbar-light.bg-light.fixed-bottom.d-none.d-sm-flex
-    +navbar-inside
-  nav.navbar.navbar-expand-sm.p-0.navbar-light.bg-light.bottom.d-sm-none.d-flex
+  nav.navbar.navbar-expand-sm.p-0.navbar-light.bg-light.fixed-bottom
     +navbar-inside
 
 mixin notificationsBlock(notificationmessage)
@@ -87,7 +85,7 @@ mixin notificationsBlock(notificationmessage)
     h4 #{t(contents.title)}
     | #{t(contents.text, contents.additionalArguments)}
 
-mixin topNavbar(xs)
+mixin topNavbar()
   a.navbar-brand.py-0(href='/')
     img(src='/img/SoftwerkskammerWappenLinks.png', alt='Softwerkskammer', width='234', height='60')
   a.navbar-toggler.d-inline.d-sm-none(data-toggle='collapse', data-target='.collapse-top')
