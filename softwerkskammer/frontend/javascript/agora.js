@@ -28,7 +28,10 @@ function initParameterisedCalendar(id, date) {
       $(this).tooltip('show');
     },
     eventMouseout: function () {
-      $(this).tooltip('destroy');
+      $(this).tooltip('dispose');
+    },
+    eventClick: function () {
+      $(this).tooltip('dispose');
     },
     eventAfterAllRender: function () {
       if (displayedActivityStart) {
@@ -46,6 +49,7 @@ function initParameterisedCalendar(id, date) {
       }
     }
   });
+  $('.fc-right button').removeClass('btn-primary').addClass('btn-light');
 }
 
 function surroundInterestsWithLinks(string, casesensitive) {
