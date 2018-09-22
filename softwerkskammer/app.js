@@ -83,7 +83,6 @@ module.exports = {
     useApp(app, 'wiki', beans.get('wikiApp'));
     useApp(app, 'waitinglist', beans.get('waitinglistApp'));
     useApp(app, 'dashboard', beans.get('dashboardApp'));
-    useApp(app, 'payment', beans.get('paymentApp'));
     useApp(app, 'gallery', beans.get('galleryApp'));
 
     app.use(beans.get('handle404')());

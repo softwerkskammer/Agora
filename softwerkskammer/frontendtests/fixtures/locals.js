@@ -54,9 +54,5 @@ module.exports = {
     authentications: function () { return []; },
   },
   regionalgroups: [],
-  themegroups: [],
-  paymentInfo: {
-    paymentDone: function () { return false; },
-    paymentKey: function () { return 'paymentKey'; }
-  }
+  themegroups: []
 };

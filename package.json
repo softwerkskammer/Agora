@@ -25,7 +25,6 @@
   "dependencies": {
     "CoolBeans": "0.0.9",
     "async": "2.6.1",
-    "autonumeric": "2.0.12",
     "awesome-bootstrap-checkbox": "1.0.1",
     "body-parser": "1.18.3",
     "bootstrap": "4.1.3",
@@ -89,7 +88,6 @@
     "simple-configure": "0.1.6",
     "simple-timepicker": "1.1.1",
     "smartmenus": "1.1.0",
-    "stripe": "6.8.0",
     "tinycolor2": "1.4.1",
     "tinygradient": "0.4.1",
     "underscore.string": "3.3.4",

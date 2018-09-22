@@ -349,14 +349,11 @@
   "message": {
     "content": {
       "activities": {
-        "credit_card_not_paid": "Your credit card payment has not been successful. Reason: \"{{reason}}\"",
-        "credit_card_paid": "Your credit card payment of {{amount}} has been transferred.",
         "deleted": "The activity is history.",
         "does_not_exist": "The activity does not exist.",
         "participation_added": "Your participation has been registered.",
         "participation_removed": "What a pity that you will not participate.",
         "saved": "Your activity has been saved.",
-        "transfer_paid": "Your money transfer confirmation was saved.",
         "waitinglist_added": "You have been added to the waiting list.",
         "waitinglist_removed": "You have been removed from the waiting list."
       },
@@ -400,26 +397,6 @@
       "query": "Short Query String",
       "save_successful": "Saving Successful"
     }
-  },
-  "payment": {
-    "amount": "Amount",
-    "bic": "BIC",
-    "card_number": "Card number",
-    "charge_credit_card": "Charge my credit card",
-    "credit_card": "Credit Card",
-    "cvc_code": "CVC code",
-    "description": "Description",
-    "handling_fee": "Handling fee",
-    "how_to_pay": "Choose how you'd like to pay.",
-    "how_to_pay_detail": "The event requires a deposit upon registration. Please decide how you'd like to pay. You can either send the money via bank transfer (to a German account) or you can pay via credit card (an additional handling fee will be charged).",
-    "iban": "IBAN",
-    "money_transfer": "Money Transfer",
-    "payment_done": "You have already paid.",
-    "receiver": "Receiver",
-    "title": "Payment",
-    "transferred": "I have transferred the money",
-    "valid_until_month": "Valid until month",
-    "valid_until_year": "Valid until year"
   },
   "photo": {
     "delete": "Delete Photo",
