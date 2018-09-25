@@ -53,7 +53,7 @@ block content
           p (#{t('activities.count_participants_meetup_interval', {postProcess: 'interval', count: activity.meetupRSVPCount()})})
         +subscriptionButtons(activity, resourceRegistrationRenderer)
         if (accessrights.isRegistered() && activity.participants.length > 0)
-          h4 #{t('activities.accepted_by')}:
+          h4.mt-3 #{t('activities.accepted_by')}:
           +memberlist(activity.participants)
 
       if (activity.group)

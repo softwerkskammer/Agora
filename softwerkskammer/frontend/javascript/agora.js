@@ -49,7 +49,6 @@ function initParameterisedCalendar(id, date) {
       }
     }
   });
-  $('.fc-right button').removeClass('btn-primary').addClass('btn-light');
 }
 
 function surroundInterestsWithLinks(string, casesensitive) {

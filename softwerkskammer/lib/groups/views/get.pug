@@ -20,7 +20,7 @@ block content
           +hidden('groupname', group.id)
           .btn-group.float-right
             a.btn.btn-light(href='/wiki/' + group.id + '/')
-              i.far.fa-book.fa-fw
+              i.fas.fa-book.fa-fw
               | &nbsp;#{t('wiki.wiki')}
             a.btn.btn-light(href=webcalURL, title=t('activities.export_subscribe')): i.far.fa-calendar-alt.fa-fw
             if (accessrights.canEditGroup(group))
@@ -49,7 +49,7 @@ block content
             +hidden('groupname', group.id)
             button.btn.btn-primary(type='submit') #{t('groups.join')}
 
-      h4.mt-2 #{t('members.members')}:
+      h4.mt-3 #{t('members.members')}:
       +memberlistHeading(t('groups.has'), users.length)
       +memberlist(users, organizers)
     .col-md-6
@@ -58,7 +58,7 @@ block content
         +activityList(upcomingGroupActivities)
       +tagCloud
       if (recentGroupActivities.length > 0)
-        h4 #{t('activities.recent_activities')}:
+        h4.mt-3 #{t('activities.recent_activities')}:
         +activityList(recentGroupActivities)
       if (blogposts.length > 0)
          +blogposts-panel(blogposts, blogpostsFeedUrl)

@@ -266,4 +266,16 @@ a {
 
 .nav-item.active {
   background-color: $gray-400;
-}                                                                                                                
+}
+
+// needed to find the right font
+.abc-checkbox input[type=checkbox]:checked+label::after, .abc-checkbox input[type=radio]:checked+label::after {
+  font-weight: 900;
+}
+
+// transform fullcalendar's primary to light button
+.fc-right .btn-primary {
+  color: #212529;
+  background-color: #f8f9fa;
+  border-color: #f8f9fa;
+}

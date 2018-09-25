@@ -53,10 +53,8 @@ module.exports = function (grunt) {
   const filesForCss = {
     'softwerkskammer/public/stylesheets/screen.css': [
       'node_modules/fullcalendar/dist/fullcalendar.css',
-      'softwerkskammer/build/stylesheets/sass/out/bootstrap.css',
       'node_modules/smartmenus/dist/addons/bootstrap-4/jquery.smartmenus.bootstrap-4.css',
       'node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
-      'softwerkskammer/build/stylesheets/sass/out/bootstrap-markdown-patched.css',
       'node_modules/@fortawesome/fontawesome-free/css/all.css',
       'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
       'node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css',
