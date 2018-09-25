@@ -207,8 +207,8 @@
       "p Mach's gut - bis zum nächsten Mal!",
       "hr",
       "p.text-right Oder magst Du nochmal reinschauen? ",
-      "  a.btn.btn-primary(data-toggle='modal', data-target='#login', href='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))",
-      "    i.fa.fa-sign-in.fa-fw",
+      "  span.modaldialog.btn.btn-primary(data-toggle='modal', data-target='#login', data-link='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))",
+      "    i.fas.fa-sign-in-alt.fa-fw",
       "    | &nbsp;$t(general.login)"
     ],
     "goodbye_text_bottom": "SoCraTes only",
@@ -343,14 +343,11 @@
   "message": {
     "content": {
       "activities": {
-        "credit_card_not_paid": "Deine Kreditkartenzahlung ist nicht erfolgt. Grund: \"{{reason}}\"",
-        "credit_card_paid": "Deine Kreditkartenzahlung in Höhe von {{amount}} ist erfolgt.",
         "deleted": "Die Aktivität wurde gelöscht.",
         "does_not_exist": "Die Aktivität existiert nicht.",
         "participation_added": "Deine Teilnahme wurde eingetragen.",
         "participation_removed": "Schade, dass Du nicht dabei sein wirst.",
         "saved": "Deine Aktivität wurde gespeichert.",
-        "transfer_paid": "Deine Überweisungsbestätigung wurde gespeichert.",
         "waitinglist_added": "Du bist jetzt auf der Warteliste.",
         "waitinglist_removed": "Du bist jetzt nicht mehr auf der Warteliste."
       },
@@ -394,26 +391,6 @@
       "query": "Suchtext zu kurz",
       "save_successful": "Speichern erfolgreich"
     }
-  },
-  "payment": {
-    "amount": "Betrag",
-    "bic": "BIC",
-    "card_number": "Kartennummer",
-    "charge_credit_card": "Meine Kreditkarte belasten",
-    "credit_card": "Kreditkarte",
-    "cvc_code": "Prüfziffer",
-    "description": "Beschreibung",
-    "handling_fee": "Bearbeitungsgebühr",
-    "how_to_pay": "Wähle, wie Du bezahlen möchtest.",
-    "how_to_pay_detail": "Die Veranstaltung erfordert eine Anzahlung bei Anmeldung. Bitte entscheide Dich, wie Du die Zahlung leisten möchtest. Du kannst das Geld entweder auf ein deutsches Konto überweisen oder gegen Gebühr mit Kreditkarte bezahlen.",
-    "iban": "IBAN",
-    "money_transfer": "Überweisung",
-    "payment_done": "Du hast schon bezahlt.",
-    "receiver": "Empfänger",
-    "title": "Zahlung",
-    "transferred": "Ich habe überwiesen",
-    "valid_until_month": "Gültig bis Monat",
-    "valid_until_year": "Gültig bis Jahr"
   },
   "photo": {
     "delete": "Photo löschen",

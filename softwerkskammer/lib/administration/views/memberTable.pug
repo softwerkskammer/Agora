@@ -11,12 +11,12 @@ block title
 
 block content
   .row
-    .col-md-12
+    .col-12
       .page-header
-        h2 Verwaltung
+        h2 Verwaltung #{' '}
           small  Mitglieder
       .table-responsive
-        table.table.table-condensed.table-hover.table-striped#membertable
+        table.table.table-sm.table-hover.table-striped#membertable
           thead
             tr
               th Edit
@@ -36,7 +36,7 @@ block content
           tbody
             for member in members
               tr
-                td: a.btn-sm(href='/members/edit/' + encodeURIComponent(member.nickname())): i.fa.fa-edit.fa-fw
+                td: a.btn-sm(href='/members/edit/' + encodeURIComponent(member.nickname())): i.fas.fa-edit.fa-fw
                 td #{member.created()}
                 td: +linkedMember(member.nickname())
                 td #{member.firstname()}

@@ -5,10 +5,10 @@ block title
 
 block content
   .page-header
-    .btn-group.pull-right
-      a.btn.btn-default(href='javascript:history.back()', type='cancel') #{t('general.back')}
-    h2 #{t('wiki.overview')} "#{subdir}"
+    .btn-group.float-right
+      a.btn.btn-light(href='javascript:history.back()', type='cancel') #{t('general.back')}
+    h1 #{t('wiki.overview')} "#{subdir}"
 
-  table.history.table.table-striped.table-bordered.table-hover.table-condensed
+  table.history.table.table-striped.table-bordered.table-hover.table-sm
     each item in items
       tr: td: a(href='/wiki/' + item.fullname) #{item.name}

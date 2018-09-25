@@ -5,9 +5,9 @@ block title
 
 block content
   .row
-    .col-md-12
+    .col-12
       .page-header
-        h2 "#{searchtext}"&nbsp;
+        h1 "#{searchtext}"&nbsp;
           small #{t('wiki.searchresults')}
       if (matches.length === 0)
         h3 #{t('wiki.no_results')}
@@ -16,11 +16,11 @@ block content
           each match in matches
             if (match.line)
               dt
-                a(href='/wiki/' + match.pageName) #{match.pageName}
-                |  (#{t('wiki.line')} #{match.line})
+                a(href='/wiki/' + match.pageName) #{match.pageName} #{' '}
+                | (#{t('wiki.line')} #{match.line})
               dd: em "#{match.text}"
             else
               dt
-                a(href='/wiki/' + match.pageName) #{match.pageName}
-                |  (#{t('wiki.filename')})
+                a(href='/wiki/' + match.pageName) #{match.pageName} #{' '}
+                | (#{t('wiki.filename')})
 

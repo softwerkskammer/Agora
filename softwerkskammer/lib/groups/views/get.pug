@@ -9,34 +9,32 @@ block head
     link(rel='alternate', type='application/atom+xml', href=blogpostsFeedUrl)
 
 block title
-    | #{group.longName}
+  | #{group.longName}
 
 block content
   .row
-    .col-md-12
+    .col-12
       .page-header
         form(role='form', method='POST', action='clone-from-meetup-for-group/')
           +csrf
           +hidden('groupname', group.id)
-          .btn-group.pull-right
-            a.btn.btn-default(href='/wiki/' + group.id + '/')
-              i.fa.fa-book.fa-fw
+          .btn-group.float-right
+            a.btn.btn-light(href='/wiki/' + group.id + '/')
+              i.fas.fa-book.fa-fw
               | &nbsp;#{t('wiki.wiki')}
-            a.btn.btn-default(href=webcalURL, title=t('activities.export_subscribe')): i.fa.fa-calendar.fa-fw
+            a.btn.btn-light(href=webcalURL, title=t('activities.export_subscribe')): i.far.fa-calendar-alt.fa-fw
             if (accessrights.canEditGroup(group))
               if (group.meetupUrlName())
-                button.btn.btn-default(type='submit', title=t('groups.meetup_clone_title')): i.fa.fa-meetup.fa-fw
-              a.btn.btn-default(href='/groups/edit/' + group.id, title=t('general.edit')): i.fa.fa-edit
-        h2 #{group.longName}
+                button.btn.btn-light(type='submit', title=t('groups.meetup_clone_title')): i.fab.fa-meetup.fa-fw
+              a.btn.btn-light(href='/groups/edit/' + group.id, title=t('general.edit')): i.fas.fa-edit
+        h1 #{group.longName} #{' '}
           small #{group.type}
       p
-        strong
-          | #{t('general.address')}:
-        |
+        strong #{t('general.address')}: #{' '}
         a(href='mailto:' + group.id + '@softwerkskammer.org')
           | #{group.id}@softwerkskammer.org
   .row
-    .col-md-6
+    .col-lg-6
       | !{group.descriptionHTML()}
 
       if (accessrights.canParticipateInGroup(group))
@@ -44,14 +42,14 @@ block content
           form(role='form', method='POST', action='unsubscribe')
             +csrf
             +hidden('groupname', group.id)
-            button.btn.btn-default(type='submit') #{t('groups.leave')}
+            button.btn.btn-light(type='submit') #{t('groups.leave')}
         else
           form(role='form', method='POST', action='subscribe')
             +csrf
             +hidden('groupname', group.id)
             button.btn.btn-primary(type='submit') #{t('groups.join')}
 
-      h4 #{t('members.members')}:
+      h4.mt-3 #{t('members.members')}:
       +memberlistHeading(t('groups.has'), users.length)
       +memberlist(users, organizers)
     .col-md-6
@@ -60,7 +58,7 @@ block content
         +activityList(upcomingGroupActivities)
       +tagCloud
       if (recentGroupActivities.length > 0)
-        h4 #{t('activities.recent_activities')}:
+        h4.mt-3 #{t('activities.recent_activities')}:
         +activityList(recentGroupActivities)
       if (blogposts.length > 0)
          +blogposts-panel(blogposts, blogpostsFeedUrl)

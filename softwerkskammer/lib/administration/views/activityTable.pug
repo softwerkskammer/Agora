@@ -10,14 +10,12 @@ block title
 
 block content
   .row
-    .col-md-12
+    .col-12
       .page-header
-        h2 Verwaltung
+        h2 Verwaltung #{' '}
           small  Aktivitäten  
-  .row
-    .col-md-12
       .table-responsive
-        table.table.table-condensed.table-hover.table-striped#activitytable
+        table.table.table-sm.table-hover.table-striped#activitytable
           thead
             tr
               th Edit
@@ -32,7 +30,7 @@ block content
           tbody
             for activity in activities
               tr
-                td: a.btn-sm(href='/activities/edit/' + encodeURIComponent(activity.url())): i.fa.fa-edit.fa-fw
+                td: a.btn-sm(href='/activities/edit/' + encodeURIComponent(activity.url())): i.fas.fa-edit.fa-fw
                 td #{activity.title()}
                 td #{activity.url()}
                 td #{activity.startMoment().locale(language).format('L')}

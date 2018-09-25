@@ -7,7 +7,7 @@ var groups_validator;
 (function () {
   'use strict';
 
-  var initValidator = function () {
+  function initValidator () {
 
     // DO NOT FORGET TO KEEP THIS FILE IN SYNC WITH /lib/commons/validation.js
 
@@ -49,22 +49,30 @@ var groups_validator;
         }
       },
       errorElement: 'span',
-      errorClass: 'help-block',
+      errorClass: 'help-block text-danger',
       highlight: function (element) {
-        $(element).parent().addClass('has-error');
+        if ($(element).hasClass('md-input')) {
+          $(element).parent().parent().addClass('has-error');
+        } else {
+          $(element).addClass('is-invalid');
+        }
       },
       unhighlight: function (element) {
-        $(element).parent().removeClass('has-error');
+        if ($(element).hasClass('md-input')) {
+          $(element).parent().parent().removeClass('has-error');
+        } else {
+          $(element).removeClass('is-invalid');
+        }
       }
     });
 
     groups_validator.form();
 
-    var handler = function (each) {
+    function handler (each) {
       return function () {
         groups_validator.element(each);
       };
-    };
+    }
 
     ['#groupform [name=id]', '#groupform [name=longName]', '#groupform [name=description]', '#groupform [name=type]',
       '#groupform [name=emailPrefix]'].forEach(
@@ -74,7 +82,7 @@ var groups_validator;
       }
     );
 
-  };
+  }
   $(document).ready(initValidator);
 
   // show / hide mapstuff widgets

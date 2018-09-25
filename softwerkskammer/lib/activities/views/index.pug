@@ -7,24 +7,24 @@ block title
 
 block content
   .row
-    .col-md-12
+    .col-12
       .page-header
         form(role='form', method='POST', action='clone-from-meetup/')
           +csrf
-          .btn-group.pull-right
-            .btn-group
-              a.btn.btn-default.dropdown-toggle(data-toggle='dropdown')
+          .btn-group.float-right
+            .dropdown
+              a.btn.btn-light.dropdown-toggle(data-toggle='dropdown')
                 | #{range} &nbsp;
                 span.caret
-              ul.dropdown-menu
-                li: a(href='/activities/upcoming') #{t('activities.upcoming')}
-                li: a(href='/activities/past') #{t('activities.past')}
-                li: a(href='/activities') #{t('general.all')}
-                li: a(href='/activities/gdcr') #{t('general.gdcr_activities')}
-            a.btn.btn-default(href=webcalURL, title=t('activities.export_subscribe')): i.fa.fa-calendar.fa-fw
+              .dropdown-menu
+                a.dropdown-item(href='/activities/upcoming') #{t('activities.upcoming')}
+                a.dropdown-item(href='/activities/past') #{t('activities.past')}
+                a.dropdown-item(href='/activities') #{t('general.all')}
+                a.dropdown-item(href='/activities/gdcr') #{t('general.gdcr_activities')}
+            a.btn.btn-light(href=webcalURL, title=t('activities.export_subscribe')): i.far.fa-calendar-alt.fa-fw
             if (accessrights.isSuperuser())
-              button.btn.btn-default(type='submit'): i.fa.fa-meetup.fa-fw
+              button.btn.btn-light(type='submit'): i.fab.fa-meetup.fa-fw
             if (accessrights.canCreateActivity())
-              a.btn.btn-default(href='new/', title=t('activities.new')): i.fa.fa-file-o.fa-fw
+              a.btn.btn-light(href='new/', title=t('activities.new')): i.far.fa-file.fa-fw
         h2 #{t('activities.activities')}
       +activityList(activities)

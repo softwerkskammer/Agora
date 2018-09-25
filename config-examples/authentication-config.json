@@ -2,10 +2,5 @@
   "githubClientID" : "00000000000000000000",
   "githubClientSecret" : "0000000000000000000000000000000000000000",
   "superuser" : ["userIDofSuperuser1", "userIDofSuperuser2"],
-  "publicPaymentKey": "<put here from stripe.com>",
-  "secretPaymentKey": "<put here from stripe.com>",
-  "paymentBic"      : "",
-  "paymentIban"     : "",
-  "paymentReceiver" : "",
   "magicLinkSecret" : ""
 }

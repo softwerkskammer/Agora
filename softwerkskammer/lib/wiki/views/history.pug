@@ -42,17 +42,17 @@ block title
 
 block content
   .page-header
-    .btn-group.pull-right
-      a.btn.btn-default(href='javascript:history.back()', type='cancel') #{t('general.back')}
+    .btn-group.float-right
+      a.btn.btn-light(href='javascript:history.back()', type='cancel') #{t('general.back')}
       if (accessrights.isRegistered())
-        button#rev-compare.btn.btn-default(data-pageName=pageName, data-subdir=subdir)
-          i.fa.fa-stethoscope.fa-fw
+        button#rev-compare.btn.btn-light(data-pageName=pageName, data-subdir=subdir)
+          i.fas.fa-stethoscope.fa-fw
           | &nbsp; #{t('general.compare')}…
-    h2 #{subdir}/#{pageName}
+    h1 #{subdir}/#{pageName}
       br
       small #{t('wiki.revisions')}
 
-  table.history.table.table-striped.table-bordered.table-hover.table-condensed
+  table.history.table.table-striped.table-bordered.table-hover.table-sm
     each item in items
       tr
         td

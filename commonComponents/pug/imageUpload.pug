@@ -1,12 +1,12 @@
 mixin selectFileButton(label, extraclasses)
   span.btn.btn-primary.btn-file(class=extraclasses)
-    i.fa.fa-fw.fa-camera
+    i.fas.fa-fw.fa-camera-retro.fa-lg
     | &nbsp; #{t(label)}
     input#input-file(type='file', accept='image/*', name='image')
 
 mixin uploadButtons(btnGroupClasses)
   .btn-group(class=btnGroupClasses)
-    span#btn-cancel.btn.btn-default #{t('general.cancel')}
+    span#btn-cancel.btn.btn-light #{t('general.cancel')}
     button.btn.btn-primary(type='submit') #{t('general.save')}
 
 mixin imageScripts
@@ -42,7 +42,7 @@ mixin imageUpload
   #selectFileButton
     +selectFileButton('general.photo')
   #uploadButtons
-    +uploadButtons(['pull-right'])
+    +uploadButtons(['float-right'])
   .clearfix
   #previewContainer
     div

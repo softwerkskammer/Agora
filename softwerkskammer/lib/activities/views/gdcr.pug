@@ -5,7 +5,7 @@ mixin activitylist(activities)
     for activity in activities
       li
         a(href='/groups/' + activity.assignedGroup())
-          span.label(style='background-color: ' + activity.colorRGB) #{activity.groupName()}
+          span.badge.text-white(style='background-color: ' + activity.colorRGB) #{activity.groupName()}
         | &nbsp;
         span.popover-highlight(rel='tooltip-in-body', data-content=activity.descriptionHTML().substring(0,500))
           a(href=activity.fullyQualifiedUrl()) #{activity.title()}
@@ -16,7 +16,7 @@ mixin placeGroupLabels(activities)
     -var group = activity.group
     -counter[group.longName] = counter[group.longName] + 1 || 0;
     if (group.shortName)
-      .label.group(style='background-color: ' + activity.colorRGB + '; top: ' + ((group.mapYrelative() || 0) + (counter[group.longName] * 4)) + '%; left: ' + (group.mapXrelative() || 2) + '%;')
+      .badge.group.position-absolute(style='background-color: ' + activity.colorRGB + '; top: ' + ((group.mapYrelative() || 0) + (counter[group.longName] * 2)) + '%; left: ' + (group.mapXrelative() || 2) + '%;')
         span(rel='tooltip-in-body', data-title='<h4>' + activity.title() + '</h4>', data-content=activity.descriptionHTML().substring(0,500))
           a.group(href=activity.fullyQualifiedUrl()) #{group.shortName}
 
@@ -26,24 +26,24 @@ block title
 
 block content
   .row
-    .col-md-12
+    .col-12
       .page-header
-        h2 #{t('general.gdcr_activities')} #{year}
+        h1 #{t('general.gdcr_activities')} #{year}
       p  #{t('general.gdcr_text')}&nbsp;
         span.urlify http://gdcr.coderetreat.org/
       h2 #{activities.length} Coderetreats
   .row
-    .col-md-6
+    .col-lg-6
       +activitylist(activities)
-    .col-md-6.visible-xs.visible-sm.groupsmap(style='position: relative; width: 100%; height: 100px; background-image:url("/img/map.svg"); background-size: 100% 100%; background-repeat: no-repeat;')
+    .col-lg-6.d-inline.d-lg-none.groupsmap(style='position: relative; width: 100%; height: 100px; background-image:url("/img/map.svg"); background-size: 100% 100%; background-repeat: no-repeat;')
       +placeGroupLabels(activities)
-    .col-md-6.hidden-xs.hidden-sm.groupsmap(style='position: relative; width: 50%; height: 100px; background-image:url("/img/map.svg"); background-size: 100% 100%; background-repeat: no-repeat;')
+    .col-lg-6.d-none.d-lg-inline.groupsmap(style='position: relative; width: 50%; height: 100px; background-image:url("/img/map.svg"); background-size: 100% 100%; background-repeat: no-repeat;')
       +placeGroupLabels(activities)
 
   .row
-    .col-md-12
+    .col-12
       if previousYears.length > 0
-        h3 #{t('activities.previous_gdcr')}
+        h2 #{t('activities.previous_gdcr')}
         each year in previousYears
           p: a(href='/activities/gdcr' + year) #{year}
 

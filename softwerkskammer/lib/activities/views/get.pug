@@ -13,19 +13,19 @@ block opengraph
 
 block content
   .row
-    .col-md-12
+    .col-12
       .page-header
-        .pull-right.visible-print
+        .float-right.d-print-flex.d-none
           img(height='80px', src='/qrcode?url=' + encodeURIComponent(activity.fullyQualifiedUrl()))
-        .btn-group.pull-right
-          a.btn.btn-default(href='/activities/ical/' + encodeURIComponent(activity.url()), title=t('activities.export')): i.fa.fa-calendar.fa-fw
-          a.btn.btn-default(href='/wiki/' + activity.blogEntryUrl(), title=t('activities.blog_entry')): i.fa.fa-rss.fa-fw
+        .btn-group.float-right
+          a.btn.btn-light(href='/activities/ical/' + encodeURIComponent(activity.url()), title=t('activities.export')): i.far.fa-calendar-alt.fa-fw
+          a.btn.btn-light(href='/wiki/' + activity.blogEntryUrl(), title=t('activities.blog_entry')): i.fas.fa-pen-nib.fa-fw
           if (accessrights.canCreateActivity())
-            a.btn.btn-default(href='/activities/newLike/' + encodeURIComponent(activity.url()), title=t('activities.new_copy')): i.fa.fa-copy.fa-fw
+            a.btn.btn-light(href='/activities/newLike/' + encodeURIComponent(activity.url()), title=t('activities.new_copy')): i.far.fa-copy.fa-fw
           if (accessrights.canEditActivity(activity))
-            a.btn.btn-default(href='/waitinglist/' + encodeURIComponent(activity.url()), title=t('activities.waitinglist')): i.fa.fa-clock-o.fa-fw
-            a.btn.btn-default(href='/mailsender/invitation/' + encodeURIComponent(activity.url()), title=t('activities.invitation')): i.fa.fa-envelope-o.fa-fw
-            a.btn.btn-default(href='/activities/edit/' + encodeURIComponent(activity.url()), title=t('general.edit')): i.fa.fa-edit.fa-fw
+            a.btn.btn-light(href='/waitinglist/' + encodeURIComponent(activity.url()), title=t('activities.waitinglist')): i.far.fa-clock.fa-fw
+            a.btn.btn-light(href='/mailsender/invitation/' + encodeURIComponent(activity.url()), title=t('activities.invitation')): i.far.fa-envelope.fa-fw
+            a.btn.btn-light(href='/activities/edit/' + encodeURIComponent(activity.url()), title=t('general.edit')): i.far.fa-edit.fa-fw
           if (accessrights.canDeleteActivity(activity))
             -var deleteoptions = {url: '/activities/delete', params: {activityUrl: activity.url()}}
             +reallyDeleteModalPost('activities.delete', deleteoptions)
@@ -36,7 +36,6 @@ block content
               | ) - #{activity.endMoment().locale(language).format('LL')} (#{activity.endMoment().locale(language).format('LT')})
             else
               |  - #{activity.endMoment().locale(language).format('LT')})
-      .clearfix
       | !{activity.descriptionHTML()}
       hr
   .row
@@ -47,14 +46,14 @@ block content
         h4 #{t('activities.directions')}:
         | !{activity.directionHTML()}
       hr
-      .hidden-print
+      .d-print-none
         if (allowsRegistration)
           p #{t('activities.count_participants_interval', { postProcess: 'interval', count: activity.participants.length })}
         if (activity.clonedFromMeetup())
           p (#{t('activities.count_participants_meetup_interval', {postProcess: 'interval', count: activity.meetupRSVPCount()})})
         +subscriptionButtons(activity, resourceRegistrationRenderer)
         if (accessrights.isRegistered() && activity.participants.length > 0)
-          h4 #{t('activities.accepted_by')}:
+          h4.mt-3 #{t('activities.accepted_by')}:
           +memberlist(activity.participants)
 
       if (activity.group)

@@ -1,0 +1,16 @@
+@import "variables";
+@import "../../../../node_modules/bootstrap/scss/functions";
+@import "../../../../node_modules/bootstrap/scss/variables";
+@import "../../../../node_modules/bootstrap/scss/mixins";
+@import "bootstrap-markdown.scss";
+
+.md-editor {
+  > textarea {
+    font-size: $code-font-size;
+    background: $body-bg;
+  }
+}
+
+.has-error .md-editor {
+  border-color: $danger;
+}

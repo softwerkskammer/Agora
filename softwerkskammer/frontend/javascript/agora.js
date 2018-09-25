@@ -28,14 +28,17 @@ function initParameterisedCalendar(id, date) {
       $(this).tooltip('show');
     },
     eventMouseout: function () {
-      $(this).tooltip('destroy');
+      $(this).tooltip('dispose');
+    },
+    eventClick: function () {
+      $(this).tooltip('dispose');
     },
     eventAfterAllRender: function () {
       if (displayedActivityStart) {
         this.calendar.select(displayedActivityStart, displayedActivityEnd);
       }
     },
-    themeSystem: 'bootstrap3',
+    themeSystem: 'bootstrap4',
     aspectRatio: 1.2,
     height: 'auto',
     views: {

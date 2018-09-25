@@ -1,6 +1,6 @@
 mixin subscriptionButtons(activity, resourceRegistrationRenderer)
   -var result = resourceRegistrationRenderer.htmlRepresentationOf(activity, accessrights.memberId())
-  -var btnClass = result.isWithdrawal() ? 'btn-default' : 'btn-primary'
+  -var btnClass = result.isWithdrawal() ? 'btn-light' : 'btn-primary'
   if (!result.representsButton())
     | #{t(result.displayText)}
   else
@@ -10,13 +10,13 @@ mixin subscriptionButtons(activity, resourceRegistrationRenderer)
       button.btn(type='submit', class=btnClass) #{t(result.displayText)}
 
 mixin activityList(activities, member)
-  dl.dl-horizontal
+  dl.row
     for activity in activities
-      dt
+      dt.col-4
         | #{activity.startMoment().locale(language).format('LL')}
-      dd
+      dd.col-8.mb-0
         a(href='/groups/' + activity.assignedGroup())
-          span.label(style='background-color: ' + activity.colorRGB) #{activity.groupName()}
+          .badge.text-white(style='background-color: ' + activity.colorRGB) #{activity.groupName()}
         | &nbsp;
         a(href=activity.fullyQualifiedUrl()) #{activity.title()}
         if (member && activity.allRegisteredMembers().indexOf(member.id()) > -1)

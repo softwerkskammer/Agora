@@ -59,13 +59,13 @@ mixin hightextarea(name, label, value, tooltip, placeholder)
   +textareaInternal('md-textarea', '15', name, label, value, tooltip, placeholder)
 
 mixin checkboxWithDescription(name, label, checked, description, optionalValue)
-  .checkbox
-    label
-      input(type='checkbox', name=name, value=optionalValue, checked=(checked ? 'true' : undefined))
+  .form-check.abc-checkbox.abc-checkbox-success
+    input.form-check-input(type='checkbox', id=name + optionalValue, name=name, value=optionalValue, checked=(checked ? 'true' : undefined))
+    label.form-check-label(for=name + optionalValue)
       -if (description)
         span.popover-highlight(rel='tooltip-in-body', data-content=description) #{label}
       -else
-        | #{label}
+        | !{label}
 
 mixin checkbox(name, label, checked, optionalValue)
   +checkboxWithDescription(name, label, checked, undefined, optionalValue)
@@ -84,14 +84,14 @@ mixin groupCheckboxes(checkboxName, regionalgroups, themegroups)
           +checkboxWithDescription(checkboxName, markedGroup.group.displaynameInSubscriptionList(), markedGroup.selected, markedGroup.group.descriptionHTMLFiltered('img'), markedGroup.group.id)
 
 mixin submitButtons(submitTextToken)
-  .btn-group.pull-right
-    a.btn.btn-default(href='javascript:history.back()', type='cancel') #{t('general.back')}
+  .btn-group.float-right
+    a.btn.btn-light(href='javascript:history.back()', type='cancel') #{t('general.back')}
     button.btn.btn-primary(type='submit') #{t(submitTextToken)}
 
 mixin memberSubmitButtons(submitText)
-  .btn-group.pull-right
+  .btn-group.float-right
     if (accessrights.isRegistered())
-      a.btn.btn-default(href='javascript:history.back()', type='cancel') #{t('general.back')}
+      a.btn.btn-light(href='javascript:history.back()', type='cancel') #{t('general.back')}
     else
       a.btn.btn-danger(href='/auth/logout', type='cancel') #{t('members.cancel')}
     button.btn.btn-primary(type='submit') #{submitText}
@@ -113,7 +113,8 @@ mixin colorPicker(name, value)
   .form-group
     +controlLabel(name, t('colors.color'))
     .input-group.c-picker
-      span.input-group-addon: i
+      span.input-group-append
+        span.input-group-text.colorpicker-input-addon: i
       input.form-control(id=name, type='text', name=name, value=value)
 
 mixin twitter(name, label, value)
@@ -130,7 +131,7 @@ mixin controlLabel(name, label, tooltip)
   label.control-label(for=name)
     -if (tooltip)
       span.tooltiplabel(data-original-title=tooltip) #{label}:&nbsp;
-        i.fa.fa-question-circle
+        i.fas.fa-question-circle
     -else
       | #{label}:
 
@@ -149,8 +150,8 @@ mixin reallyDeleteModalOnly(header, options)
     .modal-dialog
       .modal-content
         .modal-header
+          h3.modal-title #{t(header)}
           button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
-          h3 #{t(header)}
         .modal-body
           p #{t('general.are_you_sure')}
           form(action=options.url, role='form', method='post')
@@ -160,12 +161,12 @@ mixin reallyDeleteModalOnly(header, options)
             .btn-group
               button.btn.btn-default(type='cancel', data-dismiss='modal', aria-hidden='true') #{t('general.No')}
               button.btn.btn-primary(type='submit')
-                i.fa.fa-trash-o.fa-fw &nbsp;
+                i.far.fa-trash-alt.fa-fw &nbsp;
                 | #{t('general.delete')}
 
 mixin reallyDeleteButtonOnly(header, options, extraclasses)
   -var theID = 'reallyDelete' + header.replace('\.', '')
   span.btn.btn-danger(data-toggle='modal', data-target='#' + theID, class=extraclasses)
-    i.fa.fa-trash-o.fa-fw
+    i.far.fa-trash-alt.fa-fw
     if (extraclasses)
       | &nbsp; #{t('general.delete')}

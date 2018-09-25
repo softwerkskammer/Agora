@@ -6,9 +6,9 @@ block title
   | #{t('general.welcome')}
 block content
   .row
-    .col-md-12
+    .col-12
       .page-header
-        h2 Softwerkskammer <br>
+        h1 Softwerkskammer <br>
           small #{t('general.communities')}
   .row
     .col-md-12
@@ -18,7 +18,7 @@ block content
         a(href='activities/gdcr') die meisten der Veranstaltungen im Softwerkskammer-Einzugsgebiet.
       hr
   .row
-    .col-md-6
+    .col-lg-6
       !=t('general.about_us_text', { postProcess: 'pug' })
       if (language === 'de')
         h4 Wenn…
@@ -32,13 +32,13 @@ block content
             wie Clean Code, TDD etc. austauschen möchtest,
         p Dann ist die Softwerkskammer etwas für Dich!
 
-    .col-md-6.hidden-md.hidden-lg.groupsmap(style='position: relative; width: 100%; height: 100px; background-image:url("/img/map.svg"); background-size: 100% 100%; background-repeat: no-repeat;')
+    .col-lg-6.d-inline.d-lg-none.groupsmap(style='position: relative; width: 100%; height: 100px; background-image:url("/img/map.svg"); background-size: 100% 100%; background-repeat: no-repeat;')
       +placeGroupLabels(regionalgroups)
-    .col-md-6.hidden-xs.hidden-sm.groupsmap(style='position: relative; width: 50%; height: 100px; background-image:url("/img/map.svg"); background-size: 100% 100%; background-repeat: no-repeat;')
+    .col-lg-6.d-none.d-lg-inline.groupsmap(style='position: relative; width: 50%; height: 100px; background-image:url("/img/map.svg"); background-size: 100% 100%; background-repeat: no-repeat;')
       +placeGroupLabels(regionalgroups)
   if (language === 'de')
     .row
-      .col-md-12
+      .col-12
         hr
         h4 Wir sind …
         p.
@@ -51,7 +51,7 @@ block content
           li sicherstellen, dass unsere Ergebnisse eine hohe interne und externe Qualität besitzen
           li flexible, leicht änderbare Software herstellen
         p
-          strong Kurz:
+          strong Kurz:&nbsp;
           | Wir wollen die richtige Software entwickeln, und wir wollen die Software richtig entwickeln.
 
 block scripts

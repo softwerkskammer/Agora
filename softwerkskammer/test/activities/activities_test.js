@@ -251,7 +251,7 @@ describe('Activity application', () => {
         .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt\./)
         .expect(/action="unsubscribe"/)
         .expect(/input type="hidden" name="url" value="urlForInteresting"/)
-        .expect(/class="btn btn-default" type="submit">Ich kann doch nicht/)
+        .expect(/class="btn btn-light" type="submit">Ich kann doch nicht/)
         .expect(/participant1/)
         .expect(/participant2/, done);
     });
@@ -347,7 +347,7 @@ describe('Activity application', () => {
         .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt\./)
         .expect(/action="unsubscribe"/)
         .expect(/input type="hidden" name="url" value="urlForInteresting"/)
-        .expect(/class="btn btn-default" type="submit">Ich kann doch nicht/)
+        .expect(/class="btn btn-light" type="submit">Ich kann doch nicht/)
         .expect(/participant1/)
         .expect(/participant2/, done);
     });

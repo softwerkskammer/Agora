@@ -1,5 +1,8 @@
 @import "variables";
-@import "mixins";
+@import "../../../../node_modules/bootstrap/scss/bootstrap";
+@import "../../../../node_modules/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.scss";
+@import "../../../../node_modules/select2-theme-bootstrap4/src/select2-bootstrap.scss";
+@import "bootstrap-markdown-patched";
 
 // adapt syntaxhighlighted code in textboxes to bootstrap *BEGIN*
 .syntaxhighlighter a,
@@ -12,11 +15,11 @@
 .syntaxhighlighter table thead,
 .syntaxhighlighter table caption,
 .syntaxhighlighter textarea {
-  font-family: @font-family-monospace !important;
+  font-family: $font-family-monospace !important;
 }
 
 .gutter {
-  .clearfix();
+  @include clearfix();
 }
 
 pre code {
@@ -24,11 +27,6 @@ pre code {
 }
 
 // adapt syntaxhighlight *END*
-
-.bottom {
-  padding-top: 20px;
-  margin-bottom: 0px;
-}
 
 .navbar-brand.no-padding {
   padding-top: 0px;
@@ -38,16 +36,45 @@ pre code {
   height: 60px;
 }
 
-.navbar-right {
-  margin-right: 0 !important;
-}
+//.navbar-right {
+  //margin-right: 0 !important;
+//}
 
 .page-header {
   margin-top: 0px !important;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid rgb(222, 226, 230);
 }
 
-.page-header > h2 {
-  margin-top: 0px;
+h1 > small {
+  display: inline-block;
+  color: $text-muted;
+}
+
+h2 > small {
+  display: inline-block;
+  color: $text-muted;
+}
+
+h3 > small {
+  display: inline-block;
+  color: $text-muted;
+}
+
+h4 > small {
+  display: inline-block;
+  color: $text-muted;
+}
+
+h5 > small {
+  display: inline-block;
+  color: $text-muted;
+}
+
+h6 > small {
+  display: inline-block;
+  color: $text-muted;
 }
 
 // fullcalendar *BEGIN*
@@ -118,12 +145,6 @@ pre code {
   margin-left: auto;
 }
 
-@media screen {
-  body {
-    padding-top: 75px;
-  }
-}
-
 @media print {
   .btn {
     display: none !important;
@@ -140,35 +161,23 @@ pre code {
 }
 
 @media (min-width: 768px) {
-  .navbar-nav > li > a {
-    padding-top: 10px;
-    padding-bottom: 8px;
-  }
-
   body {
-    padding-bottom: 50px;
+    padding-top: 75px;
   }
 
   .popover {
     max-width: 450px;
   }
 
-  .no-left-margin {
-    padding-left: 0px !important;
-  }
 }
 
 @media (max-width: 767px) {
-  .bottom {
-    padding-top: 0px;
+  .fixed-top {
+    position: relative !important;
   }
 
-  .dl-horizontal dt {
-    margin-top: 12px;
-  }
-
-  body {
-    padding-top: 0px !important;
+  .fixed-bottom {
+    position: relative !important;
   }
 }
 
@@ -181,11 +190,20 @@ a.group {
 }
 
 a.chevron {
-  color: @text-color;
+  color: theme-color("primary");
 }
 
 a.inherit-color {
   color: inherit !important;
+}
+
+.control-label {
+  font-weight: bold;
+  margin-bottom: 0 !important;
+}
+
+legend {
+  font-weight: bold;  
 }
 
 .label.group {
@@ -239,9 +257,25 @@ a {
 }
 
 .photo-day > .photo-room:nth-child(odd) {
-  background-color: @table-bg-accent;
+  background-color: $table-accent-bg;
 }
 
 .select2-container--bootstrap {
   width: inherit !important;
+}
+
+.nav-item.active {
+  background-color: $gray-400;
+}
+
+// needed to find the right font
+.abc-checkbox input[type=checkbox]:checked+label::after, .abc-checkbox input[type=radio]:checked+label::after {
+  font-weight: 900;
+}
+
+// transform fullcalendar's primary to light button
+.fc-right .btn-primary {
+  color: #212529;
+  background-color: #f8f9fa;
+  border-color: #f8f9fa;
 }

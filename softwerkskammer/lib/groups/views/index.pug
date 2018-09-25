@@ -6,19 +6,19 @@ block title
 
 block content
   .row
-    .col-md-12
+    .col-12
       .page-header
-        .btn-group.pull-right
+        .btn-group.float-right
           if (accessrights.isSuperuser())
-            a.btn.btn-default(href='new/', title=t('groups.new')): i.fa.fa-file-o.fa-fw
-        h2 #{t('groups.groups')}
+            a.btn.btn-light(href='new/', title=t('groups.new')): i.far.fa-file.fa-fw
+        h1 #{t('groups.groups')}
   .row
-    .col-md-6
+    .col-lg-6
       +grouplist(t('groups.regional'), regionalgroups)
       +grouplist(t('groups.themed'), themegroups)
-    .col-md-6.hidden-md.hidden-lg.groupsmap(style='position: relative; width: 100%; height: 100px; background-image:url("/img/map.svg"); background-size: 100% 100%; background-repeat: no-repeat;')
+    .col-lg-6.d-inline.d-lg-none.groupsmap(style='position: relative; width: 100%; height: 100px; background-image:url("/img/map.svg"); background-size: 100% 100%; background-repeat: no-repeat;')
       +placeGroupLabels(regionalgroups)
-    .col-md-6.hidden-xs.hidden-sm.groupsmap(style='position: relative; width: 50%; height: 100px; background-image:url("/img/map.svg"); background-size: 100% 100%; background-repeat: no-repeat;')
+    .col-lg-6.d-none.d-lg-inline.groupsmap(style='position: relative; width: 50%; height: 100px; background-image:url("/img/map.svg"); background-size: 100% 100%; background-repeat: no-repeat;')
       +placeGroupLabels(regionalgroups)
 
 block scripts
