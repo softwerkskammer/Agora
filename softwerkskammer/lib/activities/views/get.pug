@@ -19,7 +19,7 @@ block content
           img(height='80px', src='/qrcode?url=' + encodeURIComponent(activity.fullyQualifiedUrl()))
         .btn-group.float-right
           a.btn.btn-light(href='/activities/ical/' + encodeURIComponent(activity.url()), title=t('activities.export')): i.far.fa-calendar-alt.fa-fw
-          a.btn.btn-light(href='/wiki/' + activity.blogEntryUrl(), title=t('activities.blog_entry')): i.fas.fa-rss.fa-fw
+          a.btn.btn-light(href='/wiki/' + activity.blogEntryUrl(), title=t('activities.blog_entry')): i.fas.fa-pen-nib.fa-fw
           if (accessrights.canCreateActivity())
             a.btn.btn-light(href='/activities/newLike/' + encodeURIComponent(activity.url()), title=t('activities.new_copy')): i.far.fa-copy.fa-fw
           if (accessrights.canEditActivity(activity))
