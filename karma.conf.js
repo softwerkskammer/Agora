@@ -9,6 +9,9 @@ module.exports = function (config) {
     // list of files / patterns to load in the browser
     files: [
       'softwerkskammer/public/clientscripts/global_de.js',
+      'softwerkskammer/public/clientscripts/bootstrap-colorpicker.min.js',
+      'softwerkskammer/public/clientscripts/bootstrap-datepicker.min.js',
+      'softwerkskammer/public/clientscripts/simple-timepicker.min.js',
       'softwerkskammer/public/clientscripts/activityDateModel.js',
       'softwerkskammer/public/clientscripts/activityform-dateAdapter.js',
       'softwerkskammer/frontendtests/fixtures/forms.html',

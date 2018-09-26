@@ -1,4 +1,6 @@
 mixin map(location)
+  script(src='/clientscripts/leaflet.js')
+  link(href='/stylesheets/leaflet.css', rel='stylesheet')
   script.
     var osm = new L.TileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       {

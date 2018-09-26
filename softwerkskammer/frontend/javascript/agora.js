@@ -1,4 +1,4 @@
-/* global moment, fc_lang, URI, datepicker_format, datepicker_lang, help */
+/* global moment, fc_lang, datepicker_format, datepicker_lang, help */
 
 var displayedActivityStart, displayedActivityEnd;
 
@@ -214,9 +214,8 @@ function interestify() {
   }
 
   function highlightCurrentSection() {
-    var result = URI.parse(window.location.href); // full URL
     $('[data-agoranav]').filter(function () {
-      return new RegExp('^/' + $(this).attr('data-agoranav')).test(result.path);
+      return new RegExp('^/' + $(this).attr('data-agoranav')).test(window.location.pathname);
     }).addClass('active');
   }
 

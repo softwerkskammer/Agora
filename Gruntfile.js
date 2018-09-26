@@ -8,7 +8,6 @@ module.exports = function (grunt) {
     'node_modules/select2/dist/js/select2.full.js',
     'node_modules/popper.js/dist/umd/popper.js',
     'node_modules/bootstrap/dist/js/bootstrap.js',
-    'node_modules/bootstrap-datepicker/js/bootstrap-datepicker.js',
     'node_modules/bootstrap-markdown/js/bootstrap-markdown.js',
     'node_modules/bootstrap-markdown/locale/bootstrap-markdown.de.js',
     'node_modules/moment/moment.js',
@@ -16,15 +15,8 @@ module.exports = function (grunt) {
     'node_modules/smartmenus/dist/jquery.smartmenus.js',
     'node_modules/smartmenus/dist/addons/bootstrap-4/jquery.smartmenus.bootstrap-4.js',
     'node_modules/fullcalendar/dist/fullcalendar.js',
-    'node_modules/tinycolor2/tinycolor.js',
-    'node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js',
     'node_modules/jquery-validation/dist/jquery.validate.js',
-    'node_modules/jquery-validation/dist/additional-methods.js',
-    'node_modules/simple-timepicker/dist/simple-timepicker.js',
-    'node_modules/jqcloud2/dist/jqcloud.js',
-    'node_modules/tinygradient/tinygradient.js',
-    'node_modules/urijs/src/URI.js',
-    'node_modules/leaflet/dist/leaflet.js'
+    'node_modules/jquery-validation/dist/additional-methods.js'
   ];
 
   // filesets for uglify
@@ -32,7 +24,6 @@ module.exports = function (grunt) {
     'softwerkskammer/public/clientscripts/global_de.js': commonJSfiles.concat([
       'node_modules/jquery-validation/dist/localization/messages_de.js',
       'node_modules/jquery-validation/dist/localization/methods_de.js',
-      'node_modules/bootstrap-datepicker/js/locales/bootstrap-datepicker.de.js',
       'node_modules/select2/dist/js/i18n/de.js',
       'node_modules/fullcalendar/dist/locale/de.js',
       'locales/frontend_de.js',
@@ -52,14 +43,11 @@ module.exports = function (grunt) {
     'softwerkskammer/public/stylesheets/screen.css': [
       'node_modules/fullcalendar/dist/fullcalendar.css',
       'node_modules/smartmenus/dist/addons/bootstrap-4/jquery.smartmenus.bootstrap-4.css',
-      'node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.css',
       'node_modules/@fortawesome/fontawesome-free/css/all.css',
       'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
       'node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css',
       'node_modules/select2/dist/css/select2.css',
-      'node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css',
       'node_modules/guillotine/css/jquery.guillotine.css',
-      'node_modules/leaflet/dist/leaflet.css',
       'softwerkskammer/build/stylesheets/sass/out/agora.css'
     ]
   };
@@ -67,7 +55,7 @@ module.exports = function (grunt) {
     clean: {
       build: ['softwerkskammer/build', 'softwerkskammer/frontendtests/fixtures/*.html'],
       coverage: ['softwerkskammer/coverage', 'softwerkskammer/coverageWithDB', 'softwerkskammer/karma-coverage'],
-      public: ['softwerkskammer/public/clientscripts', 'softwerkskammer/public/fonts', 'softwerkskammer/public/webfonts', 'softwerkskammer/public/img/bootstrap-colorpicker', 'softwerkskammer/public/images', 'softwerkskammer/public/stylesheets'],
+      public: ['softwerkskammer/public/clientscripts', 'softwerkskammer/public/fonts', 'softwerkskammer/public/webfonts', 'softwerkskammer/public/images', 'softwerkskammer/public/stylesheets'],
       options: {force: true}
     },
     copy: {
@@ -78,17 +66,37 @@ module.exports = function (grunt) {
         flatten: true
       },
       datatablesBootstrapAndGermanJS: {
-        src: ['node_modules/datatables.net-bs4/js/dataTables*', 'softwerkskammer/frontend/3rd_party_js/dataTables*'],
+        src: ['node_modules/datatables.net-bs4/js/dataTables*',
+          'softwerkskammer/frontend/3rd_party_js/dataTables*'],
         dest: 'softwerkskammer/public/clientscripts',
         expand: true,
         flatten: true
       },
-      colorpickerImages: {
-        cwd: 'node_modules/bootstrap-colorpicker/dist/img',
-        src: ['**'],
-        dest: 'softwerkskammer/public/img/',
+      pickersJS: {
+        src: ['node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.*',
+          'node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js',
+          'node_modules/bootstrap-datepicker/dist/locales/bootstrap-datepicker.de.min.js',
+          'node_modules/simple-timepicker/dist/simple-timepicker.min.js',
+        ],
+        dest: 'softwerkskammer/public/clientscripts',
         expand: true,
-        flatten: false
+        flatten: true
+      },
+      pickerCSS: {
+        src: ['node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.*',
+          'node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css'],
+        dest: 'softwerkskammer/public/stylesheets',
+        expand: true,
+        flatten: true
+      },
+      jqcloudAndColorsAndLeafletJS: {
+        src: ['node_modules/jqcloud2/dist/jqcloud.min.js',
+          'node_modules/tinycolor2/dist/tinycolor-min.js',
+          'node_modules/tinygradient/tinygradient.min.js',
+          'node_modules/leaflet/dist/leaflet.js*'],
+        dest: 'softwerkskammer/public/clientscripts',
+        expand: true,
+        flatten: true
       },
       fontawesomeFONTS: {
         src: 'node_modules/@fortawesome/fontawesome-free/webfonts/*',
@@ -102,6 +110,12 @@ module.exports = function (grunt) {
         dest: 'softwerkskammer/public/stylesheets/images/',
         expand: true,
         flatten: false
+      },
+      leafletCSS: {
+        src: 'node_modules/leaflet/dist/leaflet.css',
+        dest: 'softwerkskammer/public/stylesheets',
+        expand: true,
+        flatten: true
       },
       customJS: {
         cwd: 'softwerkskammer/frontend/javascript/',

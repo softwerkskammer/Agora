@@ -30,6 +30,9 @@ mixin tagCloud()
   #tag-cloud
     
 mixin tagCloudScript(members, startcolor)
+  script(src='/clientscripts/jqcloud.min.js')
+  script(src='/clientscripts/tinycolor-min.js')
+  script(src='/clientscripts/tinygradient.min.js')
   script.
     $(document).ready(function() {
       $('#tag-cloud').jQCloud(
