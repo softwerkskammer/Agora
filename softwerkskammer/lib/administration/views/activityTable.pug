@@ -36,6 +36,6 @@ block content
                 td #{activity.startMoment().locale(language).format('L')}
                 td #{activity.endMoment().locale(language).format('L')}
                 td #{activity.location()}
-                td.ellipsis: span(rel='tooltip', data-placement='left', data-content=activity.descriptionHTML(), data-title='<h4>' + activity.title() + '</h4>') #{activity.description()}
-                td.ellipsis: span(rel='tooltip', data-placement='left', data-content=activity.directionHTML()) #{activity.direction()}
+                td.ellipsis: span(rel='tooltip', data-content=activity.descriptionHTML(), data-title='<h4>' + activity.title() + '</h4>') #{activity.description()}
+                td.ellipsis: span(rel='tooltip', data-content=activity.directionHTML()) #{activity.direction()}
                 td #{activity.groupName()}

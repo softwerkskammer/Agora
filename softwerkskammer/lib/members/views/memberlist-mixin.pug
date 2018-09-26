@@ -9,7 +9,7 @@ mixin memberlist(members, organizers)
           +linkedMember(member.nickname())
         dd.col-8.mb-0 
           if (member.hasImage())
-            a(href='#', rel='tooltip', data-content=member.nickname(), data-placement='right', title='<div style="height: 128px;"><img src=' + member.avatarUrl(128) + ' width="128" height="128"/></div>')
+            a(href='#', rel='tooltip', data-content=member.nickname(), title='<div style="height: 128px;"><img src=' + member.avatarUrl(128) + ' width="128" height="128"/></div>')
               img.d-print-none(src=member.inlineAvatar(), width='16', height='16')
           else
             img.d-print-none(src='#', width='16', height='16')

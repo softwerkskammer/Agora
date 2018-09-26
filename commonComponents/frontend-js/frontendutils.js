@@ -147,11 +147,11 @@ function surroundEmail(email) {
 
   function initTooltipsAndHovers() {
     $('[rel=tooltip]').each(function () {
-      $(this).popover({html: true, trigger: 'hover', delay: {hide: 50}});
+      $(this).popover({html: true, trigger: 'hover', delay: {hide: 50}, placement: 'auto'});
     });
 
     $('[rel=tooltip-in-body]').each(function () {
-      $(this).popover({container: 'body', html: true, trigger: 'hover', delay: {hide: 50}});
+      $(this).popover({container: 'body', html: true, trigger: 'hover', delay: {hide: 50}, placement: 'auto'});
     });
 
     $('.tooltipify').each(function () {
