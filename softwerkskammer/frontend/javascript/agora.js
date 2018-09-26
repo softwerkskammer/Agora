@@ -137,21 +137,24 @@ function interestify() {
   }
 
   function initPickersAndWidgets() {
-    $('.datepicker').datepicker({
-      autoclose: true,
-      format: datepicker_format,
-      weekStart: 1,
-      viewMode: 'days',
-      minViewMode: 'days',
-      language: datepicker_lang,
-      orientation: 'bottom'
+    $('.datepicker').each(function () {
+      $(this).datepicker({
+        autoclose: true,
+        format: datepicker_format,
+        weekStart: 1,
+        viewMode: 'days',
+        minViewMode: 'days',
+        language: datepicker_lang,
+        orientation: 'bottom'
+      });
     });
-
-    $('.timepicker').timepicker({
-      template: false,
-      minuteStep: 15,
-      showSeconds: false,
-      showMeridian: false
+    $('.timepicker').each(function () {
+      $('.timepicker').timepicker({
+        template: false,
+        minuteStep: 15,
+        showSeconds: false,
+        showMeridian: false
+      });
     });
 
     $('.c-picker').each(function () {
