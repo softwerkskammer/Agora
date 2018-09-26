@@ -51,6 +51,8 @@ mixin editavatar(member, returnToParticipantsListing)
 
 mixin avatarscript
   +imageScripts
+  script(src='/clientscripts/jquery.guillotine.min.js')
+  link(href='/stylesheets/jquery.guillotine.css', rel='stylesheet')
   script.
     $(function () {
       var preview = $('img#preview');

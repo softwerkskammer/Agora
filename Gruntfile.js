@@ -4,7 +4,6 @@ module.exports = function (grunt) {
 
   const commonJSfiles = [
     'node_modules/jquery/dist/jquery.js',
-    'node_modules/guillotine/js/jquery.guillotine.js',
     'node_modules/select2/dist/js/select2.full.js',
     'node_modules/popper.js/dist/umd/popper.js',
     'node_modules/bootstrap/dist/js/bootstrap.js',
@@ -47,7 +46,6 @@ module.exports = function (grunt) {
       'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
       'node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css',
       'node_modules/select2/dist/css/select2.css',
-      'node_modules/guillotine/css/jquery.guillotine.css',
       'softwerkskammer/build/stylesheets/sass/out/agora.css'
     ]
   };
@@ -77,6 +75,7 @@ module.exports = function (grunt) {
           'node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js',
           'node_modules/bootstrap-datepicker/dist/locales/bootstrap-datepicker.de.min.js',
           'node_modules/simple-timepicker/dist/simple-timepicker.min.js',
+          'node_modules/guillotine/js/jquery.guillotine.min.js'
         ],
         dest: 'softwerkskammer/public/clientscripts',
         expand: true,
@@ -84,7 +83,8 @@ module.exports = function (grunt) {
       },
       pickerCSS: {
         src: ['node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.*',
-          'node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css'],
+          'node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css',
+          'node_modules/guillotine/css/jquery.guillotine.css'],
         dest: 'softwerkskammer/public/stylesheets',
         expand: true,
         flatten: true
@@ -93,7 +93,8 @@ module.exports = function (grunt) {
         src: ['node_modules/jqcloud2/dist/jqcloud.min.js',
           'node_modules/tinycolor2/dist/tinycolor-min.js',
           'node_modules/tinygradient/tinygradient.min.js',
-          'node_modules/leaflet/dist/leaflet.js*'],
+          'node_modules/leaflet/dist/leaflet.js*'
+        ],
         dest: 'softwerkskammer/public/clientscripts',
         expand: true,
         flatten: true

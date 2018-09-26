@@ -158,7 +158,7 @@ mixin reallyDeleteModalOnly(header, options)
             +csrf
             each val, param in options.params
               +hidden(param, val)
-            .btn-group
+            .btn-group.float-right
               button.btn.btn-default(type='cancel', data-dismiss='modal', aria-hidden='true') #{t('general.No')}
               button.btn.btn-primary(type='submit')
                 i.far.fa-trash-alt.fa-fw &nbsp;
