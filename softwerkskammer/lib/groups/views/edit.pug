@@ -8,10 +8,7 @@ block scripts
     
 block head
   link(href='/stylesheets/bootstrap-colorpicker.min.css', rel='stylesheet')
-
-block head
-  link(href='/stylesheets/bootstrap-datepicker3.min.css', rel='stylesheet')
-
+  
 block title
   if (group.id)
     | #{t('groups.edit', {groupId: group.id})}
