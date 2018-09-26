@@ -36,7 +36,6 @@ module.exports = function (grunt) {
       'node_modules/select2/dist/js/i18n/de.js',
       'node_modules/fullcalendar/dist/locale/de.js',
       'locales/frontend_de.js',
-      'commonComponents/frontend-js/frontendutils.js',
       'softwerkskammer/frontend/javascript/agora.js'
     ])
   };
@@ -45,7 +44,6 @@ module.exports = function (grunt) {
     'softwerkskammer/public/clientscripts/global_en.js': commonJSfiles.concat([
       'node_modules/fullcalendar/dist/locale/en-gb.js',
       'locales/frontend_en.js',
-      'commonComponents/frontend-js/frontendutils.js',
       'softwerkskammer/frontend/javascript/agora.js'
     ])
   };
