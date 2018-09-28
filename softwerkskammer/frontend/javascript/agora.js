@@ -227,19 +227,7 @@ function interestify() {
     initParameterisedCalendar(id, moment());
   }
 
-  function adaptScrollableBox() {
-    var h = $(window).height();
-    var padtop = parseInt($('body').css('padding-top'), 10);
-    var padbottom = parseInt($('body').css('padding-bottom'), 10);
-    var otherElementsHeight = 120;
-    $('.scrollable-box').css('maxHeight', Math.max(h - (padtop + padbottom + otherElementsHeight), 250) + 'px');
-    $('.scrollable-box').css('margin-bottom', '0px');
-    $('.scrollable-box').css('overflow-y', 'scroll');
-  }
-
-  $.event.add(window, 'resize', adaptScrollableBox);
   $(document).ready(highlightCurrentSection);
-  $(document).ready(adaptScrollableBox);
   $(document).ready(initActivitiesCalendar);
   $(document).ready(interestify);
 
