@@ -1,6 +1,7 @@
 extends commonLayout
 block specific
-  .col-md-8
+  .col-md-8.d-print-none
+  .col-md-12.d-print-block
     if (statusmessage)
       +notificationsBlock(statusmessage)
     block content
