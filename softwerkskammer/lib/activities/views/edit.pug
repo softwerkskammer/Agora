@@ -11,6 +11,13 @@ block content
 block scripts
   +map(activity.location())
   script $('#location').change(function() {showLocation($('#location').val())})
+  script(src='/clientscripts/bootstrap-datepicker.min.js')
+  script(src='/clientscripts/simple-timepicker.min.js')
+  if language === 'de'
+    script(src='/clientscripts/bootstrap-datepicker.de.min.js')
   script(src='/clientscripts/activityDateModel.js')
   script(src='/clientscripts/activityform-dateAdapter.js')
   script(src='/clientscripts/check-activityform.js')
+
+block head
+  link(href='/stylesheets/bootstrap-datepicker3.min.css', rel='stylesheet')

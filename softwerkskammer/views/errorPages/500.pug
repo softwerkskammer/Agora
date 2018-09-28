@@ -1,3 +1,16 @@
 extends ../layout
 
-include ../../../commonComponents/pug/500common
+block title
+  | #{status} - #{error}
+block content
+  .row
+    .col-lg-6
+      h3 #{t('error.congratulations')}
+      p #{t('error.found500')}
+        | #{t('error.click_links')}
+      !=t('error.error500_text', { postProcess: 'pug' })
+      p #{t('error.sorry')}
+    .col-lg-6
+      h3 #{status}
+      p
+        pre #{removeServerpaths(error.stack)}

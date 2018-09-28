@@ -1,9 +1,15 @@
 extends ../../../views/layoutOnlyMain
 
-include  ../../../../commonComponents/pug/formComponents
+include  ../../../views/formComponents
 
 block title
   =activityResult.id() + ' / Edit Photo'
+
+block scripts
+  script(src='/clientscripts/bootstrap-datepicker.min.js')
+  script(src='/clientscripts/simple-timepicker.min.js')
+  if language === 'de'
+    script(src='/clientscripts/bootstrap-datepicker.de.min.js')
 
 block content
   .row

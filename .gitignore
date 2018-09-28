@@ -36,7 +36,6 @@ dev-goodies
 **/public/webfonts
 
 softwerkskammer/chado-result.json
-softwerkskammer/public/img/bootstrap-colorpicker
 softwerkskammer/version.pug
 local
 

@@ -4,7 +4,11 @@ include groups-forms
 
 block scripts
   script(src='/clientscripts/check-groupform.js')
-
+  script(src='/clientscripts/bootstrap-colorpicker.min.js')
+    
+block head
+  link(href='/stylesheets/bootstrap-colorpicker.min.css', rel='stylesheet')
+  
 block title
   if (group.id)
     | #{t('groups.edit', {groupId: group.id})}
