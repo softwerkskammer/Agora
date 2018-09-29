@@ -158,7 +158,7 @@ function interestify() {
     });
 
     $('.c-picker').each(function () {
-      $(this).colorpicker();
+      $(this).colorpicker({format: 'hex'});
     });
 
     $('.enhance').each(function () {
