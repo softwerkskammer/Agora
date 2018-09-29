@@ -102,7 +102,7 @@ module.exports = function persistenceFunc(collectionName) {
       performInDB((err, db) => {
         if (err) { return callback(err); }
         const collection = db.collection(collectionName);
-        collection.update({id: storedId}, object, {upsert: true}, err1 => {
+        collection.replaceOne({id: storedId}, object, {upsert: true}, err1 => {
           if (err1) { return callback(err1); }
           //logger.info(object.constructor.name + ' saved: ' + JSON.stringify(object));
           callback(null);
@@ -117,7 +117,7 @@ module.exports = function persistenceFunc(collectionName) {
       performInDB((err, db) => {
         if (err) { return callback(err); }
         const collection = db.collection(collectionName);
-        collection.remove({id: objectId}, {w: 1}, err1 => {
+        collection.deleteOne({id: objectId}, {w: 1}, err1 => {
           callback(err1);
         });
       });
@@ -136,7 +136,7 @@ module.exports = function persistenceFunc(collectionName) {
         self.getById(object.id, (err1, result) => {
           if (err1) { return callback(err1); }
           if (result) { // object exists
-            collection.findAndModify({id: object.id, version: oldVersion}, [], object,
+            collection.findOneAndUpdate({id: object.id, version: oldVersion}, {'$set': object},
               {new: true, upsert: false},
               (err2, newObject) => {
                 if (err2) { return callback(err2); }
@@ -181,7 +181,8 @@ module.exports = function persistenceFunc(collectionName) {
 
       const MongoClient = require('mongodb').MongoClient;
       logInfo('Connecting to Mongo');
-      MongoClient.connect(conf.get('mongoURL'), (err, db) => {
+      MongoClient.connect(conf.get('mongoURL'), {useNewUrlParser: true}, (err, client) => {
+        var db = client.db('swk');
         logInfo('In connect callback');
         if (err) {
           logInfo('An error occurred: ' + err);
