@@ -4,6 +4,9 @@ include group-mixins
 block title
   | #{t('groups.overview')}
 
+block head
+  +addMapStyle
+
 block content
   .row
     .col-12
@@ -16,16 +19,8 @@ block content
     .col-lg-6
       +grouplist(t('groups.regional'), regionalgroups)
       +grouplist(t('groups.themed'), themegroups)
-    .col-lg-6.d-inline.d-lg-none.groupsmap(style='position: relative; width: 100%; height: 100px; background-image:url("/img/map.svg"); background-size: 100% 100%; background-repeat: no-repeat;')
-      +placeGroupLabels(regionalgroups)
-    .col-lg-6.d-none.d-lg-inline.groupsmap(style='position: relative; width: 50%; height: 100px; background-image:url("/img/map.svg"); background-size: 100% 100%; background-repeat: no-repeat;')
+    .col-lg-6.groupsmap
       +placeGroupLabels(regionalgroups)
 
 block scripts
-  script.
-    function adjustMapsize() {
-      $('.groupsmap').each(function() {$(this).height(1.289 * $(this).width()); })
-    }
-    $(document).ready(adjustMapsize);
-    $.event.add(window, 'resize', adjustMapsize);
-
+  +adjustMapScript
