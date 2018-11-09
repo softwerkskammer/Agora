@@ -35,7 +35,7 @@ mixin my_groups
                 i.far.fa-caret-square-down.fa-fw.blog
                 | &nbsp;#{group.longName}
               a.inherit-color(href='/groups/' + group.id): span.float-right: i.fas.fa-users.fa-fw.tooltipify(data-toggle='tooltip', title=t('groups.tooltip.gotogroup'))
-            .card-body.collapse.show(id=panelid)
+            .collapse.show.mx-3(id=panelid)
               +wikichangesOrBlogs(postsByGroup[group.id], panelid, 'blogs', t('wiki.blogposts'))
               +wikichangesOrBlogs(changesByGroup[group.id], panelid, 'changes', t('wiki.changes'))
 
