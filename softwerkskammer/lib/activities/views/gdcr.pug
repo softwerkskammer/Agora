@@ -1,5 +1,7 @@
 extends ../../../views/layout
 
+include ../../groups/views/group-mixins
+
 mixin activitylist(activities)
   ul.list-unstyled
     for activity in activities
@@ -10,19 +12,11 @@ mixin activitylist(activities)
         span.popover-highlight(rel='tooltip-in-body', data-content=activity.descriptionHTML().substring(0,500))
           a(href=activity.fullyQualifiedUrl()) #{activity.title()}
 
-mixin placeGroupLabels(activities)
-  -var counter = {}
-  each activity in activities
-    -var group = activity.group
-    -counter[group.longName] = counter[group.longName] + 1 || 0;
-    if (group.shortName)
-      .badge.group.position-absolute(style='background-color: ' + activity.colorRGB + '; top: ' + ((group.mapYrelative() || 0) + (counter[group.longName] * 2)) + '%; left: ' + (group.mapXrelative() || 2) + '%;')
-        span(rel='tooltip-in-body', data-title='<h4>' + activity.title() + '</h4>', data-content=activity.descriptionHTML().substring(0,500))
-          a.group(href=activity.fullyQualifiedUrl()) #{group.shortName}
-
-
 block title
   | #{t('general.gdcr')} #{year}
+
+block head
+  +addMapStyle
 
 block content
   .row
@@ -35,10 +29,8 @@ block content
   .row
     .col-lg-6
       +activitylist(activities)
-    .col-lg-6.d-inline.d-lg-none.groupsmap(style='position: relative; width: 100%; height: 100px; background-image:url("/img/map.svg"); background-size: 100% 100%; background-repeat: no-repeat;')
-      +placeGroupLabels(activities)
-    .col-lg-6.d-none.d-lg-inline.groupsmap(style='position: relative; width: 50%; height: 100px; background-image:url("/img/map.svg"); background-size: 100% 100%; background-repeat: no-repeat;')
-      +placeGroupLabels(activities)
+    .col-lg-6.groupsmap
+      +placeGroupLabelsForActivities(activities)
 
   .row
     .col-12
@@ -49,12 +41,7 @@ block content
 
 
 block scripts
-  script.
-    function adjustMapsize() {
-      $('.groupsmap').each(function() {$(this).height(1.289 * $(this).width()); })
-    }
-    $(document).ready(adjustMapsize);
-    $.event.add(window, 'resize', adjustMapsize);
+  +adjustMapScript
 
   if (activities.length > 0)
     script.
