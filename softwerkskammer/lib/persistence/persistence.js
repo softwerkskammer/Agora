@@ -201,7 +201,7 @@ module.exports = function persistenceFunc(collectionName) {
         return;
       }
       performInDB(() => {
-        ourDB.close();
+        ourDB.unref();
         ourDB = undefined;
         ourDBConnectionState = DBSTATE.CLOSED;
         logInfo('connection closed');
