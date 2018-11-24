@@ -111,7 +111,7 @@
 
     describe('Input formatter', function () {
 
-      it('transforms the input dates into moments', function () {
+      it('transforms the input dates into Date objects', function () {
         var model = activityDateModel('01.10.2013', '20:15');
         var result = model.convertInputs('04.11.2013', '16:15', '07.12.2013', '19:25');
         assertJsDate(result.start, '04.11.2013', '16:15');

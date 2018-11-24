@@ -84,8 +84,6 @@ function renderGdcrFor(gdcrDay, res, next) {
     if (err) { next(err); }
     const gdcrYear = gdcrDate.year();
     res.render('gdcr', {
-      calViewYear: gdcrYear,
-      calViewMonth: gdcrDate.month(),
       activities,
       year: String(gdcrYear),
       previousYears: R.range(2013, gdcrYear).map(year => String(year))
@@ -134,8 +132,6 @@ app.get('/ical/:url', (req, res, next) => {
 app.get('/eventsForSidebar', (req, res, next) => {
   const from = moment(req.query.start).utc();
   if (from.date() > 1) { from.add(1, 'M'); }
-  req.session.calViewYear = from.year();
-  req.session.calViewMonth = from.month();
 
   const start = moment(req.query.start).utc();
   const end = moment(req.query.end).utc();
@@ -255,9 +251,7 @@ app.get('/:url', (req, res, next) => {
         activity,
         allowsRegistration,
         editorNicknames,
-        resourceRegistrationRenderer,
-        calViewYear: activity.year(),
-        calViewMonth: activity.month()
+        resourceRegistrationRenderer
       });
     });
   });
