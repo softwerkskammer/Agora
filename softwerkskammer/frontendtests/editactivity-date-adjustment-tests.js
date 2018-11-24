@@ -1,15 +1,22 @@
-/*global activityDateModel, moment */
+/*global activityDateModel*/
 
 (function () {
   'use strict';
 
   var utc = function (dateString, timeString) {
-    return moment.utc(dateString + ' ' + timeString, 'D.M.YYYY H:m');
+    function stringToInt(each) { return parseInt(each, 10); }
+
+    var dateArray = dateString.split('.').map(stringToInt);
+    var timeArray = timeString.split(':').map(stringToInt);
+    return new Date(dateArray[2], dateArray[1] - 1, dateArray[0], timeArray[0], timeArray[1]);
   };
 
-  function assertMoment(moment, date, time) {
-    expect(moment.format('DD.MM.YYYY')).to.equal(date);
-    expect(moment.format('HH:mm')).to.equal(time);
+  function assertJsDate(jsDate, date, time) {
+    var dateformat = new Intl.DateTimeFormat('de', {year: 'numeric', month: '2-digit', day: '2-digit'});
+    var timeformat = new Intl.DateTimeFormat('de', {hour: '2-digit', minute: '2-digit'});
+
+    expect(dateformat.format(jsDate)).to.equal(date);
+    expect(timeformat.format(jsDate)).to.equal(time);
   }
 
   describe('Date Adjustment', function () {
@@ -21,84 +28,84 @@
 
       it('moves EndDate forward if StartDate contains the same date and is moved forward', function () {
         var model = activityDateModel('07.09.2013', '12:15');
-        var result = model.calculateNewEndMoment({start: utc('08.09.2013', '12:15'), end: utc('07.09.2013', '12:15')});
-        assertMoment(result, '08.09.2013', '12:15');
+        var result = model.calculateNewEnd({start: utc('08.09.2013', '12:15'), end: utc('07.09.2013', '12:15')});
+        assertJsDate(result, '08.09.2013', '12:15');
       });
 
       it('moves EndDate forward if StartDate contains a different date and is moved forward', function () {
         var model = activityDateModel('07.09.2013', '12:15');
-        var result = model.calculateNewEndMoment({start: utc('08.09.2013', '12:15'), end: utc('09.09.2013', '14:15')});
-        assertMoment(result, '10.09.2013', '14:15');
+        var result = model.calculateNewEnd({start: utc('08.09.2013', '12:15'), end: utc('09.09.2013', '14:15')});
+        assertJsDate(result, '10.09.2013', '14:15');
       });
 
       it('moves EndDate backward if StartDate contains the same date and is moved backward', function () {
         var model = activityDateModel('07.09.2013', '12:15');
-        var result = model.calculateNewEndMoment({start: utc('06.09.2013', '12:15'), end: utc('07.09.2013', '12:15')});
-        assertMoment(result, '06.09.2013', '12:15');
+        var result = model.calculateNewEnd({start: utc('06.09.2013', '12:15'), end: utc('07.09.2013', '12:15')});
+        assertJsDate(result, '06.09.2013', '12:15');
 
       });
 
       it('moves EndDate backward if StartDate contains a different date and is moved backward', function () {
         var model = activityDateModel('01.09.2013', '12:15');
-        var result = model.calculateNewEndMoment({start: utc('08.08.2013', '12:15'), end: utc('07.09.2013', '14:15')});
-        assertMoment(result, '14.08.2013', '14:15');
+        var result = model.calculateNewEnd({start: utc('08.08.2013', '12:15'), end: utc('07.09.2013', '14:15')});
+        assertJsDate(result, '14.08.2013', '14:15');
       });
 
       // Time
 
       it('moves EndTime forward if StartTime contains the same time and is moved forward', function () {
         var model = activityDateModel('07.09.2013', '12:15');
-        var result = model.calculateNewEndMoment({start: utc('07.09.2013', '14:15'), end: utc('07.09.2013', '12:15')});
-        assertMoment(result, '07.09.2013', '14:15');
+        var result = model.calculateNewEnd({start: utc('07.09.2013', '14:15'), end: utc('07.09.2013', '12:15')});
+        assertJsDate(result, '07.09.2013', '14:15');
       });
 
       it('moves EndTime forward if StartTime contains a different time and is moved forward', function () {
         var model = activityDateModel('07.09.2013', '12:15');
-        var result = model.calculateNewEndMoment({start: utc('07.09.2013', '15:45'), end: utc('09.09.2013', '14:15')});
-        assertMoment(result, '09.09.2013', '17:45');
+        var result = model.calculateNewEnd({start: utc('07.09.2013', '15:45'), end: utc('09.09.2013', '14:15')});
+        assertJsDate(result, '09.09.2013', '17:45');
       });
 
       it('moves EndTime backward if StartTime contains the same time and is moved backward', function () {
         var model = activityDateModel('07.09.2013', '12:15');
-        var result = model.calculateNewEndMoment({start: utc('07.09.2013', '10:10'), end: utc('07.09.2013', '12:15')});
-        assertMoment(result, '07.09.2013', '10:10');
+        var result = model.calculateNewEnd({start: utc('07.09.2013', '10:10'), end: utc('07.09.2013', '12:15')});
+        assertJsDate(result, '07.09.2013', '10:10');
 
       });
 
       it('moves EndTime backward if StartTime contains a different time and is moved backward', function () {
         var model = activityDateModel('01.09.2013', '12:15');
-        var result = model.calculateNewEndMoment({start: utc('01.09.2013', '00:00'), end: utc('07.09.2013', '14:15')});
-        assertMoment(result, '07.09.2013', '02:00');
+        var result = model.calculateNewEnd({start: utc('01.09.2013', '00:00'), end: utc('07.09.2013', '14:15')});
+        assertJsDate(result, '07.09.2013', '2:00');
       });
 
       it('moves EndDate and EndTime forward if StartTime is moved past midnight', function () {
         var model = activityDateModel('07.09.2013', '12:15');
-        var result = model.calculateNewEndMoment({start: utc('07.09.2013', '14:15'), end: utc('09.09.2013', '23:15')});
-        assertMoment(result, '10.09.2013', '01:15');
+        var result = model.calculateNewEnd({start: utc('07.09.2013', '14:15'), end: utc('09.09.2013', '23:15')});
+        assertJsDate(result, '10.09.2013', '1:15');
       });
 
       it('... if endDate is moved across the summertime boundary in spring', function () {
         var model = activityDateModel('29.03.2013', '12:15');
-        var result = model.calculateNewEndMoment({start: utc('30.03.2013', '12:15'), end: utc('30.03.2013', '14:15')});
-        assertMoment(result, '31.03.2013', '14:15');
+        var result = model.calculateNewEnd({start: utc('30.03.2013', '12:15'), end: utc('30.03.2013', '14:15')});
+        assertJsDate(result, '31.03.2013', '15:15');
       });
 
       it('... if endDate is moved across the summertime boundary in autumn', function () {
         var model = activityDateModel('25.10.2013', '20:15');
-        var result = model.calculateNewEndMoment({start: utc('26.10.2013', '20:15'), end: utc('26.10.2013', '23:15')});
-        assertMoment(result, '27.10.2013', '23:15');
+        var result = model.calculateNewEnd({start: utc('26.10.2013', '20:15'), end: utc('26.10.2013', '23:15')});
+        assertJsDate(result, '27.10.2013', '22:15');
       });
 
       it('... if endTime is moved across the summertime boundary in spring', function () {
         var model = activityDateModel('30.03.2013', '19:15');
-        var result = model.calculateNewEndMoment({start: utc('30.03.2013', '22:15'), end: utc('30.03.2013', '23:15')});
-        assertMoment(result, '31.03.2013', '02:15');
+        var result = model.calculateNewEnd({start: utc('30.03.2013', '22:15'), end: utc('30.03.2013', '23:15')});
+        assertJsDate(result, '31.03.2013', '3:15');
       });
 
       it('... if endTime is moved across the summertime boundary in autumn', function () {
         var model = activityDateModel('26.10.2013', '20:15');
-        var result = model.calculateNewEndMoment({start: utc('26.10.2013', '23:15'), end: utc('27.10.2013', '00:15')});
-        assertMoment(result, '27.10.2013', '03:15');
+        var result = model.calculateNewEnd({start: utc('26.10.2013', '23:15'), end: utc('27.10.2013', '00:15')});
+        assertJsDate(result, '27.10.2013', '2:15');
       });
     });
 
@@ -107,8 +114,8 @@
       it('transforms the input dates into moments', function () {
         var model = activityDateModel('01.10.2013', '20:15');
         var result = model.convertInputs('04.11.2013', '16:15', '07.12.2013', '19:25');
-        assertMoment(result.start, '04.11.2013', '16:15');
-        assertMoment(result.end, '07.12.2013', '19:25');
+        assertJsDate(result.start, '04.11.2013', '16:15');
+        assertJsDate(result.end, '07.12.2013', '19:25');
       });
 
     });

@@ -1,13 +1,14 @@
+'use strict';
 module.exports = function (config) {
-  'use strict';
   config.set({
     // base path, that will be used to resolve files and exclude
     basePath: '',
 
-    frameworks: ['mocha', 'must', 'sinon'],
+    frameworks: ['mocha', 'must', 'sinon', 'intl-shim'],
 
     // list of files / patterns to load in the browser
     files: [
+      'node_modules/intl/locale-data/jsonp/de.js',
       'softwerkskammer/public/clientscripts/global_de.js',
       'softwerkskammer/public/clientscripts/bootstrap-colorpicker.min.js',
       'softwerkskammer/public/clientscripts/bootstrap-datepicker.min.js',
@@ -87,7 +88,8 @@ module.exports = function (config) {
       'karma-mocha',
       'karma-must',
       'karma-phantomjs-launcher',
-      'karma-sinon'
+      'karma-sinon',
+      'karma-intl-shim'
     ]
   });
 };

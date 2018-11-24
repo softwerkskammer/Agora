@@ -1,4 +1,3 @@
-/*global moment */
 /*eslint no-unused-vars: 0 */
 var activityDateModel;
 (function () {
@@ -9,8 +8,13 @@ var activityDateModel;
   activityDateModel = function (initialDate, initialTime) {
 
     var toUtc = function (dateString, timeString) {
+      // returns javascript Date
+      function stringToInt(each) { return parseInt(each, 10); }
+
       if (dateString && timeString) {
-        return moment.utc(dateString + ' ' + timeString, 'D.M.YYYY H:m');
+        var dateArray = dateString.split('.').map(stringToInt);
+        var timeArray = timeString.split(':').map(stringToInt);
+        return new Date(dateArray[2], dateArray[1] - 1, dateArray[0], timeArray[0], timeArray[1]);
       }
       return null;
     };
@@ -25,25 +29,31 @@ var activityDateModel;
         };
       },
 
-      calculateNewEndMoment: function (currentTimes) {
-        var offset = oldStartDate && currentTimes.start ? currentTimes.start.diff(oldStartDate, 'minutes') : 0;
+      calculateNewEnd: function (currentTimes) {
+        var offsetMillis = oldStartDate && currentTimes.start
+          ? currentTimes.start.getTime() - oldStartDate.getTime()
+          : 0;
 
         oldStartDate = currentTimes.start;
 
-        return currentTimes.end ? currentTimes.end.add(offset, 'minutes') : null;
+        return currentTimes.end
+          ? new Date(currentTimes.end.getTime() + offsetMillis)
+          : null;
       },
 
-      createDateAndTimeStrings: function (endMoment) {
+      createDateAndTimeStrings: function (jsDate) {
+        var dateformat = new Intl.DateTimeFormat('de', {year: 'numeric', month: '2-digit', day: '2-digit'});
+        var timeformat = new Intl.DateTimeFormat('de', {hour: '2-digit', minute: '2-digit'});
         return {
-          endDate: (endMoment ? endMoment.format('DD.MM.YYYY') : ''),
-          endTime: (endMoment ? endMoment.format('HH:mm') : '')
+          endDate: jsDate ? dateformat.format(jsDate) : '',
+          endTime: jsDate ? timeformat.format(jsDate) : ''
         };
       },
 
       determineNewEnd: function (startDate, startTime, endDate, endTime) {
-        var inputMoments = this.convertInputs(startDate, startTime, endDate, endTime);
-        var newEndMoment = this.calculateNewEndMoment(inputMoments);
-        return this.createDateAndTimeStrings(newEndMoment);
+        var inputDateTimes = this.convertInputs(startDate, startTime, endDate, endTime);
+        var newEndDateTime = this.calculateNewEnd(inputDateTimes);
+        return this.createDateAndTimeStrings(newEndDateTime);
       }
 
     };
