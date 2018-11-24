@@ -12,11 +12,7 @@
   };
 
   function assertJsDate(jsDate, date, time) {
-    var dateformat = new Intl.DateTimeFormat('de', {year: 'numeric', month: '2-digit', day: '2-digit'});
-    var timeformat = new Intl.DateTimeFormat('de', {hour: '2-digit', minute: '2-digit'});
-
-    expect(dateformat.format(jsDate)).to.equal(date);
-    expect(timeformat.format(jsDate)).to.equal(time);
+    expect(jsDate.toLocaleString()).to.equal(utc(date, time).toLocaleString());
   }
 
   describe('Date Adjustment', function () {
