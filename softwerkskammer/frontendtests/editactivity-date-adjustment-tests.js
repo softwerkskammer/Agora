@@ -12,7 +12,7 @@
   };
 
   function assertJsDate(jsDate, date, time) {
-    expect(jsDate.toLocaleString()).to.equal(utc(date, time).toLocaleString());
+    expect(jsDate.toLocaleString('de-DE')).to.equal(utc(date, time).toLocaleString('de-DE'));
   }
 
   describe('Date Adjustment', function () {
