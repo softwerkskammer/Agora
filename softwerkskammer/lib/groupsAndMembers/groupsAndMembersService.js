@@ -100,6 +100,18 @@ module.exports = {
     });
   },
 
+  getOrganizersOfGroup: function (groupId, callback) {
+    this.getGroupAndMembersForList(groupId, (error, group) => {
+      if (error) {return callback(error);}
+      if (group === undefined) {
+        return callback(null, []);
+      }
+      const groupMembers = group.members || [];
+      const organizers = (groupMembers).filter(member => group.isOrganizer(member.id()));
+      callback(null, organizers);
+    });
+  },
+
   getGroupAndMembersForList: function getGroupAndMembersForList(groupname, globalCallback) {
     async.waterfall(
       [
@@ -198,11 +210,6 @@ module.exports = {
         return this.updateSubscriptions(member, oldEmail, subscriptions, err2 => callback(err2, member.nickname()));
       });
     });
-  },
-  getOrganizersOfGroup: function (groupName, callback) {
-    // TODO - implement using getGroupAndMembersForList
-    return callback(null, []);
   }
-
 };
 
