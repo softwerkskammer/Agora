@@ -1,9 +1,9 @@
 'use strict';
 
 const async = require('async');
-const beans = require('simple-configure').get('beans');
-const moment = require('moment-timezone');
+const {DateTime} = require('luxon');
 
+const beans = require('simple-configure').get('beans');
 const persistence = beans.get('activityresultsPersistence');
 const galleryService = beans.get('galleryService');
 const ActivityResult = beans.get('activityresult');
@@ -30,9 +30,11 @@ module.exports = {
           if (metadata && metadata.exif) {
             date = metadata.exif.dateTime || metadata.exif.dateTimeOriginal || metadata.exif.dateTimeDigitized || new Date();
           }
+          const picturesDate = DateTime.fromJSDate(date);
+          const now = DateTime.local();
           activityResult.addPhoto({
             id: imageUri,
-            timestamp: moment.min(moment(), moment(date)).toDate(),
+            timestamp: (picturesDate < now ? picturesDate : now).toJSDate(),
             uploaded_by: memberId
           });
           persistence.save(activityResult.state, err1 => cb(err1, imageUri));

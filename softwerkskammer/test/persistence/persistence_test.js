@@ -1,5 +1,7 @@
 'use strict';
 
+const {DateTime} = require('luxon');
+
 const expect = require('must-dist');
 const beans = require('./../../testutil/configureForTest').get('beans');
 const CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
@@ -279,7 +281,6 @@ describe('The persistence store', () => {
 
   describe('for Member', () => {
     const Member = beans.get('member');
-    const moment = require('moment-timezone');
     const toPersist = new Member().initFromSessionUser({authenticationId: 'toPersist'}).state;
 
     const storeSampleData = done => {
@@ -288,7 +289,7 @@ describe('The persistence store', () => {
 
     it('checks that created has been written', done => {
       // this test will definitely fail, if run a microsecond before midnight. - Ideas?
-      const today = moment().format('DD.MM.YY');
+      const today = DateTime.local().toFormat('dd.MM.yy');
       storeSampleData(() => {
         persistence.getById('toPersist', (err, result) => {
           expect(result.id).to.equal('toPersist');

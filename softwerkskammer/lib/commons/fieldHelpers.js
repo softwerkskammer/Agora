@@ -1,7 +1,6 @@
 /* eslint no-underscore-dangle: 0 */
 
-const moment = require('moment-timezone');
-
+const { DateTime } = require('luxon');
 const conf = require('simple-configure');
 const misc = conf.get('beans').get('misc');
 
@@ -67,32 +66,32 @@ module.exports = {
   },
 
   parseToUnixUsingDefaultTimezone: function parseToUnixUsingDefaultTimezone(dateString, timeString) {
-    const result = this.parseToMomentUsingDefaultTimezone(dateString, timeString);
-    return result ? result.unix() : undefined;
+    const result = this.parseToLuxonUsingDefaultTimezone(dateString, timeString);
+    return result ? result.toMillis() / 1000 : undefined;
   },
 
-  parseToMomentUsingDefaultTimezone: function parseToMomentUsingDefaultTimezone(dateString, timeString) {
-    return this.parseToMomentUsingTimezone(dateString, timeString, this.defaultTimezone());
+  parseToLuxonUsingDefaultTimezone: function parseToLuxonUsingDefaultTimezone(dateString, timeString) {
+    return this.parseToLuxonDateTimetUsingTimezone(dateString, timeString, this.defaultTimezone());
   },
 
-  parseToMomentUsingTimezone: function parseToMomentUsingTimezone(dateString, timeString, timezoneName) {
+  parseToLuxonDateTimetUsingTimezone: function parseToLuxonDateTimetUsingTimezone(dateString, timeString, timezoneName) {
     if (dateString) {
       const timeStringOrDefault = timeString || '00:00';
-      return moment.tz(dateString + ' ' + timeStringOrDefault, 'D.M.YYYY H:m', timezoneName);
+      return DateTime.fromFormat(dateString + ' ' + timeStringOrDefault, 'd.M.yyyy H:m', { zone: timezoneName });
     }
     return undefined;
   },
 
   meetupDateToActivityTimes: function meetupDateToActivityTimes(meetupStartDate, meetupStartTime, durationInMillis) {
-    const startPoint = moment.tz(meetupStartDate + ' ' + meetupStartTime, 'YYYY-MM-DD H:m', this.defaultTimezone());
-    const endPoint = startPoint.clone(); // moment is mutable, clone it first!
-    endPoint.add(durationInMillis, 'milliseconds');
+    DateTime.fromFormat(meetupStartDate + ' ' + meetupStartTime, 'yyyy-MM-dd H:m', { zone: this.defaultTimezone() });
+    const startPoint = DateTime.fromFormat(meetupStartDate + ' ' + meetupStartTime, 'yyyy-MM-dd H:m', { zone: this.defaultTimezone() });
+    const endPoint = startPoint.plus({seconds: durationInMillis / 1000});
 
     return {
-      startDate: startPoint.format('DD.MM.YYYY'),
-      startTime: startPoint.format('HH:mm'),
-      endDate: endPoint.format('DD.MM.YYYY'),
-      endTime: endPoint.format('HH:mm')
+      startDate: startPoint.toFormat('dd.MM.yyyy'),
+      startTime: startPoint.toFormat('HH:mm'),
+      endDate: endPoint.toFormat('dd.MM.yyyy'),
+      endTime: endPoint.toFormat('HH:mm')
     };
   },
 

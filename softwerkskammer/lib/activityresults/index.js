@@ -76,7 +76,7 @@ app.post('/:activityResultName/photo/:photoId/edit', (req, res, next) => {
   const photoData = {
     title: req.body.title,
     tags: misc.toArray(req.body.tags),
-    timestamp: fieldHelpers.parseToMomentUsingDefaultTimezone(req.body.date, req.body.time).toDate()
+    timestamp: fieldHelpers.parseToLuxonUsingDefaultTimezone(req.body.date, req.body.time).toJSDate()
   };
 
   activityresultsService.updatePhotoOfActivityResult(activityResultName, photoId, photoData, res.locals.accessrights, err => {
