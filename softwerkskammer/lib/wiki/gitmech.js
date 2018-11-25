@@ -57,8 +57,8 @@ module.exports = {
     });
   },
 
-  latestChanges: function latestChanges(path, moment, callback) {
-    gitExec.command(['log', '--since="' + moment.format('MM/DD/YYYY hh:mm:ss') + '"', '--pretty=format:%h%n%H%n%an%n%ai%n%s', '--', esc(path)], (err, data) => {
+  latestChanges: function latestChanges(path, jsDate, callback) {
+    gitExec.command(['log', '--since="' + jsDate.toISOString() + '"', '--pretty=format:%h%n%H%n%an%n%ai%n%s', '--', esc(path)], (err, data) => {
       if (err) { return callback(err); }
       const logdata = data ? data.split('\n') : [];
       const metadata = [];

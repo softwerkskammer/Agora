@@ -1,6 +1,5 @@
 'use strict';
 
-const moment = require('moment-timezone');
 const R = require('ramda');
 const sinon = require('sinon').createSandbox();
 const expect = require('must-dist');
@@ -189,7 +188,7 @@ describe('the gitmech module', () => {
             'no comment\n');
         }
       });
-      Git.latestChanges('path', moment(), (err, metadatas) => {
+      Git.latestChanges('path', new Date(), (err, metadatas) => {
         expect(gitCommand.firstCall.args[0][1]).to.match('--since');
         expect(metadatas).to.have.length(3);
         expect(metadatas[0].hashRef).to.equal('f327d71');
@@ -201,7 +200,7 @@ describe('the gitmech module', () => {
 
     it('calls the callback with an error when failing at "latestChanges"', done => {
       sinon.stub(gitExec, 'command').callsFake((args, callback) => callback(new Error()));
-      Git.latestChanges('path', moment(), err => {
+      Git.latestChanges('path', new Date(), err => {
         expect(err).to.exist();
         done();
       });

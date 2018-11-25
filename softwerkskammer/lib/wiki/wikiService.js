@@ -23,6 +23,7 @@ function replaceNonExistentNicknames(metadataList, callback) {
       cb(null, metadata);
     });
   }
+
   async.map(metadataList, replaceNickPotentially, (err, changedMetadataList) => {
     callback(err, changedMetadataList);
   });
@@ -153,7 +154,8 @@ module.exports = {
     });
   },
 
-  findPagesForDigestSince: function findPagesForDigestSince(moment, callback) {
+  findPagesForDigestSince: function findPagesForDigestSince(millis, callback) {
+    const date = new Date(millis);
     const self = this;
     Git.lsdirs((err, subdirs) => {
       if (err) { return callback(err); }
@@ -163,10 +165,10 @@ module.exports = {
         self.pageList(directory, (listErr, items) => {
           if (listErr) { return directoryCallback(listErr); }
           async.eachLimit(items, 5, (item, itemsCallback) => {
-            Git.latestChanges(item.fullname + '.md', moment, (err1, metadata) => {
+            Git.latestChanges(item.fullname + '.md', date, (err1, metadata) => {
               if (err1) { return itemsCallback(err1); }
               if (metadata.length > 0) {
-                Git.diff(item.fullname + '.md', 'HEAD@{' + moment.toISOString() + '}..HEAD', (err2, diff) => {
+                Git.diff(item.fullname + '.md', 'HEAD@{' + date.toISOString() + '}..HEAD', (err2, diff) => {
                   if (err2) { return itemsCallback(err2); }
                   resultLine.addFile(new FileWithChangelist({
                     file: item.name,
@@ -211,8 +213,11 @@ module.exports = {
   listFilesModifiedByMember: function listFilesModifiedByMember(nickname, callback) {
     Git.lsFilesModifiedByMember(nickname, (err, files) => {
       const reallyAnArray = err || !files ? [] : files;
-      const filteredSortedUnique = R.uniq( reallyAnArray.filter(x => x.includes('/')).sort() );
-      const mapOfWikisToObjectLists = filteredSortedUnique.map(f => { const parts = f.replace(/\.md/, '').replace(/"/g, '').split('/'); return {wiki: parts[0], page: parts[1]}; });
+      const filteredSortedUnique = R.uniq(reallyAnArray.filter(x => x.includes('/')).sort());
+      const mapOfWikisToObjectLists = filteredSortedUnique.map(f => {
+        const parts = f.replace(/\.md/, '').replace(/"/g, '').split('/');
+        return {wiki: parts[0], page: parts[1]};
+      });
       const mapOfWikisToFilenameLists = R.map(arr => arr.map(f => f.page), R.groupBy(f => f.wiki, mapOfWikisToObjectLists));
       callback(null, mapOfWikisToFilenameLists);
     });

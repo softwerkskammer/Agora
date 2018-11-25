@@ -1,7 +1,5 @@
 'use strict';
 
-const moment = require('moment-timezone');
-
 const sinon = require('sinon').createSandbox();
 const expect = require('must-dist');
 
@@ -11,16 +9,15 @@ const persistence = beans.get('activitiesPersistence');
 const Activity = beans.get('activity');
 
 describe('Activity application with DB - shows activities where a member is organizer or editor -', () => {
-
-  const tomorrowEarly = moment().add(1, 'days');
-  const tomorrowLate = moment().add(1, 'days').add(1, 'hours');
-  const dayAfterTomorrow = moment().add(2, 'days');
-  const yesterday = moment().subtract(1, 'days');
-  const dayBeforeYesterday = moment().subtract(2, 'days');
+  const tomorrowEarly = new Date(Date.now() + 86400000).getTime() / 1000; // + 1 day
+  const tomorrowLate = new Date(Date.now() + 90000000).getTime() / 1000; // + 1 day + 1 hour
+  const dayAfterTomorrow = new Date(Date.now() + 86400000 + 86400000).getTime() / 1000; // + 2 days
+  const yesterday = new Date(Date.now() - 86400000).getTime() / 1000; // - 1 day
+  const dayBeforeYesterday = new Date(Date.now() - 86400000 - 86400000).getTime() / 1000; // - 2 days
 
   const futureActivityOwner1NoEditorIds = new Activity({
     id: 'futureActivity1', title: 'Future Activity 1', description: 'description1', assignedGroup: 'groupname1',
-    location: 'location1', direction: 'direction1', startUnix: tomorrowEarly.unix(), endUnix: dayAfterTomorrow.unix(),
+    location: 'location1', direction: 'direction1', startUnix: tomorrowEarly, endUnix: dayAfterTomorrow,
     url: 'url_future', owner: 'owner1', resources: {
       Veranstaltung: {_registeredMembers: [{memberId: 'memberId2'}], _registrationOpen: true},
       AndereVeranstaltung: {_registeredMembers: [{memberId: 'memberId2'}], _registrationOpen: true}
@@ -34,8 +31,8 @@ describe('Activity application with DB - shows activities where a member is orga
     assignedGroup: 'groupname2',
     location: 'location1',
     direction: 'direction1',
-    startUnix: tomorrowLate.unix(),
-    endUnix: dayAfterTomorrow.unix(),
+    startUnix: tomorrowLate,
+    endUnix: dayAfterTomorrow,
     url: 'url_future',
     owner: 'owner2',
     editorIds: [],
@@ -50,8 +47,8 @@ describe('Activity application with DB - shows activities where a member is orga
     assignedGroup: 'groupname1',
     location: 'location1',
     direction: 'direction1',
-    startUnix: yesterday.unix(),
-    endUnix: tomorrowEarly.unix(),
+    startUnix: yesterday,
+    endUnix: tomorrowEarly,
     url: 'url_current',
     owner: 'owner2',
     editorIds: ['owner1', 'otherperson', 'yetanother'],
@@ -66,8 +63,8 @@ describe('Activity application with DB - shows activities where a member is orga
     assignedGroup: 'groupname',
     location: 'location1',
     direction: 'direction1',
-    startUnix: dayBeforeYesterday.unix(),
-    endUnix: yesterday.unix(),
+    startUnix: dayBeforeYesterday,
+    endUnix: yesterday,
     url: 'url_past',
     owner: 'owner3',
     editorIds: ['owner3'],

@@ -263,7 +263,7 @@ describe('Wiki Service (daily digest)', () => {
       if (dirname === 'dirB') { return callback(null, filesForDirB); }
     });
 
-    sinon.stub(Git, 'latestChanges').callsFake((filename, someMoment, callback) => {
+    sinon.stub(Git, 'latestChanges').callsFake((filename, somedate, callback) => {
       if (filename.indexOf('A1') > -1) { return callback(null, [metadataA1]); }
       if (filename.indexOf('A2') > -1) { return callback(null, [metadataA2]); }
       if (filename.indexOf('B1') > -1) { return callback(null, [metadataB1]); }
@@ -289,7 +289,7 @@ describe('Wiki Service (daily digest)', () => {
         callback(null, '');
       });
 
-      wikiService.findPagesForDigestSince(moment(), (err, pages) => {
+      wikiService.findPagesForDigestSince(Date.now(), (err, pages) => {
         expect(pages.length).to.equal(2);
         pages.forEach(page => {
           if (page.dir === 'dirA') {
@@ -307,7 +307,7 @@ describe('Wiki Service (daily digest)', () => {
         callback(new Error());
       });
 
-      wikiService.findPagesForDigestSince(moment(), err => {
+      wikiService.findPagesForDigestSince(Date.now(), err => {
         expect(err).to.exist();
         done();
       });

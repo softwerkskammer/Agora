@@ -221,6 +221,14 @@ class Activity {
     return this.endMoment().dayOfYear() !== this.startMoment().dayOfYear();
   }
 
+  startDate() {
+    return new Date(this.startUnix() * 1000);
+  }
+
+  endDate() {
+    return new Date(this.endUnix() * 1000);
+  }
+
   startMoment() {
     return moment.unix(this.startUnix()).tz(fieldHelpers.defaultTimezone());
   }

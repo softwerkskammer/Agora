@@ -2,8 +2,6 @@
 
 const expect = require('must-dist');
 
-const moment = require('moment');
-
 const Activity = require('../../testutil/configureForTest').get('beans').get('activity');
 
 // TODO Activity.fillFromUI with null/undefined in startDate, startTime, endDate, endTime
@@ -70,7 +68,7 @@ describe('Activity', () => {
       const activity = new Activity({
         assignedGroup: 'mygroup',
         title: 'my-activity',
-        startUnix: moment('20171120', 'YYYYMMDD').unix()
+        startUnix: 1511132400 // 20.11.2017
       });
 
       expect(activity.blogEntryUrl()).to.equal('mygroup/blog_2017-11-20_my-activity');
@@ -81,7 +79,7 @@ describe('Activity', () => {
       const activity = new Activity({
         assignedGroup: 'mygroup',
         title: 'Myactivity',
-        startUnix: moment('20171120', 'YYYYMMDD').unix()
+        startUnix: 1511132400 // 20.11.2017
       });
 
       expect(activity.blogEntryUrl()).to.equal('mygroup/blog_2017-11-20_myactivity');
@@ -91,7 +89,7 @@ describe('Activity', () => {
       const activity = new Activity({
         assignedGroup: 'mygroup',
         title: '74. my activityÄÖÜ',
-        startUnix: moment('20171120', 'YYYYMMDD').unix()
+        startUnix: 1511132400 // 20.11.2017
       });
 
       expect(activity.blogEntryUrl()).to.equal('mygroup/blog_2017-11-20_74-my-activityaou');

@@ -1,7 +1,5 @@
 'use strict';
 
-const moment = require('moment-timezone');
-
 const request = require('supertest');
 const sinon = require('sinon').createSandbox();
 const expect = require('must-dist');
@@ -14,11 +12,10 @@ const Activity = beans.get('activity');
 const createApp = require('../../testutil/testHelper')('activitiesApp', beans).createApp;
 
 describe('Activity application with DB - shows activities -', () => {
-
-  const tomorrow = moment().add(1, 'days');
-  const dayAfterTomorrow = moment().add(2, 'days');
-  const yesterday = moment().subtract(1, 'days');
-  const dayBeforeYesterday = moment().subtract(2, 'days');
+  const tomorrow = new Date(Date.now() + 86400000).getTime() / 1000; // + 1 day
+  const dayAfterTomorrow = new Date(Date.now() + 86400000 + 86400000).getTime() / 1000; // + 2 days
+  const yesterday = new Date(Date.now() - 86400000).getTime() / 1000; // - 1 day
+  const dayBeforeYesterday = new Date(Date.now() - 86400000 - 86400000).getTime() / 1000; // - 2 days
 
   const futureActivity = new Activity({
     id: 'futureActivity',
@@ -27,8 +24,8 @@ describe('Activity application with DB - shows activities -', () => {
     assignedGroup: 'groupname',
     location: 'location1',
     direction: 'direction1',
-    startUnix: tomorrow.unix(),
-    endUnix: dayAfterTomorrow.unix(),
+    startUnix: tomorrow,
+    endUnix: dayAfterTomorrow,
     url: 'url_future',
     owner: 'owner',
     resources: {Veranstaltung: {_registeredMembers: [], _registrationOpen: true}},
@@ -41,8 +38,8 @@ describe('Activity application with DB - shows activities -', () => {
     assignedGroup: 'groupname',
     location: 'location1',
     direction: 'direction1',
-    startUnix: yesterday.unix(),
-    endUnix: tomorrow.unix(),
+    startUnix: yesterday,
+    endUnix: tomorrow,
     url: 'url_current',
     owner: 'owner',
     resources: {Veranstaltung: {_registeredMembers: [], _registrationOpen: true}},
@@ -55,8 +52,8 @@ describe('Activity application with DB - shows activities -', () => {
     assignedGroup: 'groupname',
     location: 'location1',
     direction: 'direction1',
-    startUnix: dayBeforeYesterday.unix(),
-    endUnix: yesterday.unix(),
+    startUnix: dayBeforeYesterday,
+    endUnix: yesterday,
     url: 'url_past',
     owner: 'owner',
     resources: {Veranstaltung: {_registeredMembers: [], _registrationOpen: true}},

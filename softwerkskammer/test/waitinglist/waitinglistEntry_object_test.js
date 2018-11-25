@@ -5,10 +5,9 @@ const beans = require('simple-configure').get('beans');
 const expect = require('must-dist');
 
 const WaitinglistEntry = beans.get('waitinglistEntry');
-const moment = require('moment-timezone');
 
 const entryWithoutParam = new WaitinglistEntry();
-const registrationDate = moment('23.02.2013 17:44', 'DD.MM.YYYY HH:mm').toDate();
+const registrationDate = new Date(2013, 1, 23, 17, 44);
 const entryWithParam = new WaitinglistEntry({_memberId: '12345', _registeredAt: registrationDate}, 'Meine Ressource');
 
 describe('Waitinglist Entry', () => {

@@ -2,7 +2,6 @@
 
 const sinon = require('sinon').createSandbox();
 const expect = require('must-dist');
-const moment = require('moment-timezone');
 
 const beans = require('../../testutil/configureForTest').get('beans');
 const waitinglistService = beans.get('waitinglistService');
@@ -55,7 +54,7 @@ describe('Waitinglist Service', () => {
     });
 
     it('returns one entry with its member nickname when the waitinglist contains one entry', done => {
-      activity1.resourceNamed('Veranstaltung').addToWaitinglist('12345', moment());
+      activity1.resourceNamed('Veranstaltung').addToWaitinglist('12345', Date.now());
 
       waitinglistService.waitinglistFor('myActivity', (err, waitinglist) => {
         expect(waitinglist.length).to.equal(1);
@@ -68,8 +67,8 @@ describe('Waitinglist Service', () => {
     });
 
     it('returns two entries with their member nicknames when the waitinglist contains two entries', done => {
-      activity1.resourceNamed('Veranstaltung').addToWaitinglist('12345', moment());
-      activity1.resourceNamed('Veranstaltung').addToWaitinglist('abcxyz', moment());
+      activity1.resourceNamed('Veranstaltung').addToWaitinglist('12345', Date.now());
+      activity1.resourceNamed('Veranstaltung').addToWaitinglist('abcxyz', Date.now());
 
       waitinglistService.waitinglistFor('myActivity', (err, waitinglist) => {
         expect(waitinglist.length).to.equal(2);

@@ -1,7 +1,5 @@
 'use strict';
 
-const moment = require('moment-timezone');
-
 const sinon = require('sinon').createSandbox();
 const expect = require('must-dist');
 
@@ -11,17 +9,16 @@ const persistence = beans.get('activitiesPersistence');
 const Activity = beans.get('activity');
 
 describe('Activity application with DB - shows activities for Group-Ids -', () => {
-
-  const tomorrowEarly = moment().add(1, 'days');
-  const tomorrowLate = moment().add(1, 'days').add(1, 'hours');
-  const dayAfterTomorrow = moment().add(2, 'days');
-  const yesterday = moment().subtract(1, 'days');
-  const dayBeforeYesterday = moment().subtract(2, 'days');
-  const threeDaysAgo = moment().subtract(3, 'days');
+  const tomorrowEarly = new Date(Date.now() + 86400000).getTime() / 1000; // + 1 day
+  const tomorrowLate = new Date(Date.now() + 90000000).getTime() / 1000; // + 1 day + 1 hour
+  const dayAfterTomorrow = new Date(Date.now() + 86400000 + 86400000).getTime() / 1000; // + 2 days
+  const yesterday = new Date(Date.now() - 86400000).getTime() / 1000; // - 1 day
+  const dayBeforeYesterday = new Date(Date.now() - 86400000 - 86400000).getTime() / 1000; // - 2 days
+  const threeDaysAgo = new Date(Date.now() - 86400000 - 86400000 - 86400000).getTime() / 1000; // - 3 days
 
   const futureActivity1 = new Activity({
     id: 'futureActivity1', title: 'Future Activity 1', description: 'description1', assignedGroup: 'groupname1',
-    location: 'location1', direction: 'direction1', startUnix: tomorrowEarly.unix(), endUnix: dayAfterTomorrow.unix(),
+    location: 'location1', direction: 'direction1', startUnix: tomorrowEarly, endUnix: dayAfterTomorrow,
     url: 'url_future', owner: 'owner', resources: {
       Veranstaltung: {_registeredMembers: [{memberId: 'memberId2'}], _registrationOpen: true},
       AndereVeranstaltung: {_registeredMembers: [{memberId: 'memberId2'}], _registrationOpen: true}
@@ -34,8 +31,8 @@ describe('Activity application with DB - shows activities for Group-Ids -', () =
     assignedGroup: 'groupname2',
     location: 'location1',
     direction: 'direction1',
-    startUnix: tomorrowLate.unix(),
-    endUnix: dayAfterTomorrow.unix(),
+    startUnix: tomorrowLate,
+    endUnix: dayAfterTomorrow,
     url: 'url_future',
     owner: 'owner',
     resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId'}], _registrationOpen: true}},
@@ -49,8 +46,8 @@ describe('Activity application with DB - shows activities for Group-Ids -', () =
     assignedGroup: 'groupname1',
     location: 'location1',
     direction: 'direction1',
-    startUnix: yesterday.unix(),
-    endUnix: tomorrowEarly.unix(),
+    startUnix: yesterday,
+    endUnix: tomorrowEarly,
     url: 'url_current',
     owner: 'owner',
     resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId'}], _registrationOpen: true}},
@@ -58,7 +55,7 @@ describe('Activity application with DB - shows activities for Group-Ids -', () =
   });
   const currentActivity2 = new Activity({
     id: 'currentActivity2', title: 'Current Activity 2', description: 'description1', assignedGroup: 'groupname2',
-    location: 'location1', direction: 'direction1', startUnix: yesterday.unix(), endUnix: tomorrowEarly.unix(),
+    location: 'location1', direction: 'direction1', startUnix: yesterday, endUnix: tomorrowEarly,
     url: 'url_current', owner: 'owner', resources: {Veranstaltung: {}}, version: 1
   }); // resource has no registered members!
 
@@ -69,8 +66,8 @@ describe('Activity application with DB - shows activities for Group-Ids -', () =
     assignedGroup: 'groupname',
     location: 'location1',
     direction: 'direction1',
-    startUnix: dayBeforeYesterday.unix(),
-    endUnix: yesterday.unix(),
+    startUnix: dayBeforeYesterday,
+    endUnix: yesterday,
     url: 'url_past',
     owner: 'owner',
     resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId'}], _registrationOpen: true}},
@@ -84,8 +81,8 @@ describe('Activity application with DB - shows activities for Group-Ids -', () =
     assignedGroup: 'groupname',
     location: 'location1',
     direction: 'direction1',
-    startUnix: threeDaysAgo.unix(),
-    endUnix: threeDaysAgo.unix(),
+    startUnix: threeDaysAgo,
+    endUnix: threeDaysAgo,
     url: 'url_past',
     owner: 'owner',
     resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId'}], _registrationOpen: true}},

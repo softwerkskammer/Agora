@@ -11,7 +11,6 @@ const beans = require('simple-configure').get('beans');
 const persistence = beans.get('settingsPersistence');
 const wikiService = beans.get('wikiService');
 const notifications = beans.get('notifications');
-const moment = require('moment-timezone');
 const util = require('util');
 
 const lastNotifications = 'lastWikiNotifications';
@@ -31,12 +30,12 @@ persistence.getByField({id: lastNotifications}, (err, result) => {
     return closeAndExit();
   }
   logger.info('No error when reading lastWikiNotifications');
-  const yesterday = moment().subtract(1, 'days');
-  const lastNotified = result || {id: lastNotifications, moment: yesterday.toDate()};
+  const yesterday = new Date(Date.now() - 86400000); // minus 1 day
+  const lastNotified = result || {id: lastNotifications, moment: yesterday}; // moment here is a Date
   if (result) {
     logger.info('Last notified: ' + util.inspect(result.moment));
   }
-  wikiService.findPagesForDigestSince(moment(lastNotified.moment), (err1, changes) => {
+  wikiService.findPagesForDigestSince(lastNotified.moment.getTime(), (err1, changes) => {
     /* eslint no-console: 0 */
 
     if (err1) {
@@ -53,7 +52,7 @@ persistence.getByField({id: lastNotifications}, (err, result) => {
         logger.error(err2);
         return closeAndExit();
       }
-      lastNotified.moment = moment().toDate();
+      lastNotified.moment = new Date();
       persistence.save(lastNotified, err3 => {
         if (err3) {
           logger.error(err3);

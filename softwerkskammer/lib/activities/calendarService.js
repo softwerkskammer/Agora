@@ -6,7 +6,7 @@ const activitystore = beans.get('activitystore');
 
 module.exports = {
 
-  eventsBetween: function eventsBetween(startMoment, endMoment, groupsColors, callback) {
+  eventsBetween: function eventsBetween(startMillis, endMillis, groupsColors, callback) {
     function asCalendarEvent(activity) {
       return {
         start: activity.startMoment().format(),
@@ -18,7 +18,7 @@ module.exports = {
       };
     }
 
-    activitystore.allActivitiesByDateRangeInAscendingOrder(startMoment.valueOf(), endMoment.valueOf(), (err, activities) => {
+    activitystore.allActivitiesByDateRangeInAscendingOrder(startMillis, endMillis, (err, activities) => {
       if (err) { return callback(err); }
       callback(null, activities.map(asCalendarEvent));
     });

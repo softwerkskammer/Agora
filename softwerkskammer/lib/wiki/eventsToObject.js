@@ -1,6 +1,5 @@
 'use strict';
 
-const moment = require('moment-timezone');
 const beans = require('simple-configure').get('beans');
 const misc = beans.get('misc');
 
@@ -15,12 +14,22 @@ function contentsToObject(contents, year) {
   }
 
   function dates(element) {
+    function toDate(dayMonthString, plusMillis) {
+      const dayMonth = dayMonthString ? dayMonthString.split('.') : [];
+      if (dayMonth.length < 2) {
+        return null;
+      }
+      return new Date(Date.UTC(year, parseInt(dayMonth[1]) - 1, parseInt(dayMonth[0])) + plusMillis);
+    }
+
     if (element.trim()) {
       const fromAndUntil = misc.compact(element.split('-').map(each => each.trim()));
-      const from = moment.utc(fromAndUntil[0] + year, 'D.M.YYYY');
-      const until = moment.utc((fromAndUntil[1] || fromAndUntil[0]) + year, 'D.M.YYYY');
-      until.add(23, 'hours');
-      return [from.format(), until.format()];
+      const from = toDate(fromAndUntil[0], 0);
+      const until = toDate(fromAndUntil[1] || fromAndUntil[0], 82800000); // 23 hours
+      if (from && until) {
+        return [from.toISOString(), until.toISOString()];
+      }
+      return null;
     }
   }
 
