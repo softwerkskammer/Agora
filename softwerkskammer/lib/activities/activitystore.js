@@ -5,7 +5,6 @@ const beans = require('simple-configure').get('beans');
 const R = require('ramda');
 
 const misc = beans.get('misc');
-const moment = require('moment-timezone');
 
 const logger = require('winston').loggers.get('transactions');
 const persistence = beans.get('activitiesPersistence');
@@ -27,8 +26,8 @@ function toActivityList(callback, err, jsobjects) {
 function allActivitiesByDateRange(rangeFrom, rangeTo, sortOrder, callback) {
   persistence.listByField({
     $and: [
-      {endUnix: {$gt: rangeFrom}},
-      {startUnix: {$lt: rangeTo}}
+      {endUnix: {$gt: rangeFrom / 1000}},
+      {startUnix: {$lt: rangeTo / 1000}}
     ]
   }, sortOrder, R.partial(toActivityList, [callback]));
 }
@@ -52,17 +51,15 @@ module.exports = {
 
   allActivitiesByDateRangeInAscendingOrder,
 
-  allActivitiesByDateRangeInDescendingOrder,
-
   upcomingActivities: function upcomingActivities(callback) {
-    const start = moment().unix();
-    const end = moment().add(10, 'years').unix();
+    const start = Date.now();
+    const end = start + 315569260000; // 10 years as millis;
     allActivitiesByDateRangeInAscendingOrder(start, end, callback);
   },
 
   pastActivities: function pastActivities(callback) {
     const start = 0;
-    const end = moment().unix();
+    const end = Date.now();
     allActivitiesByDateRangeInDescendingOrder(start, end, callback);
   },
 
@@ -86,18 +83,18 @@ module.exports = {
   },
 
   upcomingActivitiesForGroupIds: function upcomingActivitiesForGroupIds(groupIds, callback) {
-    const start = moment().unix();
+    const start = Date.now();
 
     persistence.listByField({
       $and: [
-        {endUnix: {$gt: start}},
+        {endUnix: {$gt: start / 1000}},
         {assignedGroup: {$in: groupIds}}
       ]
     }, {startUnix: 1}, R.partial(toActivityList, [callback]));
   },
 
   pastActivitiesForGroupIds: function pastActivitiesForGroupIds(groupIds, callback) {
-    const start = moment().unix();
+    const start = Date.now();
 
     persistence.listByField({
       $and: [
@@ -145,7 +142,7 @@ module.exports = {
       return values;
     }
 
-    const now = moment().unix();
+    const now = Date.now() / 1000;
     const query = upcoming ? {endUnix: {$gt: now}} : {endUnix: {$lt: now}};
     const parameters = {out: {inline: 1}, scope: {memberId, groupIds}, query, jsMode: true};
 

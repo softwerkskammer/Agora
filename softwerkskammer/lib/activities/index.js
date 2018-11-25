@@ -1,6 +1,7 @@
 'use strict';
 
 const moment = require('moment-timezone');
+
 const async = require('async');
 const R = require('ramda');
 
@@ -131,7 +132,7 @@ app.get('/ical/:url', (req, res, next) => {
 
 app.get('/eventsForSidebar', (req, res, next) => {
   const from = moment(req.query.start).utc();
-  if (from.date() > 1) { from.add(1, 'M'); }
+  if (from.date() > 1) { from.add(1, 'M'); } // mutable!!!
 
   const start = moment(req.query.start).utc();
   const end = moment(req.query.end).utc();
@@ -260,7 +261,7 @@ app.get('/:url', (req, res, next) => {
 function subscribe(body, req, res, next) {
   const activityUrl = body.url;
 
-  activitiesService.addVisitorTo(req.user.member.id(), activityUrl, moment(), (err, statusTitle, statusText) => {
+  activitiesService.addVisitorTo(req.user.member.id(), activityUrl, Date.now(), (err, statusTitle, statusText) => {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
       statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
@@ -295,7 +296,7 @@ app.post('/unsubscribe', (req, res, next) => { // unsubscribe can only be called
 });
 
 function addToWaitinglist(body, req, res, next) {
-  activitiesService.addToWaitinglist(req.user.member.id(), body.url, moment(), (err, statusTitle, statusText) => {
+  activitiesService.addToWaitinglist(req.user.member.id(), body.url, Date.now(), (err, statusTitle, statusText) => {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
       statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);

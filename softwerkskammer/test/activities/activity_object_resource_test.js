@@ -1,7 +1,6 @@
 'use strict';
 
 const expect = require('must-dist');
-const moment = require('moment-timezone');
 
 const Activity = require('../../testutil/configureForTest').get('beans').get('activity');
 
@@ -39,11 +38,11 @@ describe('Activity resource management', () => {
     });
 
     it('sets the timestamp for the added member to the given moment', () => {
-      const now = moment();
+      const now = Date.now();
       const activity = new Activity();
       activity.resourceNamed(defaultName).addMemberId('memberID', now);
       expect(activity.state.resources[defaultName]._registeredMembers[0].memberId).to.equal('memberID');
-      expect(activity.state.resources[defaultName]._registeredMembers[0].registeredAt).to.eql(now.toDate());
+      expect(activity.state.resources[defaultName]._registeredMembers[0].registeredAt).to.eql(new Date(now));
     });
 
     it('adds a member to a desired resource', () => {

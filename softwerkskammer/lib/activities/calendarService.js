@@ -18,7 +18,7 @@ module.exports = {
       };
     }
 
-    activitystore.allActivitiesByDateRangeInAscendingOrder(startMoment.unix(), endMoment.unix(), (err, activities) => {
+    activitystore.allActivitiesByDateRangeInAscendingOrder(startMoment.valueOf(), endMoment.valueOf(), (err, activities) => {
       if (err) { return callback(err); }
       callback(null, activities.map(asCalendarEvent));
     });

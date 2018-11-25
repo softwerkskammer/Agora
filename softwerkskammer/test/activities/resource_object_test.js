@@ -1,14 +1,12 @@
 'use strict';
 
-const moment = require('moment-timezone');
 const expect = require('must-dist');
 
 const beans = require('../../testutil/configureForTest').get('beans');
 const Resource = beans.get('resource');
 const Activity = beans.get('activity');
 
-const tomorrow = moment();
-tomorrow.add(1, 'days');
+const tomorrow = new Date(Date.now() + 86400000); // 1 day as millis
 
 describe('Resource', () => {
   describe('registration matters', () => {
@@ -140,7 +138,7 @@ describe('Resource', () => {
         _waitinglist: [
           {
             _memberId: 'memberID',
-            _registrationValidUntil: tomorrow.toDate()
+            _registrationValidUntil: tomorrow
           }
         ]
       });
@@ -308,7 +306,7 @@ describe('Resource', () => {
 
     it('does not allow to subscribe if the registration is not allowed for the waiting list member', () => {
       const resource = activity1.resourceNamed('Veranstaltung');
-      resource.addToWaitinglist('12345', moment());
+      resource.addToWaitinglist('12345', Date.now());
       resource.waitinglistEntryFor('12345').setRegistrationValidityFor();
 
       expect(resource.waitinglistEntryFor('12345').canSubscribe()).to.be(false);
@@ -316,7 +314,7 @@ describe('Resource', () => {
 
     it('does not allow to subscribe if the registration timeslot is already past', () => {
       const resource = activity1.resourceNamed('Veranstaltung');
-      resource.addToWaitinglist('12345', moment());
+      resource.addToWaitinglist('12345', Date.now());
       resource.waitinglistEntryFor('12345').setRegistrationValidityFor('-1');
 
       expect(resource.waitinglistEntryFor('12345').canSubscribe()).to.be(false);
@@ -324,7 +322,7 @@ describe('Resource', () => {
 
     it('allows to subscribe if the end of the registration timeslot is not reached yet', () => {
       const resource = activity1.resourceNamed('Veranstaltung');
-      resource.addToWaitinglist('12345', moment());
+      resource.addToWaitinglist('12345', Date.now());
       resource.waitinglistEntryFor('12345').setRegistrationValidityFor('1');
 
       expect(resource.waitinglistEntryFor('12345').canSubscribe()).to.be(true);
@@ -335,7 +333,7 @@ describe('Resource', () => {
       resource.addMemberId('12345');
 
       expect(resource.isAlreadyRegistered('12345')).to.be(true);
-      resource.addToWaitinglist('12345', moment());
+      resource.addToWaitinglist('12345', Date.now());
 
       expect(resource.waitinglistEntryFor('12345')).to.not.exist();
     });
@@ -352,11 +350,10 @@ describe('Resource', () => {
     });
 
     it('returns the registration date if the member is registered', () => {
-      const momentOfRegistration = moment('2014-03-03');
-      resource.addMemberId('12345', momentOfRegistration);
+      const millisOfRegistration = new Date('2014-03-03').getTime();
+      resource.addMemberId('12345', millisOfRegistration);
 
-      expect(resource.registrationDateOf('12345').format()).to.equal(momentOfRegistration.format());
-      // we cannot compare the moments directly because internally it is transformed to a Date and back...
+      expect(resource.registrationDateOf('12345')).to.eql(new Date(millisOfRegistration));
     });
 
   });

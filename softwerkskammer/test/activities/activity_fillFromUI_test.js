@@ -147,7 +147,7 @@ describe('Activity (when filled from UI)', () => {
         startTime: '20:15'
       });
 
-      expect(activity.id()).to.equal('My_Group_My_Title_Fri_Feb_01_2013_20_15_00_GMT+0100');
+      expect(activity.id()).to.equal('My_Group_My_Title_1.2.2013__20_15_00');
     });
 
     it('with several resources where only one has open registration', () => {

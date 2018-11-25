@@ -91,18 +91,18 @@ module.exports = {
   },
 
   activitiesBetween: function activitiesBetween(startMoment, endMoment, callback) {
-    activitystore.allActivitiesByDateRangeInAscendingOrder(startMoment.unix(), endMoment.unix(), callback);
+    activitystore.allActivitiesByDateRangeInAscendingOrder(startMoment.valueOf(), endMoment.valueOf(), callback);
   },
 
-  addVisitorTo: function addVisitorTo(memberId, activityUrl, moment, callback) {
+  addVisitorTo: function addVisitorTo(memberId, activityUrl, millis, callback) {
     const self = this;
     activitystore.getActivity(activityUrl, (err, activity) => {
       if (err || !activity) { return callback(err, 'message.title.problem', 'message.content.activities.does_not_exist'); }
-      if (activity.addMemberId(memberId, moment)) {
+      if (activity.addMemberId(memberId, millis)) {
         return activitystore.saveActivity(activity, err1 => {
           if (err1 && err1.message === CONFLICTING_VERSIONS) {
             // we try again because of a racing condition during save:
-            return self.addVisitorTo(memberId, activityUrl, moment, callback);
+            return self.addVisitorTo(memberId, activityUrl, millis, callback);
           }
           if (err1) { return callback(err1); }
           notifications.visitorRegistration(activity, memberId);
@@ -129,15 +129,15 @@ module.exports = {
     });
   },
 
-  addToWaitinglist: function addToWaitinglist(memberId, activityUrl, moment, callback) {
+  addToWaitinglist: function addToWaitinglist(memberId, activityUrl, millis, callback) {
     activitystore.getActivity(activityUrl, (err, activity) => {
       if (err || !activity) { return callback(err, 'message.title.problem', 'message.content.activities.does_not_exist'); }
       if (activity.hasWaitinglist()) {
-        activity.addToWaitinglist(memberId, moment);
+        activity.addToWaitinglist(memberId, millis);
         return activitystore.saveActivity(activity, err1 => {
           if (err1 && err1.message === CONFLICTING_VERSIONS) {
             // we try again because of a racing condition during save:
-            return this.addToWaitinglist(memberId, activityUrl, moment, callback);
+            return this.addToWaitinglist(memberId, activityUrl, millis, callback);
           }
           notifications.waitinglistAddition(activity, memberId);
           return callback(err1);

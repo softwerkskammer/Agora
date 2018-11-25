@@ -278,6 +278,9 @@ module.exports = function (grunt) {
     }
   });
 
+  process.env.NODE_ICU_DATA = 'node_modules/full-icu'; // necessary for timezone stuff
+// eslint-disable-next-line no-trailing-spaces
+  
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');

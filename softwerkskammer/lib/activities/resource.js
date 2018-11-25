@@ -1,6 +1,5 @@
 'use strict';
 
-const moment = require('moment-timezone');
 const WaitinglistEntry = require('simple-configure').get('beans').get('waitinglistEntry');
 
 class Resource {
@@ -45,15 +44,15 @@ class Resource {
       this.state._registeredMembers = [];
     }
     const registration = this.state._registeredMembers.find(each => each.memberId === memberId);
-    return registration ? moment(registration.registeredAt) : undefined;
+    return registration ? new Date(registration.registeredAt) : undefined;
   }
 
-  addMemberId(memberId, momentOfRegistration) {
+  addMemberId(memberId, millisOfRegistration) {
     if (this.canSubscribe() || this.canSubscribeFromWaitinglist(memberId)) {
       if (this.registeredMembers().indexOf(memberId) === -1) {
         this.state._registeredMembers.push({
           memberId,
-          registeredAt: (momentOfRegistration || moment()).toDate()
+          registeredAt: millisOfRegistration ? new Date(millisOfRegistration) : new Date()
         });
       }
       this.removeFromWaitinglist(memberId);
@@ -76,13 +75,13 @@ class Resource {
     }
   }
 
-  addToWaitinglist(memberId, momentOfRegistration) {
+  addToWaitinglist(memberId, millisOfRegistration) {
     if (!this.hasWaitinglist()) { return false; }
     if (this.isAlreadyRegistered(memberId)) { return false; }
     if (!this.waitinglistEntryFor(memberId)) {
       this.state._waitinglist.push({
         _memberId: memberId,
-        _registeredAt: (momentOfRegistration || moment()).toDate()
+        _registeredAt: millisOfRegistration ? new Date(millisOfRegistration) : new Date()
       });
     }
     return true;

@@ -50,11 +50,11 @@ class Activity {
   }
 
   startUnix() {
-    return this.state.startUnix || moment().unix();
+    return this.state.startUnix || Date.now() / 1000; // we have secinds persisted
   }
 
   endUnix() {
-    return this.state.endUnix || moment().add(2, 'hours').unix();
+    return this.state.endUnix || (Date.now() + 7200000) / 1000; // 2 hours and we have secinds persisted
   }
 
   assignedGroup() {
@@ -95,7 +95,7 @@ class Activity {
     this.state.meetupRSVPCount = object.meetupRSVPCount;
 
     if (!this.id() || this.id() === 'undefined') {
-      this.state.id = fieldHelpers.createLinkFrom([this.assignedGroup(), this.title(), this.startMoment()]);
+      this.state.id = fieldHelpers.createLinkFrom([this.assignedGroup(), this.title(), new Date(this.state.startUnix * 1000).toLocaleString('de-DE', {timeZone: fieldHelpers.defaultTimezone()})]);
     }
 
     // these are the resource definitions in the edit page:
@@ -174,8 +174,8 @@ class Activity {
     return [standardName];
   }
 
-  addMemberId(memberId, momentOfRegistration) {
-    return this.resources().veranstaltung().addMemberId(memberId, momentOfRegistration);
+  addMemberId(memberId, millisOfRegistration) {
+    return this.resources().veranstaltung().addMemberId(memberId, millisOfRegistration);
   }
 
   removeMemberId(memberId) {
@@ -199,8 +199,8 @@ class Activity {
     return this.resources().allWaitinglistEntries();
   }
 
-  addToWaitinglist(memberId, momentOfRegistration) {
-    this.resources().veranstaltung().addToWaitinglist(memberId, momentOfRegistration);
+  addToWaitinglist(memberId, millisOfRegistration) {
+    this.resources().veranstaltung().addToWaitinglist(memberId, millisOfRegistration);
   }
 
   removeFromWaitinglist(memberId) {
@@ -241,18 +241,6 @@ class Activity {
     return groupsColors && groupsColors[this.assignedGroup()] ? groupsColors[this.assignedGroup()] : '#353535';
   }
 
-  // Helper functions for non-persistent information
-  participantsOf(resourceName) {
-    if (!this.participants) { return []; }
-    const resource = this.resourceNamed(resourceName);
-    const memberIds = resource.registeredMembers();
-    return this.participants
-      .filter(participant => memberIds.some(memberId => memberId === participant.id()))
-      .map(member => {
-        member.registeredAt = resource.registrationDateOf(member.id());
-        return member;
-      });
-  }
 }
 
 module.exports = Activity;
