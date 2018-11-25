@@ -5,7 +5,7 @@ const expect = require('must-dist');
 const beans = require('../../testutil/configureForTest').get('beans');
 const wikiService = beans.get('wikiService');
 const memberstore = beans.get('memberstore');
-const moment = require('moment-timezone');
+const {DateTime} = require('luxon');
 const Git = beans.get('gitmech');
 
 describe('Wiki Service', () => {
@@ -201,17 +201,17 @@ describe('WikiService (getBlogPosts)', () => {
     wikiService.getBlogpostsForGroup('internet', (err, result) => {
       expect(result.length === 2).to.be(true);
 
-      const post1 = result[0];
+      const post1 = result[1];
       expect(post1.title).to.equal('Lean Coffee November 2013');
       expect(post1.teaser).to.equal('<p>Und beim nächsten Mal haben wir dann.</p>\n');
       expect(post1.dialogId()).to.equal('internet-blog_2013-11-01LeanCoffeeTest');
-      expect(post1.date().isSame(moment('2013-11-01'))).to.be(true);
+      expect(post1.date()).to.eql(DateTime.fromFormat('2013-11-01', 'yyyy-MM-dd'));
 
-      const post2 = result[1];
+      const post2 = result[0];
       expect(post2.title).to.equal('Agora Code-Kata Oktober 2013');
       expect(post2.teaser).to.equal('<p>Weil viele uns weder JavaScript noch populäre JavaScript...</p>\n');
       expect(post2.dialogId()).to.equal('internet-blog_2013-10-01AgoraCodeKata');
-      expect(post2.date().isSame(moment('2013-10-01'))).to.be(true);
+      expect(post2.date()).to.eql(DateTime.fromFormat('2013-10-01', 'yyyy-MM-dd'));
 
       done(err);
     });

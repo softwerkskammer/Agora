@@ -1,5 +1,5 @@
 'use strict';
-const moment = require('moment-timezone');
+const {DateTime} = require('luxon');
 const R = require('ramda');
 const path = require('path');
 
@@ -31,7 +31,7 @@ class Metadata {
     this.url = pf.url;
   }
 
-  date() { return moment(this.datestring, 'YYYY-MM-DD hh:mm:ss ZZ'); }
+  date() {return DateTime.fromFormat(this.datestring, 'yyyy-MM-dd HH:mm:ss ZZZ'); }
 
   pureName() { return path.basename(this.name, '.md'); }
 }
@@ -52,9 +52,9 @@ class Blogpost {
     this.url = pf.url;
   }
 
-  isValid() { return !!this.title && this.date().isValid(); }
+  isValid() { return !!this.title && this.date().isValid; }
 
-  date() { return moment(this.datestring, 'YYYY-MM-DD'); }
+  date() {return DateTime.fromFormat(this.datestring || '', 'yyyy-M-d');}
 
   pureName() { return this.title; }
 
@@ -79,7 +79,7 @@ class DirectoryWithChangedFiles {
 
   sortedFiles() { return this.files.sort((a, b) => {return a.file.localeCompare(b.file);}); }
 
-  addFile (fileWithChanges) { this.files.push(fileWithChanges); }
+  addFile(fileWithChanges) { this.files.push(fileWithChanges); }
 }
 
 module.exports.Metadata = Metadata;

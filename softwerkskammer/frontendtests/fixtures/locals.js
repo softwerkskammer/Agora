@@ -1,10 +1,11 @@
 /* eslint strict: [2, "global"] */
 'use strict';
-var moment = require('moment-timezone');
+var {DateTime} = require('luxon');
 
 module.exports = {
   language: 'de',
   t: function (string) { return string; },
+  DateTime: DateTime,
   accessrights: {
     isRegistered: function () { return true; },
     isMember: function () { return true; },
@@ -14,8 +15,8 @@ module.exports = {
     id: function () { return ''; },
     url: function () { return ''; },
     title: function () { return ''; },
-    startMoment: function () { return moment(); },
-    endMoment: function () { return moment(); },
+    startLuxon: function () { return DateTime.local(); },
+    endLuxon: function () { return DateTime.local(); },
     description: function () { return ''; },
     location: function () { return ''; },
     direction: function () { return ''; },

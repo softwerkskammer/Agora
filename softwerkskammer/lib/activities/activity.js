@@ -1,6 +1,6 @@
 'use strict';
 
-const moment = require('moment-timezone');
+const {DateTime} = require('luxon');
 
 const conf = require('simple-configure');
 const beans = conf.get('beans');
@@ -153,7 +153,8 @@ class Activity {
   }
 
   blogEntryUrl() {
-    return `${this.assignedGroup()}/blog_${this.startMoment().format('YYYY-MM-DD')}_${Renderer.normalize(this.title())}`;
+    const dateString = this.startLuxon().toFormat('yyyy-MM-dd');
+    return `${this.assignedGroup()}/blog_${dateString}_${Renderer.normalize(this.title())}`;
   }
 
   // Resources
@@ -218,7 +219,7 @@ class Activity {
   // Display Dates and Times
 
   isMultiDay() {
-    return this.endMoment().dayOfYear() !== this.startMoment().dayOfYear();
+    return this.endLuxon().ordinal !== this.startLuxon().ordinal;
   }
 
   startDate() {
@@ -229,20 +230,20 @@ class Activity {
     return new Date(this.endUnix() * 1000);
   }
 
-  startMoment() {
-    return moment.unix(this.startUnix()).tz(fieldHelpers.defaultTimezone());
+  startLuxon() {
+    return DateTime.fromMillis(this.startUnix() * 1000);
   }
 
-  endMoment() {
-    return moment.unix(this.endUnix()).tz(fieldHelpers.defaultTimezone());
+  endLuxon() {
+    return DateTime.fromMillis(this.endUnix() * 1000);
   }
 
   month() {
-    return this.startMoment().month();
+    return this.startLuxon().month;
   }
 
   year() {
-    return this.startMoment().year();
+    return this.startLuxon().year;
   }
 
   colorFrom(groupsColors) {

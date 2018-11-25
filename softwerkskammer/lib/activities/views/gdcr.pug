@@ -45,5 +45,5 @@ block scripts
 
   if (activities.length > 0)
     script.
-      displayedActivityStart = '#{activities[0].startMoment().toISOString()}';
-//- cannot write "#{activity.startMoment()}" as we need to produce a string to eval in the client
+      displayedActivityStart = '#{activities[0].startLuxon().toISO()}';
+//- cannot write "#{activity.startLuxon()}" as we need to produce a string to eval in the client

@@ -90,8 +90,8 @@ module.exports = {
     });
   },
 
-  activitiesBetween: function activitiesBetween(startMoment, endMoment, callback) {
-    activitystore.allActivitiesByDateRangeInAscendingOrder(startMoment.valueOf(), endMoment.valueOf(), callback);
+  activitiesBetween: function activitiesBetween(startMillis, endMillis, callback) {
+    activitystore.allActivitiesByDateRangeInAscendingOrder(startMillis, endMillis, callback);
   },
 
   addVisitorTo: function addVisitorTo(memberId, activityUrl, millis, callback) {

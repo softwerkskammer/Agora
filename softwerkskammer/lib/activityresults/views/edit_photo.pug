@@ -21,9 +21,9 @@ block content
         +text('title', 'Title', photo.title(), '', t('activityresults.photoTitlePlaceholder'))
         +multiselect('tags', 'Tags', photo.tags(), activityResult.tags())
         .col-xs-6(style='padding-left:0px;padding-right:3px')
-          +date('date', 'Date', photo.time().locale(language).format('L'))
+          +date('date', 'Date', photo.time().setLocale(language).toLocaleString(DateTime.DATE_SHORT))
         .col-xs-6(style='padding-left:0px;padding-right:3px')
-          +time('time', photo.time().locale(language).format('LT'))
+          +time('time', photo.time().setLocale(language).toLocaleString(DateTime.TIME_24_SIMPLE))
         +submitButtons('general.save')
       if (accessrights.canDeletePhoto(photo))
         -var deleteoptions = {url: '/activityresults/delete', params: {activityresults: activityResult.id(), photo: photo.id()}}

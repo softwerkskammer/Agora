@@ -157,7 +157,7 @@ app.get('/:groupname/feed', (req, res, next) => {
     wikiService.getBlogpostsForGroup(req.params.groupname, (err1, blogposts) => {
       if (err1) { return next(err1); }
 
-      const updated = blogposts.length > 0 ? blogposts[0].date().toDate() : undefined;
+      const updated = blogposts.length > 0 ? blogposts[0].date().toJSDate() : undefined;
       const baseUrl = conf.get('publicUrlPrefix');
 
       const feed = new Feed({
@@ -175,7 +175,7 @@ app.get('/:groupname/feed', (req, res, next) => {
           id: post.name,
           link: baseUrl + post.url(),
           content: post.renderBody(),
-          date: post.date().toDate(),
+          date: post.date().toJSDate(),
         });
       });
 

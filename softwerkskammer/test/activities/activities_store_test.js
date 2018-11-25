@@ -168,8 +168,8 @@ describe('Activity store', () => {
       store.getActivityForId(id, (err, activity) => {
         expect(activity.id()).to.equal('socratesId');
         expect(activity.title()).to.equal('SoCraTes');
-        expect(activity.startMoment().toString()).to.equal('Sat Feb 01 2014 00:00:00 GMT+0100');
-        expect(activity.endMoment().toString()).to.equal('Sat Feb 15 2014 00:00:00 GMT+0100');
+        expect(activity.startLuxon().toString()).to.equal('2014-02-01T00:00:00.000+01:00');
+        expect(activity.endLuxon().toString()).to.equal('2014-02-15T00:00:00.000+01:00');
         expect(activity.fullyQualifiedUrl()).to.equal('https://socrates.com:12345');
         expect(activity.url()).to.equal('socrates-url');
         expect(activity.allRegisteredMembers()).to.eql([]);

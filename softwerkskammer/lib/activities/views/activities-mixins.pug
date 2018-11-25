@@ -13,7 +13,7 @@ mixin activityList(activities, member)
   dl.row
     for activity in activities
       dt.col-4
-        | #{activity.startMoment().locale(language).format('LL')}
+        | #{activity.startLuxon().setLocale(language).toLocaleString(DateTime.DATE_FULL)}
       dd.col-8.mb-0
         a(href='/groups/' + activity.assignedGroup())
           .badge.text-white(style='background-color: ' + activity.colorRGB) #{activity.groupName()}

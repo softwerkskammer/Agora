@@ -1,7 +1,7 @@
 'use strict';
 
+const {DateTime} = require('luxon');
 const expect = require('must-dist');
-const moment = require('moment-timezone');
 const beans = require('../../testutil/configureForTest').get('beans');
 const wikiObjects = beans.get('wikiObjects');
 const FileWithChangelist = wikiObjects.FileWithChangelist;
@@ -43,7 +43,7 @@ describe('Wiki Objects', () => {
 });
 
 describe('BlogPost', () => {
-  const datum = moment('2013-02-01', 'YYYY-MM-DD');
+  const datum = DateTime.fromFormat('2013-02-01', 'yyyy-MM-dd');
 
   it('returns a parsed blog post', () => {
     const post = '#Lean Coffee _Februar_ 2013\n ' +
@@ -56,7 +56,7 @@ describe('BlogPost', () => {
     const result = new Blogpost(path, post);
 
     expect(result.title).is('Lean Coffee _Februar_ 2013');
-    expect(result.date().isSame(datum)).to.be.true();
+    expect(result.date()).to.eql(datum);
     expect(result.teaser).is('<p>Und beim nächsten Mal haben wir dann.</p>\n');
   });
 
@@ -73,7 +73,7 @@ describe('BlogPost', () => {
 
     expect(result.title).is('Lean Coffee Februar 2013');
     expect(result.teaser).to.be.undefined();
-    expect(result.date().isValid()).to.be.true();
+    expect(result.date().isValid).to.be.true();
   });
 
   it('can parse a multitude of titles', () => {
@@ -108,9 +108,9 @@ describe('BlogPost', () => {
       return new Blogpost('blog_' + datestring + 'LeanCoffeeTest.md', '#Lean').date();
     }
 
-    expect(parseDate('2013-02-01').isSame(datum)).to.be.true();
-    expect(parseDate('2013-02-1').isSame(datum)).to.be.true();
-    expect(parseDate('2013-2-1').isSame(datum)).to.be.true();
+    expect(parseDate('2013-02-01')).to.eql(datum);
+    expect(parseDate('2013-02-1')).to.eql(datum);
+    expect(parseDate('2013-2-1')).to.eql(datum);
   });
 
   it('has reasonable url functions', () => {
