@@ -162,6 +162,18 @@ module.exports = {
       message.setTo(superusers);
       sendMail(message, 'E-Mail', callback);
     });
+  },
+
+  sendMailToContactPersonsOfGroup: function (groupName, message, callback) {
+    groupsAndMembersService.getOrganizersOfGroup(groupName, (err, organizers) => {
+      const type = '$t(mailsender.notification)';
+      if (err) { return callback(err, mailtransport.statusmessageForError(type, err)); }
+      if (!organizers.length) {
+        return callback(null, mailtransport.statusmessageForError(type, 'Die Gruppe hat keine Ansprechpartner.'));
+      }
+      message.setBccToMemberAddresses(organizers);
+      sendMail(message, type, callback);
+    });
   }
 
 };

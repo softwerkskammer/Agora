@@ -198,6 +198,10 @@ module.exports = {
         return this.updateSubscriptions(member, oldEmail, subscriptions, err2 => callback(err2, member.nickname()));
       });
     });
+  },
+  getOrganizersOfGroup: function (groupName, callback) {
+    // TODO - implement using getGroupAndMembersForList
+    return callback(null, []);
   }
 
 };

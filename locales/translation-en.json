@@ -315,6 +315,7 @@
     "send": "Send",
     "subject": "Subject",
     "to_member": "To member",
+    "to_contact_persons": "To contact persons of group",
     "to_participants": "only to the activity's participants (not to groups)",
     "why-resign": "Why do you want to resign",
     "write": "Compose Message"

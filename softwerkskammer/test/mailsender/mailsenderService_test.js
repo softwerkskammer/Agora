@@ -24,6 +24,13 @@ const sender = new Member();
 let message;
 let sendmail;
 
+function groupIsOrganizedBy(groupName, organizers) {
+  sinon.stub(groupsAndMembersService, 'getOrganizersOfGroup').callsFake((passedGroupName, callback) => {
+    expect(passedGroupName).to.eql(groupName);
+    callback(null, organizers);
+  });
+}
+
 describe('MailsenderService', () => {
   const activityURL = 'acti_vi_ty';
   const nickname = 'nickyNamy';
@@ -327,6 +334,77 @@ describe('MailsenderService', () => {
 
   });
 
+  describe('sending to contact persons of a group', () => {
+    it('sends BCC to all organizers of given group', done => {
+      const organizers = [
+        new Member({
+          email: 'organizer1@softwerkskammer.org'
+        })
+      ];
+
+      groupIsOrganizedBy('groupName', organizers);
+
+      mailsenderService.sendMailToContactPersonsOfGroup('groupName', message, (err) => {
+        expect(err).to.not.exist();
+        expect(sendmail.calledOnce).to.be.true();
+        const transportobject = sendmail.args[0][0];
+        expect(transportobject.bcc).to.contain('organizer1@softwerkskammer.org');
+        done();
+      });
+    });
+
+    describe('organizers for group can not be read', () => {
+      it('does not send any email', done => {
+        sinon.stub(groupsAndMembersService, 'getOrganizersOfGroup').callsFake((passedGroupName, callback) => {
+          callback(new Error('no soup for you'));
+        });
+
+        mailsenderService.sendMailToContactPersonsOfGroup('groupName', message, (err, statusMessage) => {
+          expect(err).to.exist();
+          expect(sendmail.called).to.be.false();
+          expect(statusMessage.contents().type).to.eql('alert-danger');
+          expect(statusMessage.contents().additionalArguments.type).to.eql('$t(mailsender.notification)');
+          expect(statusMessage.contents().additionalArguments.err).to.eql('Error: no soup for you');
+          done();
+        });
+      });
+
+    });
+
+    describe('in case of a group without any organizers', () => {
+      it('does not send any email', function (done) {
+        groupIsOrganizedBy('groupName', []);
+
+        mailsenderService.sendMailToContactPersonsOfGroup('groupName', message, (err, statusMessage) => {
+          expect(err).to.not.exist();
+          expect(sendmail.called).to.be.false();
+          expect(statusMessage.contents().type).to.eql('alert-danger');
+          expect(statusMessage.contents().additionalArguments.err).to.eql('Die Gruppe hat keine Ansprechpartner.');
+          expect(statusMessage.contents().additionalArguments.type).to.eql('$t(mailsender.notification)');
+          done();
+        });
+      });
+    });
+
+    describe('status message', () => {
+      describe('when message is successfully send', () => {
+        it('returns a message indicating the success', (done) => {
+          const organizers = [
+            new Member({
+              email: 'organizer1@softwerkskammer.org'
+            })
+          ];
+          const anyGroup = 'anyGroupName';
+
+          groupIsOrganizedBy(anyGroup, organizers);
+
+          mailsenderService.sendMailToContactPersonsOfGroup(anyGroup, message, (err, statusmessage) => {
+            expect(err).not.to.exist();
+            expect(statusmessage.contents().type).to.eql('alert-success');
+            done();
+          });
+        });
+      });
+    });
+  });
 });
-
-
