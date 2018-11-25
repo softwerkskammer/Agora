@@ -14,7 +14,7 @@ var activityDateModel;
       if (dateString && timeString) {
         var dateArray = dateString.split('.').map(stringToInt);
         var timeArray = timeString.split(':').map(stringToInt);
-        return new Date(dateArray[2], dateArray[1] - 1, dateArray[0], timeArray[0], timeArray[1]);
+        return new Date(Date.UTC(dateArray[2], dateArray[1] - 1, dateArray[0], timeArray[0], timeArray[1]));
       }
       return null;
     };
@@ -42,8 +42,8 @@ var activityDateModel;
       },
 
       createDateAndTimeStrings: function (jsDate) {
-        var dateformat = new Intl.DateTimeFormat('de', {year: 'numeric', month: '2-digit', day: '2-digit'});
-        var timeformat = new Intl.DateTimeFormat('de', {hour: '2-digit', minute: '2-digit'});
+        var dateformat = new Intl.DateTimeFormat('de', {year: 'numeric', month: '2-digit', day: '2-digit', timeZone: 'UTC'});
+        var timeformat = new Intl.DateTimeFormat('de', {hour: '2-digit', minute: '2-digit', timeZone: 'UTC'});
         return {
           endDate: jsDate ? dateformat.format(jsDate) : '',
           endTime: jsDate ? timeformat.format(jsDate) : ''

@@ -8,11 +8,11 @@
 
     var dateArray = dateString.split('.').map(stringToInt);
     var timeArray = timeString.split(':').map(stringToInt);
-    return new Date(dateArray[2], dateArray[1] - 1, dateArray[0], timeArray[0], timeArray[1]);
+    return new Date(Date.UTC(dateArray[2], dateArray[1] - 1, dateArray[0], timeArray[0], timeArray[1]));
   };
 
   function assertJsDate(jsDate, date, time) {
-    expect(jsDate.toLocaleString('de-DE')).to.equal(utc(date, time).toLocaleString('de-DE'));
+    expect(jsDate.toISOString()).to.equal(utc(date, time).toISOString());
   }
 
   describe('Date Adjustment', function () {
@@ -83,25 +83,25 @@
       it('... if endDate is moved across the summertime boundary in spring', function () {
         var model = activityDateModel('29.03.2013', '12:15');
         var result = model.calculateNewEnd({start: utc('30.03.2013', '12:15'), end: utc('30.03.2013', '14:15')});
-        assertJsDate(result, '31.03.2013', '15:15');
+        assertJsDate(result, '31.03.2013', '14:15');
       });
 
       it('... if endDate is moved across the summertime boundary in autumn', function () {
         var model = activityDateModel('25.10.2013', '20:15');
         var result = model.calculateNewEnd({start: utc('26.10.2013', '20:15'), end: utc('26.10.2013', '23:15')});
-        assertJsDate(result, '27.10.2013', '22:15');
+        assertJsDate(result, '27.10.2013', '23:15');
       });
 
       it('... if endTime is moved across the summertime boundary in spring', function () {
         var model = activityDateModel('30.03.2013', '19:15');
         var result = model.calculateNewEnd({start: utc('30.03.2013', '22:15'), end: utc('30.03.2013', '23:15')});
-        assertJsDate(result, '31.03.2013', '3:15');
+        assertJsDate(result, '31.03.2013', '2:15');
       });
 
       it('... if endTime is moved across the summertime boundary in autumn', function () {
         var model = activityDateModel('26.10.2013', '20:15');
         var result = model.calculateNewEnd({start: utc('26.10.2013', '23:15'), end: utc('27.10.2013', '00:15')});
-        assertJsDate(result, '27.10.2013', '2:15');
+        assertJsDate(result, '27.10.2013', '3:15');
       });
     });
 
