@@ -2,6 +2,26 @@
 
 var displayedActivityStart;
 
+// eslint-disable-next-line no-unused-vars
+function toUtc(dateString, timeString) {
+  'use strict';
+  // expects German strings like "30.11.1987" "12:30"
+  // returns javascript Date or null
+  function stringToInt(each) {
+    var result = parseInt(each, 10);
+    return isNaN(result) ? 0 : result;
+  }
+
+  if (dateString && timeString) {
+    var dateArray = dateString.split('.').map(stringToInt);
+    var timeArray = timeString.split(':').map(stringToInt);
+    if (dateArray.length === 3 && timeArray.length === 2) {
+      return new Date(Date.UTC(dateArray[2], dateArray[1] - 1, dateArray[0], timeArray[0], timeArray[1]));
+    }
+  }
+  return null;
+}
+
 function initParameterisedCalendar(id, date) {
   'use strict';
 
@@ -189,6 +209,7 @@ function interestify() {
 
     function utc(dateString) {
       function stringToInt(each) { return parseInt(each, 10); }
+
       var dateArray = dateString.split('.').map(stringToInt);
       return new Date(dateArray[2], dateArray[1] - 1, dateArray[0]).getTime();
 

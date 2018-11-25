@@ -1,3 +1,4 @@
+/* global toUtc */
 /*eslint no-unused-vars: 0 */
 var activityDateModel;
 (function () {
@@ -6,22 +7,6 @@ var activityDateModel;
   // THE ORIGINAL OF THIS FILE IS IN frontend/javascript
 
   activityDateModel = function (initialDate, initialTime) {
-
-    var toUtc = function (dateString, timeString) {
-      // returns javascript Date or null
-      function stringToInt(each) {
-        var result = parseInt(each, 10);
-        return isNaN(result) ? 0 : result;
-      }
-
-      if (dateString && timeString) {
-        var dateArray = dateString.split('.').map(stringToInt);
-        var timeArray = timeString.split(':').map(stringToInt);
-        return new Date(Date.UTC(dateArray[2], dateArray[1] - 1, dateArray[0], timeArray[0], timeArray[1]));
-      }
-      return null;
-    };
-
     var oldStartDate = toUtc(initialDate, initialTime);
 
     return {

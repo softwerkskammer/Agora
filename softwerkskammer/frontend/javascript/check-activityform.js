@@ -14,7 +14,7 @@ var activity_validator;
       var endDate = $('#activityform [name=endDate]').val();
       var endTime = $('#activityform [name=endTime]').val();
       var dateAndTime = activityDateModel(startDate, startTime).convertInputs(startDate, startTime, endDate, endTime);
-      return endDate !== '' && endTime !== '' && dateAndTime.end.getTime() - dateAndTime.start.getTime() > 0;
+      return endDate !== '' && endTime !== '' && dateAndTime.end && dateAndTime.start && dateAndTime.end.getTime() - dateAndTime.start.getTime() > 0;
     };
 
     $.validator.addMethod('dateAndTime', validateDateAndTime, endMustBeAfterBegin);
