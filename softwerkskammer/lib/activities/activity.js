@@ -231,11 +231,11 @@ class Activity {
   }
 
   startLuxon() {
-    return DateTime.fromMillis(this.startUnix() * 1000);
+    return DateTime.fromMillis(this.startUnix() * 1000).setZone(fieldHelpers.defaultTimezone());
   }
 
   endLuxon() {
-    return DateTime.fromMillis(this.endUnix() * 1000);
+    return DateTime.fromMillis(this.endUnix() * 1000).setZone(fieldHelpers.defaultTimezone());
   }
 
   month() {
