@@ -74,6 +74,5 @@ block content
 block scripts
   +map(activity.location())
   script.
-    displayedActivityStart = moment('#{activity.startMoment().toISOString()}');
-    displayedActivityEnd = moment('#{activity.endMoment().toISOString()}');
+    displayedActivityStart = '#{activity.startMoment().toISOString()}';
 //- cannot write "#{activity.startMoment()}" as we need to produce a string to eval in the client

@@ -1,12 +1,35 @@
-/* global moment, fc_lang, datepicker_format, datepicker_lang, help */
+/* global FullCalendar, fc_lang, datepicker_format, datepicker_lang, help */
 
-var displayedActivityStart, displayedActivityEnd;
+var displayedActivityStart;
+
+// eslint-disable-next-line no-unused-vars
+function toUtc(dateString, timeString) {
+  'use strict';
+  // expects German strings like "30.11.1987" "12:30"
+  // returns javascript Date or null
+  function stringToInt(each) {
+    var result = parseInt(each, 10);
+    return isNaN(result) ? 0 : result;
+  }
+
+  if (dateString && timeString) {
+    var dateArray = dateString.split('.').map(stringToInt);
+    var timeArray = timeString.split(':').map(stringToInt);
+    if (dateArray.length === 3 && timeArray.length === 2) {
+      return new Date(Date.UTC(dateArray[2], dateArray[1] - 1, dateArray[0], timeArray[0], timeArray[1]));
+    }
+  }
+  return null;
+}
 
 function initParameterisedCalendar(id, date) {
   'use strict';
 
-  var isForActivities = id === '#calendar';
-  $(id).fullCalendar({
+  var isForActivities = id === 'calendar';
+  var calElement = document.getElementById(id);
+  if (!calElement) { return; }
+  var calendar;
+  var options = {
     defaultDate: date,
     header: {
       left: 'title',
@@ -16,39 +39,46 @@ function initParameterisedCalendar(id, date) {
     timezone: 'Europe/Berlin',
     displayEventTime: false,
     events: isForActivities ? '/activities/eventsForSidebar' : '/wiki/eventsFor',
-    eventMouseover: function (event) {
-      var day = event.start.day();
-      $(this).tooltip({
-        title: (isForActivities ? event.start.format('HH:mm') + ': ' : '') + event.title,
+    eventMouseEnter: function (mouseEnterInfo) {
+      var event = mouseEnterInfo.event;
+      var day = event.start.getDay();
+      $(mouseEnterInfo.el).tooltip({
+        title: (isForActivities
+          ? new Intl.DateTimeFormat(fc_lang).format(event.start, {hour: 'numeric', minute: 'numeric'}) + ': ' : '') + event.title,
         trigger: 'manual',
         placement: (day < 4 && day > 0) ? 'right' : 'left',
         container: 'body',
         template: '<div class="tooltip" role="tooltip" style="max-width: 130px"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
       });
-      $(this).tooltip('show');
+      $(mouseEnterInfo.el).tooltip('show');
     },
-    eventMouseout: function () {
-      $(this).tooltip('dispose');
+    eventMouseLeave: function (mouseLeaveInfo) {
+      $(mouseLeaveInfo.el).tooltip('dispose');
     },
-    eventClick: function () {
-      $(this).tooltip('dispose');
+    eventClick: function (eventClickInfo) {
+      $(eventClickInfo.el).tooltip('dispose');
     },
-    eventAfterAllRender: function () {
+    eventSourceSuccess: function () {
       if (displayedActivityStart) {
-        this.calendar.select(displayedActivityStart, displayedActivityEnd);
+        calendar.gotoDate(displayedActivityStart);
+        calendar.select(displayedActivityStart);
+        displayedActivityStart = null;
       }
     },
     themeSystem: 'bootstrap4',
     aspectRatio: 1.2,
     height: 'auto',
+    locale: fc_lang,
     views: {
       month: {
-        titleFormat: isForActivities ? 'MMM \'YY' : 'MMMM',
-        lang: fc_lang,
-        fixedWeekCount: false
+        titleFormat: isForActivities ? {month: 'short', year: '2-digit'} : {month: 'long'},
+        fixedWeekCount: false,
+        showNonCurrentDates: isForActivities
       }
     }
-  });
+  };
+  calendar = new FullCalendar.Calendar(calElement, options);
+  calendar.render();
 }
 
 function surroundWithLink(text) {
@@ -176,8 +206,17 @@ function interestify() {
 
   function extendDataTables() {
     if (!$.fn.dataTableExt) { return; }
+
+    function utc(dateString) {
+      function stringToInt(each) { return parseInt(each, 10); }
+
+      var dateArray = dateString.split('.').map(stringToInt);
+      return new Date(dateArray[2], dateArray[1] - 1, dateArray[0]).getTime();
+
+    }
+
     $.extend($.fn.dataTableExt.oSort, {
-      'date-eu-pre': function (dateString) { return moment(dateString, 'DD.MM.YYYY HH:mm').unix(); },
+      'date-eu-pre': function (dateString) { return utc(dateString); },
       'date-eu-asc': function (a, b) { return a - b; },
       'date-eu-desc': function (a, b) { return b - a; }
     });
@@ -223,12 +262,10 @@ function interestify() {
   }
 
   function initActivitiesCalendar() {
-    var id = '#calendar';
-    initParameterisedCalendar(id, moment());
+    initParameterisedCalendar('calendar', new Date());
   }
 
   $(document).ready(highlightCurrentSection);
-  $(document).ready(initActivitiesCalendar);
   $(document).ready(interestify);
 
   $(document).ready(addHelpButtonToTextarea);
@@ -237,4 +274,5 @@ function interestify() {
   $(document).ready(createLinks);
   $(document).ready(initTooltipsAndHovers);
   $.fn.select2.defaults.set('theme', 'bootstrap');
+  document.addEventListener('DOMContentLoaded', initActivitiesCalendar);
 }());

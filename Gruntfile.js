@@ -9,10 +9,9 @@ module.exports = function (grunt) {
     'node_modules/bootstrap/dist/js/bootstrap.js',
     'node_modules/bootstrap-markdown/js/bootstrap-markdown.js',
     'node_modules/bootstrap-markdown/locale/bootstrap-markdown.de.js',
-    'node_modules/moment/moment.js',
-    'node_modules/moment-timezone/moment-timezone.js',
     'node_modules/smartmenus/dist/jquery.smartmenus.js',
     'node_modules/smartmenus/dist/addons/bootstrap-4/jquery.smartmenus.bootstrap-4.js',
+    'node_modules/superagent/superagent.js',
     'node_modules/fullcalendar/dist/fullcalendar.js',
     'node_modules/jquery-validation/dist/jquery.validate.js',
     'node_modules/jquery-validation/dist/additional-methods.js'
@@ -24,7 +23,7 @@ module.exports = function (grunt) {
       'node_modules/jquery-validation/dist/localization/messages_de.js',
       'node_modules/jquery-validation/dist/localization/methods_de.js',
       'node_modules/select2/dist/js/i18n/de.js',
-      'node_modules/fullcalendar/dist/locale/de.js',
+      'node_modules/fullcalendar/dist/locales/de.js',
       'locales/frontend_de.js',
       'softwerkskammer/frontend/javascript/agora.js'
     ])
@@ -32,7 +31,7 @@ module.exports = function (grunt) {
 
   const files_en = {
     'softwerkskammer/public/clientscripts/global_en.js': commonJSfiles.concat([
-      'node_modules/fullcalendar/dist/locale/en-gb.js',
+      'node_modules/fullcalendar/dist/locales/en-gb.js',
       'locales/frontend_en.js',
       'softwerkskammer/frontend/javascript/agora.js'
     ])
