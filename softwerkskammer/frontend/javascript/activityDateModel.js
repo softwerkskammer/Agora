@@ -8,10 +8,10 @@ var activityDateModel;
   activityDateModel = function (initialDate, initialTime) {
 
     var toUtc = function (dateString, timeString) {
-      // returns javascript Date
-      function stringToInt(each) { 
-          const result = parseInt(each, 10); 
-          return isNaN(result) ? 0 : result;
+      // returns javascript Date or null
+      function stringToInt(each) {
+        const result = parseInt(each, 10);
+        return isNaN(result) ? 0 : result;
       }
 
       if (dateString && timeString) {
