@@ -153,7 +153,7 @@ class Activity {
   }
 
   blogEntryUrl() {
-    const dateString = this.startLuxon().toFormat('yyyy-MM-dd');
+    const dateString = this.startDateTime().toFormat('yyyy-MM-dd');
     return `${this.assignedGroup()}/blog_${dateString}_${Renderer.normalize(this.title())}`;
   }
 
@@ -219,7 +219,7 @@ class Activity {
   // Display Dates and Times
 
   isMultiDay() {
-    return this.endLuxon().ordinal !== this.startLuxon().ordinal;
+    return this.endDateTime().ordinal !== this.startDateTime().ordinal;
   }
 
   startDate() {
@@ -230,20 +230,20 @@ class Activity {
     return new Date(this.endUnix() * 1000);
   }
 
-  startLuxon() {
+  startDateTime() {
     return DateTime.fromMillis(this.startUnix() * 1000).setZone(fieldHelpers.defaultTimezone());
   }
 
-  endLuxon() {
+  endDateTime() {
     return DateTime.fromMillis(this.endUnix() * 1000).setZone(fieldHelpers.defaultTimezone());
   }
 
   month() {
-    return this.startLuxon().month;
+    return this.startDateTime().month;
   }
 
   year() {
-    return this.startLuxon().year;
+    return this.startDateTime().year;
   }
 
   colorFrom(groupsColors) {

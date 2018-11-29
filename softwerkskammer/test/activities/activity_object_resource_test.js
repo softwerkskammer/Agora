@@ -142,8 +142,8 @@ describe('Activity resource management', () => {
       });
       activity = activity.resetForClone();
       expect(activity.resourceNamed('default').registeredMembers()).to.be.empty();
-      expect(activity.startLuxon().toString()).to.not.contain('2013-4-4');
-      expect(activity.endLuxon().toString()).to.not.contain('2013-4-5');
+      expect(activity.startDateTime().toString()).to.not.contain('2013-4-4');
+      expect(activity.endDateTime().toString()).to.not.contain('2013-4-5');
       expect(activity.id()).to.not.exist();
       expect(activity.url()).to.not.exist();
     });

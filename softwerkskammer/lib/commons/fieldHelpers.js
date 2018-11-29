@@ -66,15 +66,15 @@ module.exports = {
   },
 
   parseToUnixUsingDefaultTimezone: function parseToUnixUsingDefaultTimezone(dateString, timeString) {
-    const result = this.parseToLuxonUsingDefaultTimezone(dateString, timeString);
+    const result = this.parseToDateTimeUsingDefaultTimezone(dateString, timeString);
     return result ? result.toMillis() / 1000 : undefined;
   },
 
-  parseToLuxonUsingDefaultTimezone: function parseToLuxonUsingDefaultTimezone(dateString, timeString) {
-    return this.parseToLuxonDateTimetUsingTimezone(dateString, timeString, this.defaultTimezone());
+  parseToDateTimeUsingDefaultTimezone: function parseToUsingDefaultTimezone(dateString, timeString) {
+    return this.parseToDateTimeUsingTimezone(dateString, timeString, this.defaultTimezone());
   },
 
-  parseToLuxonDateTimetUsingTimezone: function parseToLuxonDateTimetUsingTimezone(dateString, timeString, timezoneName) {
+  parseToDateTimeUsingTimezone: function parseToDateTimeUsingTimezone(dateString, timeString, timezoneName) {
     if (dateString) {
       const timeStringOrDefault = timeString || '00:00';
       return DateTime.fromFormat(dateString + ' ' + timeStringOrDefault, 'd.M.yyyy H:m', { zone: timezoneName });

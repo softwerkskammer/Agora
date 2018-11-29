@@ -33,8 +33,8 @@ block content
                 td: a.btn-sm(href='/activities/edit/' + encodeURIComponent(activity.url())): i.fas.fa-edit.fa-fw
                 td #{activity.title()}
                 td #{activity.url()}
-                td #{activity.startLuxon().setLocale(language).toLocaleString(DateTime.DATE_SHORT)}
-                td #{activity.endLuxon().setLocale(language).toLocaleString(DateTime.DATE_SHORT)}
+                td #{activity.startDateTime().setLocale(language).toLocaleString(DateTime.DATE_SHORT)}
+                td #{activity.endDateTime().setLocale(language).toLocaleString(DateTime.DATE_SHORT)}
                 td #{activity.location()}
                 td.ellipsis: span(rel='tooltip', data-content=activity.descriptionHTML(), data-title='<h4>' + activity.title() + '</h4>') #{activity.description()}
                 td.ellipsis: span(rel='tooltip', data-content=activity.directionHTML()) #{activity.direction()}

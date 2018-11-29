@@ -52,7 +52,7 @@ mixin my_activities
             i.fas.fa-check.fa-fw.text-success.tooltipify(data-toggle='tooltip', title=t('activities.tooltip.registered'))
           else
             i.fas.fa-question.fa-fw.tooltipify(data-toggle='tooltip', title=t('activities.tooltip.unknown'))
-          | &nbsp; #{activity.startLuxon().setLocale(language).toLocaleString(DateTime.DATE_SHORT)} &nbsp;
+          | &nbsp; #{activity.startDateTime().setLocale(language).toLocaleString(DateTime.DATE_SHORT)} &nbsp;
           a(href=activity.fullyQualifiedUrl()) #{activity.title()}
           a.float-right(href='/groups/' + activity.assignedGroup())
             .badge.text-white(style='background-color: ' + activity.colorRGB) #{activity.groupName()}

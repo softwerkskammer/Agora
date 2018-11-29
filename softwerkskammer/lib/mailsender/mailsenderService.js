@@ -23,7 +23,7 @@ function sendMail(message, type, callback) {
 }
 
 function activityMarkdown(activity, language) {
-  let markdown = activity.description() + '\n\n**Datum:** ' + activity.startLuxon().setLocale(language || 'de').toLocaleString(DateTime.DATETIME_FULL) + '\n\n**Ort:** ' + activity.location();
+  let markdown = activity.description() + '\n\n**Datum:** ' + activity.startDateTime().setLocale(language || 'de').toLocaleString(DateTime.DATETIME_FULL) + '\n\n**Ort:** ' + activity.location();
   if (activity.hasDirection()) {
     markdown = markdown + '\n\n**Wegbeschreibung:**\n\n' + activity.direction();
   }

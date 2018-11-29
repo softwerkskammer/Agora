@@ -165,51 +165,51 @@ describe('killHtmlHead', () => {
   });
 });
 
-describe('parseToLuxonDateTimetUsingTimezone function', () => {
+describe('parseToDateTimetUsingTimezone function', () => {
 
   it('parses past time in winter', () => {
-    const result = fieldHelpers.parseToLuxonDateTimetUsingTimezone('2.1.2013', '3:04', 'Europe/Berlin');
+    const result = fieldHelpers.parseToDateTimeUsingTimezone('2.1.2013', '3:04', 'Europe/Berlin');
     expect(result.toISO()).to.equal('2013-01-02T03:04:00.000+01:00');
   });
 
   it('parses future time in winter', () => {
-    const result = fieldHelpers.parseToLuxonDateTimetUsingTimezone('2.1.2113', '3:04', 'Europe/Berlin');
+    const result = fieldHelpers.parseToDateTimeUsingTimezone('2.1.2113', '3:04', 'Europe/Berlin');
     expect(result.toISO()).to.equal('2113-01-02T03:04:00.000+01:00');
   });
 
   it('parses past time in summer', () => {
-    const result = fieldHelpers.parseToLuxonDateTimetUsingTimezone('2.8.2013', '3:04', 'Europe/Berlin');
+    const result = fieldHelpers.parseToDateTimeUsingTimezone('2.8.2013', '3:04', 'Europe/Berlin');
     expect(result.toISO()).to.equal('2013-08-02T03:04:00.000+02:00');
   });
 
   it('parses near future time in summer', () => {
-    const result = fieldHelpers.parseToLuxonDateTimetUsingTimezone('2.8.2033', '3:04', 'Europe/Berlin');
+    const result = fieldHelpers.parseToDateTimeUsingTimezone('2.8.2033', '3:04', 'Europe/Berlin');
     expect(result.toISO()).to.equal('2033-08-02T03:04:00.000+02:00');
   });
 
   it('parses far future time in summer', () => {
-    const result = fieldHelpers.parseToLuxonDateTimetUsingTimezone('2.8.2113', '3:04', 'Europe/Berlin');
+    const result = fieldHelpers.parseToDateTimeUsingTimezone('2.8.2113', '3:04', 'Europe/Berlin');
     expect(result.toISO()).to.equal('2113-08-02T03:04:00.000+02:00');
   });
 
   it('parses date with null time', () => {
-    const result = fieldHelpers.parseToLuxonDateTimetUsingTimezone('2.8.2013', null, 'Europe/Berlin');
+    const result = fieldHelpers.parseToDateTimeUsingTimezone('2.8.2013', null, 'Europe/Berlin');
     expect(result.toISO()).to.equal('2013-08-02T00:00:00.000+02:00');
   });
 
   it('parses date with undefined time', () => {
-    const result = fieldHelpers.parseToLuxonDateTimetUsingTimezone('2.8.2013', undefined, 'Europe/Berlin');
+    const result = fieldHelpers.parseToDateTimeUsingTimezone('2.8.2013', undefined, 'Europe/Berlin');
     expect(result.toISO()).to.equal('2013-08-02T00:00:00.000+02:00');
   });
 
   it('returns undefined without date', () => {
-    const result = fieldHelpers.parseToLuxonDateTimetUsingTimezone(undefined, undefined, 'Europe/Berlin');
+    const result = fieldHelpers.parseToDateTimeUsingTimezone(undefined, undefined, 'Europe/Berlin');
     expect(result).to.be(undefined);
   });
 
   it('returns unix timestamps with correct offsets', () => {
-    const berlinMoment = fieldHelpers.parseToLuxonDateTimetUsingTimezone('2.8.2013', '12:34', 'Europe/Berlin');
-    const utcMoment = fieldHelpers.parseToLuxonDateTimetUsingTimezone('2.8.2013', '12:34', 'UTC');
+    const berlinMoment = fieldHelpers.parseToDateTimeUsingTimezone('2.8.2013', '12:34', 'Europe/Berlin');
+    const utcMoment = fieldHelpers.parseToDateTimeUsingTimezone('2.8.2013', '12:34', 'UTC');
     expect(berlinMoment.plus({hours: 2})).to.eql(utcMoment);
   });
 

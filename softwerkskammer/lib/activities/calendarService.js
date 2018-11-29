@@ -9,8 +9,8 @@ module.exports = {
   eventsBetween: function eventsBetween(startMillis, endMillis, groupsColors, callback) {
     function asCalendarEvent(activity) {
       return {
-        start: activity.startLuxon().toString(),
-        end: activity.endLuxon().toString(),
+        start: activity.startDateTime().toString(),
+        end: activity.endDateTime().toString(),
         url: activity.fullyQualifiedUrl(),
         title: activity.title(),
         className: 'verySmall',

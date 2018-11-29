@@ -11,8 +11,8 @@ const Activity = beans.get('activity');
 const activitystore = beans.get('activitystore');
 
 describe('Calendar Service', () => {
-  const start = fieldHelpers.parseToLuxonUsingDefaultTimezone('01.04.2013');
-  const end = fieldHelpers.parseToLuxonUsingDefaultTimezone('01.05.2013');
+  const start = fieldHelpers.parseToDateTimeUsingDefaultTimezone('01.04.2013');
+  const end = fieldHelpers.parseToDateTimeUsingDefaultTimezone('01.05.2013');
   const activity = new Activity({
     title: 'Title',
     startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('04.04.2013'),

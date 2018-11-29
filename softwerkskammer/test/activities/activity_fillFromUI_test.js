@@ -28,7 +28,7 @@ describe('Activity (when filled from UI)', () => {
       startDate: '01.02.2013',
       startTime: '12:34'
     });
-    expect(activity.startLuxon().toString()).to.equal('2013-02-01T12:34:00.000+01:00');
+    expect(activity.startDateTime().toString()).to.equal('2013-02-01T12:34:00.000+01:00');
   });
 
   it('parses end date and time using default timezone', () => {
@@ -37,7 +37,7 @@ describe('Activity (when filled from UI)', () => {
       endDate: '01.08.2013',
       endTime: '12:34'
     });
-    expect(activity.endLuxon().toString()).to.equal('2013-08-01T12:34:00.000+02:00');
+    expect(activity.endDateTime().toString()).to.equal('2013-08-01T12:34:00.000+02:00');
   });
 
   describe('creates a resource', () => {
