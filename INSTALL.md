@@ -77,6 +77,16 @@ Configuration for Softwerkskammer:
 * Copy the logging configuration file `config-examples/winston-config.json` to `config/winston-config.json`, and adapt the paths if you like.
 * Copy the mailsender configuration file `config-examples/mailsender-config.json` to `config/mailsender-config.json`. Without setting up a proper server sending mails won't work but this configuration is sufficient to be able to start the softwerkskammer app.
 
+
+#### Internationalization for DateTime (Luxon)
+Please see the node section install instructions on https://moment.github.io/luxon/docs/manual/install.html
+
+##### Shortly: 
+Be sure to have node started with either an ENV like ```NODE_ICU_DATA="$(pwd)/node_modules/full-icu"```
+or a startup parameter like ```--icu-data-dir=./node_modules/full-icu```
+
+If you use the run scripts in WebStorm it should be save (for most)
+
 #### Mailserver settings
 if you want to be able to send mails, you need to configure the mail sender. One way to achieve a running configuration
 is to use a mail server you have access to. The configuration should look like this:
