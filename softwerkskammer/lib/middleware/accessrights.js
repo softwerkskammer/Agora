@@ -1,5 +1,4 @@
 'use strict';
-const moment = require('moment-timezone');
 const Member = require('simple-configure').get('beans').get('member');
 
 module.exports = function accessrights(req, res, next) {
@@ -36,7 +35,7 @@ module.exports = function accessrights(req, res, next) {
     },
 
     canDeleteActivity: function canDeleteActivity(activity) {
-      return this.isSuperuser() || (activity.owner() === this.memberId() && activity.startMoment().isAfter(moment()));
+      return this.isSuperuser() || (activity.owner() === this.memberId() && activity.startDate() > new Date());
     },
 
     canCreateGroup: function canCreateGroup() {

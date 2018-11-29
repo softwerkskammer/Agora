@@ -6,11 +6,11 @@ const activitystore = beans.get('activitystore');
 
 module.exports = {
 
-  eventsBetween: function eventsBetween(startMoment, endMoment, groupsColors, callback) {
+  eventsBetween: function eventsBetween(startMillis, endMillis, groupsColors, callback) {
     function asCalendarEvent(activity) {
       return {
-        start: activity.startMoment().format(),
-        end: activity.endMoment().format(),
+        start: activity.startDateTime().toString(),
+        end: activity.endDateTime().toString(),
         url: activity.fullyQualifiedUrl(),
         title: activity.title(),
         className: 'verySmall',
@@ -18,7 +18,7 @@ module.exports = {
       };
     }
 
-    activitystore.allActivitiesByDateRangeInAscendingOrder(startMoment.unix(), endMoment.unix(), (err, activities) => {
+    activitystore.allActivitiesByDateRangeInAscendingOrder(startMillis, endMillis, (err, activities) => {
       if (err) { return callback(err); }
       callback(null, activities.map(asCalendarEvent));
     });

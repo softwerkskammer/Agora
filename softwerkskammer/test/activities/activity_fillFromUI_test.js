@@ -28,7 +28,7 @@ describe('Activity (when filled from UI)', () => {
       startDate: '01.02.2013',
       startTime: '12:34'
     });
-    expect(activity.startMoment().format()).to.equal('2013-02-01T12:34:00+01:00');
+    expect(activity.startDateTime().toString()).to.equal('2013-02-01T12:34:00.000+01:00');
   });
 
   it('parses end date and time using default timezone', () => {
@@ -37,7 +37,7 @@ describe('Activity (when filled from UI)', () => {
       endDate: '01.08.2013',
       endTime: '12:34'
     });
-    expect(activity.endMoment().format()).to.equal('2013-08-01T12:34:00+02:00');
+    expect(activity.endDateTime().toString()).to.equal('2013-08-01T12:34:00.000+02:00');
   });
 
   describe('creates a resource', () => {
@@ -147,7 +147,7 @@ describe('Activity (when filled from UI)', () => {
         startTime: '20:15'
       });
 
-      expect(activity.id()).to.equal('My_Group_My_Title_Fri_Feb_01_2013_20_15_00_GMT+0100');
+      expect(activity.id()).to.equal('My_Group_My_Title_1.2.2013__20_15_00');
     });
 
     it('with several resources where only one has open registration', () => {

@@ -11,8 +11,8 @@ const Activity = beans.get('activity');
 const activitystore = beans.get('activitystore');
 
 describe('Calendar Service', () => {
-  const start = fieldHelpers.parseToMomentUsingDefaultTimezone('01.04.2013');
-  const end = fieldHelpers.parseToMomentUsingDefaultTimezone('01.05.2013');
+  const start = fieldHelpers.parseToDateTimeUsingDefaultTimezone('01.04.2013');
+  const end = fieldHelpers.parseToDateTimeUsingDefaultTimezone('01.05.2013');
   const activity = new Activity({
     title: 'Title',
     startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('04.04.2013'),
@@ -27,11 +27,11 @@ describe('Calendar Service', () => {
   });
 
   it('loads and converts a wellformed Activity to a calendar display event without colors given', done => {
-    calendarService.eventsBetween(start, end, null, (err, activities) => {
+    calendarService.eventsBetween(start.toMillis(), end.toMillis(), null, (err, activities) => {
       expect(activities).to.have.length(1);
       const event = activities[0];
       expect('Title').to.equal(event.title);
-      expect('2013-04-04T00:00:00+02:00').to.equal(event.start); // includes timezone offset!
+      expect('2013-04-04T00:00:00.000+02:00').to.equal(event.start); // includes timezone offset!
       expect(event.url).to.match('/activities/myURL$');
       expect('#353535').to.equal(event.color);
       done(err);

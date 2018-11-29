@@ -1,6 +1,6 @@
 'use strict';
 
-const moment = require('moment-timezone');
+const {DateTime} = require('luxon');
 
 const conf = require('simple-configure');
 const beans = conf.get('beans');
@@ -50,11 +50,11 @@ class Activity {
   }
 
   startUnix() {
-    return this.state.startUnix || moment().unix();
+    return this.state.startUnix || Date.now() / 1000; // we have secinds persisted
   }
 
   endUnix() {
-    return this.state.endUnix || moment().add(2, 'hours').unix();
+    return this.state.endUnix || (Date.now() + 7200000) / 1000; // 2 hours and we have secinds persisted
   }
 
   assignedGroup() {
@@ -95,7 +95,7 @@ class Activity {
     this.state.meetupRSVPCount = object.meetupRSVPCount;
 
     if (!this.id() || this.id() === 'undefined') {
-      this.state.id = fieldHelpers.createLinkFrom([this.assignedGroup(), this.title(), this.startMoment()]);
+      this.state.id = fieldHelpers.createLinkFrom([this.assignedGroup(), this.title(), new Date(this.state.startUnix * 1000).toLocaleString('de-DE', {timeZone: fieldHelpers.defaultTimezone()})]);
     }
 
     // these are the resource definitions in the edit page:
@@ -153,7 +153,8 @@ class Activity {
   }
 
   blogEntryUrl() {
-    return `${this.assignedGroup()}/blog_${this.startMoment().format('YYYY-MM-DD')}_${Renderer.normalize(this.title())}`;
+    const dateString = this.startDateTime().toFormat('yyyy-MM-dd');
+    return `${this.assignedGroup()}/blog_${dateString}_${Renderer.normalize(this.title())}`;
   }
 
   // Resources
@@ -174,8 +175,8 @@ class Activity {
     return [standardName];
   }
 
-  addMemberId(memberId, momentOfRegistration) {
-    return this.resources().veranstaltung().addMemberId(memberId, momentOfRegistration);
+  addMemberId(memberId, millisOfRegistration) {
+    return this.resources().veranstaltung().addMemberId(memberId, millisOfRegistration);
   }
 
   removeMemberId(memberId) {
@@ -199,8 +200,8 @@ class Activity {
     return this.resources().allWaitinglistEntries();
   }
 
-  addToWaitinglist(memberId, momentOfRegistration) {
-    this.resources().veranstaltung().addToWaitinglist(memberId, momentOfRegistration);
+  addToWaitinglist(memberId, millisOfRegistration) {
+    this.resources().veranstaltung().addToWaitinglist(memberId, millisOfRegistration);
   }
 
   removeFromWaitinglist(memberId) {
@@ -218,41 +219,37 @@ class Activity {
   // Display Dates and Times
 
   isMultiDay() {
-    return this.endMoment().dayOfYear() !== this.startMoment().dayOfYear();
+    return this.endDateTime().ordinal !== this.startDateTime().ordinal;
   }
 
-  startMoment() {
-    return moment.unix(this.startUnix()).tz(fieldHelpers.defaultTimezone());
+  startDate() {
+    return new Date(this.startUnix() * 1000);
   }
 
-  endMoment() {
-    return moment.unix(this.endUnix()).tz(fieldHelpers.defaultTimezone());
+  endDate() {
+    return new Date(this.endUnix() * 1000);
+  }
+
+  startDateTime() {
+    return DateTime.fromMillis(this.startUnix() * 1000).setZone(fieldHelpers.defaultTimezone());
+  }
+
+  endDateTime() {
+    return DateTime.fromMillis(this.endUnix() * 1000).setZone(fieldHelpers.defaultTimezone());
   }
 
   month() {
-    return this.startMoment().month();
+    return this.startDateTime().month;
   }
 
   year() {
-    return this.startMoment().year();
+    return this.startDateTime().year;
   }
 
   colorFrom(groupsColors) {
     return groupsColors && groupsColors[this.assignedGroup()] ? groupsColors[this.assignedGroup()] : '#353535';
   }
 
-  // Helper functions for non-persistent information
-  participantsOf(resourceName) {
-    if (!this.participants) { return []; }
-    const resource = this.resourceNamed(resourceName);
-    const memberIds = resource.registeredMembers();
-    return this.participants
-      .filter(participant => memberIds.some(memberId => memberId === participant.id()))
-      .map(member => {
-        member.registeredAt = resource.registrationDateOf(member.id());
-        return member;
-      });
-  }
 }
 
 module.exports = Activity;

@@ -82,6 +82,6 @@ describe('Administration application', () => {
       .expect(200)
       .expect(/<h2>Verwaltung  <small> Aktivitäten /)
       .expect(/Title of the Activity/)
-      .expect(/01\.01\.2013/, done);
+      .expect(/1\.1\.2013/, done);
   });
 });

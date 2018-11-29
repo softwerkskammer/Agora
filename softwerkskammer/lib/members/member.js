@@ -1,10 +1,11 @@
 'use strict';
+const {DateTime} = require('luxon');
+const R = require('ramda');
+
 const conf = require('simple-configure');
 const beans = conf.get('beans');
 const fieldHelpers = beans.get('fieldHelpers');
 const avatarProvider = beans.get('avatarProvider');
-const moment = require('moment-timezone');
-const R = require('ramda');
 
 class Member {
   constructor(object) {
@@ -41,7 +42,7 @@ class Member {
     if (!sessionUser || this.id()) {
       return this;
     }
-    this.state.created = moment().format('DD.MM.YY');
+    this.state.created = DateTime.local().toFormat('dd.MM.yy');
     this.state.id = sessionUser.authenticationId;
 
     const profile = sessionUser.profile;

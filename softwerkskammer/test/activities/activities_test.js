@@ -3,7 +3,6 @@
 const request = require('supertest');
 const sinon = require('sinon').createSandbox();
 const expect = require('must-dist');
-const moment = require('moment-timezone');
 
 const chado = require('chado');
 const cb = chado.callback;
@@ -329,7 +328,7 @@ describe('Activity application', () => {
       activityWithParticipants.state.resources.Veranstaltung._limit = 1;
       activityWithParticipants.state.resources.Veranstaltung._waitinglist = [{
         _memberId: 'memberId3',
-        _registrationValidUntil: moment().add(1, 'days')
+        _registrationValidUntil: new Date(Date.now() + 86400000) // 1 day
       }];
 
       request(createApp({member: member3}))

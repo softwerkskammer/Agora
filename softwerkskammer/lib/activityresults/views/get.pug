@@ -22,7 +22,7 @@ block content
               +imageUpload
           h1 #{activityResult.id()}
     each days in activityResult.photosByDay()
-      h3 #{days.day.locale(language).format('dddd, LL')}
+      h3 #{days.day.setLocale(language).toLocaleString(DateTime.DATE_HUGE)}
       .row.photo-day
         each photosOfTag, tagTitle in days.photosByTag
           .col-xs-12.photo-room
@@ -37,5 +37,5 @@ block content
                       span &nbsp;
                         a.float-right(href='/activityresults/' + activityResult.id() + '/photo/' + photo.id() + '/edit', title=t('general.edit'))
                           i.fas.fa-fw.fa-edit
-                    span.float-right #{photo.time().locale(language).format('LT')}
+                    span.float-right #{photo.time().setLocale(language).toLocaleString({})}
       hr

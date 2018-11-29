@@ -6,8 +6,8 @@ const eventsToObject = require('../../lib/wiki/eventsToObject');
 
 describe('Wiki EventsToObject', () => {
   const eventsWithOOP = [{
-    start: '2015-02-01T00:00:00Z',
-    end: '2015-02-05T23:00:00Z',
+    start: '2015-02-01T00:00:00.000Z',
+    end: '2015-02-05T23:00:00.000Z',
     url: 'http://www.oop-konferenz.de/',
     title: 'OOP (München)',
     color: '#999'
@@ -73,8 +73,8 @@ describe('Wiki EventsToObject', () => {
   });
 
   describe('parses start and end', () => {
-    const startString = '2015-02-01T00:00:00Z';
-    const endString = '2015-02-01T23:00:00Z';
+    const startString = '2015-02-01T00:00:00.000Z';
+    const endString = '2015-02-01T23:00:00.000Z';
 
     it('when present', () => {
       const text = '[OOP](http://www.oop-konferenz.de/) | München  | 1.2. - 5.2.';

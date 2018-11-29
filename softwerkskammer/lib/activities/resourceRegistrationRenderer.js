@@ -6,7 +6,6 @@ class RenderingInformation {
   constructor(type, url, displayText) {
     this.type = type;
     this.url = url;
-    this.resourcename = 'Veranstaltung';
     this.displayText = displayText;
   }
 

@@ -1,7 +1,6 @@
 'use strict';
 
 const async = require('async');
-const moment = require('moment-timezone');
 
 const beans = require('simple-configure').get('beans');
 const memberstore = beans.get('memberstore');
@@ -32,7 +31,7 @@ module.exports = {
       },
       (err, results) => {
         if (err || !results.member || !results.activity) { return callback(err); }
-        results.activity.addToWaitinglist(results.member.id(), moment());
+        results.activity.addToWaitinglist(results.member.id(), Date.now());
         activitystore.saveActivity(results.activity, function (err1) {
           if (err1 && err1.message === CONFLICTING_VERSIONS) {
             // we try again because of a racing condition during save:

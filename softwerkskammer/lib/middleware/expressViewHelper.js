@@ -1,5 +1,6 @@
 'use strict';
 
+const {DateTime} = require('luxon');
 const beans = require('simple-configure').get('beans');
 const statusmessage = beans.get('statusmessage');
 const membersService = beans.get('membersService');
@@ -15,5 +16,6 @@ module.exports = function expressViewHelper(req, res, next) {
   res.locals.user = req.user;
   res.locals.currentUrl = req.url;
   res.locals.tagclouddata = membersService.toWordList;
+  res.locals.DateTime = DateTime;
   next();
 };

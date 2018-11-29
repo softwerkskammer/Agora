@@ -31,11 +31,11 @@ block content
             +reallyDeleteModalPost('activities.delete', deleteoptions)
         h2 #{activity.title()}
           br
-          small #{activity.startMoment().locale(language).format('LL')} (#{activity.startMoment().locale(language).format('LT')}
+          small #{activity.startDateTime().setLocale(language).toLocaleString(DateTime.DATE_FULL)} (#{activity.startDateTime().setLocale(language).toLocaleString(DateTime.TIME_24_SIMPLE)}
             if (activity.isMultiDay())
-              | ) - #{activity.endMoment().locale(language).format('LL')} (#{activity.endMoment().locale(language).format('LT')})
+              | ) - #{activity.endDateTime().setLocale(language).toLocaleString(DateTime.DATE_FULL)} (#{activity.endDateTime().setLocale(language).toLocaleString(DateTime.TIME_24_SIMPLE)})
             else
-              |  - #{activity.endMoment().locale(language).format('LT')})
+              |  - #{activity.endDateTime().setLocale(language).toLocaleString(DateTime.TIME_24_SIMPLE)})
       | !{activity.descriptionHTML()}
       hr
   .row
@@ -74,5 +74,5 @@ block content
 block scripts
   +map(activity.location())
   script.
-    displayedActivityStart = '#{activity.startMoment().toISOString()}';
-//- cannot write "#{activity.startMoment()}" as we need to produce a string to eval in the client
+    displayedActivityStart = '#{activity.startDateTime().toISO()}';
+//- cannot write "#{activity.startDateTime()}" as we need to produce a string to eval in the client

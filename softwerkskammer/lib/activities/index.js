@@ -1,6 +1,5 @@
 'use strict';
 
-const moment = require('moment-timezone');
 const async = require('async');
 const R = require('ramda');
 
@@ -77,12 +76,12 @@ app.get('/', (req, res, next) => {
 });
 
 function renderGdcrFor(gdcrDay, res, next) {
-  const gdcrDate = moment(gdcrDay, 'YYYY-MM-DD');
-  const gdcrActivities = R.partial(activitiesService.activitiesBetween, [gdcrDate, gdcrDate.clone().add(1, 'days')]);
+  const gdcrDate = new Date(gdcrDay);
+  const gdcrActivities = R.partial(activitiesService.activitiesBetween, [gdcrDate.getTime(), gdcrDate.getTime() + 86400000]); // 1 day
 
   return activitiesService.getActivitiesForDisplay(gdcrActivities, (err, activities) => {
     if (err) { next(err); }
-    const gdcrYear = gdcrDate.year();
+    const gdcrYear = gdcrDate.getFullYear();
     res.render('gdcr', {
       activities,
       year: String(gdcrYear),
@@ -130,11 +129,8 @@ app.get('/ical/:url', (req, res, next) => {
 });
 
 app.get('/eventsForSidebar', (req, res, next) => {
-  const from = moment(req.query.start).utc();
-  if (from.date() > 1) { from.add(1, 'M'); }
-
-  const start = moment(req.query.start).utc();
-  const end = moment(req.query.end).utc();
+  const start = new Date(req.query.start).getTime();
+  const end = new Date(req.query.end).getTime();
 
   async.parallel(
     {
@@ -260,7 +256,7 @@ app.get('/:url', (req, res, next) => {
 function subscribe(body, req, res, next) {
   const activityUrl = body.url;
 
-  activitiesService.addVisitorTo(req.user.member.id(), activityUrl, moment(), (err, statusTitle, statusText) => {
+  activitiesService.addVisitorTo(req.user.member.id(), activityUrl, Date.now(), (err, statusTitle, statusText) => {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
       statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
@@ -295,7 +291,7 @@ app.post('/unsubscribe', (req, res, next) => { // unsubscribe can only be called
 });
 
 function addToWaitinglist(body, req, res, next) {
-  activitiesService.addToWaitinglist(req.user.member.id(), body.url, moment(), (err, statusTitle, statusText) => {
+  activitiesService.addToWaitinglist(req.user.member.id(), body.url, Date.now(), (err, statusTitle, statusText) => {
     if (err) { return next(err); }
     if (statusTitle && statusText) {
       statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);

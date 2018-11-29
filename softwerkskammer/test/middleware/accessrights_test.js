@@ -1,7 +1,5 @@
 'use strict';
 
-const moment = require('moment-timezone');
-
 const beans = require('../../testutil/configureForTest').get('beans');
 const accessrights = beans.get('accessrights');
 const Activity = beans.get('activity');
@@ -30,8 +28,6 @@ function superuser() {
 }
 
 describe('Accessrights for Activities', () => {
-  const nextWeek = moment().add(1, 'weeks').unix();
-  const lastWeek = moment().subtract(1, 'weeks').unix();
   it('disallows the creation for guests', () => {
     expect(guest().canCreateActivity()).to.be(false);
   });
@@ -69,6 +65,8 @@ describe('Accessrights for Activities', () => {
     expect(standardMember({id: 'id'}).canEditActivity(activity)).to.be(false);
   });
 
+  const nextWeek = (Date.now() + 604800000) / 1000; // + 1 week as seconds
+  const lastWeek = (Date.now() - 604800000) / 1000; // + 1 week as seconds
   it('allows deletion of any activity for superusers', () => {
     const activity = new Activity({owner: 'someOtherId', startUnix: lastWeek});
 

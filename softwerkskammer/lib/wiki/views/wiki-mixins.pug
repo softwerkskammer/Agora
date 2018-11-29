@@ -9,7 +9,7 @@ mixin blogposts-panel(posts, feedUrl)
     .card.mb-2
       .card-header
         h5.card-title #{post.title}
-          small.float-right #{post.date().locale(language).format('LL')}
+          small.float-right #{post.date().setLocale(language).toLocaleString(DateTime.DATE_FULL)}
       .card-body
         .card-text !{post.teaser}
         small.float-right: a(href=post.url()) #{t('groups.more')}

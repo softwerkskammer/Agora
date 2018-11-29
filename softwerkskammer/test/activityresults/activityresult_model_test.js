@@ -1,6 +1,6 @@
 'use strict';
 
-const moment = require('moment-timezone');
+const {DateTime} = require('luxon');
 const expect = require('must-dist');
 
 const ActivityResult = require('../../testutil/configureForTest').get('beans').get('activityresult');
@@ -64,8 +64,8 @@ describe('Activity result', () => {
         ]
       });
 
-      const date = moment('2014-02-20T12:00:00Z');
-      activityResult.updatePhotoById('my_photo_id', {title: 'newTitle', tags: ['peter', 'paul'], timestamp: date.toDate()});
+      const date = DateTime.fromISO('2014-02-20T12:00:00Z');
+      activityResult.updatePhotoById('my_photo_id', {title: 'newTitle', tags: ['peter', 'paul'], timestamp: date.toJSDate()});
       expect(activityResult.getPhotoById('my_photo_id').title()).to.be('newTitle');
       expect(activityResult.getPhotoById('my_photo_id').tags()).to.eql(['peter', 'paul']);
       expect(activityResult.getPhotoById('my_photo_id').time()).to.eql(date);
@@ -118,14 +118,17 @@ describe('Activity result', () => {
   });
 
   describe('preparation for display', () => {
+    const timestamp1 = DateTime.fromISO('2014-02-20T12:00:00Z').toJSDate();
+    const timestamp2 = DateTime.fromISO('2014-02-20T12:01:00Z').toJSDate();
+    const timestamp3 = DateTime.fromISO('2014-02-21T12:01:00Z').toJSDate();
 
     it('creates a list of "day" objects', () => {
       const activityResult = new ActivityResult({
         id: 'ar_id',
-        photos: [{id: 'image1.jpg', tags: ['tag1'], timestamp: moment('2014-02-20T12:00:00Z').toDate()}, {id: 'image2.jpg', tags: ['tag1'], timestamp: moment('2014-02-20T12:01:00Z').toDate()}]
+        photos: [{id: 'image1.jpg', tags: ['tag1'], timestamp: timestamp1}, {id: 'image2.jpg', tags: ['tag1'], timestamp: timestamp2}]
       });
       expect(activityResult.photosByDay()).to.have.length(1);
-      expect(activityResult.photosByDay()[0].day.locale('de').format('l')).to.be('20.2.2014');
+      expect(activityResult.photosByDay()[0].day.setLocale('de').toLocaleString(DateTime.DATE_SHORT)).to.be('20.2.2014');
       expect(activityResult.photosByDay()[0].photosByTag).to.have.ownKeys(['tag1']);
       expect(activityResult.photosByDay()[0].photosByTag.tag1).to.have.length(2);
     });
@@ -133,7 +136,7 @@ describe('Activity result', () => {
     it('sorts the photos by time', () => {
       const activityResult = new ActivityResult({
         id: 'ar_id',
-        photos: [{id: 'image2.jpg', tags: ['tag1'], timestamp: moment('2014-02-20T12:01:00Z').toDate()}, {id: 'image1.jpg', tags: ['tag1'], timestamp: moment('2014-02-20T12:00:00Z').toDate()}]
+        photos: [{id: 'image2.jpg', tags: ['tag1'], timestamp: timestamp2}, {id: 'image1.jpg', tags: ['tag1'], timestamp: timestamp1}]
       });
       const photosOfTag1 = activityResult.photosByDay()[0].photosByTag.tag1;
       expect(photosOfTag1[0].state).to.have.ownProperty('id', 'image1.jpg');
@@ -143,11 +146,11 @@ describe('Activity result', () => {
     it('sorts the days by time descending', () => {
       const activityResult = new ActivityResult({
         id: 'ar_id',
-        photos: [{id: 'image1.jpg', tags: ['tag1'], timestamp: moment('2014-02-20T12:00:00Z').toDate()}, {id: 'image2.jpg', tags: ['tag1'], timestamp: moment('2014-02-21T12:01:00Z').toDate()}]
+        photos: [{id: 'image1.jpg', tags: ['tag1'], timestamp: timestamp1}, {id: 'image2.jpg', tags: ['tag1'], timestamp: timestamp3}]
       });
       expect(activityResult.photosByDay()).to.have.length(2);
-      expect(activityResult.photosByDay()[0].day.locale('de').format('l')).to.be('21.2.2014');
-      expect(activityResult.photosByDay()[1].day.locale('de').format('l')).to.be('20.2.2014');
+      expect(activityResult.photosByDay()[0].day.setLocale('de').toLocaleString(DateTime.DATE_SHORT)).to.be('21.2.2014');
+      expect(activityResult.photosByDay()[1].day.setLocale('de').toLocaleString(DateTime.DATE_SHORT)).to.be('20.2.2014');
     });
   });
 

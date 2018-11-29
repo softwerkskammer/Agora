@@ -58,7 +58,7 @@ block content
         td
           input(type='checkbox', value=item.fullhash)
         td: +linkedMember(item.author)
-        td #{item.date().locale(language).format('ll')}
+        td #{item.date().setLocale(language).toLocaleString(DateTime.DATE_FULL)}
         td #{item.comment}
         td
           a(href=item.url() + '?version=' + item.hashRef) #{item.hashRef || 'CURRENT'}

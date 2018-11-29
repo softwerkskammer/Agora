@@ -6,7 +6,6 @@ const verify = chado.verify;
 
 const sinon = require('sinon').createSandbox();
 const expect = require('must-dist');
-const moment = require('moment-timezone');
 
 const conf = require('../../testutil/configureForTest');
 const beans = conf.get('beans');
@@ -202,7 +201,7 @@ describe('Activities Service', () => {
         (id, callback) => { callback(null, activityWithAddMemberIdReturning(true)); }
       );
 
-      activitiesService.addVisitorTo('memberId', 'activity-url', moment(), (err, statusTitle, statusText) => {
+      activitiesService.addVisitorTo('memberId', 'activity-url', Date.now(), (err, statusTitle, statusText) => {
         expect(statusTitle).to.not.exist();
         expect(statusText).to.not.exist();
         done(err);
@@ -214,7 +213,7 @@ describe('Activities Service', () => {
         (id, callback) => { callback(null, activityWithAddMemberIdReturning(false)); }
       );
 
-      activitiesService.addVisitorTo('memberId', 'activity-url', moment(), (err, statusTitle, statusText) => {
+      activitiesService.addVisitorTo('memberId', 'activity-url', Date.now(), (err, statusTitle, statusText) => {
         expect(statusTitle).to.be('activities.registration_not_now');
         expect(statusText).to.be('activities.registration_not_possible');
         done(err);
@@ -225,7 +224,7 @@ describe('Activities Service', () => {
       const activity = activityWithAddMemberIdReturning(true);
       sinon.stub(activitystore, 'getActivity').callsFake((id, callback) => { callback(null, activity); });
 
-      activitiesService.addVisitorTo('memberId', 'activity-url', moment(), err => {
+      activitiesService.addVisitorTo('memberId', 'activity-url', Date.now(), err => {
         expect(notifications.visitorRegistration.calledOnce).to.be(true);
         expect(notifications.visitorRegistration.firstCall.args[0]).to.eql(activity);
         expect(notifications.visitorRegistration.firstCall.args[1]).to.equal('memberId');
@@ -238,7 +237,7 @@ describe('Activities Service', () => {
         (id, callback) => { callback(null, activityWithAddMemberIdReturning(false)); }
       );
 
-      activitiesService.addVisitorTo('memberId', 'activity-url', moment(), err => {
+      activitiesService.addVisitorTo('memberId', 'activity-url', Date.now(), err => {
         expect(notifications.visitorRegistration.called).to.be(false);
         done(err);
       });
@@ -247,7 +246,7 @@ describe('Activities Service', () => {
     it('gives an error when activity could not be loaded', done => {
       sinon.stub(activitystore, 'getActivity').callsFake((id, callback) => { callback(new Error('error')); });
 
-      activitiesService.addVisitorTo('memberId', 'activity-url', moment(), err => {
+      activitiesService.addVisitorTo('memberId', 'activity-url', Date.now(), err => {
         expect(err).to.exist();
         done(); // error condition - do not pass err
       });
@@ -324,7 +323,7 @@ describe('Activities Service', () => {
       const activity = activityWithEinzelzimmer({_waitinglist: []});
       sinon.stub(notifications, 'waitinglistAddition');
 
-      activitiesService.addToWaitinglist('memberId', 'activity-url', moment(), (err, statusTitle, statusText) => {
+      activitiesService.addToWaitinglist('memberId', 'activity-url', Date.now(), (err, statusTitle, statusText) => {
         expect(statusTitle, 'Status Title').to.not.exist();
         expect(statusText, 'Status Text').to.not.exist();
         const waitinglistMembers = waitinglistMembersOf(activity);
@@ -337,7 +336,7 @@ describe('Activities Service', () => {
       const activity = activityWithEinzelzimmer({_waitinglist: []});
       sinon.stub(notifications, 'waitinglistAddition');
 
-      activitiesService.addToWaitinglist('memberId', 'activity-url', moment(), err => {
+      activitiesService.addToWaitinglist('memberId', 'activity-url', Date.now(), err => {
         expect(notifications.waitinglistAddition.calledOnce).to.be(true);
         expect(notifications.waitinglistAddition.firstCall.args[0]).to.eql(activity);
         expect(notifications.waitinglistAddition.firstCall.args[1]).to.equal('memberId');
@@ -348,7 +347,7 @@ describe('Activities Service', () => {
     it('gives a status message when there is no waitinglist', done => {
       const activity = activityWithEinzelzimmer({});
 
-      activitiesService.addToWaitinglist('memberId', 'activity-url', moment(), (err, statusTitle, statusText) => {
+      activitiesService.addToWaitinglist('memberId', 'activity-url', Date.now(), (err, statusTitle, statusText) => {
         expect(statusTitle, 'Status Title').to.equal('activities.waitinglist_not_possible');
         expect(statusText, 'Status Text').to.equal('activities.no_waitinglist');
         const waitinglistMembers = waitinglistMembersOf(activity);
@@ -360,7 +359,7 @@ describe('Activities Service', () => {
     it('gives an error when activity could not be loaded', done => {
       sinon.stub(activitystore, 'getActivity').callsFake((id, callback) => { callback(new Error('error')); });
 
-      activitiesService.addToWaitinglist('memberId', 'activity-url', moment(), err => {
+      activitiesService.addToWaitinglist('memberId', 'activity-url', Date.now(), err => {
         expect(err, 'Error').to.exist();
         done(); // error condition - do not pass err
       });

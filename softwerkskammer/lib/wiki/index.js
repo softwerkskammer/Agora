@@ -1,6 +1,5 @@
 'use strict';
 
-const moment = require('moment-timezone');
 const beans = require('simple-configure').get('beans');
 const renderer = beans.get('renderer');
 const wikiService = beans.get('wikiService');
@@ -34,10 +33,8 @@ app.get('/events/:year', (req, res) => {
 });
 
 app.get('/eventsFor', (req, res, next) => {
-  const from = moment(req.query.start);
-  if (from.date() > 1) { from.add(1, 'M'); }
-
-  wikiService.parseEvents(from.year(), (err, events) => {
+  const from = new Date(req.query.start);
+  wikiService.parseEvents(from.getFullYear(), (err, events) => {
     if (err) { return next(err); }
     res.end(JSON.stringify(events));
   });

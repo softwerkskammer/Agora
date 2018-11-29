@@ -46,6 +46,7 @@
     "ezmlm-node": "1.2.3",
     "feed": "2.0.1",
     "fullcalendar": "4.0.0-alpha.2",
+    "full-icu": "1.2.1",
     "glob": "7.1.3",
     "guillotine": "1.3.1",
     "i18next": "12.1.0",
@@ -62,10 +63,9 @@
     "jquery-validation": "1.18.0",
     "jsonwebtoken": "8.4.0",
     "leaflet": "1.3.4",
+    "luxon": "1.8.0",
     "marked": "0.5.2",
     "mime-types": "2.1.21",
-    "moment": "2.22.2",
-    "moment-timezone": "0.5.21",
     "mongodb": "3.1.10",
     "morgan": "1.9.1",
     "multiparty": "4.2.1",
@@ -129,7 +129,7 @@
     "supertest": "3.3.0"
   },
   "scripts": {
-    "start": "node start-softwerkskammer",
+    "start": "node --icu-data-dir=node_modules/full-icu start-softwerkskammer",
     "test": "grunt tests",
     "prepare": "git log -1 --pretty=\"format:a.dropdown-item.nav-link(href='https://github.com/softwerkskammer/Agora/commit/%H', target='_blank')%n i.fab.fa-github.fa-fw%n | &nbsp;Version: %h\" > softwerkskammer/version.pug"
   }

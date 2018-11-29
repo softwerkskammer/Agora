@@ -1,6 +1,5 @@
 'use strict';
 
-const moment = require('moment-timezone');
 const expect = require('must-dist');
 const sinon = require('sinon').createSandbox();
 
@@ -86,7 +85,7 @@ describe('Activities Service with DB', () => {
   it('addVisitor keeps the registrant that is in the database although it only reads an activity without registrant', done => {
     // here, we save an activity with a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    activitiesService.addVisitorTo('memberId2', activityUrl, moment(), err => {
+    activitiesService.addVisitorTo('memberId2', activityUrl, Date.now(), err => {
       if (err) { return done(err); }
       getActivity(activityUrl, (err1, activity) => {
         if (err1) { return done(err1); }
@@ -114,7 +113,7 @@ describe('Activities Service with DB', () => {
   it('addToWaitinglist keeps the registrant that is in the database although it only reads an activity without registrant', done => {
     // here, we save an activity with a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    activitiesService.addToWaitinglist('memberId2', activityUrl, moment(), err => {
+    activitiesService.addToWaitinglist('memberId2', activityUrl, Date.now(), err => {
       if (err) { return done(err); }
       getActivity(activityUrl, (err1, activity) => {
         if (err1) { return done(err1); }

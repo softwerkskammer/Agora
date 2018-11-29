@@ -1,7 +1,6 @@
 'use strict';
 
 const expect = require('must-dist');
-const moment = require('moment-timezone');
 
 const Activity = require('../../testutil/configureForTest').get('beans').get('activity');
 
@@ -39,11 +38,11 @@ describe('Activity resource management', () => {
     });
 
     it('sets the timestamp for the added member to the given moment', () => {
-      const now = moment();
+      const now = Date.now();
       const activity = new Activity();
       activity.resourceNamed(defaultName).addMemberId('memberID', now);
       expect(activity.state.resources[defaultName]._registeredMembers[0].memberId).to.equal('memberID');
-      expect(activity.state.resources[defaultName]._registeredMembers[0].registeredAt).to.eql(now.toDate());
+      expect(activity.state.resources[defaultName]._registeredMembers[0].registeredAt).to.eql(new Date(now));
     });
 
     it('adds a member to a desired resource', () => {
@@ -143,8 +142,8 @@ describe('Activity resource management', () => {
       });
       activity = activity.resetForClone();
       expect(activity.resourceNamed('default').registeredMembers()).to.be.empty();
-      expect(activity.startMoment().format()).to.not.contain('2013-4-4');
-      expect(activity.endMoment().format()).to.not.contain('2013-4-5');
+      expect(activity.startDateTime().toString()).to.not.contain('2013-4-4');
+      expect(activity.endDateTime().toString()).to.not.contain('2013-4-5');
       expect(activity.id()).to.not.exist();
       expect(activity.url()).to.not.exist();
     });

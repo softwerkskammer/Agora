@@ -1,6 +1,6 @@
 'use strict';
 const R = require('ramda');
-const moment = require('moment-timezone');
+const {DateTime} = require('luxon');
 
 const beans = require('simple-configure').get('beans');
 const misc = beans.get('misc');
@@ -18,7 +18,7 @@ class Photo {
 
   uploadedBy() { return this.state.uploaded_by; }
 
-  time() { return moment(this.state.timestamp); }
+  time() { return DateTime.fromJSDate(this.state.timestamp); }
 
   updateTitleTagsAndTimestamp(data) {
     this.state.title = data.title;
@@ -63,10 +63,10 @@ class ActivityResult {
 
   photosByDay() {
     const result = [];
-    const groupedByDay = R.groupBy(photo => photo.time().startOf('day').valueOf(), R.sortBy(photo => photo.time(), this.photos()));
+    const groupedByDay = R.groupBy(photo => photo.time().set({hours: 0, minutes: 0, seconds: 0}).valueOf(), R.sortBy(photo => photo.time(), this.photos()));
     R.keys(groupedByDay).forEach(key => {
       result.unshift({
-        day: moment(parseInt(key, 10)),
+        day: DateTime.fromMillis(parseInt(key, 10)),
         photosByTag: R.groupBy(photo => { return photo.tags()[0] || 'Everywhere'; }, groupedByDay[key])
       });
     });
