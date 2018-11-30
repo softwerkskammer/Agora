@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Mailsender" type="mocha-javascript-test-runner" factoryName="Mocha">
     <node-interpreter>$usr-local-bin$/node</node-interpreter>
-    <node-options />
+    <node-options>--icu-data-dir=node_modules/full-icu</node-options>
     <working-directory>$PROJECT_DIR$</working-directory>
     <pass-parent-env>true</pass-parent-env>
     <envs>
@@ -16,6 +16,6 @@
     <RunnerSettings RunnerId="RunnerForMochaJavaScript" />
     <ConfigurationWrapper RunnerId="MochaDebugRunner" />
     <ConfigurationWrapper RunnerId="RunnerForMochaJavaScript" />
-    <method />
+    <method v="2" />
   </configuration>
 </component>

@@ -85,7 +85,7 @@ Please see the node section install instructions on https://moment.github.io/lux
 Be sure to have node started with either an ENV like ```NODE_ICU_DATA="$(pwd)/node_modules/full-icu"```
 or a startup parameter like ```--icu-data-dir=./node_modules/full-icu```
 
-If you use the run scripts in WebStorm it should be save (for most)
+If you use the run scripts inside WebStorm it is save (they set the parameter where needed).
 
 #### Mailserver settings
 if you want to be able to send mails, you need to configure the mail sender. One way to achieve a running configuration
