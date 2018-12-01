@@ -98,7 +98,7 @@ module.exports = {
 
     persistence.listByField({
       $and: [
-        {endUnix: {$lt: start}},
+        {endUnix: {$lt: start / 1000}},
         {assignedGroup: {$in: groupIds}}
       ]
     }, {startUnix: -1}, R.partial(toActivityList, [callback]));
