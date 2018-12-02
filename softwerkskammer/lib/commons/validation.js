@@ -70,10 +70,10 @@ module.exports = {
     validator.check(activityInput.assignedGroup, 'Gruppe ist ein Pflichtfeld.').notEmpty();
     nonEmptyResourceLimits.forEach(limit => validator.check(limit, 'Die Ressourcenbeschränkungen dürfen nur aus Ziffern bestehen.').isInt());
 
-    const startUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(activityInput.startDate, activityInput.startTime);
-    const endUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(activityInput.endDate, activityInput.endTime);
+    const start = fieldHelpers.parseToDateTimeUsingDefaultTimezone(activityInput.startDate, activityInput.startTime);
+    const end = fieldHelpers.parseToDateTimeUsingDefaultTimezone(activityInput.endDate, activityInput.endTime);
 
-    if (startUnix >= endUnix) {
+    if (start >= end) {
       validator.error('Start muss vor Ende liegen.');
     }
 
