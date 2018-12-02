@@ -37,7 +37,6 @@ function groupsWithExtraEmailAddresses(members, groupNamesWithEmails) {
   return result;
 }
 
-
 module.exports = {
   getMemberWithHisGroups: function getMemberWithHisGroups(nickname, callback) {
     memberstore.getMember(nickname, (err, member) => {
@@ -103,11 +102,11 @@ module.exports = {
   getOrganizersOfGroup: function (groupId, callback) {
     this.getGroupAndMembersForList(groupId, (error, group) => {
       if (error) {return callback(error);}
-      if (group === undefined) {
+      if (!group) {
         return callback(null, []);
       }
       const groupMembers = group.members || [];
-      const organizers = (groupMembers).filter(member => group.isOrganizer(member.id()));
+      const organizers = groupMembers.filter(member => group.isOrganizer(member.id()));
       callback(null, organizers);
     });
   },

@@ -123,6 +123,10 @@ function groupHasMembers(members) {
   });
 }
 
+function anyGroupMember() {
+  return new Member({id: 'any-member-id'});
+}
+
 describe('Groups and Members Service (getGroupAndMembersForList)', () => {
 
   beforeEach(() => {
@@ -218,11 +222,21 @@ describe('Groups and Members Service (getOrganizersOfGroup)', () => {
     });
   });
 
+  it('returns no organizer when there is a group without an organizer', (done) => {
+    const groupId = 'existing-group-without-organizer';
+    thereIsGroup(new Group({id: groupId, organizers: []}));
+    groupHasMembers([]);
+    groupsAndMembersService.getOrganizersOfGroup(groupId, (error, organizers) => {
+      expect(organizers).to.be.empty();
+      done(error);
+    });
+  });
+
   it('returns the organizer when there is one and the group exists', (done) => {
     const groupId = 'group-with-one-organizer';
     const organizerId = 'organizerId';
     const organizer = new Member({id: organizerId});
-    const member = new Member({id: 'any-member-id'});
+    const member = anyGroupMember();
     thereIsGroup(new Group({id: groupId, organizers: [organizerId]}));
     groupHasMembers([organizer, member]);
     groupsAndMembersService.getOrganizersOfGroup(groupId, (error, organizers) => {
