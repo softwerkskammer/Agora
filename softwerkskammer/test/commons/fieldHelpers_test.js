@@ -235,13 +235,13 @@ describe('formatNumberWithCurrentLocale', () => {
   });
 
   it('formats for "en"', () => {
-    const res = {locals: {language: 'en-gb'}};
+    const res = {locals: {language: 'en-GB'}};
     const result = fieldHelpers.formatNumberWithCurrentLocale(res, 22);
     expect(result).to.equal('22.00');
   });
 
   it('formats "undefined"', () => {
-    const res = {locals: {language: 'en-gb'}};
+    const res = {locals: {language: 'en-GB'}};
     const result = fieldHelpers.formatNumberWithCurrentLocale(res, undefined);
     expect(result).to.equal('0.00');
   });

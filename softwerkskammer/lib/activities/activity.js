@@ -19,6 +19,11 @@ class Activity {
       this.state.resources = {};
       this.state.resources[standardName] = {_registeredMembers: [], _registrationOpen: true};
     }
+    const start = (this.state.startUnix && !isNaN(this.state.startUnix)) ? DateTime.fromMillis(this.state.startUnix * 1000) : DateTime.local();
+    this.state.startDate = start.set({milliseconds: 0, seconds: 0}).setZone(fieldHelpers.defaultTimezone()).toJSDate();
+
+    const end = (this.state.endUnix && !isNaN(this.state.endUnix)) ? DateTime.fromMillis(this.state.endUnix * 1000) : DateTime.local();
+    this.state.startDate = end.set({milliseconds: 0, seconds: 0}).setZone(fieldHelpers.defaultTimezone()).toJSDate();
   }
 
   id() {
