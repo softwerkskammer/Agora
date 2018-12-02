@@ -13,7 +13,7 @@ function toUtc(dateString, timeString) {
   }
 
   if (dateString && timeString) {
-    var dateArray = dateString.split('.').map(stringToInt);
+    var dateArray = dateString.split(/[.|/]/).map(stringToInt);
     var timeArray = timeString.split(':').map(stringToInt);
     if (dateArray.length === 3 && timeArray.length === 2) {
       return new Date(Date.UTC(dateArray[2], dateArray[1] - 1, dateArray[0], timeArray[0], timeArray[1]));

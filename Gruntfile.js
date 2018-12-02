@@ -73,6 +73,7 @@ module.exports = function (grunt) {
         src: ['node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.*',
           'node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js',
           'node_modules/bootstrap-datepicker/dist/locales/bootstrap-datepicker.de.min.js',
+          'node_modules/bootstrap-datepicker/dist/locales/bootstrap-datepicker.en-GB.min.js',
           'node_modules/simple-timepicker/dist/simple-timepicker.min.js',
           'node_modules/guillotine/js/jquery.guillotine.min.js'
         ],
