@@ -12,10 +12,10 @@ const Activity = beans.get('activity');
 const createApp = require('../../testutil/testHelper')('activitiesApp', beans).createApp;
 
 describe('Activity application with DB - shows activities -', () => {
-  const tomorrow = new Date(Date.now() + 86400000).getTime() / 1000; // + 1 day
-  const dayAfterTomorrow = new Date(Date.now() + 86400000 + 86400000).getTime() / 1000; // + 2 days
-  const yesterday = new Date(Date.now() - 86400000).getTime() / 1000; // - 1 day
-  const dayBeforeYesterday = new Date(Date.now() - 86400000 - 86400000).getTime() / 1000; // - 2 days
+  const tomorrow = new Date(Date.now() + 86400000); // + 1 day
+  const dayAfterTomorrow = new Date(Date.now() + 86400000 + 86400000); // + 2 days
+  const yesterday = new Date(Date.now() - 86400000); // - 1 day
+  const dayBeforeYesterday = new Date(Date.now() - 86400000 - 86400000); // - 2 days
 
   const futureActivity = new Activity({
     id: 'futureActivity',
@@ -24,8 +24,8 @@ describe('Activity application with DB - shows activities -', () => {
     assignedGroup: 'groupname',
     location: 'location1',
     direction: 'direction1',
-    startUnix: tomorrow,
-    endUnix: dayAfterTomorrow,
+    startDate: tomorrow,
+    endDate: dayAfterTomorrow,
     url: 'url_future',
     owner: 'owner',
     resources: {Veranstaltung: {_registeredMembers: [], _registrationOpen: true}},
@@ -38,8 +38,8 @@ describe('Activity application with DB - shows activities -', () => {
     assignedGroup: 'groupname',
     location: 'location1',
     direction: 'direction1',
-    startUnix: yesterday,
-    endUnix: tomorrow,
+    startDate: yesterday,
+    endDate: tomorrow,
     url: 'url_current',
     owner: 'owner',
     resources: {Veranstaltung: {_registeredMembers: [], _registrationOpen: true}},
@@ -52,8 +52,8 @@ describe('Activity application with DB - shows activities -', () => {
     assignedGroup: 'groupname',
     location: 'location1',
     direction: 'direction1',
-    startUnix: dayBeforeYesterday,
-    endUnix: yesterday,
+    startDate: dayBeforeYesterday,
+    endDate: yesterday,
     url: 'url_past',
     owner: 'owner',
     resources: {Veranstaltung: {_registeredMembers: [], _registrationOpen: true}},

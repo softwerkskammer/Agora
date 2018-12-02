@@ -180,15 +180,15 @@ describe('Groups application', () => {
     });
 
     it('displays the group\'s upcoming activities', done => {
-      const date1 = fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013');
-      const date2 = fieldHelpers.parseToUnixUsingDefaultTimezone('01.05.2013');
+      const date1 = fieldHelpers.parseToDateTimeUsingDefaultTimezone('01.01.2013').toJSDate();
+      const date2 = fieldHelpers.parseToDateTimeUsingDefaultTimezone('01.05.2013').toJSDate();
 
       sinon.stub(activitystore, 'upcomingActivitiesForGroupIds').callsFake((list, callback) => callback(null, [new Activity({
         title: 'Erste Aktivität',
-        startUnix: date1
+        startDate: date1
       }), new Activity({
         title: 'Zweite Aktivität',
-        startUnix: date2
+        startDate: date2
       })]));
 
       request(createApp())

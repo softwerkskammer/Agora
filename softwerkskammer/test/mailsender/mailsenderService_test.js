@@ -37,7 +37,7 @@ describe('MailsenderService', () => {
       assignedGroup: 'assignedGroup',
       location: 'location1',
       direction: 'direction1',
-      startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
+      startDate: fieldHelpers.parseToDateTimeUsingDefaultTimezone('01.01.2013').toJSDate(),
       url: 'urlOfTheActivity'
     });
     sinon.stub(groupsService, 'getAllAvailableGroups').callsFake(callback => { callback(null, availableGroups); });

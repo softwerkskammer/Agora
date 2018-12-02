@@ -26,27 +26,27 @@ function toActivityList(callback, err, jsobjects) {
 function allActivitiesByDateRange(rangeFrom, rangeTo, sortOrder, callback) {
   persistence.listByField({
     $and: [
-      {endUnix: {$gt: rangeFrom / 1000}},
-      {startUnix: {$lt: rangeTo / 1000}}
+      {endDate: {$gt: new Date(rangeFrom)}},
+      {startDate: {$lt: new Date(rangeTo)}}
     ]
   }, sortOrder, R.partial(toActivityList, [callback]));
 }
 
 function allActivitiesByDateRangeInAscendingOrder(rangeFrom, rangeTo, callback) {
-  allActivitiesByDateRange(rangeFrom, rangeTo, {startUnix: 1}, callback);
+  allActivitiesByDateRange(rangeFrom, rangeTo, {startDate: 1}, callback);
 }
 
 function allActivitiesByDateRangeInDescendingOrder(rangeFrom, rangeTo, callback) {
-  allActivitiesByDateRange(rangeFrom, rangeTo, {startUnix: -1}, callback);
+  allActivitiesByDateRange(rangeFrom, rangeTo, {startDate: -1}, callback);
 }
 
 function flattenAndSortMongoResultCollection(collection) {
-  return R.sortBy(R.prop('startUnix'), R.flatten(collection[0].value));
+  return R.sortBy(R.prop('startDate'), R.flatten(collection[0].value));
 }
 
 module.exports = {
   allActivities: function allActivities(callback) {
-    persistence.list({startUnix: 1}, R.partial(toActivityList, [callback]));
+    persistence.list({startDate: 1}, R.partial(toActivityList, [callback]));
   },
 
   allActivitiesByDateRangeInAscendingOrder,
@@ -83,25 +83,25 @@ module.exports = {
   },
 
   upcomingActivitiesForGroupIds: function upcomingActivitiesForGroupIds(groupIds, callback) {
-    const start = Date.now();
+    const start = new Date();
 
     persistence.listByField({
       $and: [
-        {endUnix: {$gt: start / 1000}},
+        {endDate: {$gt: start}},
         {assignedGroup: {$in: groupIds}}
       ]
-    }, {startUnix: 1}, R.partial(toActivityList, [callback]));
+    }, {startDate: 1}, R.partial(toActivityList, [callback]));
   },
 
   pastActivitiesForGroupIds: function pastActivitiesForGroupIds(groupIds, callback) {
-    const start = Date.now();
+    const start = new Date();
 
     persistence.listByField({
       $and: [
-        {endUnix: {$lt: start / 1000}},
+        {endDate: {$lt: start}},
         {assignedGroup: {$in: groupIds}}
       ]
-    }, {startUnix: -1}, R.partial(toActivityList, [callback]));
+    }, {startDate: -1}, R.partial(toActivityList, [callback]));
   },
 
   organizedOrEditedActivitiesForMemberId: function organizedOrEditedActivitiesForMemberId(memberId, callback) {
@@ -110,7 +110,7 @@ module.exports = {
         {owner: memberId},
         {editorIds: memberId} // matches when the field equals the value or when the field is an array that contains the value
       ]
-    }, {startUnix: -1}, R.partial(toActivityList, [callback]));
+    }, {startDate: -1}, R.partial(toActivityList, [callback]));
   },
 
   activitiesForGroupIdsAndRegisteredMemberId: function activitiesForGroupIdsAndRegisteredMemberId(groupIds, memberId, upcoming, callback) {
@@ -142,8 +142,8 @@ module.exports = {
       return values;
     }
 
-    const now = Date.now() / 1000;
-    const query = upcoming ? {endUnix: {$gt: now}} : {endUnix: {$lt: now}};
+    const now = new Date();
+    const query = upcoming ? {endDate: {$gt: now}} : {endDate: {$lt: now}};
     const parameters = {out: {inline: 1}, scope: {memberId, groupIds}, query, jsMode: true};
 
     persistence.mapReduce(map, reduce, parameters, (err, collection) => {

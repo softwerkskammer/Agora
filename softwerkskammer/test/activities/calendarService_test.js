@@ -15,8 +15,8 @@ describe('Calendar Service', () => {
   const end = fieldHelpers.parseToDateTimeUsingDefaultTimezone('01.05.2013');
   const activity = new Activity({
     title: 'Title',
-    startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('04.04.2013'),
-    endUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('05.04.2013'),
+    startDate: fieldHelpers.parseToDateTimeUsingDefaultTimezone('04.04.2013').toJSDate(),
+    endDate: fieldHelpers.parseToDateTimeUsingDefaultTimezone('05.04.2013').toJSDate(),
     url: 'myURL'
   });
 

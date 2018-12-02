@@ -58,7 +58,7 @@ const activityWithParticipants = new Activity({
   assignedGroup: 'groupname',
   location: 'location2',
   direction: 'direction2',
-  startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
+  startDate: fieldHelpers.parseToDateTimeUsingDefaultTimezone('01.01.2013').toJSDate(),
   url: 'urlForInteresting',
   resources: {
     Veranstaltung: {
@@ -80,7 +80,7 @@ const activityWithEditors = new Activity({
   assignedGroup: 'groupname5',
   location: 'location5',
   direction: 'direction5',
-  startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
+  startDate: fieldHelpers.parseToDateTimeUsingDefaultTimezone('01.01.2013').toJSDate(),
   url: 'urlForEditors',
   owner: 'memberId4',
   editorIds: ['memberId1', 'memberId3'],

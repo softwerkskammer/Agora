@@ -65,22 +65,22 @@ describe('Accessrights for Activities', () => {
     expect(standardMember({id: 'id'}).canEditActivity(activity)).to.be(false);
   });
 
-  const nextWeek = (Date.now() + 604800000) / 1000; // + 1 week as seconds
-  const lastWeek = (Date.now() - 604800000) / 1000; // + 1 week as seconds
+  const nextWeek = new Date((Date.now() + 604800000)); // + 1 week
+  const lastWeek = new Date((Date.now() - 604800000)); // + 1 week
   it('allows deletion of any activity for superusers', () => {
-    const activity = new Activity({owner: 'someOtherId', startUnix: lastWeek});
+    const activity = new Activity({owner: 'someOtherId', startDate: lastWeek});
 
     expect(superuser().canDeleteActivity(activity)).to.be(true);
   });
 
   it('allows deletion of future activity for owner', () => {
-    const activity = new Activity({owner: 'someOtherId', startUnix: nextWeek});
+    const activity = new Activity({owner: 'someOtherId', startDate: nextWeek});
 
     expect(standardMember({id: 'someOtherId'}).canDeleteActivity(activity)).to.be(true);
   });
 
   it('disallows deletion of past activity even for owner', () => {
-    const activity = new Activity({owner: 'someOtherId', startUnix: lastWeek});
+    const activity = new Activity({owner: 'someOtherId', startDate: lastWeek});
 
     expect(standardMember({id: 'someOtherId'}).canDeleteActivity(activity)).to.be(false);
   });

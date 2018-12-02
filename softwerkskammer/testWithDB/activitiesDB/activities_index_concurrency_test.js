@@ -27,14 +27,14 @@ describe('Activity application with DB - on submit -', () => {
 
     activityBeforeConcurrentAccess = new Activity({
       id: 'activityId', title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
-      location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
+      location: 'location1', direction: 'direction1', startDate: fieldHelpers.parseToDateTimeUsingDefaultTimezone('01.01.2013').toJSDate(),
       url: 'urlOfTheActivity', owner: 'owner',
       resources: {Veranstaltung: {_registeredMembers: [], _registrationOpen: true}}, version: 1
     });
 
     activityAfterConcurrentAccess = new Activity({
       id: 'activityId', title: 'Title of the Activity', description: 'description1', assignedGroup: 'groupname',
-      location: 'location1', direction: 'direction1', startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013'),
+      location: 'location1', direction: 'direction1', startDate: fieldHelpers.parseToDateTimeUsingDefaultTimezone('01.01.2013').toJSDate(),
       url: 'urlOfTheActivity', owner: 'owner',
       resources: {
         Veranstaltung: {
