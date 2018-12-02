@@ -1,4 +1,6 @@
 'use strict';
+
+const {DateTime} = require('luxon');
 const Member = require('simple-configure').get('beans').get('member');
 
 module.exports = function accessrights(req, res, next) {
@@ -35,7 +37,7 @@ module.exports = function accessrights(req, res, next) {
     },
 
     canDeleteActivity: function canDeleteActivity(activity) {
-      return this.isSuperuser() || (activity.owner() === this.memberId() && activity.startDate() > new Date());
+      return this.isSuperuser() || (activity.owner() === this.memberId() && activity.startDateTime() > DateTime.local());
     },
 
     canCreateGroup: function canCreateGroup() {

@@ -11,7 +11,7 @@ function activityAsICal(activity) {
   event.setDescription(activity.description().replace(/\r\n/g, '\n'));
   event.addProperty('LOCATION', activity.location().replace(/\r\n/g, '\n'));
   event.addProperty('URL', misc.toFullQualifiedUrl('activities', encodeURIComponent(activity.url())));
-  event.setDate(activity.startDate(), activity.endDate());
+  event.setDate(activity.startDateTime().toJSDate(), activity.endDateTime().toJSDate());
   return event;
 }
 

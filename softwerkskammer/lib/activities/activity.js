@@ -222,14 +222,6 @@ class Activity {
     return this.endDateTime().ordinal !== this.startDateTime().ordinal;
   }
 
-  startDate() {
-    return new Date(this.startUnix() * 1000);
-  }
-
-  endDate() {
-    return new Date(this.endUnix() * 1000);
-  }
-
   startDateTime() {
     return DateTime.fromMillis(this.startUnix() * 1000).setZone(fieldHelpers.defaultTimezone());
   }
