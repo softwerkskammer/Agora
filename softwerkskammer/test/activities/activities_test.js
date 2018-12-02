@@ -169,7 +169,7 @@ describe('Activity application', () => {
   it('shows the list of activities with "webcal:" link', done => {
     emptyActivity.colorRGB = '#123456';
     emptyActivity.group = group;
-    emptyActivity.state.startUnix = fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013');
+    emptyActivity.state.startDate = fieldHelpers.parseToDateTimeUsingDefaultTimezone('01.01.2013').toJSDate();
     request(createApp())
       .get('/')
       .expect(200)
@@ -185,7 +185,7 @@ describe('Activity application', () => {
 
   it('shows the details of an activity without participants', done => {
     emptyActivity.participants = [];
-    emptyActivity.state.startUnix = fieldHelpers.parseToUnixUsingDefaultTimezone('01.01.2013');
+    emptyActivity.state.startDate = fieldHelpers.parseToDateTimeUsingDefaultTimezone('01.01.2013').toJSDate();
     emptyActivity.state.direction = 'direction1';
     emptyActivity.state.location = 'location1';
     emptyActivity.state.description = 'description1';
