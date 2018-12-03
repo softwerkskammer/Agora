@@ -278,6 +278,7 @@
     "join": "Join Group",
     "leave": "Leave Group",
     "map_label": "Label in map",
+    "contactTheOrganizers_label": "Guests can reach out to contact persons",
     "more": "read more…",
     "new": "New Group",
     "other": "Others",
@@ -291,7 +292,8 @@
       "name": "The e-mail address \"@softwerkskammer.org\" where the group can be reached.",
       "title": "Name of the group used in the website, also realname for e-mails sent by the group",
       "x_coord": "Horizontal position on the map",
-      "y_coord": "Vertical position on the map"
+      "y_coord": "Vertical position on the map",
+      "contactTheOrganizers": "Include a contact link on the group page, where guests can reach out to the contact persons withtout having to sign up first."
     },
     "type": "Group type",
     "x_coord": "X-coord.",

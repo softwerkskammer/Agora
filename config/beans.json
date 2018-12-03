@@ -65,6 +65,7 @@
   "activityresult": {"module": "./softwerkskammer/lib/activityresults/activityresult"},
   "gitDiff": {"module": "./softwerkskammer/lib/wiki/gitDiff"},
   "group": {"module": "./softwerkskammer/lib/groups/group"},
+  "groupMapper": {"module": "./softwerkskammer/lib/groups/groupMapper"},
   "member": {"module": "./softwerkskammer/lib/members/member"},
   "message": {"module": "./softwerkskammer/lib/mailsender/message"},
   "renderer": {"module": "./softwerkskammer/lib/commons/renderer"},

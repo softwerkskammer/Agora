@@ -324,12 +324,12 @@ describe('Groups application', () => {
       it('saves the whole group info to the database and redirects to the new group\'s page', done => {
         request(createApp({id: 'someMember'}))
           .post('/submit')
-          .send('id=newgroup&emailPrefix=SONEW&longName=ANewGroup&color=#AABBCC&description=WeLoveIt&type=Regionalgruppe&organizers=someMember')
+          .send('id=newgroup&emailPrefix=SONEW&longName=ANewGroup&color=#AABBCC&description=WeLoveIt&type=Regionalgruppe&organizers=someMember&contactTheOrganizers=on')
           .expect(302)
           .expect(/Found. Redirecting to \/groups\/newgroup/, err => {
             expect(savedGroup).to.eql(new Group({
               id: 'newgroup', longName: 'ANewGroup', description: 'WeLoveIt', type: 'Regionalgruppe',
-              emailPrefix: 'SONEW', color: '#AABBCC', organizers: ['someMember'], mapX: undefined, mapY: undefined, shortName: undefined
+              emailPrefix: 'SONEW', color: '#AABBCC', organizers: ['someMember'], mapX: undefined, mapY: undefined, shortName: undefined, contactTheOrganizers: true
             }));
             done(err);
           });

@@ -271,6 +271,7 @@
     "map_label": "Label in Karte",
     "meetup_clone_title": "Kopiert existierende Events von Meetup.",
     "meetupURL_label": "Meetup-URL (falls für diese Gruppe erforderlich)",
+    "contactTheOrganizers_label": "Gäste können Ansprechpartner kontaktieren",
     "more": "mehr lesen…",
     "new": "Neue Gruppe",
     "other": "Andere",
@@ -285,7 +286,8 @@
       "name": "Die Adresse, unter der die Gruppe \"@softwerkskammer.org\" erreichbar ist.",
       "title": "Anzeigetext innerhalb der Site, ist auch Realname für E-Mails",
       "x_coord": "Waagerechte Position auf der Karte",
-      "y_coord": "Senkrechte Position auf der Karte"
+      "y_coord": "Senkrechte Position auf der Karte",
+      "contactTheOrganizers": "Auf der Gruppenseite wir ein Kontaktlink angezeigt, über den Besucher ohne Anmeldung Kontakt mit den Ansprechpartnern aufnehmen können."
     },
     "type": "Gruppenart",
     "x_coord": "X-Koord.",

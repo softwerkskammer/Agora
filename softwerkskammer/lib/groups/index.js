@@ -6,6 +6,7 @@ const Feed = require('feed').Feed;
 
 const misc = beans.get('misc');
 const groupsService = beans.get('groupsService');
+const bodyToGroup = beans.get('groupMapper').bodyToGroup;
 const groupstore = beans.get('groupstore');
 const wikiService = beans.get('wikiService');
 const Group = beans.get('group');
@@ -17,7 +18,7 @@ const statusmessage = beans.get('statusmessage');
 const app = misc.expressAppIn(__dirname);
 
 function groupSubmitted(req, res, next) {
-  const group = new Group(req.body);
+  const group = bodyToGroup(req.body);
   groupsService.isGroupValid(group, errors => {
     if (errors.length !== 0) { return res.render('../../../views/errorPages/validationError', {errors}); }
     groupstore.getGroup(group.id, (err1, existingGroup) => {
