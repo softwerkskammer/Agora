@@ -100,13 +100,13 @@ module.exports = {
   },
 
   getOrganizersOfGroup: function (groupId, callback) {
-    this.getGroupAndMembersForList(groupId, (error, group) => {
+    this.getGroupAndMembersForList(groupId, (error, groupIncludingMembers) => {
       if (error) {return callback(error);}
-      if (!group) {
+      if (!groupIncludingMembers) {
         return callback(null, []);
       }
-      const groupMembers = group.members || [];
-      const organizers = groupMembers.filter(member => group.isOrganizer(member.id()));
+      const groupMembers = groupIncludingMembers.members || [];
+      const organizers = groupMembers.filter(member => groupIncludingMembers.isOrganizer(member.id()));
       callback(null, organizers);
     });
   },
