@@ -168,7 +168,7 @@ module.exports = {
     const type = '$t(mailsender.notification)';
     groupsService.getGroups([groupName], (groupLoadErr, group) => {
       if (groupLoadErr) { return callback(groupLoadErr, mailtransport.statusmessageForError(type, groupLoadErr)); }
-      if (!group.contactTheOrganizersEnabled()) {
+      if (!group.isContactTheOrganizersEnabled()) {
         return callback(null, mailtransport.statusmessageForError(type, '$t(mailsender.contact_persons_cannot_be_contacted)'));
       }
       groupsAndMembersService.getOrganizersOfGroup(groupName, (err, organizers) => {

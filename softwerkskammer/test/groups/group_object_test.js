@@ -197,15 +197,15 @@ describe('guests can contact the organizers', () => {
   describe('for spam protection purposes is an opt in feature', () => {
     it('for new groups', () => {
       const group = new Group();
-      expect(group.contactTheOrganizersEnabled()).to.be.false();
+      expect(group.isContactTheOrganizersEnabled()).to.be.false();
     });
     it('for existing groups', () => {
       const group2 = new Group({id: 'flag-not-provided-in-state'});
-      expect(group2.contactTheOrganizersEnabled()).to.be.false();
+      expect(group2.isContactTheOrganizersEnabled()).to.be.false();
     });
     it('honour organizers choice', () => {
       const group = new Group({contactTheOrganizers: true, id: 'not-relevant'});
-      expect(group.contactTheOrganizersEnabled()).to.be.true();
+      expect(group.isContactTheOrganizersEnabled()).to.be.true();
     });
   });
 });

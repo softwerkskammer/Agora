@@ -65,7 +65,7 @@ class Group {
     }
   }
 
-  contactTheOrganizersEnabled() {
+  isContactTheOrganizersEnabled() {
     return this.contactTheOrganizers || false;
   }
 
