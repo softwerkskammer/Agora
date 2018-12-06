@@ -294,6 +294,7 @@
     "y_coord": "Y-Koord."
   },
   "mailsender": {
+    "contact_persons_cannot_be_contacted": "Ansprechpartner können für diese Gruppe nicht kontaktiert werden.",
     "contents": "Inhalt",
     "copy_to_self": "Eine Kopie an mich senden",
     "invitation": "Einladung",

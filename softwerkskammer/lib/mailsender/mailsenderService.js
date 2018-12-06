@@ -165,14 +165,20 @@ module.exports = {
   },
 
   sendMailToContactPersonsOfGroup: function (groupName, message, callback) {
-    groupsAndMembersService.getOrganizersOfGroup(groupName, (err, organizers) => {
-      const type = '$t(mailsender.notification)';
-      if (err) { return callback(err, mailtransport.statusmessageForError(type, err)); }
-      if (!organizers.length) {
-        return callback(null, mailtransport.statusmessageForError(type, 'Die Gruppe hat keine Ansprechpartner.'));
+    const type = '$t(mailsender.notification)';
+    groupsService.getGroups([groupName], (groupLoadErr, group) => {
+      if (groupLoadErr) { return callback(groupLoadErr, mailtransport.statusmessageForError(type, groupLoadErr)); }
+      if (!group.contactTheOrganizersEnabled()) {
+        return callback(null, mailtransport.statusmessageForError(type, '$t(mailsender.contact_persons_cannot_be_contacted)'));
       }
-      message.setBccToMemberAddresses(organizers);
-      sendMail(message, type, callback);
+      groupsAndMembersService.getOrganizersOfGroup(groupName, (err, organizers) => {
+        if (err) { return callback(err, mailtransport.statusmessageForError(type, err)); }
+        if (!organizers.length) {
+          return callback(null, mailtransport.statusmessageForError(type, 'Die Gruppe hat keine Ansprechpartner.'));
+        }
+        message.setBccToMemberAddresses(organizers);
+        sendMail(message, type, callback);
+      });
     });
   }
 

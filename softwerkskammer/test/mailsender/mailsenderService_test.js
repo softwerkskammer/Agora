@@ -31,6 +31,10 @@ function groupIsOrganizedBy(groupName, organizers) {
   });
 }
 
+function provideValidOrganizersForGroup(groupName) {
+  groupIsOrganizedBy(groupName, []);
+}
+
 describe('MailsenderService', () => {
   const activityURL = 'acti_vi_ty';
   const nickname = 'nickyNamy';
@@ -335,73 +339,135 @@ describe('MailsenderService', () => {
   });
 
   describe('sending to contact persons of a group', () => {
-    it('sends BCC to all organizers of given group', done => {
-      const organizers = [
-        new Member({
-          email: 'organizer1@softwerkskammer.org'
-        })
-      ];
+    const anyGroup = 'anyGroupName';
 
-      groupIsOrganizedBy('groupName', organizers);
+    describe('when contact organizers is disabled for group', () => {
+      const group = new Group({id: '1', contactTheOrganizers: false});
 
-      mailsenderService.sendMailToContactPersonsOfGroup('groupName', message, (err) => {
-        expect(err).to.not.exist();
-        expect(sendmail.calledOnce).to.be.true();
-        const transportobject = sendmail.args[0][0];
-        expect(transportobject.bcc).to.contain('organizer1@softwerkskammer.org');
-        done();
-      });
-    });
-
-    describe('organizers for group can not be read', () => {
-      it('does not send any email', done => {
-        sinon.stub(groupsAndMembersService, 'getOrganizersOfGroup').callsFake((passedGroupName, callback) => {
-          callback(new Error('no soup for you'));
+      beforeEach(() => {
+        sinon.stub(groupsService, 'getGroups').callsFake(function (groupName, callback) {
+          callback(null, group);
         });
 
-        mailsenderService.sendMailToContactPersonsOfGroup('groupName', message, (err, statusMessage) => {
-          expect(err).to.exist();
-          expect(sendmail.called).to.be.false();
-          expect(statusMessage.contents().type).to.eql('alert-danger');
-          expect(statusMessage.contents().additionalArguments.type).to.eql('$t(mailsender.notification)');
-          expect(statusMessage.contents().additionalArguments.err).to.eql('Error: no soup for you');
-          done();
-        });
+        provideValidOrganizersForGroup(anyGroup);
       });
 
-    });
-
-    describe('in case of a group without any organizers', () => {
-      it('does not send any email', function (done) {
-        groupIsOrganizedBy('groupName', []);
-
-        mailsenderService.sendMailToContactPersonsOfGroup('groupName', message, (err, statusMessage) => {
+      it('does not send any mail', done => {
+        mailsenderService.sendMailToContactPersonsOfGroup(anyGroup, message, (err, statusMessage) => {
           expect(err).to.not.exist();
           expect(sendmail.called).to.be.false();
+
           expect(statusMessage.contents().type).to.eql('alert-danger');
-          expect(statusMessage.contents().additionalArguments.err).to.eql('Die Gruppe hat keine Ansprechpartner.');
           expect(statusMessage.contents().additionalArguments.type).to.eql('$t(mailsender.notification)');
+          expect(statusMessage.contents().additionalArguments.err).to.eql('$t(mailsender.contact_persons_cannot_be_contacted)');
           done();
         });
       });
     });
 
-    describe('status message', () => {
-      describe('when message is successfully send', () => {
-        it('returns a message indicating the success', (done) => {
-          const organizers = [
-            new Member({
-              email: 'organizer1@softwerkskammer.org'
-            })
-          ];
-          const anyGroup = 'anyGroupName';
+    describe('when getting group fails', () => {
+      beforeEach(() => {
+        sinon.stub(groupsService, 'getGroups').callsFake(function (groupName, callback) {
+          callback(new Error('getGroups failed'));
+        });
+      });
 
-          groupIsOrganizedBy(anyGroup, organizers);
+      it('does not send any mail', done => {
+        mailsenderService.sendMailToContactPersonsOfGroup(anyGroup, message, (err, statusMessage) => {
+          expect(err).to.exist();
+          expect(sendmail.called).to.be.false();
 
-          mailsenderService.sendMailToContactPersonsOfGroup(anyGroup, message, (err, statusmessage) => {
-            expect(err).not.to.exist();
-            expect(statusmessage.contents().type).to.eql('alert-success');
+          expect(statusMessage.contents().type).to.eql('alert-danger');
+          expect(statusMessage.contents().additionalArguments.type).to.eql('$t(mailsender.notification)');
+          expect(statusMessage.contents().additionalArguments.err).to.eql('Error: getGroups failed');
+          done();
+        });
+      });
+    });
+
+    describe('when contact organizers is enabled for group', () => {
+      let groupServiceGetGroupsStub;
+      beforeEach(() => {
+        groupServiceGetGroupsStub = sinon.stub(groupsService, 'getGroups').callsFake(function (passedGroupNames, callback) {
+          callback(null, new Group({id: '1', contactTheOrganizers: true}));
+        });
+      });
+
+      it('calls group service with group name', done => {
+        provideValidOrganizersForGroup('groupName');
+        mailsenderService.sendMailToContactPersonsOfGroup('groupName', message, err => {
+          expect(groupServiceGetGroupsStub.args[0][0]).to.eql(['groupName']);
+          done(err);
+        });
+      });
+
+      it('sends BCC to all organizers of given group', done => {
+        const organizers = [
+          new Member({
+            email: 'organizer1@softwerkskammer.org'
+          })
+        ];
+
+        groupIsOrganizedBy('groupName', organizers);
+
+        mailsenderService.sendMailToContactPersonsOfGroup('groupName', message, (err) => {
+          expect(err).to.not.exist();
+          expect(sendmail.calledOnce).to.be.true();
+          const transportobject = sendmail.args[0][0];
+          expect(transportobject.bcc).to.contain('organizer1@softwerkskammer.org');
+          done();
+        });
+      });
+
+      describe('organizers for group can not be read', () => {
+        it('does not send any email', done => {
+          sinon.stub(groupsAndMembersService, 'getOrganizersOfGroup').callsFake((passedGroupName, callback) => {
+            callback(new Error('no soup for you'));
+          });
+
+          mailsenderService.sendMailToContactPersonsOfGroup('groupName', message, (err, statusMessage) => {
+            expect(err).to.exist();
+            expect(sendmail.called).to.be.false();
+            expect(statusMessage.contents().type).to.eql('alert-danger');
+            expect(statusMessage.contents().additionalArguments.type).to.eql('$t(mailsender.notification)');
+            expect(statusMessage.contents().additionalArguments.err).to.eql('Error: no soup for you');
             done();
+          });
+        });
+
+      });
+
+      describe('in case of a group without any organizers', () => {
+        it('does not send any email', function (done) {
+          groupIsOrganizedBy('groupName', []);
+
+          mailsenderService.sendMailToContactPersonsOfGroup('groupName', message, (err, statusMessage) => {
+            expect(err).to.not.exist();
+            expect(sendmail.called).to.be.false();
+            expect(statusMessage.contents().type).to.eql('alert-danger');
+            expect(statusMessage.contents().additionalArguments.err).to.eql('Die Gruppe hat keine Ansprechpartner.');
+            expect(statusMessage.contents().additionalArguments.type).to.eql('$t(mailsender.notification)');
+            done();
+          });
+        });
+      });
+
+      describe('status message', () => {
+        describe('when message is successfully send', () => {
+          it('returns a message indicating the success', (done) => {
+            const organizers = [
+              new Member({
+                email: 'organizer1@softwerkskammer.org'
+              })
+            ];
+
+            groupIsOrganizedBy(anyGroup, organizers);
+
+            mailsenderService.sendMailToContactPersonsOfGroup(anyGroup, message, (err, statusmessage) => {
+              expect(err).not.to.exist();
+              expect(statusmessage.contents().type).to.eql('alert-success');
+              done();
+            });
           });
         });
       });

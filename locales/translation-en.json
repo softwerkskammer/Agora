@@ -300,6 +300,7 @@
     "y_coord": "Y-coord."
   },
   "mailsender": {
+    "contact_persons_cannot_be_contacted": "Organizers of this group cannot be contacted.",
     "contents": "Contents",
     "copy_to_self": "Send a copy to myself",
     "invitation": "Invitation",
