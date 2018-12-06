@@ -174,7 +174,7 @@ module.exports = {
       groupsAndMembersService.getOrganizersOfGroup(groupName, (err, organizers) => {
         if (err) { return callback(err, mailtransport.statusmessageForError(type, err)); }
         if (!organizers.length) {
-          return callback(null, mailtransport.statusmessageForError(type, 'Die Gruppe hat keine Ansprechpartner.'));
+          return callback(null, mailtransport.statusmessageForError(type, '$t(mailsender.group_has_no_organizers)'));
         }
         message.setBccToMemberAddresses(organizers);
         sendMail(message, type, callback);

@@ -445,7 +445,7 @@ describe('MailsenderService', () => {
             expect(err).to.not.exist();
             expect(sendmail.called).to.be.false();
             expect(statusMessage.contents().type).to.eql('alert-danger');
-            expect(statusMessage.contents().additionalArguments.err).to.eql('Die Gruppe hat keine Ansprechpartner.');
+            expect(statusMessage.contents().additionalArguments.err).to.eql('$t(mailsender.group_has_no_organizers)');
             expect(statusMessage.contents().additionalArguments.type).to.eql('$t(mailsender.notification)');
             done();
           });
