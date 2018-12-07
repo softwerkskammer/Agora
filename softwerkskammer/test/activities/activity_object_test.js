@@ -2,7 +2,9 @@
 
 const expect = require('must-dist');
 
-const Activity = require('../../testutil/configureForTest').get('beans').get('activity');
+const beans = require('../../testutil/configureForTest').get('beans');
+const Activity = beans.get('activity');
+const fieldHelpers = beans.get('fieldHelpers');
 
 // TODO Activity.fillFromUI with null/undefined in startDate, startTime, endDate, endTime
 
@@ -64,11 +66,12 @@ describe('Activity', () => {
   });
 
   describe('blogEntryUrl', () => {
+    const nov20 = fieldHelpers.parseToDateTimeUsingDefaultTimezone('20.11.2017').toJSDate();
     it('uses group id, date, and title to compose url', () => {
       const activity = new Activity({
         assignedGroup: 'mygroup',
         title: 'my-activity',
-        startUnix: 1511132400 // 20.11.2017
+        startDate: nov20
       });
 
       expect(activity.blogEntryUrl()).to.equal('mygroup/blog_2017-11-20_my-activity');
@@ -79,7 +82,7 @@ describe('Activity', () => {
       const activity = new Activity({
         assignedGroup: 'mygroup',
         title: 'Myactivity',
-        startUnix: 1511132400 // 20.11.2017
+        startDate: nov20
       });
 
       expect(activity.blogEntryUrl()).to.equal('mygroup/blog_2017-11-20_myactivity');
@@ -89,7 +92,7 @@ describe('Activity', () => {
       const activity = new Activity({
         assignedGroup: 'mygroup',
         title: '74. my activityÄÖÜ',
-        startUnix: 1511132400 // 20.11.2017
+        startDate: nov20
       });
 
       expect(activity.blogEntryUrl()).to.equal('mygroup/blog_2017-11-20_74-my-activityaou');

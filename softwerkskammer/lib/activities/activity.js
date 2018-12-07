@@ -19,11 +19,6 @@ class Activity {
       this.state.resources = {};
       this.state.resources[standardName] = {_registeredMembers: [], _registrationOpen: true};
     }
-    const start = (this.state.startUnix && !isNaN(this.state.startUnix)) ? DateTime.fromMillis(this.state.startUnix * 1000) : DateTime.local();
-    this.state.startDate = start.set({milliseconds: 0, seconds: 0}).setZone(fieldHelpers.defaultTimezone()).toJSDate();
-
-    const end = (this.state.endUnix && !isNaN(this.state.endUnix)) ? DateTime.fromMillis(this.state.endUnix * 1000) : DateTime.local();
-    this.state.startDate = end.set({milliseconds: 0, seconds: 0}).setZone(fieldHelpers.defaultTimezone()).toJSDate();
   }
 
   id() {
@@ -52,14 +47,6 @@ class Activity {
 
   direction() {
     return this.state.direction;
-  }
-
-  startUnix() {
-    return this.state.startUnix || Date.now() / 1000; // we have secinds persisted
-  }
-
-  endUnix() {
-    return this.state.endUnix || (Date.now() + 7200000) / 1000; // 2 hours and we have secinds persisted
   }
 
   assignedGroup() {
@@ -93,14 +80,16 @@ class Activity {
     this.state.location = object.location;
     this.state.direction = object.direction;
     // currently we only support MEZ/MESZ for events
-    this.state.startUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(object.startDate, object.startTime);
-    this.state.endUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(object.endDate, object.endTime);
+    const startDateTime = fieldHelpers.parseToDateTimeUsingDefaultTimezone(object.startDate, object.startTime);
+    this.state.startDate = startDateTime && startDateTime.toJSDate();
+    const endDateTime = fieldHelpers.parseToDateTimeUsingDefaultTimezone(object.endDate, object.endTime);
+    this.state.endDate = endDateTime && endDateTime.toJSDate();
 
     this.state.clonedFromMeetup = object.clonedFromMeetup;
     this.state.meetupRSVPCount = object.meetupRSVPCount;
 
     if (!this.id() || this.id() === 'undefined') {
-      this.state.id = fieldHelpers.createLinkFrom([this.assignedGroup(), this.title(), new Date(this.state.startUnix * 1000).toLocaleString('de-DE', {timeZone: fieldHelpers.defaultTimezone()})]);
+      this.state.id = fieldHelpers.createLinkFrom([this.assignedGroup(), this.title(), this.startDateTime().toFormat('dd.MM.yyyy HH:mm:ss')]);
     }
 
     // these are the resource definitions in the edit page:
@@ -121,8 +110,8 @@ class Activity {
     result.state.assignedGroup = this.assignedGroup();
     result.state.location = this.location();
     result.state.direction = this.direction();
-    result.state.startUnix = this.startUnix();
-    result.state.endUnix = this.endUnix();
+    result.state.startDate = this.state.startDate;
+    result.state.endDate = this.state.endDate;
 
     result.state.resources = {};
     result.resources().copyFrom(this.resources());
@@ -228,11 +217,11 @@ class Activity {
   }
 
   startDateTime() {
-    return DateTime.fromMillis(this.startUnix() * 1000).setZone(fieldHelpers.defaultTimezone());
+    return DateTime.fromJSDate(this.state.startDate).setZone(fieldHelpers.defaultTimezone());
   }
 
   endDateTime() {
-    return DateTime.fromMillis(this.endUnix() * 1000).setZone(fieldHelpers.defaultTimezone());
+    return DateTime.fromJSDate(this.state.endDate).setZone(fieldHelpers.defaultTimezone());
   }
 
   month() {

@@ -21,8 +21,8 @@ describe('Activity store', () => {
     location: 'Right next door',
     url: 'socrates-url',
     isSoCraTes: true,
-    startUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('01.02.2014'),
-    endUnix: fieldHelpers.parseToUnixUsingDefaultTimezone('15.02.2014'),
+    startDate: fieldHelpers.parseToDateTimeUsingDefaultTimezone('01.02.2014').toJSDate(),
+    endDate: fieldHelpers.parseToDateTimeUsingDefaultTimezone('15.02.2014').toJSDate(),
     owner: {nickname: 'ownerNick'},
     assignedGroup: 'assignedGroup',
     group: {groupLongName: 'longName'}
@@ -194,18 +194,18 @@ describe('Activity store', () => {
         value: [
           [
             [
-              {startUnix: 3}, {startUnix: 7}, {startUnix: 2}
+              {startDate: new Date(3)}, {startDate: new Date(7)}, {startDate: new Date(2)}
             ],
-            {startUnix: 1}, {startUnix: 6}, {startUnix: 5}
+            {startDate: new Date(1)}, {startDate: new Date(6)}, {startDate: new Date(5)}
           ],
-          {startUnix: 4}, {startUnix: 9}, {startUnix: 8}
+          {startDate: new Date(4)}, {startDate: new Date(9)}, {startDate: new Date(8)}
         ]
       }];
       const result = store.flattenAndSortMongoResultCollection(nestedMongoResult);
       expect(result).to.eql([
-        {startUnix: 1}, {startUnix: 2}, {startUnix: 3},
-        {startUnix: 4}, {startUnix: 5}, {startUnix: 6},
-        {startUnix: 7}, {startUnix: 8}, {startUnix: 9}
+        {startDate: new Date(1)}, {startDate: new Date(2)}, {startDate: new Date(3)},
+        {startDate: new Date(4)}, {startDate: new Date(5)}, {startDate: new Date(6)},
+        {startDate: new Date(7)}, {startDate: new Date(8)}, {startDate: new Date(9)}
       ]);
     });
 

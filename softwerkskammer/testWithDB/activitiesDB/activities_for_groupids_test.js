@@ -9,16 +9,16 @@ const persistence = beans.get('activitiesPersistence');
 const Activity = beans.get('activity');
 
 describe('Activity application with DB - shows activities for Group-Ids -', () => {
-  const tomorrowEarly = new Date(Date.now() + 86400000).getTime() / 1000; // + 1 day
-  const tomorrowLate = new Date(Date.now() + 90000000).getTime() / 1000; // + 1 day + 1 hour
-  const dayAfterTomorrow = new Date(Date.now() + 86400000 + 86400000).getTime() / 1000; // + 2 days
-  const yesterday = new Date(Date.now() - 86400000).getTime() / 1000; // - 1 day
-  const dayBeforeYesterday = new Date(Date.now() - 86400000 - 86400000).getTime() / 1000; // - 2 days
-  const threeDaysAgo = new Date(Date.now() - 86400000 - 86400000 - 86400000).getTime() / 1000; // - 3 days
+  const tomorrowEarly = new Date(Date.now() + 86400000); // + 1 day
+  const tomorrowLate = new Date(Date.now() + 90000000); // + 1 day + 1 hour
+  const dayAfterTomorrow = new Date(Date.now() + 86400000 + 86400000); // + 2 days
+  const yesterday = new Date(Date.now() - 86400000); // - 1 day
+  const dayBeforeYesterday = new Date(Date.now() - 86400000 - 86400000); // - 2 days
+  const threeDaysAgo = new Date(Date.now() - 86400000 - 86400000 - 86400000); // - 3 days
 
   const futureActivity1 = new Activity({
     id: 'futureActivity1', title: 'Future Activity 1', description: 'description1', assignedGroup: 'groupname1',
-    location: 'location1', direction: 'direction1', startUnix: tomorrowEarly, endUnix: dayAfterTomorrow,
+    location: 'location1', direction: 'direction1', startDate: tomorrowEarly, endDate: dayAfterTomorrow,
     url: 'url_future', owner: 'owner', resources: {
       Veranstaltung: {_registeredMembers: [{memberId: 'memberId2'}], _registrationOpen: true},
       AndereVeranstaltung: {_registeredMembers: [{memberId: 'memberId2'}], _registrationOpen: true}
@@ -31,8 +31,8 @@ describe('Activity application with DB - shows activities for Group-Ids -', () =
     assignedGroup: 'groupname2',
     location: 'location1',
     direction: 'direction1',
-    startUnix: tomorrowLate,
-    endUnix: dayAfterTomorrow,
+    startDate: tomorrowLate,
+    endDate: dayAfterTomorrow,
     url: 'url_future',
     owner: 'owner',
     resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId'}], _registrationOpen: true}},
@@ -46,8 +46,8 @@ describe('Activity application with DB - shows activities for Group-Ids -', () =
     assignedGroup: 'groupname1',
     location: 'location1',
     direction: 'direction1',
-    startUnix: yesterday,
-    endUnix: tomorrowEarly,
+    startDate: yesterday,
+    endDate: tomorrowEarly,
     url: 'url_current',
     owner: 'owner',
     resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId'}], _registrationOpen: true}},
@@ -55,7 +55,7 @@ describe('Activity application with DB - shows activities for Group-Ids -', () =
   });
   const currentActivity2 = new Activity({
     id: 'currentActivity2', title: 'Current Activity 2', description: 'description1', assignedGroup: 'groupname2',
-    location: 'location1', direction: 'direction1', startUnix: yesterday, endUnix: tomorrowEarly,
+    location: 'location1', direction: 'direction1', startDate: yesterday, endDate: tomorrowEarly,
     url: 'url_current', owner: 'owner', resources: {Veranstaltung: {}}, version: 1
   }); // resource has no registered members!
 
@@ -66,8 +66,8 @@ describe('Activity application with DB - shows activities for Group-Ids -', () =
     assignedGroup: 'groupname',
     location: 'location1',
     direction: 'direction1',
-    startUnix: dayBeforeYesterday,
-    endUnix: yesterday,
+    startDate: dayBeforeYesterday,
+    endDate: yesterday,
     url: 'url_past',
     owner: 'owner',
     resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId'}], _registrationOpen: true}},
@@ -81,8 +81,8 @@ describe('Activity application with DB - shows activities for Group-Ids -', () =
     assignedGroup: 'groupname',
     location: 'location1',
     direction: 'direction1',
-    startUnix: threeDaysAgo,
-    endUnix: threeDaysAgo,
+    startDate: threeDaysAgo,
+    endDate: threeDaysAgo,
     url: 'url_past',
     owner: 'owner',
     resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId'}], _registrationOpen: true}},
