@@ -65,7 +65,12 @@ module.exports = {
     return text;
   },
 
-  parseToDateTimeUsingDefaultTimezone: function parseToDateTimeUsingDefaultTimezone(dateString, timeString) {
+  parseToUnixUsingDefaultTimezone: function parseToUnixUsingDefaultTimezone(dateString, timeString) {
+    const result = this.parseToDateTimeUsingDefaultTimezone(dateString, timeString);
+    return result ? result.toMillis() / 1000 : undefined;
+  },
+
+  parseToDateTimeUsingDefaultTimezone: function parseToUsingDefaultTimezone(dateString, timeString) {
     return this.parseToDateTimeUsingTimezone(dateString, timeString, this.defaultTimezone());
   },
 
