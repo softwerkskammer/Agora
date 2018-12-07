@@ -25,7 +25,7 @@ function contentsToObject(contents, year) {
     if (element.trim()) {
       const fromAndUntil = misc.compact(element.split('-').map(each => each.trim()));
       const from = toDate(fromAndUntil[0], 0);
-      const until = toDate(fromAndUntil[1] || fromAndUntil[0], 82800000); // 23 hours
+      const until = toDate(fromAndUntil[1] || fromAndUntil[0], 79200000); // 22 hours
       if (from && until) {
         return [from.toISOString(), until.toISOString()];
       }

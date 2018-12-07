@@ -37,7 +37,7 @@ describe('Wiki Service - Event Parsing', () => {
     wikiService.parseEvents(2018, (err, events) => {
       expect(events).to.have.length(4);
       expect(events[0].start).to.eql('2018-01-11T00:00:00.000Z');
-      expect(events[0].end).to.eql('2018-01-11T23:00:00.000Z');
+      expect(events[0].end).to.eql('2018-01-11T22:00:00.000Z');
       done();
     });
   });
