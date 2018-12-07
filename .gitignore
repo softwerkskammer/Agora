@@ -26,6 +26,8 @@ dev-goodies
 !dev-goodies/icon_WebStorm.png
 !dev-goodies/mongo snippets.txt
 
+swk/
+
 **/build
 **/*coverage*
 **/fixtures/*.html

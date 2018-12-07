@@ -2,6 +2,7 @@
 
 const beans = require('simple-configure').get('beans');
 const misc = beans.get('misc');
+const fieldHelpers = beans.get('fieldHelpers');
 
 function contentsToObject(contents, year) {
   if (!contents) { return {}; }
@@ -14,20 +15,23 @@ function contentsToObject(contents, year) {
   }
 
   function dates(element) {
-    function toDate(dayMonthString, plusMillis) {
+    function toDate(dayMonthString) {
       const dayMonth = dayMonthString ? dayMonthString.split('.') : [];
       if (dayMonth.length < 2) {
         return null;
       }
-      return new Date(Date.UTC(year, parseInt(dayMonth[1]) - 1, parseInt(dayMonth[0])) + plusMillis);
+      return fieldHelpers.parseToDateTimeUsingDefaultTimezone(dayMonthString + year);
     }
 
     if (element.trim()) {
       const fromAndUntil = misc.compact(element.split('-').map(each => each.trim()));
-      const from = toDate(fromAndUntil[0], 0);
-      const until = toDate(fromAndUntil[1] || fromAndUntil[0], 82800000); // 23 hours
+      const from = toDate(fromAndUntil[0]);
+      if (!from) {
+        return null;
+      }
+      const until = (fromAndUntil[1] ? toDate(fromAndUntil[1]) : from).plus({day: 1});
       if (from && until) {
-        return [from.toISOString(), until.toISOString()];
+        return [from.toISO(), until.toISO()];
       }
       return null;
     }
