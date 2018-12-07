@@ -118,7 +118,7 @@ describe('Members store', () => {
     });
   });
 
-  it('sorts "naturally" by lastname - includes numbers', done => {
+  it('sorts by lastname - not parsing numbers', done => {
     const tata1 = {lastname: 'Tata1', firstname: 'Egal'};
     const tata10 = {lastname: 'Tata10', firstname: 'Egal'};
     const tata2 = {lastname: 'Tata2', firstname: 'Egal'};
@@ -129,8 +129,8 @@ describe('Members store', () => {
 
     store.allMembers((err, members) => {
       expect(members[0].lastname()).to.equal(tata1.lastname);
-      expect(members[1].lastname()).to.equal(tata2.lastname);
-      expect(members[2].lastname()).to.equal(tata10.lastname);
+      expect(members[1].lastname()).to.equal(tata10.lastname);
+      expect(members[2].lastname()).to.equal(tata2.lastname);
       done(err);
     });
   });
