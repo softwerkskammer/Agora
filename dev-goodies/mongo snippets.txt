@@ -69,6 +69,11 @@ EOF
 -- show all collection entries at once, without iterating:
 db.collection.find().toArray()
 
+
+-- finally delete the old *Unix fields in activities
+db.activitystore.update({}, {$unset: {startUnix:"", endUnix:""}}, {multi:true})
+
+
 -- enable pretty printing by default:
 In
 $HOME/.mongorc.js

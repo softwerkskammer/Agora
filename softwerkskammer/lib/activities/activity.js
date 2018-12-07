@@ -19,14 +19,6 @@ class Activity {
       this.state.resources = {};
       this.state.resources[standardName] = {_registeredMembers: [], _registrationOpen: true};
     }
-    if (!this.state.startDate) {
-      const start = (this.state.startUnix && !isNaN(this.state.startUnix)) ? DateTime.fromMillis(this.state.startUnix * 1000) : DateTime.local();
-      this.state.startDate = start.set({millisecond: 0, second: 0}).setZone(fieldHelpers.defaultTimezone()).toJSDate();
-    }
-    if (!this.state.endDate) {
-      const end = (this.state.endUnix && !isNaN(this.state.endUnix)) ? DateTime.fromMillis(this.state.endUnix * 1000) : DateTime.local();
-      this.state.endDate = end.set({millisecond: 0, second: 0}).setZone(fieldHelpers.defaultTimezone()).toJSDate();
-    }
   }
 
   id() {
@@ -55,14 +47,6 @@ class Activity {
 
   direction() {
     return this.state.direction;
-  }
-
-  startUnix() {
-    return this.state.startUnix || Date.now() / 1000; // we have secinds persisted
-  }
-
-  endUnix() {
-    return this.state.endUnix || (Date.now() + 7200000) / 1000; // 2 hours and we have secinds persisted
   }
 
   assignedGroup() {
@@ -96,8 +80,6 @@ class Activity {
     this.state.location = object.location;
     this.state.direction = object.direction;
     // currently we only support MEZ/MESZ for events
-    this.state.startUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(object.startDate, object.startTime);
-    this.state.endUnix = fieldHelpers.parseToUnixUsingDefaultTimezone(object.endDate, object.endTime);
     const startDateTime = fieldHelpers.parseToDateTimeUsingDefaultTimezone(object.startDate, object.startTime);
     this.state.startDate = startDateTime && startDateTime.toJSDate();
     const endDateTime = fieldHelpers.parseToDateTimeUsingDefaultTimezone(object.endDate, object.endTime);
@@ -128,8 +110,6 @@ class Activity {
     result.state.assignedGroup = this.assignedGroup();
     result.state.location = this.location();
     result.state.direction = this.direction();
-    result.state.startUnix = this.startUnix();
-    result.state.endUnix = this.endUnix();
     result.state.startDate = this.state.startDate;
     result.state.endDate = this.state.endDate;
 
