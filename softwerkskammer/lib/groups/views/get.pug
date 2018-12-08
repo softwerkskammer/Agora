@@ -33,9 +33,10 @@ block content
         strong #{t('general.address')}: #{' '}
         a(href='mailto:' + group.id + '@softwerkskammer.org')
           | #{group.id}@softwerkskammer.org
-      p
-        a(href='/mailsender/contactGroupContactPersons/' + group.id)
-          | Ansprechpartner kontaktieren
+        if (userIsGroupMember)
+          p
+            a(href='/mailsender/contactGroupContactPersons/' + group.id)
+              | Ansprechpartner kontaktieren
   .row
     .col-lg-6
       | !{group.descriptionHTML()}
