@@ -29,7 +29,7 @@ function singleSentEmail() {
   return sendmail.args[0][0];
 }
 
-function noEmailWasSent() {
+function expectNoEmailWasSent() {
   expect(sendmail.called).to.be.false();
 }
 
@@ -363,6 +363,16 @@ describe('MailsenderService', () => {
       });
     }
 
+    function memberWithMailAdress(email) {
+      return new Member({
+        email: email
+      });
+    }
+
+    function anyMemberWithEmail() {
+      return memberWithMailAdress('any@example.org');
+    }
+
     function groupIsOrganizedBy(groupName, organizers) {
       getGroupOrganizers(groupName, (passedGroupId, callback) => {
         callback(null, organizers);
@@ -370,13 +380,7 @@ describe('MailsenderService', () => {
     }
 
     function provideValidOrganizersForGroup(groupName) {
-      groupIsOrganizedBy(groupName, []);
-    }
-
-    function anyMember() {
-      return new Member({
-        email: 'organizer1@softwerkskammer.org'
-      });
+      groupIsOrganizedBy(groupName, [anyMemberWithEmail()]);
     }
 
     const groupId = 'any-group-id';
@@ -392,8 +396,7 @@ describe('MailsenderService', () => {
       it('does not send any mail', done => {
         mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err, statusMessage) => {
           expect(err).to.not.exist();
-          expect(sendmail.called).to.be.false();
-
+          expectNoEmailWasSent();
           expect(statusMessage.contents().type).to.eql('alert-danger');
           expect(statusMessage.contents().additionalArguments.type).to.eql('$t(mailsender.notification)');
           expect(statusMessage.contents().additionalArguments.err).to.eql('$t(mailsender.contact_persons_cannot_be_contacted)');
@@ -407,10 +410,12 @@ describe('MailsenderService', () => {
         getGroupFails(groupId);
       });
 
-      it('does not send any mail', done => {
+      it('does not send any mail to the organizers', done => {
+        groupIsOrganizedBy(groupId, [anyMemberWithEmail()]);
+
         mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err, statusMessage) => {
           expect(err).to.exist();
-          expect(sendmail.called).to.be.false();
+          expectNoEmailWasSent();
 
           expect(statusMessage.contents().type).to.eql('alert-danger');
           expect(statusMessage.contents().additionalArguments.type).to.eql('$t(mailsender.notification)');
@@ -421,26 +426,11 @@ describe('MailsenderService', () => {
     });
 
     describe('when contact organizers is enabled for group', () => {
-      let groupServiceGetGroupsStub;
       const group = new Group({id: groupId, contactTheOrganizers: true});
 
       beforeEach(() => {
-        groupServiceGetGroupsStub = thereIsAGroup(group);
+        thereIsAGroup(group);
       });
-
-      it('calls group service with group name', done => {
-        provideValidOrganizersForGroup(groupId);
-        mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, err => {
-          expect(groupServiceGetGroupsStub.args[0][0]).to.eql([groupId]);
-          done(err);
-        });
-      });
-
-      function memberWithMailAdress(email) {
-        return new Member({
-          email: email
-        });
-      }
 
       it('sends BCC to all organizers of given group', done => {
         groupIsOrganizedBy(groupId, [
@@ -464,7 +454,7 @@ describe('MailsenderService', () => {
           mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err, statusMessage) => {
             expect(err).to.exist();
 
-            noEmailWasSent();
+            expectNoEmailWasSent();
             expect(statusMessage.contents().type).to.eql('alert-danger');
             expect(statusMessage.contents().additionalArguments.type).to.eql('$t(mailsender.notification)');
             expect(statusMessage.contents().additionalArguments.err).to.eql('Error: no soup for you');
@@ -479,7 +469,7 @@ describe('MailsenderService', () => {
 
           mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err, statusMessage) => {
             expect(err).to.not.exist();
-            expect(sendmail.called).to.be.false();
+            expectNoEmailWasSent();
             expect(statusMessage.contents().type).to.eql('alert-danger');
             expect(statusMessage.contents().additionalArguments.err).to.eql('$t(mailsender.group_has_no_organizers)');
             expect(statusMessage.contents().additionalArguments.type).to.eql('$t(mailsender.notification)');
@@ -491,7 +481,7 @@ describe('MailsenderService', () => {
       describe('status message', () => {
         describe('when message is successfully send', () => {
           it('returns a message indicating the success', (done) => {
-            groupIsOrganizedBy(groupId, [anyMember()]);
+            groupIsOrganizedBy(groupId, [anyMemberWithEmail()]);
             mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err, statusmessage) => {
               expect(err).not.to.exist();
               expect(statusmessage.contents().type).to.eql('alert-success');
