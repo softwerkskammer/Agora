@@ -24,6 +24,15 @@ const sender = new Member();
 let message;
 let sendmail;
 
+function singleSentEmail() {
+  expect(sendmail.calledOnce).to.be(true);
+  return sendmail.args[0][0];
+}
+
+function noEmailWasSent() {
+  expect(sendmail.called).to.be.false();
+}
+
 describe('MailsenderService', () => {
   const activityURL = 'acti_vi_ty';
   const nickname = 'nickyNamy';
@@ -145,12 +154,11 @@ describe('MailsenderService', () => {
       emptyActivity.participants = [new Member({email})];
 
       mailsenderService.sendMailToParticipantsOf(activityURL, message, (err, statusmessage) => {
-        expect(sendmail.calledOnce).to.be(true);
-        const transportobject = sendmail.args[0][0];
-        expect(transportobject.bcc).to.contain(email);
-        expect(transportobject.html).to.contain('mark down');
-        expect(transportobject.icalEvent).to.contain('BEGIN:VCALENDAR');
-        expect(transportobject.icalEvent).to.contain('URL:http://localhost:17125/activities/urlOfTheActivity');
+        const sendEmail = singleSentEmail();
+        expect(sendEmail.bcc).to.contain(email);
+        expect(sendEmail.html).to.contain('mark down');
+        expect(sendEmail.icalEvent).to.contain('BEGIN:VCALENDAR');
+        expect(sendEmail.icalEvent).to.contain('URL:http://localhost:17125/activities/urlOfTheActivity');
         expect(statusmessage.contents().type).to.equal('alert-success');
         done(err);
       });
@@ -177,10 +185,9 @@ describe('MailsenderService', () => {
   describe('sending mail to distinct member', () => {
     it('sends the email', done => {
       mailsenderService.sendMailToMember('nickname', message, (err, statusmessage) => {
-        expect(sendmail.calledOnce).to.be(true);
-        const transportobject = sendmail.args[0][0];
-        expect(transportobject.bcc).to.contain('email@mail.de');
-        expect(transportobject.html).to.contain('mark down');
+        const email = singleSentEmail();
+        expect(email.bcc).to.contain('email@mail.de');
+        expect(email.html).to.contain('mark down');
         expect(statusmessage.contents().type).to.equal('alert-success');
         done(err);
       });
@@ -214,11 +221,10 @@ describe('MailsenderService', () => {
       const markdown = '';
       const member = new Member({nickname: 'nick', firstname: 'first', lastname: 'last'});
       mailsenderService.sendResignment(markdown, member, (err, statusmessage) => {
-        expect(sendmail.calledOnce).to.be(true);
-        const transportobject = sendmail.args[0][0];
-        expect(transportobject.from).to.contain('first last');
-        expect(transportobject.subject).to.contain('Austrittswunsch');
-        expect(transportobject.to).to.contain('email@super.user');
+        const email = singleSentEmail();
+        expect(email.from).to.contain('first last');
+        expect(email.subject).to.contain('Austrittswunsch');
+        expect(email.to).to.contain('email@super.user');
         expect(statusmessage.contents().type).to.equal('alert-success');
         done(err);
       });
@@ -262,13 +268,12 @@ describe('MailsenderService', () => {
         callback(null, group);
       });
       mailsenderService.sendMailToInvitedGroups(['GroupA', 'GroupB'], 'activityUrlForMock', message, (err, statusmessage) => {
-        expect(sendmail.calledOnce).to.be(true);
-        const transportobject = sendmail.args[0][0];
-        expect(transportobject.bcc).to.contain('memberA');
-        expect(transportobject.bcc).to.contain('memberB');
-        expect(transportobject.html).to.contain('mark down');
-        expect(transportobject.icalEvent).to.contain('BEGIN:VCALENDAR');
-        expect(transportobject.icalEvent).to.contain('URL:http://localhost:17125/activities/urlOfTheActivity');
+        const email = singleSentEmail();
+        expect(email.bcc).to.contain('memberA');
+        expect(email.bcc).to.contain('memberB');
+        expect(email.html).to.contain('mark down');
+        expect(email.icalEvent).to.contain('BEGIN:VCALENDAR');
+        expect(email.icalEvent).to.contain('URL:http://localhost:17125/activities/urlOfTheActivity');
         expect(statusmessage.contents().type).to.equal('alert-success');
         done(err);
       });
@@ -283,12 +288,11 @@ describe('MailsenderService', () => {
         callback(null, group);
       });
       mailsenderService.sendMailToInvitedGroups(['GroupA', 'GroupB'], 'errorProvokingUrl', message, (err, statusmessage) => {
-        expect(sendmail.calledOnce).to.be(true);
-        const transportobject = sendmail.args[0][0];
-        expect(transportobject.bcc).to.contain('memberA');
-        expect(transportobject.bcc).to.contain('memberB');
-        expect(transportobject.html).to.contain('mark down');
-        expect(transportobject.icalEvent).to.be(undefined);
+        const email = singleSentEmail();
+        expect(email.bcc).to.contain('memberA');
+        expect(email.bcc).to.contain('memberB');
+        expect(email.html).to.contain('mark down');
+        expect(email.icalEvent).to.be(undefined);
         expect(statusmessage.contents().type).to.equal('alert-success');
         done(err);
       });
@@ -328,7 +332,6 @@ describe('MailsenderService', () => {
   });
 
   describe('sending to contact persons of a group', () => {
-    const groupId = 'any-group-id';
 
     function getGroups(groupIdToLookUp, fakeImplementation) {
       return sinon.stub(groupsService, 'getGroups')
@@ -342,20 +345,20 @@ describe('MailsenderService', () => {
       });
     }
 
-    function getGroupFails(groupIdToLookUp) {
-      return getGroups(groupIdToLookUp, function (passedGroupNames, callback) {
+    function getGroupFails(groupId) {
+      return getGroups(groupId, function (passedGroupNames, callback) {
         callback(new Error('getGroups failed'));
       });
     }
 
-    function getGroupOrganizers(groupIdToLookUpOrganizersFor, fakeImplementation){
+    function getGroupOrganizers(groupId, fakeImplementation){
       return sinon.stub(groupsAndMembersService, 'getOrganizersOfGroup')
-        .withArgs(groupIdToLookUpOrganizersFor, sinon.match.any)
+        .withArgs(groupId, sinon.match.any)
         .callsFake(fakeImplementation);
     }
 
-    function loadingGroupOrganizersFailsFor(groupName) {
-      return getGroupOrganizers(groupName, (passedGroupName, callback) => {
+    function loadingGroupOrganizersFailsFor(groupId) {
+      return getGroupOrganizers(groupId, (passedGroupName, callback) => {
         callback(new Error('no soup for you'));
       });
     }
@@ -369,6 +372,14 @@ describe('MailsenderService', () => {
     function provideValidOrganizersForGroup(groupName) {
       groupIsOrganizedBy(groupName, []);
     }
+
+    function anyMember() {
+      return new Member({
+        email: 'organizer1@softwerkskammer.org'
+      });
+    }
+
+    const groupId = 'any-group-id';
 
     describe('when contact organizers is disabled for group', () => {
       const group = new Group({id: groupId, contactTheOrganizers: false});
@@ -425,20 +436,23 @@ describe('MailsenderService', () => {
         });
       });
 
-      it('sends BCC to all organizers of given group', done => {
-        const organizers = [
-          new Member({
-            email: 'organizer1@softwerkskammer.org'
-          })
-        ];
+      function memberWithMailAdress(email) {
+        return new Member({
+          email: email
+        });
+      }
 
-        groupIsOrganizedBy(groupId, organizers);
+      it('sends BCC to all organizers of given group', done => {
+        groupIsOrganizedBy(groupId, [
+          memberWithMailAdress('first@example.org'),
+          memberWithMailAdress('second@example.org')
+        ]);
 
         mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err) => {
           expect(err).to.not.exist();
-          expect(sendmail.calledOnce).to.be.true();
-          const transportobject = sendmail.args[0][0];
-          expect(transportobject.bcc).to.contain('organizer1@softwerkskammer.org');
+          const email = singleSentEmail();
+          expect(email.bcc).to.contain('first@example.org');
+          expect(email.bcc).to.contain('second@example.org');
           done();
         });
       });
@@ -449,7 +463,8 @@ describe('MailsenderService', () => {
 
           mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err, statusMessage) => {
             expect(err).to.exist();
-            expect(sendmail.called).to.be.false();
+
+            noEmailWasSent();
             expect(statusMessage.contents().type).to.eql('alert-danger');
             expect(statusMessage.contents().additionalArguments.type).to.eql('$t(mailsender.notification)');
             expect(statusMessage.contents().additionalArguments.err).to.eql('Error: no soup for you');
@@ -476,14 +491,7 @@ describe('MailsenderService', () => {
       describe('status message', () => {
         describe('when message is successfully send', () => {
           it('returns a message indicating the success', (done) => {
-            const organizers = [
-              new Member({
-                email: 'organizer1@softwerkskammer.org'
-              })
-            ];
-
-            groupIsOrganizedBy(groupId, organizers);
-
+            groupIsOrganizedBy(groupId, [anyMember()]);
             mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err, statusmessage) => {
               expect(err).not.to.exist();
               expect(statusmessage.contents().type).to.eql('alert-success');
