@@ -24,17 +24,6 @@ const sender = new Member();
 let message;
 let sendmail;
 
-function groupIsOrganizedBy(groupName, organizers) {
-  sinon.stub(groupsAndMembersService, 'getOrganizersOfGroup').callsFake((passedGroupName, callback) => {
-    expect(passedGroupName).to.eql(groupName);
-    callback(null, organizers);
-  });
-}
-
-function provideValidOrganizersForGroup(groupName) {
-  groupIsOrganizedBy(groupName, []);
-}
-
 describe('MailsenderService', () => {
   const activityURL = 'acti_vi_ty';
   const nickname = 'nickyNamy';
@@ -339,21 +328,58 @@ describe('MailsenderService', () => {
   });
 
   describe('sending to contact persons of a group', () => {
-    const anyGroup = 'anyGroupName';
+    const groupId = 'any-group-id';
+
+    function getGroups(groupIdToLookUp, fakeImplementation) {
+      return sinon.stub(groupsService, 'getGroups')
+        .withArgs([groupIdToLookUp], sinon.match.any)
+        .callsFake(fakeImplementation);
+    }
+
+    function thereIsAGroup(group) {
+      return getGroups(group.id, function (passedGroupName, callback) {
+        callback(null, group);
+      });
+    }
+
+    function getGroupFails(groupIdToLookUp) {
+      return getGroups(groupIdToLookUp, function (passedGroupNames, callback) {
+        callback(new Error('getGroups failed'));
+      });
+    }
+
+    function getGroupOrganizers(groupIdToLookUpOrganizersFor, fakeImplementation){
+      return sinon.stub(groupsAndMembersService, 'getOrganizersOfGroup')
+        .withArgs(groupIdToLookUpOrganizersFor, sinon.match.any)
+        .callsFake(fakeImplementation);
+    }
+
+    function loadingGroupOrganizersFailsFor(groupName) {
+      return getGroupOrganizers(groupName, (passedGroupName, callback) => {
+        callback(new Error('no soup for you'));
+      });
+    }
+
+    function groupIsOrganizedBy(groupName, organizers) {
+      getGroupOrganizers(groupName, (passedGroupId, callback) => {
+        callback(null, organizers);
+      });
+    }
+
+    function provideValidOrganizersForGroup(groupName) {
+      groupIsOrganizedBy(groupName, []);
+    }
 
     describe('when contact organizers is disabled for group', () => {
-      const group = new Group({id: '1', contactTheOrganizers: false});
+      const group = new Group({id: groupId, contactTheOrganizers: false});
 
       beforeEach(() => {
-        sinon.stub(groupsService, 'getGroups').callsFake(function (groupName, callback) {
-          callback(null, group);
-        });
-
-        provideValidOrganizersForGroup(anyGroup);
+        thereIsAGroup(group);
+        provideValidOrganizersForGroup(groupId);
       });
 
       it('does not send any mail', done => {
-        mailsenderService.sendMailToContactPersonsOfGroup(anyGroup, message, (err, statusMessage) => {
+        mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err, statusMessage) => {
           expect(err).to.not.exist();
           expect(sendmail.called).to.be.false();
 
@@ -367,13 +393,11 @@ describe('MailsenderService', () => {
 
     describe('when getting group fails', () => {
       beforeEach(() => {
-        sinon.stub(groupsService, 'getGroups').callsFake(function (groupName, callback) {
-          callback(new Error('getGroups failed'));
-        });
+        getGroupFails(groupId);
       });
 
       it('does not send any mail', done => {
-        mailsenderService.sendMailToContactPersonsOfGroup(anyGroup, message, (err, statusMessage) => {
+        mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err, statusMessage) => {
           expect(err).to.exist();
           expect(sendmail.called).to.be.false();
 
@@ -387,16 +411,16 @@ describe('MailsenderService', () => {
 
     describe('when contact organizers is enabled for group', () => {
       let groupServiceGetGroupsStub;
+      const group = new Group({id: groupId, contactTheOrganizers: true});
+
       beforeEach(() => {
-        groupServiceGetGroupsStub = sinon.stub(groupsService, 'getGroups').callsFake(function (passedGroupNames, callback) {
-          callback(null, new Group({id: '1', contactTheOrganizers: true}));
-        });
+        groupServiceGetGroupsStub = thereIsAGroup(group);
       });
 
       it('calls group service with group name', done => {
-        provideValidOrganizersForGroup('groupName');
-        mailsenderService.sendMailToContactPersonsOfGroup('groupName', message, err => {
-          expect(groupServiceGetGroupsStub.args[0][0]).to.eql(['groupName']);
+        provideValidOrganizersForGroup(groupId);
+        mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, err => {
+          expect(groupServiceGetGroupsStub.args[0][0]).to.eql([groupId]);
           done(err);
         });
       });
@@ -408,9 +432,9 @@ describe('MailsenderService', () => {
           })
         ];
 
-        groupIsOrganizedBy('groupName', organizers);
+        groupIsOrganizedBy(groupId, organizers);
 
-        mailsenderService.sendMailToContactPersonsOfGroup('groupName', message, (err) => {
+        mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err) => {
           expect(err).to.not.exist();
           expect(sendmail.calledOnce).to.be.true();
           const transportobject = sendmail.args[0][0];
@@ -421,11 +445,9 @@ describe('MailsenderService', () => {
 
       describe('organizers for group can not be read', () => {
         it('does not send any email', done => {
-          sinon.stub(groupsAndMembersService, 'getOrganizersOfGroup').callsFake((passedGroupName, callback) => {
-            callback(new Error('no soup for you'));
-          });
+          loadingGroupOrganizersFailsFor(groupId);
 
-          mailsenderService.sendMailToContactPersonsOfGroup('groupName', message, (err, statusMessage) => {
+          mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err, statusMessage) => {
             expect(err).to.exist();
             expect(sendmail.called).to.be.false();
             expect(statusMessage.contents().type).to.eql('alert-danger');
@@ -434,14 +456,13 @@ describe('MailsenderService', () => {
             done();
           });
         });
-
       });
 
       describe('in case of a group without any organizers', () => {
         it('does not send any email', function (done) {
-          groupIsOrganizedBy('groupName', []);
+          groupIsOrganizedBy(groupId, []);
 
-          mailsenderService.sendMailToContactPersonsOfGroup('groupName', message, (err, statusMessage) => {
+          mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err, statusMessage) => {
             expect(err).to.not.exist();
             expect(sendmail.called).to.be.false();
             expect(statusMessage.contents().type).to.eql('alert-danger');
@@ -461,9 +482,9 @@ describe('MailsenderService', () => {
               })
             ];
 
-            groupIsOrganizedBy(anyGroup, organizers);
+            groupIsOrganizedBy(groupId, organizers);
 
-            mailsenderService.sendMailToContactPersonsOfGroup(anyGroup, message, (err, statusmessage) => {
+            mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err, statusmessage) => {
               expect(err).not.to.exist();
               expect(statusmessage.contents().type).to.eql('alert-success');
               done();

@@ -164,14 +164,14 @@ module.exports = {
     });
   },
 
-  sendMailToContactPersonsOfGroup: function (groupName, message, callback) {
+  sendMailToContactPersonsOfGroup: function (groupId, message, callback) {
     const type = '$t(mailsender.notification)';
-    groupsService.getGroups([groupName], (groupLoadErr, group) => {
+    groupsService.getGroups([groupId], (groupLoadErr, group) => {
       if (groupLoadErr) { return callback(groupLoadErr, mailtransport.statusmessageForError(type, groupLoadErr)); }
       if (!group.isContactTheOrganizersEnabled()) {
         return callback(null, mailtransport.statusmessageForError(type, '$t(mailsender.contact_persons_cannot_be_contacted)'));
       }
-      groupsAndMembersService.getOrganizersOfGroup(groupName, (err, organizers) => {
+      groupsAndMembersService.getOrganizersOfGroup(groupId, (err, organizers) => {
         if (err) { return callback(err, mailtransport.statusmessageForError(type, err)); }
         if (!organizers.length) {
           return callback(null, mailtransport.statusmessageForError(type, '$t(mailsender.group_has_no_organizers)'));
