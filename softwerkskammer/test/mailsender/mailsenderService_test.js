@@ -341,7 +341,7 @@ describe('MailsenderService', () => {
 
     function thereIsAGroup(group) {
       return getGroups(group.id, function (passedGroupName, callback) {
-        callback(null, group);
+        callback(null, [group]);
       });
     }
 
