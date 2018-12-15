@@ -168,6 +168,10 @@ module.exports = {
     const type = '$t(mailsender.notification)';
     groupsService.getGroups([groupId], (groupLoadErr, groups) => {
       if (groupLoadErr) { return callback(groupLoadErr, mailtransport.statusmessageForError(type, groupLoadErr)); }
+      if (groups.length !== 1) {
+        const groupNotFoundError = new Error(`Gruppe ${groupId} nicht gefunden.`);
+        return callback(groupNotFoundError, mailtransport.statusmessageForError(type, groupNotFoundError));
+      }
       if (!groups[0].isContactTheOrganizersEnabled()) {
         return callback(null, mailtransport.statusmessageForError(type, '$t(mailsender.contact_persons_cannot_be_contacted)'));
       }

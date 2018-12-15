@@ -345,6 +345,13 @@ describe('MailsenderService', () => {
       });
     }
 
+    function thereIsNoGroup() {
+      return sinon.stub(groupsService, 'getGroups')
+        .callsFake(function (passedGroupId, callback) {
+          callback(null, []);
+        });
+    }
+
     function getGroupFails(groupId) {
       return getGroups(groupId, function (passedGroupNames, callback) {
         callback(new Error('getGroups failed'));
@@ -424,6 +431,27 @@ describe('MailsenderService', () => {
         });
       });
     });
+
+    describe('when group does not exist', () => {
+      beforeEach(() => {
+        thereIsNoGroup();
+      });
+
+      it('does not send any mail to the organizers', done => {
+        groupIsOrganizedBy(groupId, [anyMemberWithEmail()]);
+
+        mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err, statusMessage) => {
+          expect(err).to.exist();
+          expectNoEmailWasSent();
+
+          expect(statusMessage.contents().type).to.eql('alert-danger');
+          expect(statusMessage.contents().additionalArguments.type).to.eql('$t(mailsender.notification)');
+          expect(statusMessage.contents().additionalArguments.err).to.eql(`Error: Gruppe ${groupId} nicht gefunden.`);
+          done();
+        });
+      });
+    });
+
 
     describe('when contact organizers is enabled for group', () => {
       const group = new Group({id: groupId, contactTheOrganizers: true});
