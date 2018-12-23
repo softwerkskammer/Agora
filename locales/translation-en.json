@@ -112,6 +112,9 @@
     "authentication": "Authentication",
     "authentication_text": "You can authenticate via one of the methods given below. Subsequently, we ask you to provide some personal data.",
     "authentication_text_green": "Last time you have been authenticated by the highlighted provider:",
+    "change_password": "Change or init password",
+    "error_member_exists": "There already is a registered member with this email address.",
+    "error_member_not_exists": "There is no member associated with this emails address.",
     "error": "Authentication Error",
     "error_text": [
       "h3 Authentication Error!",
@@ -135,7 +138,10 @@
       "p If this is an application error, we apologize and would love to get ",
       "  a(href='https://github.com/softwerkskammer/Agora/issues/') feedback.",
       "p The Agora-Team is begging your pardon."
-    ]
+    ],
+    "password": "Password",
+    "password_repeat": "Repeat Password",
+    "password_dialog_title": "Enter Password"
   },
   "colors": {
     "color": "Colour",

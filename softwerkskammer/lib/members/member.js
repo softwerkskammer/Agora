@@ -27,6 +27,9 @@ class Member {
     if (object.interests) {
       this.state.interests = object.interests.toString();
     }
+    if (object.password) {
+      this.updatePassword(object.password);
+    }
 
     return this;
   }
@@ -43,7 +46,6 @@ class Member {
     }
     this.state.created = DateTime.local().toFormat('dd.MM.yy');
     this.state.id = sessionUser.authenticationId;
-
     const profile = sessionUser.profile;
     if (profile) {
       this.state.email = fieldHelpers.valueOrFallback(profile.emails && profile.emails[0] && profile.emails[0].value, this.email());
@@ -194,6 +196,20 @@ class Member {
       }
     });
     this.subscribedGroups = result;
+  }
+
+  updatePassword(newPass) {
+    const {genSalt, hashPassword} = beans.get('hashPassword');
+    this.state.salt = genSalt();
+    this.state.hashedPassword = hashPassword(newPass, this.state.salt);
+  }
+
+  salt() {
+    return this.state.salt;
+  }
+
+  hashedPassword() {
+    return this.state.hashedPassword;
   }
 
   static isSuperuser(id) {

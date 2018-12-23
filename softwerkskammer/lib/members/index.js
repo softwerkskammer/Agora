@@ -140,6 +140,18 @@ app.post('/delete', (req, res, next) => {
   });
 });
 
+app.post('/updatePassword', (req, res, next) => {
+  memberstore.getMemberForId(req.body.id, (err, member) => {
+    if (err) { return next(err); }
+    member.updatePassword(req.body.password);
+    member.addAuthentication('UserPass' + member.email())
+    memberstore.saveMember(member, err1 => {
+      if (err1) { return next(err1); }
+      res.redirect('/members/' + encodeURIComponent(member.nickname()));
+    });
+  });
+});
+
 app.post('/submit', (req, res, next) => {
   async.parallel(
     [

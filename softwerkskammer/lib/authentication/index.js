@@ -38,16 +38,16 @@ function loginChoiceCookieFor(url) {
 
 function createProviderAuthenticationRoutes(app1, strategyName) {
 
-  function authenticate() {
-    return passport.authenticate(strategyName, {successReturnToOrRedirect: '/', failureRedirect: '/login'});
-  }
-
   function setReturnOnSuccess(req, res, next) {
     if (req.session.returnTo === undefined) {
       req.session.returnTo = req.query.returnTo || '/';
     }
-    res.cookie('loginChoice', loginChoiceCookieFor(decodeURIComponent(req.url)), { maxAge: 1000 * 60 * 60 * 24 * 365, httpOnly: true }); // expires: Date
+    res.cookie('loginChoice', loginChoiceCookieFor(decodeURIComponent(req.url)), {maxAge: 1000 * 60 * 60 * 24 * 365, httpOnly: true}); // expires: Date
     next();
+  }
+
+  function authenticate() {
+    return passport.authenticate(strategyName, {successReturnToOrRedirect: '/', failureRedirect: '/login'});
   }
 
   app1.get('/' + strategyName, setReturnOnSuccess, authenticate());
@@ -163,6 +163,64 @@ function setupMagicLink(app1) {
   });
 }
 
+function setupUserPass(app1) {
+  const LocalStrategy = require('passport-local').Strategy;
+  const {hashPassword} = beans.get('hashPassword');
+
+  passport.use(new LocalStrategy(
+    {usernameField: 'email', passwordField: 'password'},
+    (email, password, done) => {
+      const isNewUser = password === 'NEW';
+      memberstore.getMemberForEMail(email, (err, member) => {
+        if (err) {
+          logger.error('Login error for: ' + email);
+          logger.error(err);
+          return done(err);
+        }
+        if (isNewUser) { // create new user for not alerady registerd email
+          logger.info('NEW Login for: ' + email);
+          if (member) {
+            logger.error(new Error('Member with email address "' + email + '" already exists'));
+            return done(null, false, {message: 'authentication.error_member_exists'});
+          }
+          const authenticationId = 'UserPass' + email;
+          const profile = {emails: [{value: email}]};
+          return done(null, {authenticationId, profile});
+        } else { // login for existing user who already has setup a password
+          logger.info('Login for: ' + email);
+          if (!member) {
+            logger.error(new Error('Member with email address "' + email + '" doesn\'t exist'));
+            return done(null, false, {message: 'authentication.error_member_not_exists'});
+          }
+          if (hashPassword(password, member.salt()) === member.hashedPassword()) {
+            return done(null, {authenticationId: member.id(), member});
+          }
+          done(null, false);
+        }
+      });
+    })
+  );
+  app1.post('/login', (req, res, next) => {
+      passport.authenticate('local', (err, user, info) => {
+        if (err) { return next(err); }
+        if (info) { statusmessage.errorMessage('authentication.error', info.message).putIntoSession(req); }
+        if (!user) { return res.redirect('/login'); }
+        res.cookie('loginChoice', loginChoiceCookieFor(decodeURIComponent(req.url)), {maxAge: 1000 * 60 * 60 * 24 * 365, httpOnly: true}); // expires: Date
+        req.logIn(user, {}, (err1) => {
+          if (err1) { return next(err1); }
+          let url = '/';
+          if (req.session && req.session.returnTo) {
+            url = req.session.returnTo;
+            delete req.session.returnTo;
+          }
+          return res.redirect(url);
+        });
+      })(req, res, next);
+    }
+  );
+
+}
+
 const app = misc.expressAppIn(__dirname);
 
 app.get('/logout', (req, res) => {
@@ -178,5 +236,6 @@ setupOpenID(app);
 setupGithub(app);
 setupGooglePlus(app);
 setupMagicLink(app);
+setupUserPass(app);
 
 module.exports = app;

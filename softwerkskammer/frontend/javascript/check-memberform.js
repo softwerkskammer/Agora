@@ -13,6 +13,10 @@ var member_validator;
     member_validator = $('#memberform, #participationform').validate(
       {
         rules: {
+          password: {
+            required: true,
+            minlength: 5
+          },
           nickname: {
             required: true,
             minlength: 2,
@@ -76,7 +80,7 @@ var member_validator;
       };
     }
 
-    ['nickname', 'lastname', 'firstname', 'country', 'email', 'profession', 'location', 'reference', 'homeAddress'].forEach(
+    ['nickname', 'lastname', 'firstname', 'country', 'email', 'profession', 'location', 'reference', 'homeAddress', 'password'].forEach(
       function (name) {
         var each = '[name=' + name + ']';
         $(each).on('change', handler(each));

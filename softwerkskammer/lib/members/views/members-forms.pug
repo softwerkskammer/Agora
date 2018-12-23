@@ -1,6 +1,10 @@
 include  ../../../views/formComponents
 
 mixin memberform(member, regionalgroups, themegroups, tags)
+  #passwordDialog.modal.fade(tabindex='-1')
+    .modal-dialog.modal-lg
+      .modal-content
+
   form#memberform(action='/members/submit', method='post')
     +csrf
     fieldset
@@ -27,6 +31,9 @@ mixin memberform(member, regionalgroups, themegroups, tags)
           +hidden('previousNickname', member.nickname())
           +hidden('previousEmail', accessrights.isRegistered() ? member.email() : '')
           +hidden('created', member.created())
+          if (!member.authentications())
+            label.control-label(for='password') #{t('authentication.password')}:
+            input#password.form-control.trim-text(type='password', name='password', value='')
           +text('nickname', t('members.nickname'), member.nickname())
           +text('firstname', t('members.firstname'), member.firstname())
           +text('lastname', t('members.lastname'), member.lastname())
@@ -56,9 +63,13 @@ mixin memberform(member, regionalgroups, themegroups, tags)
         if (accessrights.isMember(member))
           .row
             .col-md-6
-              a.btn.btn-primary(data-toggle='modal', data-target='#login', href='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))
+              span.btn.btn-primary.modaldialog(data-toggle='modal', data-target='#login', data-link='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))
                 i.far.fa-plus-square.fa-fw
                 | &nbsp;#{t('members.authenticate')}
+            .col-md-6
+              span.btn.btn-primary.modaldialog(data-toggle='modal', data-target='#passwordDialog', data-link='/passwordDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))
+                i.fas.fa-key.fa-fw
+                | &nbsp;#{t('authentication.change_password')}
         if (accessrights.isSuperuser())
           .row
             .col-md-6

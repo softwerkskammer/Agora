@@ -62,6 +62,10 @@ app.get('/loginDialog', (req, res) => {
   res.render('loginDialog', {returnUrl: req.query.returnUrl, loginChoice: req.cookies.loginChoice || {}});
 });
 
+app.get('/passwordDialog', (req, res) => {
+  res.render('passwordDialog', {returnUrl: req.query.returnUrl, loginChoice: req.cookies.loginChoice || {}});
+});
+
 app.get('/mustBeSuperuser', (req, res) => {
   res.render('superuserRightsRequired', {requestedPage: req.query.page});
 });

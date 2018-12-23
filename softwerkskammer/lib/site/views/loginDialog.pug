@@ -22,6 +22,23 @@
         | &nbsp;StackExchange
   .row
     .col-12
+      form(action='/auth/login', method='post')
+        input(type='hidden', name='_csrf', value=csrf_token)
+        .row
+          .col-6
+            label.control-label(for='email') Email:
+            input.form-control.trim-text(id='email', type='email', name='email', value='', placeholder='myaddress@example.com')
+          .col-6
+            .form-group
+              label.control-label(for='password') Password:
+              input#password.form-control.trim-text(type='password', name='password', value='', placeholder='enter "NEW" for new user')
+        .row
+          .col-12
+            .btn-group.float-right
+              button.btn.btn-primary(type='submit') Anmelden
+
+  .row
+    .col-12
       form(action='/auth/openid', method='get')
         p &nbsp;
         input(type='hidden', name='returnTo', value=returnUrl)
@@ -42,6 +59,6 @@
             a.inherit-color(href='#magicLinkInput', data-toggle='collapse') #{t('authentication.magic_link')}:
           #magicLinkInput.collapse(class=('btn-default'))
             .input-group
-              input.form-control#magicLinkEmail(type='text', name='magic_link_email', value=(''), placeholder='myaddress@example.com')
+              input.form-control#magicLinkEmail(type='email', name='magic_link_email', value='', placeholder='myaddress@example.com')
               .input-group-append
                 button.btn.btn-light(type='submit') #{t('authentication.magic_link_request')}

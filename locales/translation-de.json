@@ -106,6 +106,9 @@
     "authentication": "Authentifizierung",
     "authentication_text": "Du kannst Dich über einen der untenstehenden Dienste authentifizieren. Im Anschluss bitten wir Dich, einige persönliche Daten einzugeben.",
     "authentication_text_green": "Beim letzten Mal hast Du Dich mit dem hervorgehobenen Provider angemeldet:",
+    "change_password": "Passwort ändern / anlegen",
+    "error_member_exists": "Es existiert schon ein Mitglied mit dieser E-Mail Adresse.",
+    "error_member_not_exists": "Es existiert kein Mitglied mit dieser E-Mail Adresse.",
     "error": "Authentifizierungsproblem",
     "error_text": [
       "h3 Problem bei der Authentifizierung!",
@@ -129,7 +132,10 @@
       "p Sollte dies ein Fehler in der Anwendung sein, bitten wir um ",
       "  a(href='https://github.com/softwerkskammer/Agora/issues/') Rückmeldung.",
       "p Das Agora-Team bittet um Entschuldigung."
-    ]
+    ],
+    "password": "Passwort",
+    "password_repeat": "Passwort wiederholen",
+    "password_dialog_title": "Passwort eingeben"
   },
   "colors": {
     "color": "Farbe",
