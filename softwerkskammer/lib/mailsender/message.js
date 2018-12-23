@@ -1,5 +1,3 @@
-'use strict';
-
 const R = require('ramda');
 const pug = require('pug');
 const path = require('path');

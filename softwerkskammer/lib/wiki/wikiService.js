@@ -1,4 +1,3 @@
-'use strict';
 const Fs = require('fs');
 const Path = require('path');
 const R = require('ramda');

@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = function handle500(appLogger) {
   /* eslint no-unused-vars: 0 */
   return (error, req, res, next) => { // express needs four arguments!

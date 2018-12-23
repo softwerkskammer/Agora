@@ -1,5 +1,3 @@
-'use strict';
-
 const conf = require('simple-configure');
 const ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn('/login');
 const securedByLoginURLRegex = new RegExp(conf.get('securedByLoginURLPattern'));

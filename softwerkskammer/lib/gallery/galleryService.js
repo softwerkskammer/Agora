@@ -1,5 +1,3 @@
-'use strict';
-
 const conf = require('simple-configure');
 const magick = require('imagemagick');
 const uuid = require('uuid');

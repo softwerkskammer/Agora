@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = function handle404() {
   return (req, res) => {
     res.status(404);

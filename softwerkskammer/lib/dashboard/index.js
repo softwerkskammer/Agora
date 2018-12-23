@@ -1,5 +1,3 @@
-'use strict';
-
 const beans = require('simple-configure').get('beans');
 const misc = beans.get('misc');
 const dashboardService = beans.get('dashboardService');

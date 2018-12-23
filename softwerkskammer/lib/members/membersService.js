@@ -1,5 +1,3 @@
-'use strict';
-
 const R = require('ramda');
 const fs = require('fs');
 const mimetypes = require('mime-types');

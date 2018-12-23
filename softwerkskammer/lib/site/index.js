@@ -1,5 +1,4 @@
 /* eslint no-underscore-dangle: 0 */
-'use strict';
 
 const path = require('path');
 const async = require('async');

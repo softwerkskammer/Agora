@@ -1,5 +1,4 @@
 /* eslint no-underscore-dangle: 0 */
-'use strict';
 
 const async = require('async');
 const conf = require('simple-configure');

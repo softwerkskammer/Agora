@@ -1,5 +1,4 @@
 /* eslint no-underscore-dangle: 0 */
-'use strict';
 
 const R = require('ramda');
 const async = require('async');

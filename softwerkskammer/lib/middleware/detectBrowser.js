@@ -1,4 +1,3 @@
-'use strict';
 const useragent = require('useragent');
 
 module.exports = function detectBrowser(req, res, next) {

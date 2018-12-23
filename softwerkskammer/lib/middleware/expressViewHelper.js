@@ -1,5 +1,3 @@
-'use strict';
-
 const {DateTime} = require('luxon');
 const beans = require('simple-configure').get('beans');
 const statusmessage = beans.get('statusmessage');
