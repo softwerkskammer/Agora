@@ -203,7 +203,7 @@ a.inherit-color {
 }
 
 legend {
-  font-weight: bold;  
+  font-weight: bold;
 }
 
 .label.group {
@@ -278,4 +278,9 @@ a {
   color: #212529;
   background-color: #f8f9fa;
   border-color: #f8f9fa;
+}
+
+// patch bootstrap btn
+.btn {
+  white-space: nowrap;
 }
