@@ -32,7 +32,7 @@
             .row
               .col-6
                 label.control-label(for='email') #{t('member.email')}:
-                input.form-control.trim-text(id='email', type='email', name='email', value='', placeholder='myaddress@example.com')
+                input#email.form-control.trim-text(type='email', name='email', value='', placeholder='myaddress@example.com')
               .col-6
                 .form-group
                   label.control-label(for='password') #{t('authentication.password')}:

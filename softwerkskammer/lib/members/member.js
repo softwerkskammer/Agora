@@ -5,6 +5,7 @@ const conf = require('simple-configure');
 const beans = conf.get('beans');
 const fieldHelpers = beans.get('fieldHelpers');
 const avatarProvider = beans.get('avatarProvider');
+const {genSalt, hashPassword} = beans.get('hashPassword');
 
 class Member {
   constructor(object) {
@@ -199,7 +200,6 @@ class Member {
   }
 
   updatePassword(newPass) {
-    const {genSalt, hashPassword} = beans.get('hashPassword');
     this.state.salt = genSalt();
     this.state.hashedPassword = hashPassword(newPass, this.state.salt);
   }
@@ -210,6 +210,10 @@ class Member {
 
   hashedPassword() {
     return this.state.hashedPassword;
+  }
+
+  passwordMatches(pass) {
+    return hashPassword(pass, this.salt()) === this.hashedPassword();
   }
 
   static isSuperuser(id) {

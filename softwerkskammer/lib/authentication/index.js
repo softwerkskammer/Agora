@@ -165,7 +165,6 @@ function setupMagicLink(app1) {
 
 function setupUserPass(app1) {
   const LocalStrategy = require('passport-local').Strategy;
-  const {hashPassword} = beans.get('hashPassword');
 
   passport.use(new LocalStrategy(
     {usernameField: 'email', passwordField: 'password'},
@@ -192,7 +191,7 @@ function setupUserPass(app1) {
             logger.error(new Error('Member with email address "' + email + '" doesn\'t exist'));
             return done(null, false, {message: 'authentication.error_member_not_exists'});
           }
-          if (hashPassword(password, member.salt()) === member.hashedPassword()) {
+          if (member.passwordMatches(password)) {
             return done(null, {authenticationId: member.id(), member});
           }
           done(null, false);
