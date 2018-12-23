@@ -22,20 +22,25 @@
         | &nbsp;StackExchange
   .row
     .col-12
+      p &nbsp;
       form(action='/auth/login', method='post')
         input(type='hidden', name='_csrf', value=csrf_token)
-        .row
-          .col-6
-            label.control-label(for='email') Email:
-            input.form-control.trim-text(id='email', type='email', name='email', value='', placeholder='myaddress@example.com')
-          .col-6
-            .form-group
-              label.control-label(for='password') Password:
-              input#password.form-control.trim-text(type='password', name='password', value='', placeholder='enter "NEW" for new user')
-        .row
-          .col-12
-            .btn-group.float-right
-              button.btn.btn-primary(type='submit') Anmelden
+        .card.mb-2
+          h5.card-header.p-2(class=(loginChoice.userPass ? 'alert-success' : 'bg-light'))
+            a.inherit-color(href='#userPass', data-toggle='collapse') #{t('authentication.user_pass')}:
+          #userPass.collapse(class=(loginChoice.userPass ? 'show' : ''))
+            .row
+              .col-6
+                label.control-label(for='email') Email:
+                input.form-control.trim-text(id='email', type='email', name='email', value='', placeholder='myaddress@example.com')
+              .col-6
+                .form-group
+                  label.control-label(for='password') Password:
+                  input#password.form-control.trim-text(type='password', name='password', value='', placeholder='enter "NEW" for new user')
+            .row
+              .col-12
+                .btn-group.float-right
+                  button.btn.btn-primary(type='submit') Anmelden
 
   .row
     .col-12

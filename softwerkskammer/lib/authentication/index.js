@@ -205,7 +205,7 @@ function setupUserPass(app1) {
         if (err) { return next(err); }
         if (info) { statusmessage.errorMessage('authentication.error', info.message).putIntoSession(req); }
         if (!user) { return res.redirect('/login'); }
-        res.cookie('loginChoice', loginChoiceCookieFor(decodeURIComponent(req.url)), {maxAge: 1000 * 60 * 60 * 24 * 365, httpOnly: true}); // expires: Date
+        res.cookie('loginChoice', {userPass: true}, {maxAge: 1000 * 60 * 60 * 24 * 365, httpOnly: true}); // expires: Date
         req.logIn(user, {}, (err1) => {
           if (err1) { return next(err1); }
           let url = '/';

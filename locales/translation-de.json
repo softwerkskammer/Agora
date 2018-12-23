@@ -135,7 +135,8 @@
     ],
     "password": "Passwort",
     "password_repeat": "Passwort wiederholen",
-    "password_dialog_title": "Passwort eingeben"
+    "password_dialog_title": "Passwort eingeben",
+    "user_pass": "Mit E-Mail und Passwort"
   },
   "colors": {
     "color": "Farbe",

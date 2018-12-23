@@ -141,7 +141,8 @@
     ],
     "password": "Password",
     "password_repeat": "Repeat Password",
-    "password_dialog_title": "Enter Password"
+    "password_dialog_title": "Enter Password",
+    "user_pass": "By email and password"
   },
   "colors": {
     "color": "Colour",
