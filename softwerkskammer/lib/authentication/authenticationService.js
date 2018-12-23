@@ -1,5 +1,3 @@
-'use strict';
-
 const conf = require('simple-configure');
 const beans = conf.get('beans');
 const membersService = beans.get('membersService');

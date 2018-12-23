@@ -1,5 +1,3 @@
-'use strict';
-
 const Form = require('multiparty').Form;
 
 const beans = require('simple-configure').get('beans');

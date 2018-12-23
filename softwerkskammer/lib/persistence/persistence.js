@@ -1,4 +1,3 @@
-'use strict';
 const conf = require('simple-configure');
 const async = require('async');
 let ourDB;

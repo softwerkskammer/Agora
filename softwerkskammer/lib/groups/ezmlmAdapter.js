@@ -1,5 +1,3 @@
-'use strict';
-
 const async = require('async');
 const conf = require('simple-configure');
 const ezmlm = require('ezmlm-node')(conf.get('fullyQualifiedHomeDir'), conf.get('emaildomainname'), conf.get('listownerAddress'), conf.get('ezmlmrc'));

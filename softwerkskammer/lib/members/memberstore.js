@@ -1,5 +1,4 @@
 /* eslint no-underscore-dangle: 0 */
-'use strict';
 
 const async = require('async');
 const conf = require('simple-configure');
@@ -8,12 +7,11 @@ const R = require('ramda');
 const persistence = beans.get('membersPersistence');
 const Member = beans.get('member');
 const misc = beans.get('misc');
-const naturalCmp = require('underscore.string/naturalCmp');
 const logger = require('winston').loggers.get('transactions');
 const toMember = R.partial(misc.toObject, [Member]);
 
 function sortCaseInsensitive(objectlist) {
-  return objectlist.sort((a, b) => naturalCmp(a.lastname.toLowerCase() + ' ' + a.firstname.toLowerCase(), b.lastname.toLowerCase() + ' ' + b.firstname.toLowerCase()));
+  return objectlist.sort((a, b) => new Intl.Collator('de').compare(a.lastname.toLowerCase() + ' ' + a.firstname.toLowerCase(), b.lastname.toLowerCase() + ' ' + b.firstname.toLowerCase()));
 }
 
 function toMemberList(callback, err, result) {

@@ -1,5 +1,3 @@
-'use strict';
-
 const beans = require('simple-configure').get('beans');
 const misc = beans.get('misc');
 
@@ -14,7 +12,7 @@ function contentsToObject(contents, year) {
   }
 
   function dates(element) {
-    function toDate(dayMonthString, plusMillis) {
+    function toDate(dayMonthString, plusMillis = 0) {
       const dayMonth = dayMonthString ? dayMonthString.split('.') : [];
       if (dayMonth.length < 2) {
         return null;
@@ -24,7 +22,7 @@ function contentsToObject(contents, year) {
 
     if (element.trim()) {
       const fromAndUntil = misc.compact(element.split('-').map(each => each.trim()));
-      const from = toDate(fromAndUntil[0], 0);
+      const from = toDate(fromAndUntil[0]);
       const until = toDate(fromAndUntil[1] || fromAndUntil[0], 79200000); // 22 hours
       if (from && until) {
         return [from.toISOString(), until.toISOString()];

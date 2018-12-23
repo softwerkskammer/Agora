@@ -1,5 +1,3 @@
-'use strict';
-
 const {DateTime} = require('luxon');
 const Member = require('simple-configure').get('beans').get('member');
 

@@ -1,5 +1,3 @@
-'use strict';
-
 const Fs = require('fs');
 const conf = require('simple-configure');
 const workTree = conf.get('wikipath');

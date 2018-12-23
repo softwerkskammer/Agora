@@ -1,5 +1,3 @@
-'use strict';
-
 const beans = require('simple-configure').get('beans');
 const R = require('ramda');
 

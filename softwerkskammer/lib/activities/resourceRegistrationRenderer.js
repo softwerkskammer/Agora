@@ -1,5 +1,3 @@
-'use strict';
-
 const Resource = require('simple-configure').get('beans').get('resource');
 
 class RenderingInformation {

@@ -1,5 +1,3 @@
-'use strict';
-
 const async = require('async');
 const R = require('ramda');
 const Form = require('multiparty').Form;

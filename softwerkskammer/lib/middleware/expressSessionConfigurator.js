@@ -1,4 +1,3 @@
-'use strict';
 const conf = require('simple-configure');
 const expressSession = require('express-session');
 const sevenDays = 86400 * 1000 * 7;

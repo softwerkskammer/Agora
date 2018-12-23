@@ -1,5 +1,4 @@
 /* eslint no-underscore-dangle: 0 */
-'use strict';
 
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
