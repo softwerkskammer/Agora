@@ -120,8 +120,9 @@ mixin colorPicker(name, value)
 mixin twitter(name, label, value)
   .form-group
     +controlLabel(name, label)
-    .input-group
-      span.input-group-addon @
+    .input-group.mb-3
+      .input-group-prepend
+        span.input-group-text @
       input.form-control(id=name, type='text', name=name, value=value)
 
 mixin csrf
