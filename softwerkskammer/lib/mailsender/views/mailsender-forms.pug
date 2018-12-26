@@ -17,6 +17,7 @@ mixin mailform(message, regionalgroups, themegroups, massMailing, contactPersons
             +checkbox('toParticipants', t('mailsender.to_participants'), false, 'toParticipants')
           if (contactPersons)
             +text('contactPersonsGroupName', t('mailsender.to_contact_persons'), contactPersons.groupName, '', '', true)
+            p #{t('mailsender.to_contact_persons_leave_contact_information_hint')}
           if (message.receiver)
             +text('nickname', t('mailsender.to_member'), message.receiver.nickname(), '', '', true)
           +text('subject', t('mailsender.subject'), message.subject)

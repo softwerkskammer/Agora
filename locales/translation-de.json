@@ -314,6 +314,7 @@
     "subject": "Betreff",
     "to_member": "An Mitglied",
     "to_contact_persons": "An Ansprechpartner der Gruppe",
+    "to_contact_persons_leave_contact_information_hint": "Falls Du von den Ansprechpartnern kontaktiert werden möchtest, füge Deiner Nachricht bitte Kontaktinformationen hinzu.",
     "to_participants": "nur an die Teilnehmer der Aktivität (nicht an Gruppen)",
     "why-resign": "Warum willst Du austreten",
     "write": "Nachricht schreiben"

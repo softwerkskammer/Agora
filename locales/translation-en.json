@@ -320,6 +320,7 @@
     "subject": "Subject",
     "to_member": "To member",
     "to_contact_persons": "To contact persons of group",
+    "to_contact_persons_leave_contact_information_hint": "In case you want to be contacted by the contact persons of the group please add some contact information to your message.",
     "to_participants": "only to the activity's participants (not to groups)",
     "why-resign": "Why do you want to resign",
     "write": "Compose Message"
