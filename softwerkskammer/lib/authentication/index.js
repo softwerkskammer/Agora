@@ -169,33 +169,23 @@ function setupUserPass(app1) {
   passport.use(new LocalStrategy(
     {usernameField: 'email', passwordField: 'password'},
     (email, password, done) => {
-      const isNewUser = password === 'NEW';
       memberstore.getMemberForEMail(email, (err, member) => {
         if (err) {
           logger.error('Login error for: ' + email);
           logger.error(err);
           return done(err);
         }
-        if (isNewUser) { // create new user for not alerady registerd email
+        if (!member) { // create new user for not alerady registerd email
           logger.info('NEW Login for: ' + email);
-          if (member) {
-            logger.error(new Error('Member with email address "' + email + '" already exists'));
-            return done(null, false, {message: 'authentication.error_member_exists'});
-          }
           const authenticationId = 'UserPass' + email;
-          const profile = {emails: [{value: email}]};
+          const profile = {emails: [{value: email}], password: password};
           return done(null, {authenticationId, profile});
-        } else { // login for existing user who already has setup a password
-          logger.info('Login for: ' + email);
-          if (!member) {
-            logger.error(new Error('Member with email address "' + email + '" doesn\'t exist'));
-            return done(null, false, {message: 'authentication.error_member_not_exists'});
-          }
-          if (member.passwordMatches(password)) {
-            return done(null, {authenticationId: member.id(), member});
-          }
-          done(null, false);
         }
+        logger.info('Login for: ' + email);
+        if (member.passwordMatches(password)) {
+          return done(null, {authenticationId: member.id(), member});
+        }
+        done(null, false);
       });
     })
   );
@@ -207,7 +197,7 @@ function setupUserPass(app1) {
         res.cookie('loginChoice', {userPass: true}, {maxAge: 1000 * 60 * 60 * 24 * 365, httpOnly: true}); // expires: Date
         req.logIn(user, {}, (err1) => {
           if (err1) { return next(err1); }
-          let url = '/';
+          let url = req.query.returnTo;
           if (req.session && req.session.returnTo) {
             url = req.session.returnTo;
             delete req.session.returnTo;

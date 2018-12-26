@@ -55,6 +55,9 @@ class Member {
         this.state.firstname = fieldHelpers.valueOrFallback(name.givenName, this.firstname());
         this.state.lastname = fieldHelpers.valueOrFallback(name.familyName, this.lastname());
       }
+      if (profile.password) {
+        this.updatePassword(profile.password);
+      }
       this.state.site = fieldHelpers.valueOrFallback(profile.profileUrl, this.site());
       if (profile._json && fieldHelpers.isFilled(profile._json.blog)) {
         this.state.site += (this.site() ? ', ' : '') + fieldHelpers.addPrefixTo('http://', profile._json.blog, 'https://');

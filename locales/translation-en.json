@@ -113,8 +113,6 @@
     "authentication_text": "You can authenticate via one of the methods given below. Subsequently, we ask you to provide some personal data.",
     "authentication_text_green": "Last time you have been authenticated by the highlighted provider:",
     "change_password": "Change or init password",
-    "error_member_exists": "There already is a registered member with this email address.",
-    "error_member_not_exists": "There is no member associated with this emails address.",
     "error": "Authentication Error",
     "error_text": [
       "h3 Authentication Error!",
@@ -142,7 +140,14 @@
     "password": "Password",
     "password_repeat": "Repeat Password",
     "password_dialog_title": "Enter Password",
-    "user_pass": "By email and password"
+    "user_pass": "By E-mail and Password",
+    "user_pass_info_text": [
+      "p.",
+      "  As an existing member please enter your E-mail adress along with your password.",
+      "  To add password authentication to your existing data, log in first, then create a password via the 'Edit Profile' page.",
+      "p To register as a new member enter a not-registered E-mail address. The entered password will become your password."
+    ]
+
   },
   "colors": {
     "color": "Colour",
