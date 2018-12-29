@@ -31,6 +31,9 @@ module.exports = function (grunt) {
 
   const files_en = {
     'softwerkskammer/public/clientscripts/global_en.js': commonJSfiles.concat([
+      'node_modules/jquery-validation/dist/localization/messages_en.js',
+      'node_modules/jquery-validation/dist/localization/methods_en.js',
+      'node_modules/select2/dist/js/i18n/en.js',
       'node_modules/fullcalendar/dist/locales/en-gb.js',
       'locales/frontend_en.js',
       'softwerkskammer/frontend/javascript/agora.js'
@@ -170,7 +173,10 @@ module.exports = function (grunt) {
         files: files_de
       },
       development_en: {
-        options: {beautify: true},
+        options: {
+          mangle: false,
+          beautify: true
+        },
         files: files_en
       },
       production_de: {
