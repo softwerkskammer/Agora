@@ -58,7 +58,7 @@ describe('Member initial filling', () => {
 
   it('is populated by UserPass record with only email', () => {
     const userdata = {
-      authenticationId: 'UserPasspeter@pan.de',
+      authenticationId: 'password:peter@pan.de',
       profile: {
         emails: [{value: 'peter@pan.de'}]
       }

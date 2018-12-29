@@ -202,9 +202,9 @@ class Member {
     this.subscribedGroups = result;
   }
 
-  updatePassword(newPass) {
+  updatePassword(newPassword) {
     this.state.salt = genSalt();
-    this.state.hashedPassword = hashPassword(newPass, this.state.salt);
+    this.state.hashedPassword = hashPassword(newPassword, this.state.salt);
   }
 
   salt() {
@@ -215,8 +215,8 @@ class Member {
     return this.state.hashedPassword;
   }
 
-  passwordMatches(pass) {
-    return hashPassword(pass, this.salt()) === this.hashedPassword();
+  passwordMatches(password) {
+    return hashPassword(password, this.salt()) === this.hashedPassword();
   }
 
   static isSuperuser(id) {

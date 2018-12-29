@@ -175,9 +175,9 @@ function setupUserPass(app1) {
           logger.error(err);
           return done(err);
         }
-        if (!member) { // create new user for not alerady registerd email
+        if (!member) { // create new user for not already registerd email
           logger.info('NEW Login for: ' + email);
-          const authenticationId = 'UserPass' + email;
+          const authenticationId = authenticationService.pwdAuthenticationPrefix() + email;
           const profile = {emails: [{value: email}], password: password};
           return done(null, {authenticationId, profile});
         }
