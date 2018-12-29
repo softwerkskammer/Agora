@@ -5,7 +5,7 @@
   .row
     .col-12
       p #{t('authentication.authentication_text')}
-      if (loginChoice.oidc || loginChoice.gh || loginChoice.se || loginChoice.provider)
+      if (loginChoice.oidc || loginChoice.gh || loginChoice.se || loginChoice.userPass || loginChoice.provider)
         p.alert-success #{t('authentication.authentication_text_green')}
   .row
     .col-md-4
