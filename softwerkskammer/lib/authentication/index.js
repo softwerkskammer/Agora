@@ -185,14 +185,14 @@ function setupUserPass(app1) {
         if (member.passwordMatches(password)) {
           return done(null, {authenticationId: member.id(), member});
         }
-        done(null, false);
+        done(null, null, 'authentication.wrong_credentials');
       });
     })
   );
   app1.post('/login', (req, res, next) => {
-      passport.authenticate('local', (err, user, info) => {
+      passport.authenticate('local', (err, user, problemMessage) => {
         if (err) { return next(err); }
-        if (info) { statusmessage.errorMessage('authentication.error', info.message).putIntoSession(req); }
+        if (problemMessage) { statusmessage.errorMessage('authentication.error', req.i18n.t(problemMessage)).putIntoSession(req); }
         if (!user) { return res.redirect('/login'); }
         res.cookie('loginChoice', {userPass: true}, {maxAge: 1000 * 60 * 60 * 24 * 365, httpOnly: true}); // expires: Date
         req.logIn(user, {}, (err1) => {

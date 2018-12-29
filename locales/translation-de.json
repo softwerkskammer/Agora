@@ -142,7 +142,8 @@
     "sign_up": "Neu anmelden",
     "sign_up_button": "Anmelden",
     "sign_up_text": "Um Dich als neues Mitglied zu registrieren, gib die zu verwendende E-Mail-Adresse sowie Dein gewünschtes Passwort ein:",
-    "user_pass": "Mit E-Mail und Passwort"
+    "user_pass": "Mit E-Mail und Passwort",
+    "wrong_credentials": "Falsche E-Mail-Adresse oder falsches Passwort!"
   },
   "colors": {
     "color": "Farbe",

@@ -148,7 +148,8 @@
     "sign_up": "Create new account",
     "sign_up_button": "Sign up",
     "sign_up_text": "To sign up with a new account, please enter the E-mail address to use and the desired password:",
-    "user_pass": "By E-mail and Password"
+    "user_pass": "By E-mail and Password",
+    "wrong_credentials": "Wrong E-mail address or password!"
   },
   "colors": {
     "color": "Colour",
