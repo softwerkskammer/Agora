@@ -23,8 +23,6 @@
   .row
     .col-12
       p &nbsp;
-      form#passwordform(action='/auth/login?returnTo=' + encodeURIComponent(returnUrl), method='post')
-        input(type='hidden', name='_csrf', value=csrf_token)
         .card.mb-2
           h5.card-header.p-2(class=(loginChoice.userPass ? 'alert-success' : 'bg-light'))
             a.inherit-color(href='#userPass', data-toggle='collapse') #{t('authentication.user_pass')}:
@@ -42,34 +40,38 @@
 
             #passwordTabContents.tab-content
               #sign-in-contents.tab-pane.fade.show.active
-                | Zum Einloggen gib Deine hinterlegte E-Mail-Adresse und Dein Passwort ein:
-                .row
-                  .col-6
-                    label.control-label(for='sign-in-email') #{t('members.email')}:
-                    input#sign-in-email.form-control.trim-text(type='email', name='email', value='', placeholder='myaddress@example.com')
-                  .col-6
-                    .form-group
-                      label.control-label(for='sign-in-password') #{t('authentication.password')}:
-                      input#sign-in-password.form-control.trim-text(type='password', name='password', value='')
-                .row
-                  .col-12
-                    .btn-group.float-right
-                      button.btn.btn-primary(type='submit', value='LOGIN') #{t('Einloggen')}
+                form#passwordform-sign-in(action='/auth/login?returnTo=' + encodeURIComponent(returnUrl), method='post')
+                  input(type='hidden', name='_csrf', value=csrf_token)
+                  | Zum Einloggen gib Deine hinterlegte E-Mail-Adresse und Dein Passwort ein:
+                  .row
+                    .col-6
+                      label.control-label(for='sign-in-email') #{t('members.email')}:
+                      input#sign-in-email.form-control.trim-text(type='email', name='email', value='', placeholder='myaddress@example.com')
+                    .col-6
+                      .form-group
+                        label.control-label(for='sign-in-password') #{t('authentication.password')}:
+                        input#sign-in-password.form-control.trim-text(type='password', name='password', value='')
+                  .row
+                    .col-12
+                      .btn-group.float-right
+                        button.btn.btn-primary(type='submit', value='LOGIN') #{t('Einloggen')}
 
               #sign-up-contents.tab-pane.fade
-                | Um Dich als neues Mitglied zu registrieren, gib die zu verwendende E-Mail-Adresse sowie Dein gewünschtes Passwort ein:
-                .row
-                  .col-6
-                    label.control-label(for='sign-up-email') #{t('members.email')}:
-                    input#sign-up-email.form-control.trim-text(type='email', name='email', value='', placeholder='myaddress@example.com')
-                  .col-6
-                    .form-group
-                      label.control-label(for='sign-up-password') #{t('authentication.password')}:
-                      input#sign-up-password.form-control.trim-text(type='password', name='password', value='')
-                .row
-                  .col-12
-                    .btn-group.float-right
-                      button.btn.btn-primary(type='submit') #{t('Anmelden')}
+                form#passwordform-sign-up(action='/auth/login?returnTo=' + encodeURIComponent(returnUrl), method='post')
+                  input(type='hidden', name='_csrf', value=csrf_token)
+                  | Um Dich als neues Mitglied zu registrieren, gib die zu verwendende E-Mail-Adresse sowie Dein gewünschtes Passwort ein:
+                  .row
+                    .col-6
+                      label.control-label(for='sign-up-email') #{t('members.email')}:
+                      input#sign-up-email.form-control.trim-text(type='email', name='email', value='', placeholder='myaddress@example.com')
+                    .col-6
+                      .form-group
+                        label.control-label(for='sign-up-password') #{t('authentication.password')}:
+                        input#sign-up-password.form-control.trim-text(type='password', name='password', value='')
+                  .row
+                    .col-12
+                      .btn-group.float-right
+                        button.btn.btn-primary(type='submit') #{t('Anmelden')}
 
               #add-to-existing-contents.tab-pane.fade
                 | Um ein Passwort zu setzen, melde Dich zuerst mit Deiner bisherigen Authentifizierungsmethode an
