@@ -29,19 +29,19 @@
           h5.card-header.p-2(class=(loginChoice.userPass ? 'alert-success' : 'bg-light'))
             a.inherit-color(href='#userPass', data-toggle='collapse') #{t('authentication.user_pass')}:
           #userPass.collapse(class=(loginChoice.userPass ? 'show' : ''))
-            ul#passwordTab(class='nav nav-tabs', role='tablist')
-              li(class='nav-item')
-                a#sign-in(class='nav-link active', data-toggle='tab', href='#sign-in-contents', role='tab')
+            ul#passwordTab.nav.nav-tabs
+              li.nav-item
+                a#sign-in.nav-link.active(data-toggle='tab', href='#sign-in-contents')
                   | Einloggen
-              li(class='nav-item')
-                a#sign-up(class='nav-link', data-toggle='tab', href='#sign-up-contents', role='tab')
+              li.nav-item
+                a#sign-up.nav-link(data-toggle='tab', href='#sign-up-contents')
                   | Neu anmelden
-              li(class='nav-item')
-                a#add-to-existing(class='nav-link', data-toggle='tab', href='#add-to-existing-contents', role='tab')
+              li.nav-item
+                a#add-to-existing.nav-link(data-toggle='tab', href='#add-to-existing-contents')
                   | Passwort zu existierendem Account zufügen
 
-            div#passwordTabContents(class='tab-content')
-              div#sign-in-contents(class='tab-pane fade show active', role='tabpanel')
+            #passwordTabContents.tab-content
+              #sign-in-contents.tab-pane.fade.show.active
                 | Zum Einloggen gib Deine hinterlegte E-Mail-Adresse und Dein Passwort ein:
                 .row
                   .col-6
@@ -54,10 +54,10 @@
                 .row
                   .col-12
                     .btn-group.float-right
-                      button.btn.btn-primary(type='submit') #{t('Einloggen')}
+                      button.btn.btn-primary(type='submit', value='LOGIN') #{t('Einloggen')}
 
-              div#sign-up-contents(class='tab-pane fade', role='tabpanel')
-                | Um Dich als neues Mitglied zu registireren, gib die zu verwendende E-Mail-Adresse sowie Dein gewünschtes Passwort ein:
+              #sign-up-contents.tab-pane.fade
+                | Um Dich als neues Mitglied zu registrieren, gib die zu verwendende E-Mail-Adresse sowie Dein gewünschtes Passwort ein:
                 .row
                   .col-6
                     label.control-label(for='sign-up-email') #{t('members.email')}:
@@ -71,7 +71,7 @@
                     .btn-group.float-right
                       button.btn.btn-primary(type='submit') #{t('Anmelden')}
 
-              div#add-to-existing-contents(class='tab-pane fade', role='tabpanel')
+              #add-to-existing-contents.tab-pane.fade
                 | Um ein Passwort zu setzen, melde Dich zuerst mit Deiner bisherigen Authentifizierungsmethode an
                 | und füge dann über die 'Profil bearbeiten' Seite ein Passwort hinzu (ganz unten auf der Seite).
 
