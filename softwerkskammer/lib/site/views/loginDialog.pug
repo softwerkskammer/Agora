@@ -27,6 +27,7 @@
           h5.card-header.p-2(class=(loginChoice.userPass ? 'alert-success' : 'bg-light'))
             a.inherit-color(href='#userPass', data-toggle='collapse') #{t('authentication.user_pass')}:
           #userPass.collapse(class=(loginChoice.userPass ? 'show' : ''))
+            div(style='margin-top: 10px')
             ul#passwordTab.nav.nav-tabs
               li.nav-item
                 a#sign-in.nav-link.active(data-toggle='tab', href='#sign-in-contents')
