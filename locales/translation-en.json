@@ -129,6 +129,9 @@
       "    li $t(error.datetime)",
       "    li $t(error.stacktrace500)"
     ],
+    "password": "Password",
+    "password_repeat": "Repeat Password",
+    "password_dialog_title": "Enter Password",
     "please_authenticate": "Please, authenticate yourself!",
     "required_text": [
       "h3 You need to be logged-in to access this page!",
@@ -137,9 +140,6 @@
       "  a(href='https://github.com/softwerkskammer/Agora/issues/') feedback.",
       "p The Agora-Team is begging your pardon."
     ],
-    "password": "Password",
-    "password_repeat": "Repeat Password",
-    "password_dialog_title": "Enter Password",
     "user_pass": "By E-mail and Password",
     "user_pass_info_text": [
       "p.",

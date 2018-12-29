@@ -123,6 +123,9 @@
       "    li $t(error.datetime)",
       "    li $t(error.stacktrace500)"
     ],
+    "password": "Passwort",
+    "password_repeat": "Passwort wiederholen",
+    "password_dialog_title": "Passwort eingeben",
     "please_authenticate": "Bitte authentifiziere Dich!",
     "required_text": [
       "h3 Um auf diese Seite zuzugreifen, musst Du angemeldet sein!",
@@ -131,9 +134,6 @@
       "  a(href='https://github.com/softwerkskammer/Agora/issues/') Rückmeldung.",
       "p Das Agora-Team bittet um Entschuldigung."
     ],
-    "password": "Passwort",
-    "password_repeat": "Passwort wiederholen",
-    "password_dialog_title": "Passwort eingeben",
     "user_pass": "Mit E-Mail und Passwort",
     "user_pass_info_text": [
       "p.",
