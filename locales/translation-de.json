@@ -99,6 +99,8 @@
     "submit": "Speichern"
   },
   "authentication": {
+    "add_to_existing": "Zu existierendem Account zufügen",
+    "add_to_existing_text": "Um ein Passwort zu setzen, melde Dich zuerst mit Deiner bisherigen Authentifizierungsmethode an und füge dann über die 'Profil bearbeiten' Seite ein Passwort hinzu (ganz unten auf der Seite).",
     "alternative_url": "(optional) Eingabe der URL eines alternativen OpenID Providers",
     "magic_link": "Authentifizierungsmethode vergessen? Hier gibt's einen Magic Link",
     "magic_link_request": "Magic Link anfordern",
@@ -134,13 +136,13 @@
       "  a(href='https://github.com/softwerkskammer/Agora/issues/') Rückmeldung.",
       "p Das Agora-Team bittet um Entschuldigung."
     ],
-    "user_pass": "Mit E-Mail und Passwort",
-    "user_pass_info_text": [
-      "p.",
-      "  Gib als existierendes Mitglied Deine E-Mail Adresse und Dein Passwort ein.",
-      "  Um ein Passwort zu setzen, melde Dich zuerst an und lege dann über die 'Profil bearbeiten' Seite ein Passwort an.",
-      "p Um Dich als neues Mitglied zu registireren, gib eine noch nicht vergebende E-Mail-Adresse ein sowie Dein zu verwendendes Passwort."
-    ]
+    "sign_in": "Einloggen",
+    "sign_in_button": "Einloggen",
+    "sign_in_text": "Zum Einloggen gib Deine hinterlegte E-Mail-Adresse und Dein Passwort ein:",
+    "sign_up": "Neu anmelden",
+    "sign_up_button": "Anmelden",
+    "sign_up_text": "Um Dich als neues Mitglied zu registrieren, gib die zu verwendende E-Mail-Adresse sowie Dein gewünschtes Passwort ein:",
+    "user_pass": "Mit E-Mail und Passwort"
   },
   "colors": {
     "color": "Farbe",

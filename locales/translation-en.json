@@ -105,6 +105,8 @@
     "submit": "Submit"
   },
   "authentication": {
+    "add_to_existing": "Add password to existing account",
+    "add_to_existing_text": "In order to add a password, log in with your current authentication method and add a password via the 'Edit Profile' page (at the very bottom of the page).",
     "alternative_url": "(optional) Enter the URL of an alternative OpenID provider",
     "magic_link": "Forgot your authentication method? We'll send you a Magic Link",
     "magic_link_request": "Request Magic Link",
@@ -140,14 +142,13 @@
       "  a(href='https://github.com/softwerkskammer/Agora/issues/') feedback.",
       "p The Agora-Team is begging your pardon."
     ],
-    "user_pass": "By E-mail and Password",
-    "user_pass_info_text": [
-      "p.",
-      "  As an existing member please enter your E-mail adress along with your password.",
-      "  To add password authentication to your existing data, log in first, then create a password via the 'Edit Profile' page.",
-      "p To register as a new member enter a not-registered E-mail address. The entered password will become your password."
-    ]
-
+    "sign_in": "Sign in",
+    "sign_in_button": "Sign in",
+    "sign_in_text": "To log in, please enter you E-mail address and your password:",
+    "sign_up": "Create new account",
+    "sign_up_button": "Sign up",
+    "sign_up_text": "To sign up with a new account, please enter the E-mail address to use and the desired password:",
+    "user_pass": "By E-mail and Password"
   },
   "colors": {
     "color": "Colour",
