@@ -10,8 +10,10 @@ function createUserObject(req, authenticationId, profile, done) {
   }));
 }
 
+const pwdAuthenticationPrefix = () => 'password:';
+
 module.exports = {
-  pwdAuthenticationPrefix: () => 'password:',
+  pwdAuthenticationPrefix,
 
   createUserObjectFromOpenID: (req, authenticationId, openidProfile, done) => {
     const minimalProfile = openidProfile &&
