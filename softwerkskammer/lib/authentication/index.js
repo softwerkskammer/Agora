@@ -167,28 +167,13 @@ function setupUserPass(app1) {
   const LocalStrategy = require('passport-local').Strategy;
 
   passport.use(new LocalStrategy(
-    {usernameField: 'email', passwordField: 'password'},
-    (email, password, done) => {
-      memberstore.getMemberForEMail(email, (err, member) => {
-        if (err) {
-          logger.error('Login error for: ' + email);
-          logger.error(err);
-          return done(err);
-        }
-        if (!member) { // create new user for not already registerd email
-          logger.info('NEW Login for: ' + email);
-          const authenticationId = authenticationService.pwdAuthenticationPrefix() + email;
-          const profile = {emails: [{value: email}], password: password};
-          return done(null, {authenticationId, profile});
-        }
-        logger.info('Login for: ' + email);
-        if (member.passwordMatches(password)) {
-          return done(null, {authenticationId: member.id(), member});
-        }
-        done(null, null, 'authentication.wrong_credentials');
-      });
-    })
-  );
+    {
+      usernameField: 'email',
+      passwordField: 'password',
+      passReqToCallback: true
+    },
+    authenticationService.createUserObjectFromPassword
+  ));
   app1.post('/login', (req, res, next) => {
       passport.authenticate('local', (err, user, problemMessage) => {
         if (err) { return next(err); }

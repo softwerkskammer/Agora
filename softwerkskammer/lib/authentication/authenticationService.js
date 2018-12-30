@@ -53,5 +53,19 @@ module.exports = {
 
   createUserObjectFromMagicLink: (req, authenticationId, done) => {
     createUserObject(req, authenticationId, {}, done);
+  },
+
+  createUserObjectFromPassword: (req, email, password, done) => {
+    const authenticationId = pwdAuthenticationPrefix() + email;
+
+    createUserObject(req, authenticationId, {}, (err, userObject) => {
+      if (err || !userObject) {
+        return done(err);
+      }
+      if (userObject.member && userObject.member.passwordMatches(password)) {
+        return done(null, userObject);
+      }
+      done(null, null, 'authentication.wrong_credentials');
+    });
   }
 };
