@@ -39,15 +39,15 @@ function loginChoiceCookieFor(url) {
   return {};
 }
 
-function createProviderAuthenticationRoutes(app1, strategyName) {
-
-  function setReturnOnSuccess(req, res, next) {
-    if (req.session.returnTo === undefined) {
-      req.session.returnTo = req.query.returnTo || '/';
-    }
-    res.cookie('loginChoice', loginChoiceCookieFor(decodeURIComponent(req.url)), {maxAge: 1000 * 60 * 60 * 24 * 365, httpOnly: true}); // expires: Date
-    next();
+function setReturnOnSuccess(req, res, next) {
+  if (req.session.returnTo === undefined) {
+    req.session.returnTo = req.query.returnTo || '/';
   }
+  res.cookie('loginChoice', loginChoiceCookieFor(decodeURIComponent(req.url)), {maxAge: 1000 * 60 * 60 * 24 * 365, httpOnly: true}); // expires: Date
+  next();
+}
+
+function createProviderAuthenticationRoutes(app1, strategyName) {
 
   function authenticate() {
     return passport.authenticate(strategyName, {successReturnToOrRedirect: '/', failureRedirect: '/login'});
@@ -179,20 +179,14 @@ function setupUserPass(app1) {
   );
   passport.use(strategy);
 
-  app1.post('/login', (req, res, next) => {
-      passport.authenticate('local', (err, user, problemMessage) => {
+  app1.post('/login', setReturnOnSuccess, (req, res, next) => {
+      passport.authenticate(strategy.name, (err, user, problemMessage) => {
         if (err) { return next(err); }
         if (problemMessage) { statusmessage.errorMessage('authentication.error', req.i18n.t(problemMessage)).putIntoSession(req); }
         if (!user) { return res.redirect('/login'); }
-        res.cookie('loginChoice', loginChoiceCookieFor(decodeURIComponent(req.url)), {maxAge: 1000 * 60 * 60 * 24 * 365, httpOnly: true}); // expires: Date
         req.logIn(user, {}, (err1) => {
           if (err1) { return next(err1); }
-          let url = req.query.returnTo;
-          if (req.session && req.session.returnTo) {
-            url = req.session.returnTo;
-            delete req.session.returnTo;
-          }
-          return res.redirect(url);
+          return res.redirect(req.session.returnTo);
         });
       })(req, res, next);
     }
