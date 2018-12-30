@@ -166,7 +166,7 @@ function setupMagicLink(app1) {
   });
 }
 
-function setupUserPass(app1) {
+function setupUserPassForLogin(app1) {
   const LocalStrategy = require('passport-local').Strategy;
 
   const strategy = new LocalStrategy(
@@ -209,6 +209,6 @@ setupOpenID(app);
 setupGithub(app);
 setupGooglePlus(app);
 setupMagicLink(app);
-setupUserPass(app);
+setupUserPassForLogin(app);
 
 module.exports = app;
