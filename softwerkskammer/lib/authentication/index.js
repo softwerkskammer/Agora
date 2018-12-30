@@ -24,6 +24,9 @@ function loginChoiceCookieFor(url) {
   if (url.startsWith('/github?')) {
     return {gh: true};
   }
+  if (url.startsWith('/login?')) {
+    return {userPass: true};
+  }
   if (url.startsWith('/openid?') && url.includes(identifier + 'https://openid.stackexchange.com')) {
     return {se: true};
   }
@@ -181,7 +184,7 @@ function setupUserPass(app1) {
         if (err) { return next(err); }
         if (problemMessage) { statusmessage.errorMessage('authentication.error', req.i18n.t(problemMessage)).putIntoSession(req); }
         if (!user) { return res.redirect('/login'); }
-        res.cookie('loginChoice', {userPass: true}, {maxAge: 1000 * 60 * 60 * 24 * 365, httpOnly: true}); // expires: Date
+        res.cookie('loginChoice', loginChoiceCookieFor(decodeURIComponent(req.url)), {maxAge: 1000 * 60 * 60 * 24 * 365, httpOnly: true}); // expires: Date
         req.logIn(user, {}, (err1) => {
           if (err1) { return next(err1); }
           let url = req.query.returnTo;
