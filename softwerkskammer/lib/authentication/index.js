@@ -166,14 +166,16 @@ function setupMagicLink(app1) {
 function setupUserPass(app1) {
   const LocalStrategy = require('passport-local').Strategy;
 
-  passport.use(new LocalStrategy(
+  const strategy = new LocalStrategy(
     {
       usernameField: 'email',
       passwordField: 'password',
       passReqToCallback: true
     },
     authenticationService.createUserObjectFromPassword
-  ));
+  );
+  passport.use(strategy);
+
   app1.post('/login', (req, res, next) => {
       passport.authenticate('local', (err, user, problemMessage) => {
         if (err) { return next(err); }
