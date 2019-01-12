@@ -167,42 +167,35 @@ function setupMagicLink(app1) {
   });
 }
 
-const usernameField = 'email';
-
 const localStrategy = new LocalStrategy(
   {
-    usernameField,
+    usernameField: 'email',
     passwordField: 'password',
     passReqToCallback: true
   },
   authenticationService.createUserObjectFromPassword
 );
 
-const localStrategyAuthenticationCallback = (req, res, next) => (err, user, problemMessage) => {
-  if (err) { return next(err); }
-  if (problemMessage) { statusmessage.errorMessage('authentication.error', req.i18n.t(problemMessage)).putIntoSession(req); }
-  if (!user) { return res.redirect('/login'); }
-  req.logIn(user, {}, (err1) => {
-    if (err1) { return next(err1); }
-    return res.redirect(req.session.returnTo);
-  });
+
+const localStrategyCallback = (req, res, next) => {
+  passport.authenticate(localStrategy.name, (err, user, problemMessage) => {
+    if (err) { return next(err); }
+    if (problemMessage) { statusmessage.errorMessage('authentication.error', req.i18n.t(problemMessage)).putIntoSession(req); }
+    if (!user) { return res.redirect('/login'); }
+    req.logIn(user, {}, (err1) => {
+      if (err1) { return next(err1); }
+      return res.redirect(req.session.returnTo);
+    });
+  })(req, res, next);
 };
 
-  const localStrategyCallback = (req, res, next) => {
-    passport.authenticate(localStrategy.name, localStrategyAuthenticationCallback(req, res, next))(req, res, next);
-  };
-
 function setupUserPassForLogin(app1) {
-
   passport.use(localStrategy);
-
   app1.post('/login', setReturnOnSuccess, localStrategyCallback);
 }
 
 function setupUserPassForSignup(app1) {
-
   passport.use(localStrategy);
-
   app1.post('/signup', setReturnOnSuccess, localStrategyCallback);
 }
 
