@@ -58,7 +58,7 @@
                         button.btn.btn-primary(type='submit') #{t('authentication.sign_in_button')}
 
               #sign-up-contents.tab-pane.fade
-                form#passwordform-sign-up(action='/auth/login?returnTo=' + encodeURIComponent(returnUrl), method='post')
+                form#passwordform-sign-up(action='/auth/signup?returnTo=' + encodeURIComponent(returnUrl), method='post')
                   input(type='hidden', name='_csrf', value=csrf_token)
                   | #{t('authentication.sign_up_text')}
                   .row

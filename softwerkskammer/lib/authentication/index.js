@@ -3,6 +3,7 @@
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const MagicLinkStrategy = require('./magicLinkStrategy');
+const LocalStrategy = require('passport-local').Strategy;
 
 const logger = require('winston').loggers.get('authorization');
 
@@ -166,32 +167,43 @@ function setupMagicLink(app1) {
   });
 }
 
+const usernameField = 'email';
+
+const localStrategy = new LocalStrategy(
+  {
+    usernameField,
+    passwordField: 'password',
+    passReqToCallback: true
+  },
+  authenticationService.createUserObjectFromPassword
+);
+
+const localStrategyAuthenticationCallback = (req, res, next) => (err, user, problemMessage) => {
+  if (err) { return next(err); }
+  if (problemMessage) { statusmessage.errorMessage('authentication.error', req.i18n.t(problemMessage)).putIntoSession(req); }
+  if (!user) { return res.redirect('/login'); }
+  req.logIn(user, {}, (err1) => {
+    if (err1) { return next(err1); }
+    return res.redirect(req.session.returnTo);
+  });
+};
+
+  const localStrategyCallback = (req, res, next) => {
+    passport.authenticate(localStrategy.name, localStrategyAuthenticationCallback(req, res, next))(req, res, next);
+  };
+
 function setupUserPassForLogin(app1) {
-  const LocalStrategy = require('passport-local').Strategy;
 
-  const strategy = new LocalStrategy(
-    {
-      usernameField: 'email',
-      passwordField: 'password',
-      passReqToCallback: true
-    },
-    authenticationService.createUserObjectFromPassword
-  );
-  passport.use(strategy);
+  passport.use(localStrategy);
 
-  app1.post('/login', setReturnOnSuccess, (req, res, next) => {
-      passport.authenticate(strategy.name, (err, user, problemMessage) => {
-        if (err) { return next(err); }
-        if (problemMessage) { statusmessage.errorMessage('authentication.error', req.i18n.t(problemMessage)).putIntoSession(req); }
-        if (!user) { return res.redirect('/login'); }
-        req.logIn(user, {}, (err1) => {
-          if (err1) { return next(err1); }
-          return res.redirect(req.session.returnTo);
-        });
-      })(req, res, next);
-    }
-  );
+  app1.post('/login', setReturnOnSuccess, localStrategyCallback);
+}
 
+function setupUserPassForSignup(app1) {
+
+  passport.use(localStrategy);
+
+  app1.post('/signup', setReturnOnSuccess, localStrategyCallback);
 }
 
 const app = misc.expressAppIn(__dirname);
@@ -210,5 +222,6 @@ setupGithub(app);
 setupGooglePlus(app);
 setupMagicLink(app);
 setupUserPassForLogin(app);
+setupUserPassForSignup(app);
 
 module.exports = app;
