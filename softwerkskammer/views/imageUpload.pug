@@ -37,14 +37,3 @@ mixin imageScripts
       $('#previewContainer').hide();
       $('#uploadButtons').hide();
     });
-
-mixin imageUpload
-  #selectFileButton
-    +selectFileButton('general.photo')
-  #uploadButtons
-    +uploadButtons(['float-right'])
-  .clearfix
-  #previewContainer
-    div
-      .mt-5
-        img#preview(style='max-width: 100%;')
