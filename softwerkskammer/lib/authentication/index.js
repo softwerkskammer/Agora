@@ -180,7 +180,7 @@ const localStrategy = new LocalStrategy(
 const localStrategyCallback = (req, res, next) => {
   passport.authenticate(localStrategy.name, (err, user, problemMessage) => {
     if (err) { return next(err); }
-    if (problemMessage) { statusmessage.errorMessage('authentication.error', req.i18n.t(problemMessage)).putIntoSession(req); }
+    if (problemMessage) { statusmessage.errorMessage('authentication.error', problemMessage).putIntoSession(req); }
     if (!user) { return res.redirect('/login'); }
     req.logIn(user, {}, (err1) => {
       if (err1) { return next(err1); }
