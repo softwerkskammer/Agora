@@ -18,28 +18,27 @@ mixin editavatar(member, returnToParticipantsListing)
       #selectFileButton
         img(src=member.avatarUrl())
         if(accessrights.canEditMember(member))
-          .btn-group.mt-5(style='display: table; margin-left: auto; margin-right: auto;')
+          .btn-group.mt-2.mx-auto.d-table
             +selectFileButton(member.hasCustomAvatar() ? 'photo.replace': 'general.new', 'btn-sm')
             if member.hasCustomAvatar()
               +reallyDeleteButtonOnly('photo.delete', deleteoptions, 'btn-sm')
       #previewContainer
-        div
-          .mt-5(style='width: 200px; height:200px;')
-            img#preview
-          .clearfix
-          .btn-group.mt-5(style='display: table; margin-left: auto; margin-right: auto;')
-            span#rotate-left.btn.btn-sm.btn-light(title=t('photo.rotate-left')): i.fas.fa-fw.fa-undo
-            span#zoom-in.btn.btn-sm.btn-light(title=t('photo.zoom-in')): i.fas.fa-fw.fa-search-plus
-            span#fit.btn.btn-sm.btn-light(title=t('photo.fit')): i.fas.fa-fw.fa-arrows-alt
-            span#zoom-out.btn.btn-sm.btn-light(title=t('photo.zoom-out')): i.fas.fa-fw.fa-search-minus
-            span#rotate-right.btn.btn-sm.btn-light(title=t('photo.rotate-right')): i.fas.fa-fw.fa-redo
-          .btn-group
-            span#btn-cancel.btn.btn-sm.btn-danger(title=t('general.cancel'))
-              i.fas.fa-fw.fa-times
-              | &nbsp; #{t('general.cancel')}
-            button.btn.btn-sm.btn-primary(type='submit', title=t('general.save'))
-              i.fas.fa-fw.fa-check
-              | &nbsp; #{t('general.save')}
+        .mt-2(style='width: 200px; height:200px;')
+          img#preview
+        .clearfix
+        .btn-group.mt-2.mx-auto.d-table
+          span#rotate-left.btn.btn-sm.btn-light(title=t('photo.rotate-left')): i.fas.fa-fw.fa-undo
+          span#zoom-in.btn.btn-sm.btn-light(title=t('photo.zoom-in')): i.fas.fa-fw.fa-search-plus
+          span#fit.btn.btn-sm.btn-light(title=t('photo.fit')): i.fas.fa-fw.fa-arrows-alt
+          span#zoom-out.btn.btn-sm.btn-light(title=t('photo.zoom-out')): i.fas.fa-fw.fa-search-minus
+          span#rotate-right.btn.btn-sm.btn-light(title=t('photo.rotate-right')): i.fas.fa-fw.fa-redo
+        .btn-group
+          span#btn-cancel.btn.btn-sm.btn-danger(title=t('general.cancel'))
+            i.fas.fa-fw.fa-times
+            | &nbsp; #{t('general.cancel')}
+          button.btn.btn-sm.btn-primary(type='submit', title=t('general.save'))
+            i.fas.fa-fw.fa-check
+            | &nbsp; #{t('general.save')}
 
       +hidden('nickname', member.nickname())
       +hidden('scale')
