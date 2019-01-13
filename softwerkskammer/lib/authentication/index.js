@@ -189,13 +189,9 @@ const localStrategyCallback = (req, res, next) => {
   })(req, res, next);
 };
 
-function setupUserPassForLogin(app1) {
+function setupUserPass(app1) {
   passport.use(localStrategy);
   app1.post('/login', setReturnOnSuccess, localStrategyCallback);
-}
-
-function setupUserPassForSignup(app1) {
-  passport.use(localStrategy);
   app1.post('/signup', setReturnOnSuccess, localStrategyCallback);
 }
 
@@ -214,7 +210,6 @@ setupOpenID(app);
 setupGithub(app);
 setupGooglePlus(app);
 setupMagicLink(app);
-setupUserPassForLogin(app);
-setupUserPassForSignup(app);
+setupUserPass(app);
 
 module.exports = app;
