@@ -28,20 +28,20 @@
             a.inherit-color(href='#userPass', data-toggle='collapse') #{t('authentication.user_pass')}:
           #userPass.collapse(class=(loginChoice.userPass ? 'show' : ''))
             .mt-10
-            ul#passwordTab.nav.nav-tabs
+            ul.nav.nav-tabs
               li.nav-item
-                a#sign-in.nav-link.active(data-toggle='tab', href='#sign-in-contents')
+                a.nav-link.active(data-toggle='tab', href='#sign-in-contents')
                   | #{t('authentication.sign_in')}
               li.nav-item
-                a#sign-up.nav-link(data-toggle='tab', href='#sign-up-contents')
+                a.nav-link(data-toggle='tab', href='#sign-up-contents')
                   | #{t('authentication.sign_up')}
               li.nav-item
-                a#add-to-existing.nav-link(data-toggle='tab', href='#add-to-existing-contents')
+                a.nav-link(data-toggle='tab', href='#add-to-existing-contents')
                   | #{t('authentication.add_to_existing')}
 
-            #passwordTabContents.tab-content
+            .tab-content
               #sign-in-contents.tab-pane.fade.show.active
-                form#passwordform-sign-in(action='/auth/login?returnTo=' + encodeURIComponent(returnUrl), method='post')
+                form(action='/auth/login?returnTo=' + encodeURIComponent(returnUrl), method='post')
                   input(type='hidden', name='_csrf', value=csrf_token)
                   | #{t('authentication.sign_in_text')}
                   .row
@@ -58,7 +58,7 @@
                         button.btn.btn-primary(type='submit') #{t('authentication.sign_in_button')}
 
               #sign-up-contents.tab-pane.fade
-                form#passwordform-sign-up(action='/auth/signup?returnTo=' + encodeURIComponent(returnUrl), method='post')
+                form(action='/auth/signup?returnTo=' + encodeURIComponent(returnUrl), method='post')
                   input(type='hidden', name='_csrf', value=csrf_token)
                   | #{t('authentication.sign_up_text')}
                   .row
