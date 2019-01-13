@@ -177,7 +177,7 @@ const localStrategy = new LocalStrategy(
 );
 
 
-const localStrategyCallback = (req, res, next) => {
+function localStrategyCallback(req, res, next) {
   passport.authenticate(localStrategy.name, (err, user, problemMessage) => {
     if (err) { return next(err); }
     if (problemMessage) { statusmessage.errorMessage('authentication.error', problemMessage).putIntoSession(req); }
@@ -187,7 +187,7 @@ const localStrategyCallback = (req, res, next) => {
       return res.redirect(req.session.returnTo);
     });
   })(req, res, next);
-};
+}
 
 function setupUserPass(app1) {
   passport.use(localStrategy);
