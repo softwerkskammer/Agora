@@ -1,6 +1,10 @@
 include  ../../../views/formComponents
 
 mixin memberform(member, regionalgroups, themegroups, tags)
+  #passwordDialog.modal.fade(tabindex='-1')
+    .modal-dialog.modal-lg
+      .modal-content
+
   form#memberform(action='/members/submit', method='post')
     +csrf
     fieldset
@@ -56,9 +60,13 @@ mixin memberform(member, regionalgroups, themegroups, tags)
         if (accessrights.isMember(member))
           .row
             .col-md-6
-              a.btn.btn-primary(data-toggle='modal', data-target='#login', href='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))
+              span.btn.btn-primary.modaldialog(data-toggle='modal', data-target='#login', data-link='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))
                 i.far.fa-plus-square.fa-fw
                 | &nbsp;#{t('members.authenticate')}
+            .col-md-6
+              span.btn.btn-primary.modaldialog(data-toggle='modal', data-target='#passwordDialog', data-link='/passwordDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))
+                i.fas.fa-key.fa-fw
+                | &nbsp;#{t('authentication.change_password')}
         if (accessrights.isSuperuser())
           .row
             .col-md-6

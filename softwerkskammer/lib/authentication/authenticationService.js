@@ -1,6 +1,10 @@
 const conf = require('simple-configure');
+
+const logger = require('winston').loggers.get('authorization');
+
 const beans = conf.get('beans');
 const membersService = beans.get('membersService');
+const memberstore = beans.get('memberstore');
 
 function createUserObject(req, authenticationId, profile, done) {
   process.nextTick(membersService.findMemberFor(req.user, authenticationId, (err, member) => {
@@ -10,7 +14,11 @@ function createUserObject(req, authenticationId, profile, done) {
   }));
 }
 
+const pwdAuthenticationPrefix = 'password:';
+
 module.exports = {
+  pwdAuthenticationPrefix,
+
   createUserObjectFromOpenID: (req, authenticationId, openidProfile, done) => {
     const minimalProfile = openidProfile &&
       {
@@ -49,5 +57,35 @@ module.exports = {
 
   createUserObjectFromMagicLink: (req, authenticationId, done) => {
     createUserObject(req, authenticationId, {}, done);
+  },
+
+  createUserObjectFromPassword: (req, email, password, done) => {
+    const authenticationId = pwdAuthenticationPrefix + email;
+
+    if (req.route.path === '/login') {
+
+      createUserObject(req, authenticationId, {}, (err, userObject) => {
+        if (err || !userObject) {
+          return done(err);
+        }
+        if (userObject.member && userObject.member.passwordMatches(password)) {
+          return done(null, userObject);
+        }
+        done(null, null, 'authentication.wrong_credentials');
+      });
+
+    } else if (req.route.path === '/signup') {
+
+      memberstore.getMemberForEMail(email, (err, member) => {
+        if (err) { return done(err); }
+
+        if (member) {
+          logger.error(new Error('On Signup: Member with email address "' + email + '" already exists'));
+          return done(null, null, 'authentication.error_member_exists');
+        }
+        createUserObject(req, authenticationId, {emails: [{value: email}], password}, done);
+      });
+
+    }
   }
 };

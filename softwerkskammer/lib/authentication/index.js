@@ -3,6 +3,7 @@
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const MagicLinkStrategy = require('./magicLinkStrategy');
+const LocalStrategy = require('passport-local').Strategy;
 
 const logger = require('winston').loggers.get('authorization');
 
@@ -24,6 +25,9 @@ function loginChoiceCookieFor(url) {
   if (url.startsWith('/github?')) {
     return {gh: true};
   }
+  if (url.startsWith('/login?') || url.startsWith('/signup?')) {
+    return {userPass: true};
+  }
   if (url.startsWith('/openid?') && url.includes(identifier + 'https://openid.stackexchange.com')) {
     return {se: true};
   }
@@ -36,18 +40,18 @@ function loginChoiceCookieFor(url) {
   return {};
 }
 
+function setReturnOnSuccess(req, res, next) {
+  if (req.session.returnTo === undefined) {
+    req.session.returnTo = req.query.returnTo || '/';
+  }
+  res.cookie('loginChoice', loginChoiceCookieFor(decodeURIComponent(req.url)), {maxAge: 1000 * 60 * 60 * 24 * 365, httpOnly: true}); // expires: Date
+  next();
+}
+
 function createProviderAuthenticationRoutes(app1, strategyName) {
 
   function authenticate() {
     return passport.authenticate(strategyName, {successReturnToOrRedirect: '/', failureRedirect: '/login'});
-  }
-
-  function setReturnOnSuccess(req, res, next) {
-    if (req.session.returnTo === undefined) {
-      req.session.returnTo = req.query.returnTo || '/';
-    }
-    res.cookie('loginChoice', loginChoiceCookieFor(decodeURIComponent(req.url)), { maxAge: 1000 * 60 * 60 * 24 * 365, httpOnly: true }); // expires: Date
-    next();
   }
 
   app1.get('/' + strategyName, setReturnOnSuccess, authenticate());
@@ -163,6 +167,34 @@ function setupMagicLink(app1) {
   });
 }
 
+const localStrategy = new LocalStrategy(
+  {
+    usernameField: 'email',
+    passwordField: 'password',
+    passReqToCallback: true
+  },
+  authenticationService.createUserObjectFromPassword
+);
+
+
+function localStrategyCallback(req, res, next) {
+  passport.authenticate(localStrategy.name, (err, user, problemMessage) => {
+    if (err) { return next(err); }
+    if (problemMessage) { statusmessage.errorMessage('authentication.error', problemMessage).putIntoSession(req); }
+    if (!user) { return res.redirect('/login'); }
+    req.logIn(user, {}, (err1) => {
+      if (err1) { return next(err1); }
+      return res.redirect(req.session.returnTo);
+    });
+  })(req, res, next);
+}
+
+function setupUserPass(app1) {
+  passport.use(localStrategy);
+  app1.post('/login', setReturnOnSuccess, localStrategyCallback);
+  app1.post('/signup', setReturnOnSuccess, localStrategyCallback);
+}
+
 const app = misc.expressAppIn(__dirname);
 
 app.get('/logout', (req, res) => {
@@ -178,5 +210,6 @@ setupOpenID(app);
 setupGithub(app);
 setupGooglePlus(app);
 setupMagicLink(app);
+setupUserPass(app);
 
 module.exports = app;

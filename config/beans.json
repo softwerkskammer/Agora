@@ -76,6 +76,7 @@
   "wikiObjects": {"module": "./softwerkskammer/lib/wiki/wikiObjects"},
 
   "constants": {"module": "./softwerkskammer/lib/commons/constants"},
+  "hashPassword": {"module": "./softwerkskammer/lib/commons/hashPassword"},
   "fieldHelpers": {"module": "./softwerkskammer/lib/commons/fieldHelpers"},
   "misc": {"module": "./softwerkskammer/lib/commons/misc"},
   "notifications": {"module": "./softwerkskammer/lib/notifications"},

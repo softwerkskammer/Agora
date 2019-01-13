@@ -99,13 +99,16 @@
     "submit": "Speichern"
   },
   "authentication": {
+    "add_to_existing": "Zu existierendem Account zufügen",
+    "add_to_existing_text": "Um ein Passwort zu setzen, melde Dich zuerst mit Deiner bisherigen Authentifizierungsmethode an und füge dann über die 'Profil bearbeiten' Seite ein Passwort hinzu (ganz unten auf der Seite).",
     "alternative_url": "(optional) Eingabe der URL eines alternativen OpenID Providers",
     "magic_link": "Authentifizierungsmethode vergessen? Hier gibt's einen Magic Link",
     "magic_link_request": "Magic Link anfordern",
     "authenticate": "Authentifizieren",
     "authentication": "Authentifizierung",
     "authentication_text": "Du kannst Dich über einen der untenstehenden Dienste authentifizieren. Im Anschluss bitten wir Dich, einige persönliche Daten einzugeben.",
-    "authentication_text_green": "Beim letzten Mal hast Du Dich mit dem hervorgehobenen Provider angemeldet:",
+    "authentication_text_green": "Beim letzten Mal hast Du Dich mit der hervorgehobenen Methode angemeldet:",
+    "change_password": "Passwort ändern / anlegen",
     "error": "Authentifizierungsproblem",
     "error_text": [
       "h3 Problem bei der Authentifizierung!",
@@ -122,6 +125,9 @@
       "    li $t(error.datetime)",
       "    li $t(error.stacktrace500)"
     ],
+    "password": "Passwort",
+    "password_repeat": "Passwort wiederholen",
+    "password_dialog_title": "Passwort eingeben",
     "please_authenticate": "Bitte authentifiziere Dich!",
     "required_text": [
       "h3 Um auf diese Seite zuzugreifen, musst Du angemeldet sein!",
@@ -129,7 +135,15 @@
       "p Sollte dies ein Fehler in der Anwendung sein, bitten wir um ",
       "  a(href='https://github.com/softwerkskammer/Agora/issues/') Rückmeldung.",
       "p Das Agora-Team bittet um Entschuldigung."
-    ]
+    ],
+    "sign_in": "Einloggen",
+    "sign_in_button": "Einloggen",
+    "sign_in_text": "Zum Einloggen gib Deine hinterlegte E-Mail-Adresse und Dein Passwort ein:",
+    "sign_up": "Neu anmelden",
+    "sign_up_button": "Anmelden",
+    "sign_up_text": "Um Dich als neues Mitglied zu registrieren, gib die zu verwendende E-Mail-Adresse sowie Dein gewünschtes Passwort ein:",
+    "user_pass": "Mit E-Mail und Passwort",
+    "wrong_credentials": "Falsche E-Mail-Adresse oder falsches Passwort!"
   },
   "colors": {
     "color": "Farbe",

@@ -15,6 +15,7 @@ const wikiService = beans.get('wikiService');
 const misc = beans.get('misc');
 const statusmessage = beans.get('statusmessage');
 const notifications = beans.get('notifications');
+const authenticationService = beans.get('authenticationService');
 
 function memberSubmitted(req, res, next) {
   function notifyNewMemberRegistration(member, subscriptions) {
@@ -137,6 +138,18 @@ app.post('/delete', (req, res, next) => {
     }
     statusmessage.successMessage('message.title.save_successful', 'message.content.members.deleted').putIntoSession(req);
     res.redirect('/members/');
+  });
+});
+
+app.post('/updatePassword', (req, res, next) => {
+  memberstore.getMemberForId(req.body.id, (err, member) => {
+    if (err) { return next(err); }
+    member.updatePassword(req.body.password);
+    member.addAuthentication(authenticationService.pwdAuthenticationPrefix + member.email());
+    memberstore.saveMember(member, err1 => {
+      if (err1) { return next(err1); }
+      res.redirect('/members/' + encodeURIComponent(member.nickname()));
+    });
   });
 });
 

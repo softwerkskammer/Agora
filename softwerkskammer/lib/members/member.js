@@ -5,6 +5,7 @@ const conf = require('simple-configure');
 const beans = conf.get('beans');
 const fieldHelpers = beans.get('fieldHelpers');
 const avatarProvider = beans.get('avatarProvider');
+const {genSalt, hashPassword} = beans.get('hashPassword');
 
 class Member {
   constructor(object) {
@@ -27,6 +28,9 @@ class Member {
     if (object.interests) {
       this.state.interests = object.interests.toString();
     }
+    if (object.password) {
+      this.updatePassword(object.password);
+    }
 
     return this;
   }
@@ -43,7 +47,6 @@ class Member {
     }
     this.state.created = DateTime.local().toFormat('dd.MM.yy');
     this.state.id = sessionUser.authenticationId;
-
     const profile = sessionUser.profile;
     if (profile) {
       this.state.email = fieldHelpers.valueOrFallback(profile.emails && profile.emails[0] && profile.emails[0].value, this.email());
@@ -51,6 +54,9 @@ class Member {
       if (name) {
         this.state.firstname = fieldHelpers.valueOrFallback(name.givenName, this.firstname());
         this.state.lastname = fieldHelpers.valueOrFallback(name.familyName, this.lastname());
+      }
+      if (profile.password) {
+        this.updatePassword(profile.password);
       }
       this.state.site = fieldHelpers.valueOrFallback(profile.profileUrl, this.site());
       if (profile._json && fieldHelpers.isFilled(profile._json.blog)) {
@@ -194,6 +200,23 @@ class Member {
       }
     });
     this.subscribedGroups = result;
+  }
+
+  updatePassword(newPassword) {
+    this.state.salt = genSalt();
+    this.state.hashedPassword = hashPassword(newPassword, this.state.salt);
+  }
+
+  salt() {
+    return this.state.salt;
+  }
+
+  hashedPassword() {
+    return this.state.hashedPassword;
+  }
+
+  passwordMatches(password) {
+    return hashPassword(password, this.salt()) === this.hashedPassword();
   }
 
   static isSuperuser(id) {

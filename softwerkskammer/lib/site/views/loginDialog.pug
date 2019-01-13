@@ -5,7 +5,7 @@
   .row
     .col-12
       p #{t('authentication.authentication_text')}
-      if (loginChoice.oidc || loginChoice.gh || loginChoice.se || loginChoice.provider)
+      if (loginChoice.oidc || loginChoice.gh || loginChoice.se || loginChoice.userPass || loginChoice.provider)
         p.alert-success #{t('authentication.authentication_text_green')}
   .row
     .col-md-4
@@ -20,6 +20,56 @@
       a.btn.btn-block(class=(loginChoice.se ? 'btn-success' : 'btn-light'), href='/auth/openid?openid_identifier=' + encodeURIComponent('https://openid.stackexchange.com') + '&returnTo=' + encodeURIComponent(returnUrl))
         img(src='/img/stackexchange.ico', alt='stackexchange', width='16', height='16')
         | &nbsp;StackExchange
+  .row
+    .col-12
+      p &nbsp;
+        .card.mb-2
+          h5.card-header.p-2(class=(loginChoice.userPass ? 'alert-success' : 'bg-light'))
+            a.inherit-color(href='#userPass', data-toggle='collapse') #{t('authentication.user_pass')}:
+          #userPass.mt-2.collapse(class=(loginChoice.userPass ? 'show' : ''))
+            ul.nav.nav-tabs
+              li.nav-item: a.nav-link.active(data-toggle='tab', href='#sign-in-contents') #{t('authentication.sign_in')}
+              li.nav-item: a.nav-link(data-toggle='tab', href='#sign-up-contents') #{t('authentication.sign_up')}
+              li.nav-item: a.nav-link(data-toggle='tab', href='#add-to-existing-contents') #{t('authentication.add_to_existing')}
+
+            .tab-content
+              #sign-in-contents.tab-pane.fade.show.active
+                form#passwordform-sign-in(action='/auth/login?returnTo=' + encodeURIComponent(returnUrl), method='post')
+                  input(type='hidden', name='_csrf', value=csrf_token)
+                  p #{t('authentication.sign_in_text')}
+                  .row
+                    .col-6
+                      label.control-label(for='sign-in-email') #{t('members.email')}:
+                      input#sign-in-email.form-control.trim-text(type='email', name='email', value='', placeholder='myaddress@example.com')
+                    .col-6
+                      .form-group
+                        label.control-label(for='sign-in-password') #{t('authentication.password')}:
+                        input#sign-in-password.form-control.trim-text(type='password', name='password', value='')
+                  .row
+                    .col-12
+                      .btn-group.float-right
+                        button.btn.btn-primary(type='submit') #{t('authentication.sign_in_button')}
+
+              #sign-up-contents.tab-pane.fade
+                form#passwordform-sign-up(action='/auth/signup?returnTo=' + encodeURIComponent(returnUrl), method='post')
+                  input(type='hidden', name='_csrf', value=csrf_token)
+                  p #{t('authentication.sign_up_text')}
+                  .row
+                    .col-6
+                      label.control-label(for='sign-up-email') #{t('members.email')}:
+                      input#sign-up-email.form-control.trim-text(type='email', name='email', value='', placeholder='myaddress@example.com')
+                    .col-6
+                      .form-group
+                        label.control-label(for='sign-up-password') #{t('authentication.password')}:
+                        input#sign-up-password.form-control.trim-text(type='password', name='password', value='')
+                  .row
+                    .col-12
+                      .btn-group.float-right
+                        button.btn.btn-primary(type='submit') #{t('authentication.sign_up_button')}
+
+              #add-to-existing-contents.tab-pane.fade
+                p #{t('authentication.add_to_existing_text')}
+
   .row
     .col-12
       form(action='/auth/openid', method='get')
@@ -42,6 +92,42 @@
             a.inherit-color(href='#magicLinkInput', data-toggle='collapse') #{t('authentication.magic_link')}:
           #magicLinkInput.collapse(class=('btn-default'))
             .input-group
-              input.form-control#magicLinkEmail(type='text', name='magic_link_email', value=(''), placeholder='myaddress@example.com')
+              input.form-control#magicLinkEmail(type='email', name='magic_link_email', value='', placeholder='myaddress@example.com')
               .input-group-append
                 button.btn.btn-light(type='submit') #{t('authentication.magic_link_request')}
+
+script.
+  function createValidator(formId) {
+    var validator = $(formId).validate({
+      rules: {
+        email: {required: true, email: true},
+        password: {
+          required: true,
+          minlength: 5
+        }
+      },
+      errorPlacement: function (error, element) { error.insertAfter(element); },
+      errorElement: 'span',
+      errorClass: 'help-block text-danger',
+      highlight: function (element) { $(element).addClass('is-invalid'); },
+      unhighlight: function (element) { $(element).removeClass('is-invalid'); }
+    });
+
+    function handler(each) {
+      return function () {
+        validator.element(each);
+      };
+    }
+
+    [formId + ' [name=email]', formId + ' [name=password]'].forEach(
+      function (each) {
+        $(each).change(handler(each));
+        $(each).keyup(handler(each));
+      }
+    );
+    validator.form();
+  }
+  $(document).ready(function () {
+    createValidator('#passwordform-sign-in');
+    createValidator('#passwordform-sign-up');
+  });

@@ -56,6 +56,22 @@ describe('Member initial filling', () => {
     expect(member.site()).to.equal('https://github.com/hansdampf');
   });
 
+  it('is populated by UserPass record with only email', () => {
+    const userdata = {
+      authenticationId: 'password:peter@pan.de',
+      profile: {
+        emails: [{value: 'peter@pan.de'}]
+      }
+    };
+
+    const member = new Member().initFromSessionUser(userdata);
+    expect(member.firstname()).not.to.exist();
+    expect(member.lastname()).not.to.exist();
+    expect(member.email()).to.equal('peter@pan.de');
+    expect(member.salt()).not.to.exist();
+    expect(member.hashedPassword()).not.to.exist();
+  });
+
   it('is populated with empty fields where no information is given', () => {
     const record = {
       id: 'testuser',
@@ -139,6 +155,28 @@ describe('fillFromUI', () => {
     expect(member.interests()).to.equal('Everything, And more');
   });
 
+  it('handles given password correctly and creates hash and encrypted password', () => {
+    const record = {
+      password: 'ZickZack',
+    };
+    const member = new Member().fillFromUI(record);
+    expect(member.state.password).not.to.exist();
+    expect(member.hashedPassword()).to.exist();
+    expect(member.salt()).to.exist();
+  });
+
+});
+
+describe('Passwords can be compared', () => {
+  it('is using the saved salt', () => {
+    const member = new Member();
+    expect(member.hashedPassword()).not.to.exist();
+    expect(member.salt()).not.to.exist();
+    member.updatePassword('Hühnerkacke');
+    expect(member.hashedPassword()).to.exist();
+    expect(member.salt()).to.exist();
+    expect(member.passwordMatches('Hühnerkacke')).to.be.true();
+  });
 });
 
 describe('Member twitter field autocorrection', () => {

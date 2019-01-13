@@ -105,13 +105,16 @@
     "submit": "Submit"
   },
   "authentication": {
+    "add_to_existing": "Add password to existing account",
+    "add_to_existing_text": "In order to add a password, log in with your current authentication method and add a password via the 'Edit Profile' page (at the very bottom of the page).",
     "alternative_url": "(optional) Enter the URL of an alternative OpenID provider",
     "magic_link": "Forgot your authentication method? We'll send you a Magic Link",
     "magic_link_request": "Request Magic Link",
     "authenticate": "Authenticate",
     "authentication": "Authentication",
     "authentication_text": "You can authenticate via one of the methods given below. Subsequently, we ask you to provide some personal data.",
-    "authentication_text_green": "Last time you have been authenticated by the highlighted provider:",
+    "authentication_text_green": "Last time you have been authenticated via the highlighted method:",
+    "change_password": "Change or init password",
     "error": "Authentication Error",
     "error_text": [
       "h3 Authentication Error!",
@@ -128,6 +131,9 @@
       "    li $t(error.datetime)",
       "    li $t(error.stacktrace500)"
     ],
+    "password": "Password",
+    "password_repeat": "Repeat Password",
+    "password_dialog_title": "Enter Password",
     "please_authenticate": "Please, authenticate yourself!",
     "required_text": [
       "h3 You need to be logged-in to access this page!",
@@ -135,7 +141,15 @@
       "p If this is an application error, we apologize and would love to get ",
       "  a(href='https://github.com/softwerkskammer/Agora/issues/') feedback.",
       "p The Agora-Team is begging your pardon."
-    ]
+    ],
+    "sign_in": "Sign in",
+    "sign_in_button": "Sign in",
+    "sign_in_text": "To log in, please enter you E-mail address and your password:",
+    "sign_up": "Create new account",
+    "sign_up_button": "Sign up",
+    "sign_up_text": "To sign up with a new account, please enter the E-mail address to use and the desired password:",
+    "user_pass": "By E-mail and Password",
+    "wrong_credentials": "Wrong E-mail address or password!"
   },
   "colors": {
     "color": "Colour",
