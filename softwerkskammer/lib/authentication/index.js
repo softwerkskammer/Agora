@@ -25,7 +25,7 @@ function loginChoiceCookieFor(url) {
   if (url.startsWith('/github?')) {
     return {gh: true};
   }
-  if (url.startsWith('/login?')) {
+  if (url.startsWith('/login?') || url.startsWith('/signup?')) {
     return {userPass: true};
   }
   if (url.startsWith('/openid?') && url.includes(identifier + 'https://openid.stackexchange.com')) {
