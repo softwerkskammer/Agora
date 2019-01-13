@@ -18,16 +18,16 @@ mixin editavatar(member, returnToParticipantsListing)
       #selectFileButton
         img(src=member.avatarUrl())
         if(accessrights.canEditMember(member))
-          .btn-group(style='display: table; margin-left: auto; margin-right: auto; margin-top: 5px;')
+          .btn-group.mt-5(style='display: table; margin-left: auto; margin-right: auto;')
             +selectFileButton(member.hasCustomAvatar() ? 'photo.replace': 'general.new', 'btn-sm')
             if member.hasCustomAvatar()
               +reallyDeleteButtonOnly('photo.delete', deleteoptions, 'btn-sm')
       #previewContainer
         div
-          div(style='margin-top: 5px; width: 200px; height:200px;')
+          .mt-5(style='width: 200px; height:200px;')
             img#preview
           .clearfix
-          .btn-group(style='display: table; margin-left: auto; margin-right: auto; margin-top: 5px;')
+          .btn-group.mt-5(style='display: table; margin-left: auto; margin-right: auto;')
             span#rotate-left.btn.btn-sm.btn-light(title=t('photo.rotate-left')): i.fas.fa-fw.fa-undo
             span#zoom-in.btn.btn-sm.btn-light(title=t('photo.zoom-in')): i.fas.fa-fw.fa-search-plus
             span#fit.btn.btn-sm.btn-light(title=t('photo.fit')): i.fas.fa-fw.fa-arrows-alt
