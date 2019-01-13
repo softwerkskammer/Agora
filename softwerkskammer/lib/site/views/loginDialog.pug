@@ -29,15 +29,9 @@
           #userPass.collapse(class=(loginChoice.userPass ? 'show' : ''))
             .mt-10
             ul.nav.nav-tabs
-              li.nav-item
-                a.nav-link.active(data-toggle='tab', href='#sign-in-contents')
-                  | #{t('authentication.sign_in')}
-              li.nav-item
-                a.nav-link(data-toggle='tab', href='#sign-up-contents')
-                  | #{t('authentication.sign_up')}
-              li.nav-item
-                a.nav-link(data-toggle='tab', href='#add-to-existing-contents')
-                  | #{t('authentication.add_to_existing')}
+              li.nav-item: a.nav-link.active(data-toggle='tab', href='#sign-in-contents') #{t('authentication.sign_in')}
+              li.nav-item: a.nav-link(data-toggle='tab', href='#sign-up-contents') #{t('authentication.sign_up')}
+              li.nav-item: a.nav-link(data-toggle='tab', href='#add-to-existing-contents') #{t('authentication.add_to_existing')}
 
             .tab-content
               #sign-in-contents.tab-pane.fade.show.active
