@@ -145,7 +145,7 @@ app.post('/updatePassword', (req, res, next) => {
   memberstore.getMemberForId(req.body.id, (err, member) => {
     if (err) { return next(err); }
     member.updatePassword(req.body.password);
-    member.addAuthentication(authenticationService.pwdAuthenticationPrefix() + member.email());
+    member.addAuthentication(authenticationService.pwdAuthenticationPrefix + member.email());
     memberstore.saveMember(member, err1 => {
       if (err1) { return next(err1); }
       res.redirect('/members/' + encodeURIComponent(member.nickname()));

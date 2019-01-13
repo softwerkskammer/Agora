@@ -14,7 +14,7 @@ function createUserObject(req, authenticationId, profile, done) {
   }));
 }
 
-const pwdAuthenticationPrefix = () => 'password:';
+const pwdAuthenticationPrefix = 'password:';
 
 module.exports = {
   pwdAuthenticationPrefix,
@@ -60,7 +60,7 @@ module.exports = {
   },
 
   createUserObjectFromPassword: (req, email, password, done) => {
-    const authenticationId = pwdAuthenticationPrefix() + email;
+    const authenticationId = pwdAuthenticationPrefix + email;
 
     if (req.route.path === '/login') {
 
