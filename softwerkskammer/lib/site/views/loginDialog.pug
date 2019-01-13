@@ -37,7 +37,7 @@
               #sign-in-contents.tab-pane.fade.show.active
                 form(action='/auth/login?returnTo=' + encodeURIComponent(returnUrl), method='post')
                   input(type='hidden', name='_csrf', value=csrf_token)
-                  | #{t('authentication.sign_in_text')}
+                  p #{t('authentication.sign_in_text')}
                   .row
                     .col-6
                       label.control-label(for='sign-in-email') #{t('members.email')}:
@@ -54,7 +54,7 @@
               #sign-up-contents.tab-pane.fade
                 form(action='/auth/signup?returnTo=' + encodeURIComponent(returnUrl), method='post')
                   input(type='hidden', name='_csrf', value=csrf_token)
-                  | #{t('authentication.sign_up_text')}
+                  p #{t('authentication.sign_up_text')}
                   .row
                     .col-6
                       label.control-label(for='sign-up-email') #{t('members.email')}:
@@ -69,7 +69,7 @@
                         button.btn.btn-primary(type='submit') #{t('authentication.sign_up_button')}
 
               #add-to-existing-contents.tab-pane.fade
-                | #{t('authentication.add_to_existing_text')}
+                p #{t('authentication.add_to_existing_text')}
 
   .row
     .col-12
