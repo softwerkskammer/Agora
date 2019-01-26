@@ -95,7 +95,7 @@ module.exports = function (grunt) {
       jqcloudAndColorsAndLeafletJS: {
         src: ['node_modules/jqcloud2/dist/jqcloud.min.js',
           'node_modules/tinycolor2/dist/tinycolor-min.js',
-          'node_modules/tinygradient/tinygradient.min.js',
+          'node_modules/tinygradient/browser.js',
           'node_modules/leaflet/dist/leaflet.js*'
         ],
         dest: 'softwerkskammer/public/clientscripts',
@@ -287,7 +287,7 @@ module.exports = function (grunt) {
 
   process.env.NODE_ICU_DATA = 'node_modules/full-icu'; // necessary for timezone stuff
 // eslint-disable-next-line no-trailing-spaces
-  
+
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
