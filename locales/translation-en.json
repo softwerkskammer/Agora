@@ -116,6 +116,7 @@
     "authentication_text_green": "Last time you have been authenticated via the highlighted method:",
     "change_password": "Change or init password",
     "error": "Authentication Error",
+    "error_member_exists": "This e-mail address is already registered. Maybe you already have registered via a different authentication method?",
     "error_text": [
       "h3 Authentication Error!",
       "p Unfortunately, something went wrong during authentication.",

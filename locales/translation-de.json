@@ -110,6 +110,7 @@
     "authentication_text_green": "Beim letzten Mal hast Du Dich mit der hervorgehobenen Methode angemeldet:",
     "change_password": "Passwort ändern / anlegen",
     "error": "Authentifizierungsproblem",
+    "error_member_exists": "Diese E-Mail Adresse ist schon registriert. Hast Du bereits bei uns mit einer anderen Methode registriert?",
     "error_text": [
       "h3 Problem bei der Authentifizierung!",
       "p Leider scheint bei der Authentifizierung etwas schief gegangen zu sein.",
