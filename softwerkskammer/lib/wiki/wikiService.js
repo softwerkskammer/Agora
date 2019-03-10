@@ -147,7 +147,7 @@ module.exports = {
         },
         (err1, unsortedPosts) => {
           if (err1) { return callback(err1); }
-          const postsSortedByDate = misc.compact(unsortedPosts).sort();
+          const postsSortedByDate = misc.compact(unsortedPosts).sort((a, b) => {return a.date() < b.date() ? 1 : -1;});
           callback(null, postsSortedByDate);
         });
     });
