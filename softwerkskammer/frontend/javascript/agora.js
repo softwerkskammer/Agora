@@ -30,6 +30,11 @@ function initParameterisedCalendar(id, date) {
   if (!calElement) { return; }
   var calendar;
   var options = {
+    plugins: ['bootstrap', 'dayGrid'],
+    defaultView: 'dayGridMonth',
+    themeSystem: 'bootstrap',
+    locales: ['de', 'en-GB'],
+    locale: fc_lang,
     defaultDate: date,
     header: {
       left: 'title',
@@ -65,10 +70,8 @@ function initParameterisedCalendar(id, date) {
         displayedActivityStart = null;
       }
     },
-    themeSystem: 'bootstrap4',
     aspectRatio: 1.2,
     height: 'auto',
-    locale: fc_lang,
     views: {
       month: {
         titleFormat: isForActivities ? {month: 'short', year: '2-digit'} : {month: 'long'},

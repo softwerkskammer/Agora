@@ -11,8 +11,9 @@ module.exports = function (grunt) {
     'node_modules/bootstrap-markdown/locale/bootstrap-markdown.de.js',
     'node_modules/smartmenus/dist/jquery.smartmenus.js',
     'node_modules/smartmenus/dist/addons/bootstrap-4/jquery.smartmenus.bootstrap-4.js',
-    'node_modules/superagent/superagent.js',
-    'node_modules/fullcalendar/dist/fullcalendar.js',
+    'node_modules/@fullcalendar/core/main.js',
+    'node_modules/@fullcalendar/daygrid/main.js',
+    'node_modules/@fullcalendar/bootstrap/main.js',
     'node_modules/jquery-validation/dist/jquery.validate.js',
     'node_modules/jquery-validation/dist/additional-methods.js'
   ];
@@ -23,7 +24,7 @@ module.exports = function (grunt) {
       'node_modules/jquery-validation/dist/localization/messages_de.js',
       'node_modules/jquery-validation/dist/localization/methods_de.js',
       'node_modules/select2/dist/js/i18n/de.js',
-      'node_modules/fullcalendar/dist/locales/de.js',
+      'node_modules/@fullcalendar/core/locales/de.js',
       'locales/frontend_de.js',
       'softwerkskammer/frontend/javascript/agora.js'
     ])
@@ -34,7 +35,7 @@ module.exports = function (grunt) {
       'node_modules/jquery-validation/dist/localization/messages_en.js',
       'node_modules/jquery-validation/dist/localization/methods_en.js',
       'node_modules/select2/dist/js/i18n/en.js',
-      'node_modules/fullcalendar/dist/locales/en-gb.js',
+      'node_modules/@fullcalendar/core/locales/en-gb.js',
       'locales/frontend_en.js',
       'softwerkskammer/frontend/javascript/agora.js'
     ])
@@ -42,7 +43,9 @@ module.exports = function (grunt) {
 
   const filesForCss = {
     'softwerkskammer/public/stylesheets/screen.css': [
-      'node_modules/fullcalendar/dist/fullcalendar.css',
+      'node_modules/@fullcalendar/core/main.css',
+      'node_modules/@fullcalendar/daygrid/main.css',
+      'node_modules/@fullcalendar/bootstrap/main.css',
       'node_modules/smartmenus/dist/addons/bootstrap-4/jquery.smartmenus.bootstrap-4.css',
       'node_modules/@fortawesome/fontawesome-free/css/all.css',
       'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
