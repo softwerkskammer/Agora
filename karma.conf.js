@@ -1,4 +1,7 @@
 'use strict';
+const puppeteer = require('puppeteer');
+process.env.CHROME_BIN = puppeteer.executablePath();
+
 module.exports = function (config) {
   config.set({
     // base path, that will be used to resolve files and exclude
@@ -53,7 +56,7 @@ module.exports = function (config) {
     // - PhantomJS
     // - IE (only Windows)
     // CLI --browsers Chrome,Firefox,Safari
-    browsers: ['PhantomJS'],
+    browsers: ['ChromeHeadless'],
 
     // If browser does not capture in given timeout [ms], kill it
     // CLI --capture-timeout 5000
@@ -84,10 +87,10 @@ module.exports = function (config) {
 
     plugins: [
       'karma-coverage',
+      'karma-chrome-launcher',
       'karma-html2js-preprocessor',
       'karma-mocha',
       'karma-must',
-      'karma-phantomjs-launcher',
       'karma-sinon',
       'karma-intl-shim'
     ]
