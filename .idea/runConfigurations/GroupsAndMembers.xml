@@ -1,7 +1,8 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="GroupsAndMembers" type="mocha-javascript-test-runner" factoryName="Mocha" singleton="false">
+  <configuration default="false" name="GroupsAndMembers" type="mocha-javascript-test-runner" singleton="false">
     <node-interpreter>$usr-local-bin$/node</node-interpreter>
     <node-options />
+    <mocha-package>$PROJECT_DIR$/node_modules/mocha</mocha-package>
     <working-directory>$PROJECT_DIR$/softwerkskammer</working-directory>
     <pass-parent-env>true</pass-parent-env>
     <envs>
@@ -14,6 +15,6 @@
     <recursive>true</recursive>
     <RunnerSettings RunnerId="RunnerForMochaJavaScript" />
     <ConfigurationWrapper RunnerId="RunnerForMochaJavaScript" />
-    <method />
+    <method v="2" />
   </configuration>
 </component>

@@ -1,7 +1,8 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Site" type="mocha-javascript-test-runner" factoryName="Mocha" singleton="false">
+  <configuration default="false" name="Site" type="mocha-javascript-test-runner" singleton="false">
     <node-interpreter>$usr-local-bin$/node</node-interpreter>
     <node-options />
+    <mocha-package>$PROJECT_DIR$/node_modules/mocha</mocha-package>
     <working-directory>$PROJECT_DIR$</working-directory>
     <pass-parent-env>true</pass-parent-env>
     <envs>
@@ -12,6 +13,6 @@
     <test-kind>DIRECTORY</test-kind>
     <test-directory>$PROJECT_DIR$/softwerkskammer/test/site</test-directory>
     <recursive>true</recursive>
-    <method />
+    <method v="2" />
   </configuration>
 </component>
