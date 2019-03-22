@@ -46,14 +46,11 @@ function initParameterisedCalendar(id, date) {
     events: isForActivities ? '/activities/eventsForSidebar' : '/wiki/eventsFor',
     eventMouseEnter: function (mouseEnterInfo) {
       var event = mouseEnterInfo.event;
-      var day = event.start.getDay();
       $(mouseEnterInfo.el).tooltip({
         title: (isForActivities
           ? new Intl.DateTimeFormat(fc_lang).format(event.start, {hour: 'numeric', minute: 'numeric'}) + ': ' : '') + event.title,
         trigger: 'manual',
-        placement: (day < 4 && day > 0) ? 'right' : 'left',
-        container: 'body',
-        template: '<div class="tooltip" role="tooltip" style="max-width: 130px"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
+        container: 'body'
       });
       $(mouseEnterInfo.el).tooltip('show');
     },
