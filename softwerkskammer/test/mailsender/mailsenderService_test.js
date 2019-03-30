@@ -452,7 +452,6 @@ describe('MailsenderService', () => {
       });
     });
 
-
     describe('when contact organizers is enabled for group', () => {
       const group = new Group({id: groupId, contactTheOrganizers: true});
 
