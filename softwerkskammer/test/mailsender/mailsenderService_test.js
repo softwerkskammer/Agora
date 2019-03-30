@@ -446,7 +446,7 @@ describe('MailsenderService', () => {
 
           expect(statusMessage.contents().type).to.eql('alert-danger');
           expect(statusMessage.contents().additionalArguments.type).to.eql('$t(mailsender.notification)');
-          expect(statusMessage.contents().additionalArguments.err).to.eql(`Error: Gruppe ${groupId} nicht gefunden.`);
+          expect(statusMessage.contents().additionalArguments.err).to.eql(`Error: 0 Gruppen für Id ${groupId} gefunden. Erwarte genau eine Gruppe.`);
           done();
         });
       });

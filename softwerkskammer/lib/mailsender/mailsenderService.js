@@ -169,7 +169,7 @@ module.exports = {
     groupsService.getGroups([groupId], (groupLoadErr, groups) => {
       if (groupLoadErr) { return callback(groupLoadErr, mailtransport.statusmessageForError(type, groupLoadErr)); }
       if (groups.length !== 1) {
-        const groupNotFoundError = new Error(`Gruppe ${groupId} nicht gefunden.`);
+        const groupNotFoundError = new Error(`${groups.length} Gruppen für Id ${groupId} gefunden. Erwarte genau eine Gruppe.`);
         return callback(groupNotFoundError, mailtransport.statusmessageForError(type, groupNotFoundError));
       }
       if (!groups[0].isContactTheOrganizersEnabled()) {
