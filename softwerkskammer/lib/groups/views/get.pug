@@ -30,13 +30,14 @@ block content
         h1 #{group.longName} #{' '}
           small #{group.type}
       p
-        strong #{t('general.address')}: #{' '}
+        if (userIsGroupMember && group.contactTheOrganizers)
+          strong #{t('groups.contacts')}: #{' '}
+          a(href='/mailsender/contactGroupContactPersons/' + group.id)
+            | #{t('groups.contact_the_organizers')}
+          br
+        strong #{t('groups.mailinglist')}: #{' '}
         a(href='mailto:' + group.id + '@softwerkskammer.org')
           | #{group.id}@softwerkskammer.org
-        if (userIsGroupMember && group.contactTheOrganizers)
-          p
-            a(href='/mailsender/contactGroupContactPersons/' + group.id)
-              | #{t('groups.contact_the_organizers')}
   .row
     .col-lg-6
       | !{group.descriptionHTML()}
