@@ -30,7 +30,7 @@ block content
         h1 #{group.longName} #{' '}
           small #{group.type}
       p
-        if (userIsGroupMember && group.contactTheOrganizers)
+        if (group.contactTheOrganizers && accessrights.canParticipateInGroup(group))
           strong #{t('groups.contacts')}: #{' '}
           a(href='/mailsender/contactGroupContactPersons/' + group.id)
             | #{t('groups.contact_the_organizers')}
