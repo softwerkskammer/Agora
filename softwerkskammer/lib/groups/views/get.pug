@@ -36,7 +36,7 @@ block content
         if (userIsGroupMember && group.contactTheOrganizers)
           p
             a(href='/mailsender/contactGroupContactPersons/' + group.id)
-              | Ansprechpartner kontaktieren
+              | #{t('groups.contact_the_organizers')}
   .row
     .col-lg-6
       | !{group.descriptionHTML()}

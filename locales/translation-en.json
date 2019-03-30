@@ -269,6 +269,7 @@
   "groups": {
     "contact": "Contact person",
     "contacts": "Contact persons",
+    "contact_the_organizers": "Contact the organizers",
     "create": "Create group",
     "edit": "Edit group \"{{groupId}}\"",
     "email_prefix": "Prefix for e-mail-subjects",

@@ -260,6 +260,7 @@
   "groups": {
     "contact": "Ansprechpartner",
     "contacts": "Ansprechpartner",
+    "contact_the_organizers": "Ansprechpartner kontaktieren",
     "create": "Gruppe anlegen",
     "edit": "Gruppe \"{{groupId}}\" bearbeiten",
     "email_prefix": "Präfix für E-Mail-Subjects",
