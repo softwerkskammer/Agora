@@ -269,8 +269,8 @@
   "groups": {
     "contact": "Contact person",
     "contacts": "Contact persons",
-    "mail_the_organizers": "E-mail to the organizers",
-    "contactTheOrganizers_label": "Guests can reach out to contact persons",
+    "mail_the_contact_persons": "E-mail to the contact persons",
+    "mail_the_contact_persons_label": "Members (and later also guests) can write an e-mail to the contact persons.",
     "create": "Create group",
     "edit": "Edit group \"{{groupId}}\"",
     "email_prefix": "Prefix for e-mail-subjects",
@@ -295,7 +295,7 @@
       "title": "Name of the group used in the website, also realname for e-mails sent by the group",
       "x_coord": "Horizontal position on the map",
       "y_coord": "Vertical position on the map",
-      "contactTheOrganizers": "Include a contact link on the group page, where guests can reach out to the contact persons withtout having to sign up first."
+      "mail_the_contact_persons": "An e-mail button is displayed on the group page, which can be used to write to the contact persons."
     },
     "type": "Group type",
     "x_coord": "X-coord.",

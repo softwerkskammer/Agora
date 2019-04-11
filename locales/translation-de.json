@@ -260,8 +260,8 @@
   "groups": {
     "contact": "Ansprechpartner",
     "contacts": "Ansprechpartner",
-    "mail_the_organizers": "E-Mail an die Ansprechpartner",
-    "contactTheOrganizers_label": "Gäste können Ansprechpartner kontaktieren",
+    "mail_the_contact_persons": "E-Mail an die Ansprechpartner",
+    "mail_the_contact_persons_label": "Softwerkskammer-Mitglieder (und später auch Gäste) können eine E-Mail an die Ansprechpartner senden.",
     "create": "Gruppe anlegen",
     "edit": "Gruppe \"{{groupId}}\" bearbeiten",
     "email_prefix": "Präfix für E-Mail-Subjects",
@@ -289,7 +289,7 @@
       "title": "Anzeigetext innerhalb der Site, ist auch Realname für E-Mails",
       "x_coord": "Waagerechte Position auf der Karte",
       "y_coord": "Senkrechte Position auf der Karte",
-      "contactTheOrganizers": "Auf der Gruppenseite wir ein Kontaktlink angezeigt, über den Besucher ohne Anmeldung Kontakt mit den Ansprechpartnern aufnehmen können."
+      "mail_the_contact_persons": "Auf der Gruppenseite wird ein E-Mail-Knopf angezeigt, über den die Ansprechpartnern angeschrieben werden können."
     },
     "type": "Gruppenart",
     "x_coord": "X-Koord.",
