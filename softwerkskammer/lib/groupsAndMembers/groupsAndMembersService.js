@@ -99,7 +99,7 @@ module.exports = {
     });
   },
 
-  getOrganizersOfGroup: function (groupId, callback) {
+  getOrganizersOfGroup: function getOrganizersOfGroup (groupId, callback) {
     this.getGroupAndMembersForList(groupId, (error, groupIncludingMembers) => {
       if (error) {return callback(error);}
       if (!groupIncludingMembers) {
