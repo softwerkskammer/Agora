@@ -29,12 +29,11 @@ block content
               a.btn.btn-light(href='/groups/edit/' + group.id, title=t('general.edit')): i.fas.fa-edit
         h1 #{group.longName} #{' '}
           small #{group.type}
+      if (group.contactTheOrganizers && accessrights.canParticipateInGroup(group))
+        p
+          a.btn.btn-success(href='/mailsender/contactGroupContactPersons/' + group.id)
+            | #{t('groups.mail_the_organizers')}
       p
-        if (group.contactTheOrganizers && accessrights.canParticipateInGroup(group))
-          strong #{t('groups.contacts')}: #{' '}
-          a(href='/mailsender/contactGroupContactPersons/' + group.id)
-            | #{t('groups.contact_the_organizers')}
-          br
         strong #{t('groups.mailinglist')}: #{' '}
         a(href='mailto:' + group.id + '@softwerkskammer.org')
           | #{group.id}@softwerkskammer.org

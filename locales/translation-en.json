@@ -269,7 +269,7 @@
   "groups": {
     "contact": "Contact person",
     "contacts": "Contact persons",
-    "contact_the_organizers": "Contact",
+    "mail_the_organizers": "E-mail to the organizers",
     "contactTheOrganizers_label": "Guests can reach out to contact persons",
     "create": "Create group",
     "edit": "Edit group \"{{groupId}}\"",
