@@ -172,7 +172,7 @@ module.exports = {
         const groupNotFoundError = new Error(`${groups.length} Gruppen für Id ${groupId} gefunden. Erwarte genau eine Gruppe.`);
         return callback(groupNotFoundError, mailtransport.statusmessageForError(type, groupNotFoundError));
       }
-      if (!groups[0].isContactTheOrganizersEnabled()) {
+      if (!groups[0].canTheOrganizersBeContacted()) {
         return callback(null, mailtransport.statusmessageForError(type, '$t(mailsender.contact_persons_cannot_be_contacted)'));
       }
       groupsAndMembersService.getOrganizersOfGroup(groupId, (err, organizers) => {
