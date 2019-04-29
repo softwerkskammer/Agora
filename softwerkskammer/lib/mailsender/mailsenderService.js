@@ -164,7 +164,7 @@ module.exports = {
     });
   },
 
-  sendMailToContactPersonsOfGroup: function (groupId, message, callback) {
+  sendMailToContactPersonsOfGroup: function sendMailToContactPersonsOfGroup (groupId, message, callback) {
     const type = '$t(mailsender.notification)';
     groupsService.getGroups([groupId], (groupLoadErr, groups) => {
       if (groupLoadErr) { return callback(groupLoadErr, mailtransport.statusmessageForError(type, groupLoadErr)); }
