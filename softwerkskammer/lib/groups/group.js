@@ -66,7 +66,7 @@ class Group {
   }
 
   canTheOrganizersBeContacted() {
-    return this.contactTheOrganizers || false;
+    return !!this.contactTheOrganizers;
   }
 
   // Helper functions (static) -> look for a better place to implement
