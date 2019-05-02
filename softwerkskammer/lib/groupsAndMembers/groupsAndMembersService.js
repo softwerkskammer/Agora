@@ -105,8 +105,7 @@ module.exports = {
       if (!groupIncludingMembers) {
         return callback(null, []);
       }
-      const groupMembers = groupIncludingMembers.members || [];
-      const organizers = groupMembers.filter(member => groupIncludingMembers.isOrganizer(member.id()));
+      const organizers = groupIncludingMembers.members.filter(member => groupIncludingMembers.isOrganizer(member.id()));
       callback(null, organizers);
     });
   },

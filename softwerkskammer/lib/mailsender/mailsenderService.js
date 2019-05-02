@@ -180,6 +180,7 @@ module.exports = {
         if (!organizers.length) {
           return callback(null, mailtransport.statusmessageForError(type, '$t(mailsender.group_has_no_organizers)'));
         }
+        message.setSubject(`[Anfrage an Ansprechpartner/Mail to organizers] ${message.subject}`);
         message.setBccToMemberAddresses(organizers);
         sendMail(message, type, callback);
       });

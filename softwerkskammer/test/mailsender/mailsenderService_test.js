@@ -472,6 +472,22 @@ describe('MailsenderService', () => {
           expect(email.bcc).to.contain('second@example.org');
           done();
         });
+
+      });
+
+      it('allows organizers to see the source of the mail by prepending a prefix to the subject', done => {
+        groupIsOrganizedBy(groupId, [
+          anyMemberWithEmail()
+        ]);
+
+        message.setSubject('Email-Subject');
+
+        mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, err => {
+          expect(err).to.not.exist();
+          const email = singleSentEmail();
+          expect(email.subject).to.eql('[Anfrage an Ansprechpartner/Mail to organizers] Email-Subject');
+          done();
+        });
       });
 
       describe('organizers for group can not be read', () => {
