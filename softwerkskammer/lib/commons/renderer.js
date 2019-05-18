@@ -89,7 +89,7 @@ module.exports = {
     if (tokens.length === 0) {
       return {title: '', body: ''};
     }
-    const title = tokens.shift();
+    const title = tokens[0].text ? tokens.shift() : '';
     try {
       const rendered = marked.parser(tokens);
       return {

@@ -132,6 +132,13 @@ describe('Renderer', () => {
       expect(Renderer.titleAndRenderedTail(undefined, '')).to.be('');
       expect(Renderer.titleAndRenderedTail(null, '')).to.be('');
     });
+
+    it('only interprets first line as title if sensible', () => {
+      expect(Renderer.titleAndRenderedTail('- Verwaltung des Contents erfolgt auf GitHub: https://github.com/Meet-Hub-Hannover', '')).to.eql({
+        body: '<ul>\n<li>Verwaltung des Contents erfolgt auf GitHub: <a href="https://github.com/Meet-Hub-Hannover">https://github.com/Meet-Hub-Hannover</a></li>\n</ul>\n',
+        title: undefined
+      });
+    });
   });
 
 });
