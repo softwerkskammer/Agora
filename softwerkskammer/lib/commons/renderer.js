@@ -92,8 +92,6 @@ module.exports = {
     const title = tokens.shift();
     try {
       const rendered = marked.parser(tokens);
-      logger.error('Error during wiki parsing ("titleAndRenderedTail") with input: ' + content);
-      logger.error('Error during wiki parsing ("titleAndRenderedTail") with tokens: ' + tokens);
       return {
         title: title.text,
         body: enhanceTableTag(rendered)
