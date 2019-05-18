@@ -3,6 +3,7 @@ const Crypto = require('crypto');
 const Nsh = require('node-syntaxhighlighter');
 const iconv = require('iconv-lite');
 const R = require('ramda');
+const logger = require('winston').loggers.get('application');
 
 function normalize(str) {
   if (typeof str !== 'string' || str.trim() === '') {
@@ -89,10 +90,18 @@ module.exports = {
       return {title: '', body: ''};
     }
     const title = tokens.shift();
-    const rendered = marked.parser(tokens);
-    return {
-      title: title.text,
-      body: enhanceTableTag(rendered)
-    };
+    try {
+      const rendered = marked.parser(tokens);
+      logger.error('Error during wiki parsing ("titleAndRenderedTail") with input: ' + content);
+      logger.error('Error during wiki parsing ("titleAndRenderedTail") with tokens: ' + tokens);
+      return {
+        title: title.text,
+        body: enhanceTableTag(rendered)
+      };
+    } catch (e) {
+      logger.error('Error during wiki parsing ("titleAndRenderedTail") with input: ' + content);
+      logger.error('Error during wiki parsing ("titleAndRenderedTail") with tokens: ' + tokens);
+      throw e;
+    }
   }
 };
