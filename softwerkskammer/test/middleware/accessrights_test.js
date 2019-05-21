@@ -27,6 +27,14 @@ function superuser() {
   return standardMember({id: 'superuserID'});
 }
 
+function goupWithContactTheOrganizersTurnedOff() {
+  return new Group();
+}
+
+function goupWithContactTheOrganizersTurnedOn() {
+  return new Group({id: '1', contactTheOrganizers: true});
+}
+
 describe('Accessrights for Activities', () => {
   it('disallows the creation for guests', () => {
     expect(guest().canCreateActivity()).to.be(false);
@@ -142,6 +150,22 @@ describe('Accessrights for Groups', () => {
 
   it('allows every registered member to participate in a group', () => {
     expect(standardMember().canParticipateInGroup()).to.be(true);
+  });
+
+  it('disallows guest to contact the organizers when contact feature is turned off', () => {
+    expect(guest().canContactTheOrganizers(goupWithContactTheOrganizersTurnedOff())).to.be(false);
+  });
+
+  it('disallows guest to contact the organizers when contact feature is turned on', () => {
+    expect(guest().canContactTheOrganizers(goupWithContactTheOrganizersTurnedOn())).to.be(false);
+  });
+
+  it('disallows registered members to contact the organizers when contact feature is turned off', () => {
+    expect(standardMember().canContactTheOrganizers(goupWithContactTheOrganizersTurnedOff())).to.be(false);
+  });
+
+  it('allows registered members to contact the organizers when contact feature is turned on', () => {
+    expect(standardMember().canContactTheOrganizers(goupWithContactTheOrganizersTurnedOn())).to.be(true);
   });
 });
 

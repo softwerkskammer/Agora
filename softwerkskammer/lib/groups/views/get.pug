@@ -29,7 +29,7 @@ block content
               a.btn.btn-light(href='/groups/edit/' + group.id, title=t('general.edit')): i.fas.fa-edit
         h1 #{group.longName} #{' '}
           small #{group.type}
-      if (group.contactTheOrganizers && accessrights.canParticipateInGroup(group))
+      if (accessrights.canContactTheOrganizers(group))
         p
           a.btn.btn-success(href='/mailsender/contactGroupContactPersons/' + group.id)
             | #{t('groups.mail_the_contact_persons')}
