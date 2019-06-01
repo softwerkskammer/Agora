@@ -37,8 +37,8 @@ function messageSubmitted(req, res, next) {
   if (req.body.nickname) {
     return mailsenderService.sendMailToMember(req.body.nickname, message, processResult);
   }
-  if (req.body.contactPersonsGroupName) {
-    return mailsenderService.sendMailToContactPersonsOfGroup(req.body.contactPersonsGroupName, message, processResult);
+  if (req.body.groupNameForContact) {
+    return mailsenderService.sendMailToContactPersonsOfGroup(req.body.groupNameForContact, message, processResult);
   }
   statusmessage.errorMessage('message.title.email_problem', 'message.content.mailsender.error_no_recipient').putIntoSession(req);
   res.redirect(req.body.successURL);
