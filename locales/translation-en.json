@@ -302,7 +302,7 @@
     "y_coord": "Y-coord."
   },
   "mailsender": {
-    "contact_persons_cannot_be_contacted": "Organizers of this group cannot be contacted.",
+    "contact_the_organizers_disabled": "The feature \"E-mail to the contact persons\" is disabled.",
     "contents": "Contents",
     "copy_to_self": "Send a copy to myself",
     "group_has_no_organizers": "Group has no organizers.",

@@ -173,7 +173,7 @@ module.exports = {
         return callback(groupNotFoundError, mailtransport.statusmessageForError(type, groupNotFoundError));
       }
       if (!groups[0].canTheOrganizersBeContacted()) {
-        return callback(null, mailtransport.statusmessageForError(type, '$t(mailsender.contact_persons_cannot_be_contacted)'));
+        return callback(null, mailtransport.statusmessageForError(type, '$t(mailsender.contact_the_organizers_disabled)'));
       }
       groupsAndMembersService.getOrganizersOfGroup(groupId, (err, organizers) => {
         if (err) { return callback(err, mailtransport.statusmessageForError(type, err)); }

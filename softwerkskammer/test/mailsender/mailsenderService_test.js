@@ -406,7 +406,7 @@ describe('MailsenderService', () => {
           expectNoEmailWasSent();
           expect(statusMessage.contents().type).to.eql('alert-danger');
           expect(statusMessage.contents().additionalArguments.type).to.eql('$t(mailsender.notification)');
-          expect(statusMessage.contents().additionalArguments.err).to.eql('$t(mailsender.contact_persons_cannot_be_contacted)');
+          expect(statusMessage.contents().additionalArguments.err).to.eql('$t(mailsender.contact_the_organizers_disabled)');
           done();
         });
       });

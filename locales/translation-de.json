@@ -296,7 +296,7 @@
     "y_coord": "Y-Koord."
   },
   "mailsender": {
-    "contact_persons_cannot_be_contacted": "Ansprechpartner können für diese Gruppe nicht kontaktiert werden.",
+    "contact_the_organizers_disabled": "Das Feature \"E-Mail an die Ansprechpartner\" ist deaktiviert.",
     "contents": "Inhalt",
     "copy_to_self": "Eine Kopie an mich senden",
     "group_has_no_organizers": "Die Gruppe hat keine Ansprechpartner.",
