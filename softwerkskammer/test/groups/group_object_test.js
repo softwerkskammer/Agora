@@ -32,6 +32,34 @@ describe('Group object', () => {
       expect(group.organizers).to.contain('idB');
     });
 
+    describe('contactTheOrganizers flag', function () {
+      let body;
+
+      beforeEach(() => {
+        body = {
+          id: 'any-group-id',
+          contactTheOrganizers: 'on'
+        };
+      });
+
+      function organizerDidNotSelectCheckbox() {
+        delete body.contactTheOrganizers;
+      }
+
+      function organizerSelectedCheckbox() {
+        body.contactTheOrganizers = 'on';
+      }
+
+      it('no contactTheOrganizers property it was not checked', () => {
+        organizerDidNotSelectCheckbox();
+        expect(new Group(body).contactTheOrganizers).to.be(false);
+      });
+
+      it('contactTheOrganizers property with value on it was checked', () => {
+        organizerSelectedCheckbox();
+        expect(new Group(body).contactTheOrganizers).to.be(true);
+      });
+    });
   });
 
 });

@@ -20,7 +20,7 @@ class Group {
       this.mapX = object.mapX;
       this.mapY = object.mapY;
       this.shortName = object.shortName;
-      this.contactTheOrganizers = object.contactTheOrganizers;
+      this.contactTheOrganizers = !!object.contactTheOrganizers;
     } else {
       this.color = '#FF00FF';
     }
