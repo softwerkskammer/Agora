@@ -1,6 +1,7 @@
 const async = require('async');
 const {DateTime} = require('luxon');
 const conf = require('simple-configure');
+const logger = require('winston').loggers.get('application');
 
 const beans = conf.get('beans');
 const groupsService = beans.get('groupsService');
@@ -169,8 +170,9 @@ module.exports = {
     groupsService.getGroups([groupId], (groupLoadErr, groups) => {
       if (groupLoadErr) { return callback(groupLoadErr, mailtransport.statusmessageForError(type, groupLoadErr)); }
       if (groups.length !== 1) {
-        const groupNotFoundError = new Error(`${groups.length} Gruppen für Id ${groupId} gefunden. Erwarte genau eine Gruppe.`);
-        return callback(groupNotFoundError, mailtransport.statusmessageForError(type, groupNotFoundError));
+        logger.error(`${groups.length} Gruppen für Id ${groupId} gefunden. Erwarte genau eine Gruppe.`);
+        const error = new Error('Das senden der E-Mail ist fehlgeschlagen. Es liegt ein technisches Problem vor.');
+        return callback(error, mailtransport.statusmessageForError(type, error));
       }
       if (!groups[0].canTheOrganizersBeContacted()) {
         return callback(null, mailtransport.statusmessageForError(type, '$t(mailsender.contact_the_organizers_disabled)'));
