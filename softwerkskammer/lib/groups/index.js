@@ -121,7 +121,13 @@ app.post('/unsubscribe', (req, res) => {
 });
 
 app.get('/:groupname', (req, res, next) => {
-
+  function addGroupDataToActivity(activities, group) {
+    activities.forEach(activity => {
+      activity.colorRGB = group.color;
+      activity.group = group; // sets the group object in activity
+    });
+    return activities;
+  }
   groupsAndMembers.getGroupAndMembersForList(req.params.groupname, (err, group) => {
     if (err || !group) { return next(err); }
     wikiService.getBlogpostsForGroup(req.params.groupname, (err1, blogposts) => {
@@ -139,8 +145,8 @@ app.get('/:groupname', (req, res, next) => {
             blogposts,
             blogpostsFeedUrl: req.originalUrl + '/feed',
             webcalURL: conf.get('publicUrlPrefix').replace('http', 'webcal') + '/activities/icalForGroup/' + group.id,
-            upcomingGroupActivities: activities || [],
-            recentGroupActivities: pastActivities ? R.take(5, pastActivities) : []
+            upcomingGroupActivities: addGroupDataToActivity(activities, group) || [],
+            recentGroupActivities: addGroupDataToActivity(pastActivities ? R.take(5, pastActivities) : [], group)
           });
         });
       });

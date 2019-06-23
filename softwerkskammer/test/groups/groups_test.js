@@ -25,7 +25,8 @@ const GroupA = new Group({
   description: 'Dies ist Gruppe A.',
   type: 'Themengruppe',
   emailPrefix: 'Group-A',
-  organizers: ['organizer']
+  organizers: ['organizer'],
+  color: '#FFF'
 });
 
 describe('Groups application', () => {
@@ -198,6 +199,7 @@ describe('Groups application', () => {
         .expect(/Kommende Aktivitäten:/)
         .expect(/1\. Januar 2013/)
         .expect(/Erste Aktivität/)
+        .expect(/background-color: #FFF/)
         .expect(/1\. Mai 2013/)
         .expect(/Zweite Aktivität/, done);
     });
