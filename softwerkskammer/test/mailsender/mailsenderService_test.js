@@ -358,7 +358,7 @@ describe('MailsenderService', () => {
       });
     }
 
-    function getGroupOrganizers(groupId, fakeImplementation){
+    function getGroupOrganizers(groupId, fakeImplementation) {
       return sinon.stub(groupsAndMembersService, 'getOrganizersOfGroup')
         .withArgs(groupId, sinon.match.any)
         .callsFake(fakeImplementation);
@@ -521,15 +521,13 @@ describe('MailsenderService', () => {
         });
       });
 
-      describe('status message', () => {
-        describe('when message is successfully send', () => {
-          it('returns a message indicating the success', (done) => {
-            groupIsOrganizedBy(groupId, [anyMemberWithEmail()]);
-            mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err, statusmessage) => {
-              expect(err).not.to.exist();
-              expect(statusmessage.contents().type).to.eql('alert-success');
-              done();
-            });
+      describe('when message is successfully send', () => {
+        it('returns a message indicating the success', (done) => {
+          groupIsOrganizedBy(groupId, [anyMemberWithEmail()]);
+          mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err, statusmessage) => {
+            expect(err).not.to.exist();
+            expect(statusmessage.contents().type).to.eql('alert-success');
+            done();
           });
         });
       });
