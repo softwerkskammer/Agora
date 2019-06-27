@@ -32,7 +32,8 @@ block content
       if (accessrights.canContactTheOrganizers(group))
         p
           a.btn.btn-success(href='/mailsender/contactGroupContactPersons/' + group.id)
-            | #{t('groups.mail_the_contact_persons')}
+            i.far.fa-envelope
+            | &nbsp;#{t('groups.mail_the_contact_persons')}
       p
         strong #{t('groups.mailinglist')}: #{' '}
         a(href='mailto:' + group.id + '@softwerkskammer.org')
