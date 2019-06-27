@@ -56,8 +56,6 @@
     "icalendar": "0.7.1",
     "iconv-lite": "0.4.24",
     "imagemagick": "0.1.3",
-    "intl": "1.2.5",
-    "intl-locales-supported": "1.1.2",
     "jqcloud2": "2.0.3",
     "jquery": "3.4.1",
     "jquery-validation": "1.19.1",
