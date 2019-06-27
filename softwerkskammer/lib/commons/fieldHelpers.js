@@ -4,15 +4,6 @@ const { DateTime } = require('luxon');
 const conf = require('simple-configure');
 const misc = conf.get('beans').get('misc');
 
-// adding additional languages to builtin Intl
-if (!require('intl-locales-supported')(['de', 'en-GB'])) {
-  // `Intl` exists, but it doesn't have the data we need, so load the
-  // polyfill and replace the constructors we need with the polyfill's.
-  const IntlPolyfill = require('intl');
-  Intl.NumberFormat = IntlPolyfill.NumberFormat;
-  Intl.DateTimeFormat = IntlPolyfill.DateTimeFormat;
-}
-
 module.exports = {
   isFilled: function isFilled(someValue) {
     return someValue !== undefined && someValue !== null && someValue !== 'undefined' &&
