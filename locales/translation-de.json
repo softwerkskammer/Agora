@@ -261,7 +261,6 @@
     "contact": "Ansprechpartner",
     "contacts": "Ansprechpartner",
     "mail_the_contact_persons": "E-Mail an die Ansprechpartner",
-    "mail_the_contact_persons_label": "Softwerkskammer-Mitglieder (und später auch Gäste) können eine E-Mail an die Ansprechpartner senden.",
     "create": "Gruppe anlegen",
     "edit": "Gruppe \"{{groupId}}\" bearbeiten",
     "email_prefix": "Präfix für E-Mail-Subjects",

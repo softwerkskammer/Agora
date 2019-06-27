@@ -270,7 +270,6 @@
     "contact": "Contact person",
     "contacts": "Contact persons",
     "mail_the_contact_persons": "E-mail to the contact persons",
-    "mail_the_contact_persons_label": "Members (and later also guests) can write an e-mail to the contact persons.",
     "create": "Create group",
     "edit": "Edit group \"{{groupId}}\"",
     "email_prefix": "Prefix for e-mail-subjects",
