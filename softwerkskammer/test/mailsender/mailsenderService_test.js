@@ -154,11 +154,11 @@ describe('MailsenderService', () => {
       emptyActivity.participants = [new Member({email})];
 
       mailsenderService.sendMailToParticipantsOf(activityURL, message, (err, statusmessage) => {
-        const sendEmail = singleSentEmail();
-        expect(sendEmail.bcc).to.contain(email);
-        expect(sendEmail.html).to.contain('mark down');
-        expect(sendEmail.icalEvent).to.contain('BEGIN:VCALENDAR');
-        expect(sendEmail.icalEvent).to.contain('URL:http://localhost:17125/activities/urlOfTheActivity');
+        const sentEmail = singleSentEmail();
+        expect(sentEmail.bcc).to.contain(email);
+        expect(sentEmail.html).to.contain('mark down');
+        expect(sentEmail.icalEvent).to.contain('BEGIN:VCALENDAR');
+        expect(sentEmail.icalEvent).to.contain('URL:http://localhost:17125/activities/urlOfTheActivity');
         expect(statusmessage.contents().type).to.equal('alert-success');
         done(err);
       });
@@ -185,9 +185,9 @@ describe('MailsenderService', () => {
   describe('sending mail to distinct member', () => {
     it('sends the email', done => {
       mailsenderService.sendMailToMember('nickname', message, (err, statusmessage) => {
-        const email = singleSentEmail();
-        expect(email.bcc).to.contain('email@mail.de');
-        expect(email.html).to.contain('mark down');
+        const sentMail = singleSentEmail();
+        expect(sentMail.bcc).to.contain('email@mail.de');
+        expect(sentMail.html).to.contain('mark down');
         expect(statusmessage.contents().type).to.equal('alert-success');
         done(err);
       });
@@ -221,10 +221,10 @@ describe('MailsenderService', () => {
       const markdown = '';
       const member = new Member({nickname: 'nick', firstname: 'first', lastname: 'last'});
       mailsenderService.sendResignment(markdown, member, (err, statusmessage) => {
-        const email = singleSentEmail();
-        expect(email.from).to.contain('first last');
-        expect(email.subject).to.contain('Austrittswunsch');
-        expect(email.to).to.contain('email@super.user');
+        const sentMail = singleSentEmail();
+        expect(sentMail.from).to.contain('first last');
+        expect(sentMail.subject).to.contain('Austrittswunsch');
+        expect(sentMail.to).to.contain('email@super.user');
         expect(statusmessage.contents().type).to.equal('alert-success');
         done(err);
       });
@@ -268,12 +268,12 @@ describe('MailsenderService', () => {
         callback(null, group);
       });
       mailsenderService.sendMailToInvitedGroups(['GroupA', 'GroupB'], 'activityUrlForMock', message, (err, statusmessage) => {
-        const email = singleSentEmail();
-        expect(email.bcc).to.contain('memberA');
-        expect(email.bcc).to.contain('memberB');
-        expect(email.html).to.contain('mark down');
-        expect(email.icalEvent).to.contain('BEGIN:VCALENDAR');
-        expect(email.icalEvent).to.contain('URL:http://localhost:17125/activities/urlOfTheActivity');
+        const sentMail = singleSentEmail();
+        expect(sentMail.bcc).to.contain('memberA');
+        expect(sentMail.bcc).to.contain('memberB');
+        expect(sentMail.html).to.contain('mark down');
+        expect(sentMail.icalEvent).to.contain('BEGIN:VCALENDAR');
+        expect(sentMail.icalEvent).to.contain('URL:http://localhost:17125/activities/urlOfTheActivity');
         expect(statusmessage.contents().type).to.equal('alert-success');
         done(err);
       });
@@ -288,11 +288,11 @@ describe('MailsenderService', () => {
         callback(null, group);
       });
       mailsenderService.sendMailToInvitedGroups(['GroupA', 'GroupB'], 'errorProvokingUrl', message, (err, statusmessage) => {
-        const email = singleSentEmail();
-        expect(email.bcc).to.contain('memberA');
-        expect(email.bcc).to.contain('memberB');
-        expect(email.html).to.contain('mark down');
-        expect(email.icalEvent).to.be(undefined);
+        const sentMail = singleSentEmail();
+        expect(sentMail.bcc).to.contain('memberA');
+        expect(sentMail.bcc).to.contain('memberB');
+        expect(sentMail.html).to.contain('mark down');
+        expect(sentMail.icalEvent).to.be(undefined);
         expect(statusmessage.contents().type).to.equal('alert-success');
         done(err);
       });
@@ -467,9 +467,9 @@ describe('MailsenderService', () => {
 
         mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err) => {
           expect(err).to.not.exist();
-          const email = singleSentEmail();
-          expect(email.bcc).to.contain('first@example.org');
-          expect(email.bcc).to.contain('second@example.org');
+          const sentMail = singleSentEmail();
+          expect(sentMail.bcc).to.contain('first@example.org');
+          expect(sentMail.bcc).to.contain('second@example.org');
           done();
         });
 
@@ -484,8 +484,8 @@ describe('MailsenderService', () => {
 
         mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, err => {
           expect(err).to.not.exist();
-          const email = singleSentEmail();
-          expect(email.subject).to.eql('[Anfrage an Ansprechpartner/Mail to organizers] Email-Subject');
+          const sentMail = singleSentEmail();
+          expect(sentMail.subject).to.eql('[Anfrage an Ansprechpartner/Mail to organizers] Email-Subject');
           done();
         });
       });
