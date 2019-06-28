@@ -245,6 +245,23 @@ describe('Groups and Members Service (getOrganizersOfGroup)', () => {
       done(error);
     });
   });
+
+  it('returns the organizers when there are any and the group exists', (done) => {
+    const groupId = 'group-with-organizers';
+    const organizerId1 = 'organizerId1';
+    const organizerId2 = 'organizerId2';
+    const organizer1 = new Member({id: organizerId1});
+    const organizer2 = new Member({id: organizerId2});
+    const member = anyGroupMember();
+    thereIsGroup(new Group({id: groupId, organizers: [organizerId1, organizerId2]}));
+    groupHasMembers([organizer1, organizer2, member]);
+    groupsAndMembersService.getOrganizersOfGroup(groupId, (error, organizers) => {
+      expect(organizers).to.have.length(2);
+      expect(organizers[0].id()).to.equal(organizerId1);
+      expect(organizers[1].id()).to.equal(organizerId2);
+      done(error);
+    });
+  });
 });
 
 describe('Groups and Members Service (addMembercountToGroup)', () => {
