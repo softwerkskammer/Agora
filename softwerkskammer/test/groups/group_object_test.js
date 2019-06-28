@@ -33,30 +33,20 @@ describe('Group object', () => {
     });
 
     describe('contactTheOrganizers flag', function () {
-      let body;
-
-      beforeEach(() => {
-        body = {
-          id: 'any-group-id',
-          contactTheOrganizers: 'on'
-        };
-      });
-
-      function organizerDidNotSelectCheckbox() {
-        delete body.contactTheOrganizers;
-      }
-
-      function organizerSelectedCheckbox() {
-        body.contactTheOrganizers = 'on';
-      }
-
       it('no contactTheOrganizers property it was not checked', () => {
-        organizerDidNotSelectCheckbox();
+        const body = {
+          id: 'any-group-id',
+        };
+
         expect(new Group(body).contactTheOrganizers).to.be(false);
       });
 
       it('contactTheOrganizers property with value on it was checked', () => {
-        organizerSelectedCheckbox();
+        const body = {
+          id: 'any-group-id',
+          contactTheOrganizers: 'on'
+        };
+
         expect(new Group(body).contactTheOrganizers).to.be(true);
       });
     });
