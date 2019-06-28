@@ -40,6 +40,10 @@ class Group {
     return members.map(member => {return {member, checked: this.isOrganizer(member.id())}; });
   }
 
+  membersThatAreOrganizers(members) {
+    return members.filter(member => this.isOrganizer(member.id()));
+  }
+
   mapYrelative() {
     return 100 * this.mapY / 441;
   }

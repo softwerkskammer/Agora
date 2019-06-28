@@ -160,6 +160,26 @@ describe('answers that a', () => {
 
 });
 
+describe('list of organizers', () => {
+  it('returns empty list when no members are in group', () => {
+    const group = new Group({id: 'groupA', organizers: []});
+    expect(group.membersThatAreOrganizers([])).to.be.empty();
+  });
+
+  it('returns empty list when no organizers are in goup', () => {
+    const group = new Group({id: 'groupA', organizers: []});
+    expect(group.membersThatAreOrganizers([new Member({id: 'member1'})])).to.be.empty();
+  });
+
+  it('returns list with only those members that are organizers', () => {
+    const group = new Group({id: 'groupA', organizers: ['organizer1', 'organizer2']});
+    const organizer1 = new Member({id: 'organizer1'});
+    const organizer2 = new Member({id: 'organizer2'});
+    const members = [organizer1, new Member({id: 'no-organizer'}), organizer2];
+    expect(group.membersThatAreOrganizers(members)).to.eql([organizer1, organizer2]);
+  });
+});
+
 describe('delivers the symmetric difference of organizers to', () => {
 
   it('no other group (first arg is undefined)', () => {
