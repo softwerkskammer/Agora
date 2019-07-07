@@ -70,7 +70,11 @@ class Group {
   }
 
   canTheOrganizersBeContacted() {
-    return !!this.contactTheOrganizers;
+    return !!this.contactTheOrganizers && this.hasOrganizers();
+  }
+
+  hasOrganizers() {
+    return !R.isEmpty(this.organizers);
   }
 
   // Helper functions (static) -> look for a better place to implement

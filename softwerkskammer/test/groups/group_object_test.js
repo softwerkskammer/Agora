@@ -231,6 +231,20 @@ describe('returns the meetup :urlname from the given meetup URL', () => {
 
 });
 
+describe('hasOrganizers', () => {
+  it('returns false when there are no organizers', () => {
+    const group = new Group({id: 'id'});
+
+    expect(group.hasOrganizers()).to.be.false();
+  });
+
+  it('returns true when there are organizers', () => {
+    const group = new Group({id: 'id', organizers: ['organizer1', 'organizer2']});
+
+    expect(group.hasOrganizers()).to.be.true();
+  });
+});
+
 describe('contact the organizers is an opt in feature (for spam protection purposes)', () => {
   it('for new groups', () => {
     const group = new Group();
@@ -238,12 +252,17 @@ describe('contact the organizers is an opt in feature (for spam protection purpo
   });
 
   it('for existing groups', () => {
-    const group2 = new Group({id: 'flag-not-provided-in-state'});
-    expect(group2.canTheOrganizersBeContacted()).to.be.false();
+    const group = new Group({id: 'flag-not-provided-in-state'});
+    expect(group.canTheOrganizersBeContacted()).to.be.false();
   });
 
-  it('honour organizers choice', () => {
-    const group = new Group({contactTheOrganizers: true, id: 'not-relevant'});
+  it('honour organizers choice when there are organizers', () => {
+    const group = new Group({contactTheOrganizers: true, organizers: ['organizer1', 'organizer2'], id: 'not-relevant'});
     expect(group.canTheOrganizersBeContacted()).to.be.true();
+  });
+
+  it('returns false when flag is enabled but there are no organizers', () => {
+    const group = new Group({contactTheOrganizers: true, organizers: [], id: 'not-relevant'});
+    expect(group.canTheOrganizersBeContacted()).to.be.false();
   });
 });

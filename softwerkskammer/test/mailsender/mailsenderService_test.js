@@ -443,7 +443,9 @@ describe('MailsenderService', () => {
     });
 
     describe('when contact organizers is enabled for group', () => {
-      const group = new Group({id: groupId, contactTheOrganizers: true});
+      const organizerId1 = 'first';
+      const organizerId2 = 'second';
+      const group = new Group({id: groupId, contactTheOrganizers: true, organizers: [organizerId1, organizerId2]});
 
       beforeEach(() => {
         thereIsAGroup(group);
@@ -452,9 +454,11 @@ describe('MailsenderService', () => {
       it('sends BCC to all organizers of given group', done => {
         groupIsOrganizedBy(groupId, [
           new Member({
+            id: organizerId1,
             email: 'first@example.org'
           }),
           new Member({
+            id: organizerId2,
             email: 'second@example.org'
           })
         ]);
