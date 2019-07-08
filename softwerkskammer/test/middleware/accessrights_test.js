@@ -27,6 +27,11 @@ function superuser() {
   return standardMember({id: 'superuserID'});
 }
 
+const groupWithOrganizersContactTheOrganizersTurnedOff = new Group({id: '1', organizers: ['organizer1']});
+const groupWithoutOrganizersAndContactTheOrganizersTurnedOff = new Group({id: '1'});
+const groupWithOrganizersAndContactTheOrganizersTurnedOn = new Group({id: '1', contactTheOrganizers: true, organizers: ['organizer1']});
+const groupWithoutOrganizersAndContactTheOrganizersTurnedOn = new Group({id: '1', contactTheOrganizers: true});
+
 describe('Accessrights for Activities', () => {
   it('disallows the creation for guests', () => {
     expect(guest().canCreateActivity()).to.be(false);
@@ -142,6 +147,29 @@ describe('Accessrights for Groups', () => {
 
   it('allows every registered member to participate in a group', () => {
     expect(standardMember().canParticipateInGroup()).to.be(true);
+  });
+
+  it('disallows memebrs to contact the organizers when contact feature is turned off', () => {
+    expect(guest().canContactTheOrganizers(groupWithOrganizersContactTheOrganizersTurnedOff)).to.be(false);
+    expect(guest().canContactTheOrganizers(groupWithoutOrganizersAndContactTheOrganizersTurnedOff)).to.be(false);
+  });
+
+  it('disallows guest to contact the organizers when contact feature is turned on', () => {
+    expect(guest().canContactTheOrganizers(groupWithOrganizersAndContactTheOrganizersTurnedOn)).to.be(false);
+    expect(guest().canContactTheOrganizers(groupWithoutOrganizersAndContactTheOrganizersTurnedOn)).to.be(false);
+  });
+
+  it('disallows registered members to contact the organizers when contact feature is turned off', () => {
+    expect(standardMember().canContactTheOrganizers(groupWithOrganizersContactTheOrganizersTurnedOff)).to.be(false);
+    expect(standardMember().canContactTheOrganizers(groupWithoutOrganizersAndContactTheOrganizersTurnedOff)).to.be(false);
+  });
+
+  it('allows registered members to contact the organizers when contact feature is turned on and there are organizers', () => {
+    expect(standardMember().canContactTheOrganizers(groupWithOrganizersAndContactTheOrganizersTurnedOn)).to.be(true);
+  });
+
+  it('disallows registered members to contact the organizers when contact feature is turned on and there no organizers', () => {
+    expect(standardMember().canContactTheOrganizers(groupWithoutOrganizersAndContactTheOrganizersTurnedOn)).to.be(false);
   });
 });
 

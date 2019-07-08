@@ -37,10 +37,12 @@ function messageSubmitted(req, res, next) {
   if (req.body.nickname) {
     return mailsenderService.sendMailToMember(req.body.nickname, message, processResult);
   }
+  if (req.body.groupNameForContact) {
+    return mailsenderService.sendMailToContactPersonsOfGroup(req.body.groupNameForContact, message, processResult);
+  }
   statusmessage.errorMessage('message.title.email_problem', 'message.content.mailsender.error_no_recipient').putIntoSession(req);
   res.redirect(req.body.successURL);
 }
-
 
 const app = misc.expressAppIn(__dirname);
 
@@ -62,6 +64,18 @@ app.get('/contactMember/:nickname', (req, res, next) => {
   mailsenderService.dataForShowingMessageToMember(req.params.nickname, (err, result) => {
     if (err || !result) {return next(err); }
     res.render('compose', result);
+  });
+});
+
+app.get('/contactGroupContactPersons/:groupname', (req, res) => {
+  const groupName = req.params.groupname;
+
+  res.render('compose', {
+    message: new Message(),
+    successURL: '/groups/' + groupName,
+    contactPersons: {
+      groupName: groupName
+    }
   });
 });
 

@@ -20,6 +20,7 @@ class Group {
       this.mapX = object.mapX;
       this.mapY = object.mapY;
       this.shortName = object.shortName;
+      this.contactTheOrganizers = !!object.contactTheOrganizers;
     } else {
       this.color = '#FF00FF';
     }
@@ -37,6 +38,10 @@ class Group {
 
   checkedOrganizers(members) {
     return members.map(member => {return {member, checked: this.isOrganizer(member.id())}; });
+  }
+
+  membersThatAreOrganizers(members) {
+    return members.filter(member => this.isOrganizer(member.id()));
   }
 
   mapYrelative() {
@@ -62,6 +67,14 @@ class Group {
     } else {
       return null;
     }
+  }
+
+  canTheOrganizersBeContacted() {
+    return !!this.contactTheOrganizers && this.hasOrganizers();
+  }
+
+  hasOrganizers() {
+    return !R.isEmpty(this.organizers);
   }
 
   // Helper functions (static) -> look for a better place to implement

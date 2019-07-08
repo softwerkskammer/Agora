@@ -32,6 +32,24 @@ describe('Group object', () => {
       expect(group.organizers).to.contain('idB');
     });
 
+    describe('contactTheOrganizers flag', function () {
+      it('no contactTheOrganizers property it was not checked', () => {
+        const body = {
+          id: 'any-group-id',
+        };
+
+        expect(new Group(body).contactTheOrganizers).to.be(false);
+      });
+
+      it('contactTheOrganizers property with value on it was checked', () => {
+        const body = {
+          id: 'any-group-id',
+          contactTheOrganizers: 'on'
+        };
+
+        expect(new Group(body).contactTheOrganizers).to.be(true);
+      });
+    });
   });
 
 });
@@ -132,6 +150,26 @@ describe('answers that a', () => {
 
 });
 
+describe('list of organizers', () => {
+  it('returns empty list when no members are in group', () => {
+    const group = new Group({id: 'groupA', organizers: []});
+    expect(group.membersThatAreOrganizers([])).to.be.empty();
+  });
+
+  it('returns empty list when no organizers are in goup', () => {
+    const group = new Group({id: 'groupA', organizers: []});
+    expect(group.membersThatAreOrganizers([new Member({id: 'member1'})])).to.be.empty();
+  });
+
+  it('returns list with only those members that are organizers', () => {
+    const group = new Group({id: 'groupA', organizers: ['organizer1', 'organizer2']});
+    const organizer1 = new Member({id: 'organizer1'});
+    const organizer2 = new Member({id: 'organizer2'});
+    const members = [organizer1, new Member({id: 'no-organizer'}), organizer2];
+    expect(group.membersThatAreOrganizers(members)).to.eql([organizer1, organizer2]);
+  });
+});
+
 describe('delivers the symmetric difference of organizers to', () => {
 
   it('no other group (first arg is undefined)', () => {
@@ -191,4 +229,40 @@ describe('returns the meetup :urlname from the given meetup URL', () => {
     expect(group.meetupUrlName()).to.eql('Softwerkskammer-Karlsruhe');
   });
 
+});
+
+describe('hasOrganizers', () => {
+  it('returns false when there are no organizers', () => {
+    const group = new Group({id: 'id'});
+
+    expect(group.hasOrganizers()).to.be.false();
+  });
+
+  it('returns true when there are organizers', () => {
+    const group = new Group({id: 'id', organizers: ['organizer1', 'organizer2']});
+
+    expect(group.hasOrganizers()).to.be.true();
+  });
+});
+
+describe('contact the organizers is an opt in feature (for spam protection purposes)', () => {
+  it('for new groups', () => {
+    const group = new Group();
+    expect(group.canTheOrganizersBeContacted()).to.be.false();
+  });
+
+  it('for existing groups', () => {
+    const group = new Group({id: 'flag-not-provided-in-state'});
+    expect(group.canTheOrganizersBeContacted()).to.be.false();
+  });
+
+  it('honour organizers choice when there are organizers', () => {
+    const group = new Group({contactTheOrganizers: true, organizers: ['organizer1', 'organizer2'], id: 'not-relevant'});
+    expect(group.canTheOrganizersBeContacted()).to.be.true();
+  });
+
+  it('returns false when flag is enabled but there are no organizers', () => {
+    const group = new Group({contactTheOrganizers: true, organizers: [], id: 'not-relevant'});
+    expect(group.canTheOrganizersBeContacted()).to.be.false();
+  });
 });

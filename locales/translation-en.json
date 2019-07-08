@@ -269,6 +269,7 @@
   "groups": {
     "contact": "Contact person",
     "contacts": "Contact persons",
+    "mail_the_contact_persons": "E-mail to the contact persons",
     "create": "Create group",
     "edit": "Edit group \"{{groupId}}\"",
     "email_prefix": "Prefix for e-mail-subjects",
@@ -277,6 +278,7 @@
     "has": "This group has",
     "join": "Join Group",
     "leave": "Leave Group",
+    "mailinglist": "Group mailinglist",
     "map_label": "Label in map",
     "more": "read more…",
     "new": "New Group",
@@ -291,15 +293,18 @@
       "name": "The e-mail address \"@softwerkskammer.org\" where the group can be reached.",
       "title": "Name of the group used in the website, also realname for e-mails sent by the group",
       "x_coord": "Horizontal position on the map",
-      "y_coord": "Vertical position on the map"
+      "y_coord": "Vertical position on the map",
+      "mail_the_contact_persons": "An e-mail button is displayed on the group page, which can be used to write to the contact persons."
     },
     "type": "Group type",
     "x_coord": "X-coord.",
     "y_coord": "Y-coord."
   },
   "mailsender": {
+    "contact_the_organizers_disabled": "The feature \"E-mail to the contact persons\" is disabled.",
     "contents": "Contents",
     "copy_to_self": "Send a copy to myself",
+    "group_has_no_organizers": "Group has no organizers.",
     "invitation": "Invitation",
     "notes-resign": "Please let us know what you think about this site",
     "notification": "Message",
@@ -315,6 +320,7 @@
     "send": "Send",
     "subject": "Subject",
     "to_member": "To member",
+    "to_contact_persons": "To contact persons of group",
     "to_participants": "only to the activity's participants (not to groups)",
     "why-resign": "Why do you want to resign",
     "write": "Compose Message"

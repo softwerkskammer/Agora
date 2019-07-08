@@ -45,6 +45,7 @@ mixin groupform(group, allTypes, organizersChecked)
               +text('mapY', t('groups.y_coord'), group.mapY, t('groups.tooltip.y_coord'))
           +text('shortName', t('groups.map_label'), group.shortName, t('groups.tooltip.map_label'))
           +text('meetupURL', t('groups.meetupURL_label'), group.meetupURL, t('groups.tooltip.meetupURL_label'))
+          +checkboxWithDescription('contactTheOrganizers', t('groups.mail_the_contact_persons'), group.contactTheOrganizers, t('groups.tooltip.mail_the_contact_persons'))
       .row
         .col-md-12
           if group.id

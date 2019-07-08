@@ -91,6 +91,42 @@ describe('Groups and Members Service (getMemberWithHisGroups or getMemberWithHis
   });
 });
 
+function thereIsNoGroupFor(groupId) {
+  sinon.stub(groupstore, 'getGroup')
+    .withArgs(groupId, sinon.match.any)
+    .callsFake((groupname, callback) => { callback(null, null); });
+}
+
+function thereAreNoMailingListUsersFor(groupId) {
+  sinon.stub(groupsService, 'getMailinglistUsersOfList')
+    .withArgs(groupId, sinon.match.any)
+    .callsFake((ignoredErr, callback) => { callback(null, []); });
+}
+
+function thereIsGroup(group) {
+  sinon.stub(groupstore, 'getGroup')
+    .withArgs(group.id, sinon.match.any)
+    .callsFake((groupname, callback) => {callback(null, group);
+  });
+}
+
+function groupHasMembers(members) {
+  const mailingListSubscribers = ['user@email.com'];
+  sinon.stub(groupsService, 'getMailinglistUsersOfList')
+    .callsFake((ignoredErr, callback) => {callback(null, mailingListSubscribers); });
+  sinon.stub(memberstore, 'getMembersForEMails')
+    .withArgs(mailingListSubscribers, sinon.match.any)
+    .callsFake((member, callback) => {callback(null, members);
+  });
+  sinon.stub(membersService, 'putAvatarIntoMemberAndSave')
+    .callsFake((member, callback) => {callback();
+  });
+}
+
+function anyGroupMember() {
+  return new Member({id: 'any-member-id'});
+}
+
 describe('Groups and Members Service (getGroupAndMembersForList)', () => {
 
   beforeEach(() => {
@@ -103,8 +139,8 @@ describe('Groups and Members Service (getGroupAndMembersForList)', () => {
 
   it('returns no group when there is no group and no mailing-list', done => {
     sinon.stub(memberstore, 'getMembersForEMails').callsFake((member, callback) => { callback(); });
-    sinon.stub(groupsService, 'getMailinglistUsersOfList').callsFake((ignoredErr, callback) => { callback(null, []); });
-    sinon.stub(groupstore, 'getGroup').callsFake((groupname, callback) => { callback(null, null); });
+    thereAreNoMailingListUsersFor('unbekannteListe');
+    thereIsNoGroupFor('unbekannteListe');
 
     groupsAndMembersService.getGroupAndMembersForList('unbekannteListe', (err, group) => {
       expect(group).to.not.exist();
@@ -119,7 +155,7 @@ describe('Groups and Members Service (getGroupAndMembersForList)', () => {
     sinon.stub(memberstore, 'getMembersForEMails').callsFake((member, callback) => {
       callback(null, [dummymember, dummymember2]);
     });
-    sinon.stub(groupstore, 'getGroup').callsFake((groupname, callback) => { callback(null, null); });
+    thereIsNoGroupFor('mailingListWithoutGroup');
 
     groupsAndMembersService.getGroupAndMembersForList('mailingListWithoutGroup', (err, group) => {
       expect(group).to.not.exist();
@@ -128,7 +164,8 @@ describe('Groups and Members Service (getGroupAndMembersForList)', () => {
   });
 
   it('returns the group with the given name and an empty list of subscribed users when there is no mailing-list or when there are no subscribers', done => {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList').callsFake((ignoredErr, callback) => { callback(null, []); });
+    const groupId = GroupA.id;
+    thereAreNoMailingListUsersFor(groupId);
     sinon.stub(groupstore, 'getGroup').callsFake((groupname, callback) => {
       callback(null, GroupA);
     });
@@ -136,7 +173,7 @@ describe('Groups and Members Service (getGroupAndMembersForList)', () => {
       callback(null, []);
     });
 
-    groupsAndMembersService.getGroupAndMembersForList('GroupA', (err, group) => {
+    groupsAndMembersService.getGroupAndMembersForList(groupId, (err, group) => {
       expect(group).to.equal(GroupA);
       expect(group.members).to.not.be(null);
       expect(group.members.length).to.equal(0);
@@ -145,18 +182,10 @@ describe('Groups and Members Service (getGroupAndMembersForList)', () => {
   });
 
   it('returns the group with the given name and a list of one subscribed user when there is one subscriber in mailinglist', done => {
-    sinon.stub(groupsService, 'getMailinglistUsersOfList').callsFake((ignoredErr, callback) => { callback(null, ['user@email.com']); });
-    sinon.stub(groupstore, 'getGroup').callsFake((groupname, callback) => {
-      callback(null, GroupA);
-    });
-    sinon.stub(memberstore, 'getMembersForEMails').callsFake((member, callback) => {
-      callback(null, [dummymember]);
-    });
-    sinon.stub(membersService, 'putAvatarIntoMemberAndSave').callsFake((member, callback) => {
-      callback();
-    });
+    thereIsGroup(GroupA);
+    groupHasMembers([dummymember]);
 
-    groupsAndMembersService.getGroupAndMembersForList('GroupA', (err, group) => {
+    groupsAndMembersService.getGroupAndMembersForList(GroupA.id, (err, group) => {
       expect(group).to.equal(GroupA);
       expect(group.members).to.not.be(null);
       expect(group.members.length).to.equal(1);
@@ -177,6 +206,62 @@ describe('Groups and Members Service (getGroupAndMembersForList)', () => {
     });
   });
 
+});
+
+describe('Groups and Members Service (getOrganizersOfGroup)', () => {
+  afterEach(() => {
+    sinon.restore();
+  });
+
+  it('returns no organizer when there is no group', (done) => {
+    const groupId = 'not-existing-group';
+    thereIsNoGroupFor(groupId);
+    groupsAndMembersService.getOrganizersOfGroup(groupId, (error, organizers) => {
+      expect(organizers).to.be.empty();
+      done(error);
+    });
+  });
+
+  it('returns no organizer when there is a group without an organizer', (done) => {
+    const groupId = 'existing-group-without-organizer';
+    thereIsGroup(new Group({id: groupId, organizers: []}));
+    groupHasMembers([]);
+    groupsAndMembersService.getOrganizersOfGroup(groupId, (error, organizers) => {
+      expect(organizers).to.be.empty();
+      done(error);
+    });
+  });
+
+  it('returns the organizer when there is one and the group exists', (done) => {
+    const groupId = 'group-with-one-organizer';
+    const organizerId = 'organizerId';
+    const organizer = new Member({id: organizerId});
+    const member = anyGroupMember();
+    thereIsGroup(new Group({id: groupId, organizers: [organizerId]}));
+    groupHasMembers([organizer, member]);
+    groupsAndMembersService.getOrganizersOfGroup(groupId, (error, organizers) => {
+      expect(organizers).to.have.length(1);
+      expect(organizers[0].id()).to.equal(organizerId);
+      done(error);
+    });
+  });
+
+  it('returns the organizers when there are any and the group exists', (done) => {
+    const groupId = 'group-with-organizers';
+    const organizerId1 = 'organizerId1';
+    const organizerId2 = 'organizerId2';
+    const organizer1 = new Member({id: organizerId1});
+    const organizer2 = new Member({id: organizerId2});
+    const member = anyGroupMember();
+    thereIsGroup(new Group({id: groupId, organizers: [organizerId1, organizerId2]}));
+    groupHasMembers([organizer1, organizer2, member]);
+    groupsAndMembersService.getOrganizersOfGroup(groupId, (error, organizers) => {
+      expect(organizers).to.have.length(2);
+      expect(organizers[0].id()).to.equal(organizerId1);
+      expect(organizers[1].id()).to.equal(organizerId2);
+      done(error);
+    });
+  });
 });
 
 describe('Groups and Members Service (addMembercountToGroup)', () => {

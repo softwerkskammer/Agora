@@ -260,6 +260,7 @@
   "groups": {
     "contact": "Ansprechpartner",
     "contacts": "Ansprechpartner",
+    "mail_the_contact_persons": "E-Mail an die Ansprechpartner",
     "create": "Gruppe anlegen",
     "edit": "Gruppe \"{{groupId}}\" bearbeiten",
     "email_prefix": "Präfix für E-Mail-Subjects",
@@ -268,6 +269,7 @@
     "has": "Diese Gruppe hat",
     "join": "Gruppe beitreten",
     "leave": "Gruppe verlassen",
+    "mailinglist": "Gruppen-Mailingliste",
     "map_label": "Label in Karte",
     "meetup_clone_title": "Kopiert existierende Events von Meetup.",
     "meetupURL_label": "Meetup-URL (falls für diese Gruppe erforderlich)",
@@ -285,15 +287,18 @@
       "name": "Die Adresse, unter der die Gruppe \"@softwerkskammer.org\" erreichbar ist.",
       "title": "Anzeigetext innerhalb der Site, ist auch Realname für E-Mails",
       "x_coord": "Waagerechte Position auf der Karte",
-      "y_coord": "Senkrechte Position auf der Karte"
+      "y_coord": "Senkrechte Position auf der Karte",
+      "mail_the_contact_persons": "Auf der Gruppenseite wird ein E-Mail-Knopf angezeigt, über den die Ansprechpartnern angeschrieben werden können."
     },
     "type": "Gruppenart",
     "x_coord": "X-Koord.",
     "y_coord": "Y-Koord."
   },
   "mailsender": {
+    "contact_the_organizers_disabled": "Das Feature \"E-Mail an die Ansprechpartner\" ist deaktiviert.",
     "contents": "Inhalt",
     "copy_to_self": "Eine Kopie an mich senden",
+    "group_has_no_organizers": "Die Gruppe hat keine Ansprechpartner.",
     "invitation": "Einladung",
     "notes-resign": "Was möchtest Du uns mitteilen (Anregungen, Kritik, Lob)",
     "notification": "Nachricht",
@@ -309,6 +314,7 @@
     "send": "Senden",
     "subject": "Betreff",
     "to_member": "An Mitglied",
+    "to_contact_persons": "An Ansprechpartner der Gruppe",
     "to_participants": "nur an die Teilnehmer der Aktivität (nicht an Gruppen)",
     "why-resign": "Warum willst Du austreten",
     "write": "Nachricht schreiben"

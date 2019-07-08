@@ -37,7 +37,6 @@ function groupsWithExtraEmailAddresses(members, groupNamesWithEmails) {
   return result;
 }
 
-
 module.exports = {
   getMemberWithHisGroups: function getMemberWithHisGroups(nickname, callback) {
     memberstore.getMember(nickname, (err, member) => {
@@ -97,6 +96,17 @@ module.exports = {
           cb(err1, memo);
         });
       }, loadMembersAndFillInGroups);
+    });
+  },
+
+  getOrganizersOfGroup: function getOrganizersOfGroup (groupId, callback) {
+    this.getGroupAndMembersForList(groupId, (error, groupIncludingMembers) => {
+      if (error) {return callback(error);}
+      if (!groupIncludingMembers) {
+        return callback(null, []);
+      }
+      const organizers = groupIncludingMembers.membersThatAreOrganizers(groupIncludingMembers.members);
+      callback(null, organizers);
     });
   },
 
@@ -199,6 +209,5 @@ module.exports = {
       });
     });
   }
-
 };
 

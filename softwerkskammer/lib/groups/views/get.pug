@@ -29,8 +29,13 @@ block content
               a.btn.btn-light(href='/groups/edit/' + group.id, title=t('general.edit')): i.fas.fa-edit
         h1 #{group.longName} #{' '}
           small #{group.type}
+      if (accessrights.canContactTheOrganizers(group))
+        p
+          a.btn.btn-success(href='/mailsender/contactGroupContactPersons/' + group.id)
+            i.far.fa-envelope
+            | &nbsp;#{t('groups.mail_the_contact_persons')}
       p
-        strong #{t('general.address')}: #{' '}
+        strong #{t('groups.mailinglist')}: #{' '}
         a(href='mailto:' + group.id + '@softwerkskammer.org')
           | #{group.id}@softwerkskammer.org
   .row

@@ -1,6 +1,6 @@
 include  ../../../views/formComponents
 
-mixin mailform(message, regionalgroups, themegroups, massMailing)
+mixin mailform(message, regionalgroups, themegroups, massMailing, contactPersons)
   form#mailform(action='/mailsender/send', method='post')
     +csrf
     fieldset
@@ -15,6 +15,8 @@ mixin mailform(message, regionalgroups, themegroups, massMailing)
             +groupCheckboxes('invitedGroups', regionalgroups, themegroups)
             h4 #{t('mailsender.others')}
             +checkbox('toParticipants', t('mailsender.to_participants'), false, 'toParticipants')
+          if (contactPersons)
+            +text('groupNameForContact', t('mailsender.to_contact_persons'), contactPersons.groupName, '', '', true)
           if (message.receiver)
             +text('nickname', t('mailsender.to_member'), message.receiver.nickname(), '', '', true)
           +text('subject', t('mailsender.subject'), message.subject)
