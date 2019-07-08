@@ -32,22 +32,22 @@ describe('Group object', () => {
       expect(group.organizers).to.contain('idB');
     });
 
-    describe('contactTheOrganizers flag', function () {
-      it('no contactTheOrganizers property it was not checked', () => {
+    describe('contactingOrganizersEnabled flag', function () {
+      it('no contactingOrganizersEnabled property it was not checked', () => {
         const body = {
           id: 'any-group-id',
         };
 
-        expect(new Group(body).contactTheOrganizers).to.be(false);
+        expect(new Group(body).contactingOrganizersEnabled).to.be(false);
       });
 
-      it('contactTheOrganizers property with value on it was checked', () => {
+      it('contactingOrganizersEnabled property with value on it was checked', () => {
         const body = {
           id: 'any-group-id',
-          contactTheOrganizers: 'on'
+          contactingOrganizersEnabled: 'on'
         };
 
-        expect(new Group(body).contactTheOrganizers).to.be(true);
+        expect(new Group(body).contactingOrganizersEnabled).to.be(true);
       });
     });
   });
@@ -257,12 +257,12 @@ describe('contact the organizers is an opt in feature (for spam protection purpo
   });
 
   it('honour organizers choice when there are organizers', () => {
-    const group = new Group({contactTheOrganizers: true, organizers: ['organizer1', 'organizer2'], id: 'not-relevant'});
+    const group = new Group({contactingOrganizersEnabled: true, organizers: ['organizer1', 'organizer2'], id: 'not-relevant'});
     expect(group.canTheOrganizersBeContacted()).to.be.true();
   });
 
   it('returns false when flag is enabled but there are no organizers', () => {
-    const group = new Group({contactTheOrganizers: true, organizers: [], id: 'not-relevant'});
+    const group = new Group({contactingOrganizersEnabled: true, organizers: [], id: 'not-relevant'});
     expect(group.canTheOrganizersBeContacted()).to.be.false();
   });
 });

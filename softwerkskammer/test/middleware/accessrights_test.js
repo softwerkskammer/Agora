@@ -29,8 +29,8 @@ function superuser() {
 
 const groupWithOrganizersContactTheOrganizersTurnedOff = new Group({id: '1', organizers: ['organizer1']});
 const groupWithoutOrganizersAndContactTheOrganizersTurnedOff = new Group({id: '1'});
-const groupWithOrganizersAndContactTheOrganizersTurnedOn = new Group({id: '1', contactTheOrganizers: true, organizers: ['organizer1']});
-const groupWithoutOrganizersAndContactTheOrganizersTurnedOn = new Group({id: '1', contactTheOrganizers: true});
+const groupWithOrganizersAndContactTheOrganizersTurnedOn = new Group({id: '1', contactingOrganizersEnabled: true, organizers: ['organizer1']});
+const groupWithoutOrganizersAndContactTheOrganizersTurnedOn = new Group({id: '1', contactingOrganizersEnabled: true});
 
 describe('Accessrights for Activities', () => {
   it('disallows the creation for guests', () => {

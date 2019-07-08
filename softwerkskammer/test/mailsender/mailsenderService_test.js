@@ -393,7 +393,7 @@ describe('MailsenderService', () => {
 
     describe('when contact organizers is disabled for group', () => {
       it('does not send any mail', done => {
-        const group = new Group({id: groupId, contactTheOrganizers: false});
+        const group = new Group({id: groupId, contactingOrganizersEnabled: false});
         thereIsAGroup(group);
         provideValidOrganizersForGroup(groupId);
 
@@ -445,7 +445,7 @@ describe('MailsenderService', () => {
     describe('when contact organizers is enabled for group', () => {
       const organizerId1 = 'first';
       const organizerId2 = 'second';
-      const group = new Group({id: groupId, contactTheOrganizers: true, organizers: [organizerId1, organizerId2]});
+      const group = new Group({id: groupId, contactingOrganizersEnabled: true, organizers: [organizerId1, organizerId2]});
 
       beforeEach(() => {
         thereIsAGroup(group);
