@@ -124,7 +124,7 @@ module.exports = {
 
         // is the member registered in one of the resources?
         for (var resource in activity.resources) {
-          if (activity.resources.hasOwnProperty(resource) && activity.resources[resource]._registeredMembers) {
+          if (activity.resources[resource] && activity.resources[resource]._registeredMembers) {
             const memberIsRegistered = activity.resources[resource]._registeredMembers.some(
               function (mem) { return mem.memberId === memberId; }
             );
