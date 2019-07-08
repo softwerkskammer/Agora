@@ -288,7 +288,7 @@
       "title": "Anzeigetext innerhalb der Site, ist auch Realname für E-Mails",
       "x_coord": "Waagerechte Position auf der Karte",
       "y_coord": "Senkrechte Position auf der Karte",
-      "mail_the_contact_persons": "Auf der Gruppenseite wird ein E-Mail-Knopf angezeigt, über den die Ansprechpartnern angeschrieben werden können."
+      "mail_the_contact_persons": "Auf der Gruppenseite wird ein E-Mail-Knopf angezeigt, über den die Ansprechpartner angeschrieben werden können."
     },
     "type": "Gruppenart",
     "x_coord": "X-Koord.",
@@ -314,7 +314,7 @@
     "send": "Senden",
     "subject": "Betreff",
     "to_member": "An Mitglied",
-    "to_contact_persons": "An Ansprechpartner der Gruppe",
+    "to_contact_persons": "An die Ansprechpartner der Gruppe",
     "to_participants": "nur an die Teilnehmer der Aktivität (nicht an Gruppen)",
     "why-resign": "Warum willst Du austreten",
     "write": "Nachricht schreiben"

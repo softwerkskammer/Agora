@@ -106,7 +106,7 @@ describe('Groups and Members Service (updateAndSaveSubmittedMember)', () => {
       groupsAndMembersService.updateAndSaveSubmittedMember(sessionUser, memberformData, accessrights, undefined, (err, nickname) => {
         expect(nickname).to.equal('nick in memberform');
         expect(sessionUser.member).to.equal(member);
-        expect(sessionUser.hasOwnProperty('profile')).to.be.false();
+        expect(sessionUser.profile).to.be(undefined);
         done(err);
       });
     });

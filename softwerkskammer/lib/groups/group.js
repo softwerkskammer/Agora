@@ -20,7 +20,7 @@ class Group {
       this.mapX = object.mapX;
       this.mapY = object.mapY;
       this.shortName = object.shortName;
-      this.contactTheOrganizers = !!object.contactTheOrganizers;
+      this.contactingOrganizersEnabled = !!object.contactingOrganizersEnabled;
     } else {
       this.color = '#FF00FF';
     }
@@ -70,7 +70,7 @@ class Group {
   }
 
   canTheOrganizersBeContacted() {
-    return !!this.contactTheOrganizers && this.hasOrganizers();
+    return !!this.contactingOrganizersEnabled && this.hasOrganizers();
   }
 
   hasOrganizers() {

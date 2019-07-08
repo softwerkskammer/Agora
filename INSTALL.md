@@ -39,7 +39,7 @@ On Windows there are currently issues when running the tests:
 #### Useful commands
 1. `mongo swk` to connect to the database
 1. `db.memberstore.find().pretty()` to prettry print the content of `memberstore` 
-1. `db.groupstore.update( { _id : ObjectId("5bf9d641b68a0cb25fa4515c") }, { $unset: {contactTheOrganizers: ""} } );` to remove property `contactTheOrganizers` from the group with id `ObjectId("5bf9d641b68a0cb25fa4515c")` 
+1. `db.groupstore.update( { _id : ObjectId("5bf9d641b68a0cb25fa4515c") }, { $unset: {contactingOrganizersEnabled: ""} } );` to remove property `contactingOrganizersEnabled` from the group with id `ObjectId("5bf9d641b68a0cb25fa4515c")` 
 
 ### ImageMagick
     brew install imagemagick

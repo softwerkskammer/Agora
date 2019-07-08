@@ -14,7 +14,7 @@ class Member {
 
   fillFromUI(object) {
     ['nickname', 'firstname', 'lastname', 'email', 'location', 'profession', 'reference', 'customAvatar'].forEach(property => {
-      if (object.hasOwnProperty(property) && object[property]) { this.state[property] = object[property].trim(); }
+      if (object[property]) { this.state[property] = object[property].trim(); }
     });
     ['notifyOnWikiChanges'].forEach(property => {
       this.state[property] = !!object[property];
