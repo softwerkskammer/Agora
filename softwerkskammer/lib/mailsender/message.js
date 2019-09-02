@@ -50,6 +50,7 @@ class Message {
 
   setIcal(ical) {
     this.icalEvent = ical;
+    this.markdown = (this.markdown || '') + '\r\n\r\n\r\n **Wichtig:** Der ical Anhang ist nur für Deinen Kalender. Das Annehmen der ical Einladung hat keine Konsequenzen.';
   }
 
   addToButtons(buttonOrButtons) {
