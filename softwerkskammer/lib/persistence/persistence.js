@@ -180,18 +180,20 @@ module.exports = function persistenceFunc(collectionName) {
 
       const MongoClient = require('mongodb').MongoClient;
       logInfo('Connecting to Mongo');
-      MongoClient.connect(conf.get('mongoURL'), {useNewUrlParser: true}, (err, client) => {
-        var db = client.db('swk');
-        logInfo('In connect callback');
-        if (err) {
-          logInfo('An error occurred: ' + err);
-          ourDBConnectionState = DBSTATE.CLOSED;
-          return logger.error(err);
-        }
-        ourDB = db;
-        ourDBConnectionState = DBSTATE.OPEN;
-        logInfo('DB state is now OPEN, db = ' + db);
-      });
+      MongoClient.connect(conf.get('mongoURL'),
+        {useNewUrlParser: true, useUnifiedTopology: true},
+        (err, client) => {
+          var db = client.db('swk');
+          logInfo('In connect callback');
+          if (err) {
+            logInfo('An error occurred: ' + err);
+            ourDBConnectionState = DBSTATE.CLOSED;
+            return logger.error(err);
+          }
+          ourDB = db;
+          ourDBConnectionState = DBSTATE.OPEN;
+          logInfo('DB state is now OPEN, db = ' + db);
+        });
     },
 
     closeDB: function closeDB(callback) {

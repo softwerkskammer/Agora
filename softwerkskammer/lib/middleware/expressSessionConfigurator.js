@@ -9,7 +9,8 @@ if (!conf.get('dontUsePersistentSessions')) {
   const MongoStore = require('connect-mongo')(expressSession);
   sessionStore = new MongoStore({
     url: conf.get('mongoURL'),
-    touchAfter: oneHour
+    touchAfter: oneHour,
+    mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true }
   });
 }
 
