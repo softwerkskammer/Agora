@@ -1,6 +1,7 @@
 const conf = require('simple-configure');
 const async = require('async');
 let ourDB;
+let ourClient;
 const loggers = require('winston').loggers;
 const logger = loggers.get('transactions');
 const scriptLogger = loggers.get('scripts');
@@ -191,6 +192,7 @@ module.exports = function persistenceFunc(collectionName) {
             return logger.error(err);
           }
           ourDB = db;
+          ourClient = client;
           ourDBConnectionState = DBSTATE.OPEN;
           logInfo('DB state is now OPEN, db = ' + db);
         });
@@ -202,8 +204,8 @@ module.exports = function persistenceFunc(collectionName) {
         return;
       }
       performInDB(() => {
-        ourDB.unref();
-        ourDB = undefined;
+        ourClient.close();
+        ourClient = undefined;
         ourDBConnectionState = DBSTATE.CLOSED;
         logInfo('connection closed');
         if (callback) { callback(); }
