@@ -6,6 +6,39 @@ const Renderer = beans.get('renderer');
 const themengruppe = 'Themengruppe';
 const regionalgruppe = 'Regionalgruppe';
 
+/**
+ * Max latitude of Germany.
+ *
+ * according to: https://de.wikipedia.org/wiki/Liste_der_Extrempunkte_Deutschlands
+ */
+const MAP_COORDINATES_NORTH = 55.05864;
+/**
+ * Max longitude of Austria.
+ *
+ * according to: https://de.wikipedia.org/wiki/Geographie_%C3%96sterreichs#Grenzen,_Entfernungen,_Extrempunkte
+ */
+const MAP_COORDINATES_EAST = 17.160749;
+/**
+ * Min latitude of Swiss.
+ *
+ * according to: https://de.wikipedia.org/wiki/Geographische_Extrempunkte_der_Schweiz
+ */
+const MAP_COORDINATES_SOUTH = 45.817920;
+/**
+ * Min longitude of Germany.
+ *
+ * according to: https://de.wikipedia.org/wiki/Liste_der_Extrempunkte_Deutschlands
+ */
+const MAP_COORDINATES_WEST = 5.866944;
+/**
+ * Difference of the longitudes of the map.
+ */
+const MAP_COORDINATES_WIDTH = MAP_COORDINATES_EAST - MAP_COORDINATES_WEST;
+/**
+ * Difference of the latitudes of the map.
+ */
+const MAP_COORDINATES_HEIGHT = MAP_COORDINATES_NORTH - MAP_COORDINATES_SOUTH;
+
 class Group {
   constructor(object) {
     if (object) {
@@ -45,11 +78,17 @@ class Group {
   }
 
   mapYrelative() {
-    return 100 * this.mapY / 441;
+    let mapY = parseFloat(this.mapY);
+    mapY = mapY - MAP_COORDINATES_SOUTH;
+    // swap the origin of the coordinate system:
+    mapY = MAP_COORDINATES_HEIGHT - mapY;
+    return 100 * mapY / MAP_COORDINATES_HEIGHT;
   }
 
   mapXrelative() {
-    return 100 * this.mapX / 342;
+    let mapX = parseFloat(this.mapX);
+    mapX = mapX - MAP_COORDINATES_WEST;
+    return 100 * mapX / MAP_COORDINATES_WIDTH;
   }
 
   isOrganizer(memberId) {

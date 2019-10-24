@@ -286,13 +286,13 @@
       "meetupURL_label": "Manche Gruppen kommen leider nicht ohne eine Präsenz auf Meetup aus. Sollte das auch für diese Gruppe gelten, kann hier die Meetup-URL der Gruppe eingetragen werden. Dadurch werden die Meetup-Events der Gruppe automatisch in die Softwerkskammer übernommen.",
       "name": "Die Adresse, unter der die Gruppe \"@softwerkskammer.org\" erreichbar ist.",
       "title": "Anzeigetext innerhalb der Site, ist auch Realname für E-Mails",
-      "x_coord": "Waagerechte Position auf der Karte",
-      "y_coord": "Senkrechte Position auf der Karte",
+      "x_coord": "Geografische Länge (Longitude) für die Position auf der Karte",
+      "y_coord": "Geografische Breite (Latitude) für die Position auf der Karte",
       "mail_the_contact_persons": "Auf der Gruppenseite wird ein E-Mail-Knopf angezeigt, über den die Ansprechpartner angeschrieben werden können."
     },
     "type": "Gruppenart",
-    "x_coord": "X-Koord.",
-    "y_coord": "Y-Koord."
+    "x_coord": "Längengrad",
+    "y_coord": "Breitengrad"
   },
   "mailsender": {
     "contact_the_organizers_disabled": "Das Feature \"E-Mail an die Ansprechpartner\" ist deaktiviert.",

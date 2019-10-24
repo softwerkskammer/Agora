@@ -40,9 +40,9 @@ mixin groupform(group, allTypes, organizersChecked)
         #mapstuff.col-md-6
           .row
             .col-md-6
-              +text('mapX', t('groups.x_coord'), group.mapX, t('groups.tooltip.x_coord'))
-            .col-md-6
               +text('mapY', t('groups.y_coord'), group.mapY, t('groups.tooltip.y_coord'))
+            .col-md-6
+              +text('mapX', t('groups.x_coord'), group.mapX, t('groups.tooltip.x_coord'))
           +text('shortName', t('groups.map_label'), group.shortName, t('groups.tooltip.map_label'))
           +text('meetupURL', t('groups.meetupURL_label'), group.meetupURL, t('groups.tooltip.meetupURL_label'))
           +checkboxWithDescription('contactingOrganizersEnabled', t('groups.mail_the_contact_persons'), group.contactingOrganizersEnabled, t('groups.tooltip.mail_the_contact_persons'))
