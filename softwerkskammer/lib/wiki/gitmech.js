@@ -85,7 +85,7 @@ module.exports = {
   mv: function mv(oldpath, newpath, message, author, callback) {
     gitExec.command(['mv', esc(oldpath), esc(newpath)], err => {
       if (err) { return callback(err); }
-      return commit('', message, author, callback);
+      return commit('.', message, author, callback);
     });
   },
 
