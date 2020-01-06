@@ -82,7 +82,13 @@ module.exports = function (config) {
     coverageReporter: {
       reporters: [{type: 'json'}, {type: 'html'}],
       dir: 'softwerkskammer/karma-coverage/',
-      subdir: '.'
+      subdir: '.',
+      check: {
+        global: {
+          lines: 93,
+          statements: 93
+        }
+      }
     },
 
     plugins: [
