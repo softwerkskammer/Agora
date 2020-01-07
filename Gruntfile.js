@@ -57,7 +57,7 @@ module.exports = function (grunt) {
   grunt.initConfig({
     clean: {
       build: ['softwerkskammer/build', 'softwerkskammer/frontendtests/fixtures/*.html'],
-      coverage: ['softwerkskammer/coverage', 'softwerkskammer/coverageWithDB', 'softwerkskammer/karma-coverage'],
+      coverage: ['softwerkskammer/coverage', 'softwerkskammer/coverageWithDB', 'softwerkskammer/karma-coverage', '.nyc_output'],
       public: ['softwerkskammer/public/clientscripts', 'softwerkskammer/public/fonts', 'softwerkskammer/public/webfonts', 'softwerkskammer/public/images', 'softwerkskammer/public/stylesheets'],
       options: {force: true}
     },
@@ -190,69 +190,6 @@ module.exports = function (grunt) {
       }
     },
 
-    mocha_istanbul: {
-      testWithDB: {
-        src: 'softwerkskammer/testWithDB',
-        options: {
-          coverageFolder: 'softwerkskammer/coverageWithDB',
-          excludes: ['**/activitystore.js'],
-          timeout: 6000,
-          slow: 100,
-          mask: '**/*.js',
-          root: 'softwerkskammer/lib',
-          reporter: 'dot',
-          mochaOptions: ['--exit']
-        }
-      },
-      testApp: {
-        src: 'softwerkskammer/testApp',
-        options: {
-          coverageFolder: 'softwerkskammer/coverageApp',
-          timeout: 6000,
-          slow: 100,
-          mask: '**/*.js',
-          root: 'softwerkskammer/lib',
-          reporter: 'dot',
-          mochaOptions: ['--exit']
-        }
-      },
-      test: {
-        src: 'softwerkskammer/test',
-        options: {
-          coverageFolder: 'softwerkskammer/coverage',
-          timeout: 6000,
-          slow: 100,
-          mask: '**/*.js',
-          root: 'softwerkskammer/lib',
-          reporter: 'dot',
-          check: {
-            lines: 80,
-            statements: 76
-          },
-          mochaOptions: ['--exit']
-        }
-      }
-    },
-    istanbul_check_coverage: {
-      server: {
-        options: {
-          coverageFolder: 'softwerkskammer/coverage*',
-          check: {
-            lines: 81,
-            statements: 77
-          }
-        }
-      },
-      frontend: {
-        options: {
-          coverageFolder: 'softwerkskammer/karma-coverage',
-          check: {
-            lines: 93,
-            statements: 93
-          }
-        }
-      }
-    },
     pug: {
       compile: {
         options: {
@@ -285,11 +222,64 @@ module.exports = function (grunt) {
         },
         src: ['softwerkskammer/**/*.pug']
       }
+    },
+    mochacli: {
+      options: {
+        exit: true,
+        reporter: 'dot',
+        timeout: 6000
+      },
+      testApp: {
+        src: 'softwerkskammer/testApp/**/*.js',
+      },
+      testWithDB: {
+        src: 'softwerkskammer/testWithDB/**/*.js',
+      },
+      test: {
+        src: 'softwerkskammer/test/**/*.js',
+      }
+    },
+    nyc: {
+      coverApp: {
+        options: {
+          include: ['softwerkskammer/**', 'softwerkskammer/**'],
+          reporter: 'lcov',
+          reportDir: 'softwerkskammer/coverageApp'
+        },
+        cmd: false,
+        args: ['grunt', 'mochacli:testApp']
+      },
+      coverWithDB: {
+        options: {
+          exclude: ['**/activitystore.js'],
+          include: ['softwerkskammer/**', 'softwerkskammer/**'],
+          reporter: 'lcov',
+          reportDir: 'softwerkskammer/coverageWithDB'
+        },
+        cmd: false,
+        args: ['grunt', 'mochacli:testWithDB']
+      },
+      cover: {
+        options: {
+          include: ['softwerkskammer/**', 'softwerkskammer/**'],
+          reporter: 'lcov',
+          reportDir: 'softwerkskammer/coverage'
+        },
+        cmd: false,
+        args: ['grunt', 'mochacli:test']
+      },
+      report: {
+        options: {
+          lines: 81,
+          statements: 77,
+          'check-coverage': true,
+          reporter: 'text-summary'
+        }
+      }
     }
   });
 
   process.env.NODE_ICU_DATA = 'node_modules/full-icu'; // necessary for timezone stuff
-// eslint-disable-next-line no-trailing-spaces
 
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-clean');
@@ -300,12 +290,13 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-karma');
-  grunt.loadNpmTasks('grunt-mocha-istanbul');
+  grunt.loadNpmTasks('grunt-mocha-cli');
   grunt.loadNpmTasks('grunt-puglint');
+  grunt.loadNpmTasks('grunt-simple-nyc');
 
   grunt.registerTask('prepare', ['clean', 'copy']);
-  grunt.registerTask('frontendtests', ['clean', 'prepare', 'sass', 'pug', 'cssmin', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once', 'istanbul_check_coverage:frontend']);
-  grunt.registerTask('tests', ['eslint', 'puglint', 'frontendtests', 'mocha_istanbul', 'istanbul_check_coverage:server']);
+  grunt.registerTask('frontendtests', ['clean', 'prepare', 'sass', 'pug', 'cssmin', 'uglify:production_de', 'karma:once', 'uglify:development_de', 'karma:once']);
+  grunt.registerTask('tests', ['eslint', 'puglint', 'frontendtests', 'nyc']);
   grunt.registerTask('deploy_development', ['prepare', 'sass', 'cssmin', 'uglify:development_de', 'uglify:development_en']);
 
   // Default task.

@@ -40,6 +40,7 @@ softwerkskammer/version.pug
 local
 
 test.html
+.nyc_output
 
 docker/local-openid/
 docker/mongo/
