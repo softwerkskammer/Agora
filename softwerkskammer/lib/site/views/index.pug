@@ -15,13 +15,6 @@ block content
         h1 Softwerkskammer <br>
           small #{t('general.communities')}
   .row
-    .col-md-12
-      h2 Aktuell: Der Global Day of Coderetreat am 16. November 2019
-      p
-        | Hier findest Du&nbsp;
-        a(href='activities/gdcr') die meisten der Veranstaltungen im Softwerkskammer-Einzugsgebiet.
-      hr
-  .row
     .col-lg-6
       !=t('general.about_us_text', { postProcess: 'pug' })
       if (language === 'de')
