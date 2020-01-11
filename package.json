@@ -106,7 +106,6 @@
     "grunt-contrib-uglify": "4.0.1",
     "grunt-eslint": "22.0.0",
     "grunt-karma": "3.0.2",
-    "grunt-mocha-test": "0.13.3",
     "grunt-mocha-cli": "5.0.0",
     "grunt-patcher": "1.0.0",
     "grunt-puglint": "1.0.0",
