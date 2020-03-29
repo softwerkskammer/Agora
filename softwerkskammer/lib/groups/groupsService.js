@@ -78,7 +78,7 @@ module.exports = {
     groupstore.allGroups((err, groups) => {
       if (err) { return callback(err); }
       const subscribedGroups = groups.filter(g => g.subscribedMembers.includes(member.id()));
-      const groupsForNewSubscriptions = groups.filter(g => newSubscriptions.includes(g.id));
+      const groupsForNewSubscriptions = groups.filter(g => misc.toArray(newSubscriptions).includes(g.id));
 
       const groupsToSubscribe = R.difference(groupsForNewSubscriptions, subscribedGroups);
       const groupsToUnsubscribe = R.difference(subscribedGroups, groupsForNewSubscriptions);

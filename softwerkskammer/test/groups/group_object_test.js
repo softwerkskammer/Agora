@@ -266,3 +266,45 @@ describe('contact the organizers is an opt in feature (for spam protection purpo
     expect(group.canTheOrganizersBeContacted()).to.be.false();
   });
 });
+
+describe('subscription related', () => {
+  const member = new Member({id: 'id1'});
+
+  it('subscribing adds the member\'s id to the group', () => {
+    const group = new Group({id: 'theGroup'});
+    expect(group.membercount()).to.be(0);
+    group.subscribe(member);
+    expect(group.membercount()).to.be(1);
+    expect(group.subscribedMembers).to.include('id1');
+  });
+
+  it('unsubscribing removes the member\'s id to the group', () => {
+    const group = new Group({id: 'theGroup', subscribedMembers: ['id1']});
+    expect(group.membercount()).to.be(1);
+    group.unsubscribe(member);
+    expect(group.membercount()).to.be(0);
+    expect(group.subscribedMembers).not.to.include('id1');
+  });
+
+
+  it('unsubscribing a non-subscribed member is neutral', () => {
+    const group = new Group({id: 'theGroup', subscribedMembers: ['id2']});
+    expect(group.membercount()).to.be(1);
+    group.unsubscribe(member);
+    expect(group.membercount()).to.be(1);
+    expect(group.subscribedMembers).not.to.include('id1');
+  });
+
+
+  it('(un)subscribing a member does not touch other subscriptions', () => {
+    const group = new Group({id: 'theGroup', subscribedMembers: ['id2']});
+    expect(group.membercount()).to.be(1);
+    group.subscribe(member);
+    expect(group.membercount()).to.be(2);
+    expect(group.subscribedMembers).to.include('id1');
+    group.unsubscribe(member);
+    expect(group.subscribedMembers).not.to.include('id1');
+    expect(group.subscribedMembers).to.include('id2');
+  });
+
+});

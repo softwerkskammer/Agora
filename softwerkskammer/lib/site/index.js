@@ -1,7 +1,6 @@
 /* eslint no-underscore-dangle: 0 */
 
 const path = require('path');
-const async = require('async');
 const fs = require('fs');
 const qrimage = require('qr-image');
 

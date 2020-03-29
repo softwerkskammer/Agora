@@ -6,78 +6,64 @@ const expect = require('must-dist');
 const beans = require('../../testutil/configureForTest').get('beans');
 
 const groupsForTest = require('./groups_for_tests');
-const GroupA = groupsForTest.GroupA;
-const GroupB = groupsForTest.GroupB;
 
-const fakeListAdapter = beans.get('fakeListAdapter');
+const groupstore = beans.get('groupstore');
 const systemUnderTest = beans.get('groupsService');
+
+const Member = beans.get('member');
+const testMember = new Member({id: 'testmember'});
+
 
 describe('Groups Service (updateSubscriptions)', () => {
 
-  let subscribeSpy;
-  let unsubscribeSpy;
+  let testGroups;
+  let saveGroupSpy;
 
   beforeEach(() => {
-    subscribeSpy = sinon.stub(fakeListAdapter, 'addUserToList').callsFake((email, list, callback) => { callback(); });
-    unsubscribeSpy = sinon.stub(fakeListAdapter, 'removeUserFromList').callsFake((email, list, callback) => { callback(); });
+    saveGroupSpy = sinon.stub(groupstore, 'saveGroup').callsFake((group, callback) => { callback(); });
   });
 
   afterEach(() => {
     sinon.restore();
   });
 
-  function setupSubscribedListsForUser(lists) {
-    sinon.stub(fakeListAdapter, 'getSubscribedListsForUser').callsFake((email, callback) => {
-      callback(null, lists);
+  function setupSubscribedListsForUser(groups) {
+    testGroups = groupsForTest();
+    const testGroupsArray = [testGroups.GroupA, testGroups.GroupB, testGroups.GroupC]
+      .map(
+        g => {
+          if (groups.includes(g.id)) { g.subscribe(testMember); }
+          return g;
+        }
+      );
+    sinon.stub(groupstore, 'allGroups').callsFake(callback => {
+      callback(null, testGroupsArray);
     });
   }
 
   it('subscribes and unsubscribes no lists if both old and new subscription lists are empty', done => {
     setupSubscribedListsForUser([]);
 
-    systemUnderTest.updateSubscriptions('user@mail.com', 'user@mail.com', [], err => {
-
-      expect(subscribeSpy.called, 'subscribe is called').to.be(false);
-      expect(unsubscribeSpy.called, 'unsubscribe is called').to.be(false);
-
+    systemUnderTest.updateSubscriptions(testMember, [], err => {
+      expect(saveGroupSpy.called, 'group changed and saved').to.be(false);
       done(err);
     });
   });
 
-  it('subscribes and unsubscribes no lists if old list contains one element and new subscription is the same element (not list)', done => {
-    setupSubscribedListsForUser(['list1']);
+  it('subscribes and unsubscribes no lists if old list contains one element and new subscription is the same element (not array)', done => {
+    setupSubscribedListsForUser(['groupa']);
 
-    systemUnderTest.updateSubscriptions('user@mail.com', 'user@mail.com', 'list1', err => {
-
-      expect(subscribeSpy.called, 'subscribe is called').to.be(false);
-      expect(unsubscribeSpy.called, 'unsubscribe is called').to.be(false);
-
-      done(err);
-    });
-  });
-
-  it('subscribes list for new mail address and unsubscribes same list for old mail address if old and new mail addresses differ', done => {
-    setupSubscribedListsForUser(['list1']);
-
-    systemUnderTest.updateSubscriptions('user-new@mail.com', 'user-old@mail.com', 'list1', err => {
-
-      expect(subscribeSpy.calledOnce, 'subscribe is called once').to.be(true);
-      expect(subscribeSpy.calledWith('user-new@mail.com', 'list1'), 'list1 is subscribed with address user-new@mail.com').to.be(true);
-      expect(unsubscribeSpy.calledOnce, 'unsubscribe is called once').to.be(true);
-      expect(unsubscribeSpy.calledWith('user-old@mail.com', 'list1'), 'list1 is unsubscribed with address user-old@mail.com').to.be(true);
-
+    systemUnderTest.updateSubscriptions(testMember, 'groupa', err => {
+      expect(saveGroupSpy.called, 'group changed and saved').to.be(false);
       done(err);
     });
   });
 
   it('subscribes and unsubscribes no lists if old and new subscription lists contain the same lists', done => {
-    setupSubscribedListsForUser(['list1', 'list2']);
+    setupSubscribedListsForUser(['groupa', 'groupb']);
 
-    systemUnderTest.updateSubscriptions('user@mail.com', 'user@mail.com', ['list1', 'list2'], err => {
-
-      expect(subscribeSpy.called, 'subscribe is called').to.be(false);
-      expect(unsubscribeSpy.called, 'unsubscribe is called').to.be(false);
-
+    systemUnderTest.updateSubscriptions(testMember, ['groupa', 'groupb'], err => {
+      expect(saveGroupSpy.called, 'group changed and saved').to.be(false);
       done(err);
     });
   });
@@ -85,12 +71,9 @@ describe('Groups Service (updateSubscriptions)', () => {
   it('subscribes one list if old subscriptions are empty and new ones contain one listname (not array)', done => {
     setupSubscribedListsForUser([]);
 
-    systemUnderTest.updateSubscriptions('user@mail.com', 'user@mail.com', 'list1', err => {
-
-      expect(subscribeSpy.calledOnce, 'subscribe is called once').to.be(true);
-      expect(subscribeSpy.calledWith('user@mail.com', 'list1')).to.be(true);
-      expect(unsubscribeSpy.called, 'unsubscribe is called').to.be(false);
-
+    systemUnderTest.updateSubscriptions(testMember, 'groupa', err => {
+      expect(saveGroupSpy.calledOnce, 'group changed and saved').to.be(true);
+      expect(saveGroupSpy.calledWith(testGroups.GroupA)).to.be(true);
       done(err);
     });
   });
@@ -98,96 +81,76 @@ describe('Groups Service (updateSubscriptions)', () => {
   it('subscribes one list if old subscriptions are empty and new ones contain one listname in an array', done => {
     setupSubscribedListsForUser([]);
 
-    systemUnderTest.updateSubscriptions('user@mail.com', 'user@mail.com', ['list1'], err => {
-
-      expect(subscribeSpy.calledOnce, 'subscribe is called once').to.be(true);
-      expect(subscribeSpy.calledWith('user@mail.com', 'list1')).to.be(true);
-      expect(unsubscribeSpy.called, 'unsubscribe is called').to.be(false);
-
+    systemUnderTest.updateSubscriptions(testMember, ['groupa'], err => {
+      expect(saveGroupSpy.calledOnce, 'group changed and saved').to.be(true);
+      expect(saveGroupSpy.calledWith(testGroups.GroupA)).to.be(true);
+      expect(testGroups.GroupA.subscribedMembers).to.include(testMember.id());
       done(err);
     });
   });
 
   it('unsubscribes one list if old subscriptions contain a list and new ones are undefined', done => {
-    setupSubscribedListsForUser(['list1']);
+    setupSubscribedListsForUser(['groupa']);
+    expect(testGroups.GroupA.subscribedMembers).to.include(testMember.id());
 
-    systemUnderTest.updateSubscriptions('user@mail.com', 'user@mail.com', undefined, err => {
-
-      expect(subscribeSpy.called, 'subscribe is called').to.be(false);
-      expect(unsubscribeSpy.calledOnce, 'unsubscribe is called once').to.be(true);
-      expect(unsubscribeSpy.calledWith('user@mail.com', 'list1')).to.be(true);
-
+    systemUnderTest.updateSubscriptions(testMember, undefined, err => {
+      expect(saveGroupSpy.calledOnce, 'group changed and saved').to.be(true);
+      expect(saveGroupSpy.calledWith(testGroups.GroupA)).to.be(true);
+      expect(testGroups.GroupA.subscribedMembers).not.to.include(testMember.id());
       done(err);
     });
   });
 
   it('unsubscribes one list if old subscriptions contain a list and new ones are an empty array', done => {
-    setupSubscribedListsForUser(['list1']);
+    setupSubscribedListsForUser(['groupa']);
+    expect(testGroups.GroupA.subscribedMembers).to.include(testMember.id());
 
-    systemUnderTest.updateSubscriptions('user@mail.com', 'user@mail.com', [], err => {
-
-      expect(subscribeSpy.called, 'subscribe is called').to.be(false);
-      expect(unsubscribeSpy.calledOnce, 'unsubscribe is called once').to.be(true);
-      expect(unsubscribeSpy.calledWith('user@mail.com', 'list1')).to.be(true);
-
+    systemUnderTest.updateSubscriptions(testMember, [], err => {
+      expect(saveGroupSpy.calledOnce, 'group changed and saved').to.be(true);
+      expect(saveGroupSpy.calledWith(testGroups.GroupA)).to.be(true);
+      expect(testGroups.GroupA.subscribedMembers).not.to.include(testMember.id());
       done(err);
     });
   });
 
   it('subscribes and unsubscribes appropriately if there are many changes', done => {
-    setupSubscribedListsForUser(['list1', 'list2', 'list3']);
+    setupSubscribedListsForUser(['groupa', 'groupb']);
 
-    systemUnderTest.updateSubscriptions('user@mail.com', 'user@mail.com', ['list2', 'list4', 'list5'], err => {
-
-      expect(subscribeSpy.calledTwice, 'subscribe is called twice').to.be(true);
-      expect(unsubscribeSpy.calledTwice, 'unsubscribe is called twice').to.be(true);
-      expect(unsubscribeSpy.calledWith('user@mail.com', 'list1')).to.be(true);
-      expect(unsubscribeSpy.calledWith('user@mail.com', 'list3')).to.be(true);
-      expect(subscribeSpy.calledWith('user@mail.com', 'list4')).to.be(true);
-      expect(subscribeSpy.calledWith('user@mail.com', 'list5')).to.be(true);
-
-      done(err);
-    });
-  });
-
-  it('subscribes and unsubscribes appropriately if there are many changes and the email addresses differ', done => {
-    setupSubscribedListsForUser(['list1', 'list2', 'list3']);
-
-    systemUnderTest.updateSubscriptions('user-new@mail.com', 'user-old@mail.com', ['list2', 'list4', 'list5'], err => {
-
-      expect(subscribeSpy.calledThrice, 'subscribe is called thrice').to.be(true);
-      expect(unsubscribeSpy.calledThrice, 'unsubscribe is called thrice').to.be(true);
-      expect(unsubscribeSpy.calledWith('user-old@mail.com', 'list1')).to.be(true);
-      expect(unsubscribeSpy.calledWith('user-old@mail.com', 'list2')).to.be(true);
-      expect(unsubscribeSpy.calledWith('user-old@mail.com', 'list3')).to.be(true);
-      expect(subscribeSpy.calledWith('user-new@mail.com', 'list2')).to.be(true);
-      expect(subscribeSpy.calledWith('user-new@mail.com', 'list4')).to.be(true);
-      expect(subscribeSpy.calledWith('user-new@mail.com', 'list5')).to.be(true);
-
+    systemUnderTest.updateSubscriptions(testMember, ['groupb', 'groupc'], err => {
+      expect(saveGroupSpy.calledTwice, 'each group changed and saved').to.be(true);
+      expect(saveGroupSpy.calledWith(testGroups.GroupA)).to.be(true);
+      expect(saveGroupSpy.calledWith(testGroups.GroupB), 'GroupB was not changed').to.be(false);
+      expect(saveGroupSpy.calledWith(testGroups.GroupC)).to.be(true);
+      expect(testGroups.GroupA.subscribedMembers).not.to.include(testMember.id());
+      expect(testGroups.GroupB.subscribedMembers).to.include(testMember.id());
+      expect(testGroups.GroupC.subscribedMembers).to.include(testMember.id());
       done(err);
     });
   });
 
 });
 
-describe('Groups Service (combineSubscribedAndAvailableGroups)', () => {
+describe('Groups Service (markGroupsSelected)', () => {
+  const testGroups = groupsForTest();
+  const GroupA = testGroups.GroupA;
+  const GroupB = testGroups.GroupB;
 
   it('combines no subscribed and no available groups to an empty array', () => {
-    const result = systemUnderTest.combineSubscribedAndAvailableGroups([], []);
+    const result = systemUnderTest.markGroupsSelected([], []);
 
     expect(result).to.not.be(null);
     expect(result.length).to.equal(0);
   });
 
   it('combines some subscribed but no available groups to an empty array', () => {
-    const result = systemUnderTest.combineSubscribedAndAvailableGroups([GroupA, GroupB], []);
+    const result = systemUnderTest.markGroupsSelected([GroupA, GroupB], []);
 
     expect(result).to.not.be(null);
     expect(result.length).to.equal(0);
   });
 
   it('combines no subscribed and one available group to indicate an unselected group', () => {
-    const result = systemUnderTest.combineSubscribedAndAvailableGroups([], [GroupA]);
+    const result = systemUnderTest.markGroupsSelected([], [GroupA]);
 
     expect(result).to.not.be(null);
     expect(result.length).to.equal(1);
@@ -196,7 +159,7 @@ describe('Groups Service (combineSubscribedAndAvailableGroups)', () => {
   });
 
   it('combines one subscribed and another available group to indicate an unselected group', () => {
-    const result = systemUnderTest.combineSubscribedAndAvailableGroups([GroupA], [GroupB]);
+    const result = systemUnderTest.markGroupsSelected([GroupA], [GroupB]);
 
     expect(result).to.not.be(null);
     expect(result.length).to.equal(1);
@@ -205,7 +168,7 @@ describe('Groups Service (combineSubscribedAndAvailableGroups)', () => {
   });
 
   it('combines one subscribed and the same available group to indicate a selected group', () => {
-    const result = systemUnderTest.combineSubscribedAndAvailableGroups([GroupA], [GroupA]);
+    const result = systemUnderTest.markGroupsSelected([GroupA], [GroupA]);
 
     expect(result).to.not.be(null);
     expect(result.length).to.equal(1);
@@ -214,7 +177,7 @@ describe('Groups Service (combineSubscribedAndAvailableGroups)', () => {
   });
 
   it('combines some subscribed and some available groups to indicate the correct selections', () => {
-    const result = systemUnderTest.combineSubscribedAndAvailableGroups([GroupA], [GroupA, GroupB]);
+    const result = systemUnderTest.markGroupsSelected([GroupA], [GroupA, GroupB]);
 
     expect(result).to.not.be(null);
     expect(result.length).to.equal(2);

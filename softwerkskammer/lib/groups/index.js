@@ -8,6 +8,7 @@ const groupsService = beans.get('groupsService');
 const groupstore = beans.get('groupstore');
 const wikiService = beans.get('wikiService');
 const Group = beans.get('group');
+const Member = beans.get('member');
 const groupsAndMembers = beans.get('groupsAndMembersService');
 const meetupActivitiesService = beans.get('meetupActivitiesService');
 const activitystore = beans.get('activitystore');
@@ -134,7 +135,7 @@ app.get('/:groupname', (req, res, next) => {
           res.render('get', {
             group,
             users: group.members,
-            userIsGroupMember: groupsAndMembers.memberIsInMemberList(registeredUserId, group.members),
+            userIsGroupMember: Member.memberIsInMemberList(registeredUserId, group.members),
             organizers: group.organizers,
             blogposts,
             blogpostsFeedUrl: req.originalUrl + '/feed',

@@ -11,7 +11,6 @@ const dummymember = new Member({id: 'memberID', nickname: 'hada', email: 'a@b.c'
 
 const groupsService = beans.get('groupsService');
 const membersService = beans.get('membersService');
-const groupsAndMembersService = beans.get('groupsAndMembersService');
 const Group = beans.get('group');
 
 const activitiesService = beans.get('activitiesService');
@@ -35,6 +34,7 @@ describe('Administration application', () => {
     sinon.stub(groupsService, 'getAllAvailableGroups').callsFake(
       callback => callback(null, [new Group({id: 'id', longName: 'GRUPPO', description: 'desc'})])
     );
+    sinon.stub(memberstore, 'allMembers').callsFake(callback => callback(null, [dummymember]));
     sinon.stub(membersService, 'putAvatarIntoMemberAndSave').callsFake((member, callback) => {
       callback();
     });
@@ -45,7 +45,6 @@ describe('Administration application', () => {
   });
 
   it('shows the table for members', done => {
-    sinon.stub(memberstore, 'allMembers').callsFake(callback => callback(null, [dummymember]));
     appWithSuperuser
       .get('/memberTable')
       .expect(200)
@@ -54,16 +53,11 @@ describe('Administration application', () => {
   });
 
   it('shows the table for members and groups', done => {
-    sinon.stub(groupsAndMembersService, 'getAllMembersWithTheirGroups').callsFake(
-      callback => callback(null, [dummymember], [{group: 'Überflüssig', extraAddresses: ['peter.pan@alice.de']}])
-    );
     appWithSuperuser
       .get('/memberAndGroupTable')
       .expect(200)
       .expect(/<h2>Verwaltung  <small> Mitglieder und Gruppen/)
       .expect(/Hans Dampf/)
-      .expect(/<dt>Überflüssig<\/dt>/)
-      .expect(/<dd>peter\.pan@alice\.de<\/dd>/)
       .expect(/GRUP&hellip;/, done);
   });
 

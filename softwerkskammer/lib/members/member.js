@@ -225,6 +225,10 @@ class Member {
   static superuserEmails(members) {
     return members.filter(member => member.isSuperuser()).map(member => member.email());
   }
+
+  static memberIsInMemberList(id, members) {
+    return members.some(member => member.id() === id);
+  }
 }
 
 module.exports = Member;

@@ -7,6 +7,7 @@ const beans = require('../../testutil/configureForTest').get('beans');
 const Member = beans.get('member');
 const memberstore = beans.get('memberstore');
 const groupsAndMembersService = beans.get('groupsAndMembersService');
+const groupsService = beans.get('groupsService');
 
 describe('Groups and Members Service (updateAndSaveSubmittedMember)', () => {
   let accessrights;
@@ -67,7 +68,7 @@ describe('Groups and Members Service (updateAndSaveSubmittedMember)', () => {
     beforeEach(() => {
       sinon.stub(memberstore, 'saveMember').callsFake((anyMember, callback) => { callback(null); });
       sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups').callsFake((nickname, callback) => { callback(null, null); });
-      sinon.stub(groupsAndMembersService, 'updateSubscriptions').callsFake((anyMember, oldEmail, subscriptions, callback) => { callback(null); });
+      sinon.stub(groupsService, 'updateSubscriptions').callsFake((anyMember, subscriptions, callback) => { callback(null); });
     });
 
     it('adds the new member to the sessionUser', done => {
@@ -88,7 +89,7 @@ describe('Groups and Members Service (updateAndSaveSubmittedMember)', () => {
     beforeEach(() => {
       sinon.stub(memberstore, 'saveMember').callsFake((anyMember, callback) => { callback(null); });
       sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups').callsFake((nickname, callback) => { callback(null, member); });
-      sinon.stub(groupsAndMembersService, 'updateSubscriptions').callsFake((anyMember, oldEmail, subscriptions, callback) => { callback(null); });
+      sinon.stub(groupsService, 'updateSubscriptions').callsFake((anyMember, subscriptions, callback) => { callback(null); });
     });
 
     it('returns null when we are not allowed to edit the member', done => {

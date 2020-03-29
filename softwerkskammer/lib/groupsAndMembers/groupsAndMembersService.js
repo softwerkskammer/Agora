@@ -36,7 +36,8 @@ module.exports = {
       if (err || !member) { return callback(err); }
 
       const unsubFunction = (group, cb) => {
-        this.unsubscribeMemberFromGroup(member, group.id, cb);
+        group.unsubscribe(member);
+        groupstore.saveGroup(group, cb);
       };
 
       async.each(member.subscribedGroups, unsubFunction, err1 => {
@@ -85,10 +86,6 @@ module.exports = {
         callback(err1, group);
       });
     });
-  },
-
-  memberIsInMemberList: function memberIsInMemberList(id, members) {
-    return members.some(member => member.id() === id);
   },
 
   saveGroup: function saveGroup(group, callback) {
