@@ -9,7 +9,6 @@ const conf = require('simple-configure');
 const beans = conf.get('beans');
 const Renderer = beans.get('renderer');
 const groupsService = beans.get('groupsService');
-const groupsAndMembers = beans.get('groupsAndMembersService');
 const Group = beans.get('group');
 const misc = beans.get('misc');
 
@@ -20,11 +19,7 @@ app.get('/', (req, res, next) => {
   // display all groups
   groupsService.getAllAvailableGroups((err, groups) => {
     if (err) { return next(err); }
-    async.map(groups, (group, callback) => { groupsAndMembers.addMembercountToGroup(group, callback); },
-      (err1, groupsWithMembers) => {
-        if (err1) { return next(err1); }
-        res.render('index', {regionalgroups: Group.regionalsFrom(groupsWithMembers)});
-      });
+    res.render('index', {regionalgroups: Group.regionalsFrom(groups)});
   });
 });
 

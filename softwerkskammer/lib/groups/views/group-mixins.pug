@@ -3,7 +3,7 @@ mixin grouplist(title, groupsOfAKind)
   ul.list-unstyled
     each group in groupsOfAKind
       li
-        span.badge.text-white(style='background-color: ' + group.color + '; min-width:32px; text-align:right; display:inline-block') #{group.membercount}
+        span.badge.text-white(style='background-color: ' + group.color + '; min-width:32px; text-align:right; display:inline-block') #{group.membercount()}
         | &nbsp;&nbsp;
         span.popover-highlight(rel='tooltip-in-body', data-content=group.descriptionHTMLFiltered('img'))
           strong: a(href=group.id) #{group.longName}

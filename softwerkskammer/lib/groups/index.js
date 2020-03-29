@@ -1,6 +1,5 @@
 const conf = require('simple-configure');
 const beans = conf.get('beans');
-const async = require('async');
 const R = require('ramda');
 const Feed = require('feed').Feed;
 
@@ -22,17 +21,15 @@ function groupSubmitted(req, res, next) {
     if (errors.length !== 0) { return res.render('../../../views/errorPages/validationError', {errors}); }
     groupstore.getGroup(group.id, (err1, existingGroup) => {
       if (err1) { return next(err1); }
+      if (!existingGroup) {
+        group.subscribe(req.user.member);
+      } else {
+        group.subscribedMembers = existingGroup.subscribedMembers;
+      }
       groupsAndMembers.saveGroup(group, err2 => {
         if (err2) { return next(err2); }
         statusmessage.successMessage('message.title.save_successful', 'message.content.groups.saved').putIntoSession(req);
-        if (!existingGroup) {
-          groupsAndMembers.subscribeMemberToGroup(req.user.member, group.id, err3 => {
-            if (err3) { return next(err3); }
-            res.redirect('/groups/' + group.id);
-          });
-        } else {
-          res.redirect('/groups/' + group.id);
-        }
+        res.redirect('/groups/' + group.id);
       });
     });
   });
@@ -42,14 +39,10 @@ function groupSubmitted(req, res, next) {
 app.get('/', (req, res, next) => {
   groupsService.getAllAvailableGroups((err, groups) => {
     if (err) { return next(err); }
-    async.map(groups, (group, callback) => groupsAndMembers.addMembercountToGroup(group, callback),
-      (err1, groupsWithMembers) => {
-        if (err1) { return next(err1); }
-        res.render('index', {
-          regionalgroups: Group.regionalsFrom(groupsWithMembers),
-          themegroups: Group.thematicsFrom(groupsWithMembers)
-        });
-      });
+    res.render('index', {
+      regionalgroups: Group.regionalsFrom(groups),
+      themegroups: Group.thematicsFrom(groups)
+    });
   });
 });
 
@@ -128,6 +121,7 @@ app.get('/:groupname', (req, res, next) => {
     });
     return activities;
   }
+
   groupsAndMembers.getGroupAndMembersForList(req.params.groupname, (err, group) => {
     if (err || !group) { return next(err); }
     wikiService.getBlogpostsForGroup(req.params.groupname, (err1, blogposts) => {

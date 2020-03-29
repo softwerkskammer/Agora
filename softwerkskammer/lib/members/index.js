@@ -90,8 +90,8 @@ app.get('/new', (req, res, next) => {
       const allGroups = results.allGroups;
       res.render('edit', {
         member: new Member().initFromSessionUser(req.user),
-        regionalgroups: groupsService.combineSubscribedAndAvailableGroups([], Group.regionalsFrom(allGroups)),
-        themegroups: groupsService.combineSubscribedAndAvailableGroups([], Group.thematicsFrom(allGroups)),
+        regionalgroups: groupsService.markGroupsSelected([], Group.regionalsFrom(allGroups)),
+        themegroups: groupsService.markGroupsSelected([], Group.thematicsFrom(allGroups)),
         tags: results.allTags
       });
     }
@@ -115,8 +115,8 @@ app.get('/edit/:nickname', (req, res, next) => {
       const allGroups = results.allGroups;
       res.render('edit', {
         member,
-        regionalgroups: groupsService.combineSubscribedAndAvailableGroups(member.subscribedGroups, Group.regionalsFrom(allGroups)),
-        themegroups: groupsService.combineSubscribedAndAvailableGroups(member.subscribedGroups, Group.thematicsFrom(allGroups)),
+        regionalgroups: groupsService.markGroupsSelected(member.subscribedGroups, Group.regionalsFrom(allGroups)),
+        themegroups: groupsService.markGroupsSelected(member.subscribedGroups, Group.thematicsFrom(allGroups)),
         tags: results.allTags
       });
     }

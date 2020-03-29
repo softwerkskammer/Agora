@@ -7,34 +7,21 @@ const validation = beans.get('validation');
 const groupstore = beans.get('groupstore');
 const misc = beans.get('misc');
 
-//Just checking if remote has been configured
-const listAdapter = conf.get('fullyQualifiedHomeDir') ? beans.get('ezmlmAdapter') : beans.get('fakeListAdapter');
-
 function isReserved(groupname) {
   return new RegExp('^edit$|^new$|^checkgroupname$|^submit$|^administration$|[^\\w-]', 'i').test(groupname);
 }
 
-function subscribedListsForUser(userMail, callback) {
-  listAdapter.getSubscribedListsForUser(userMail, (err, lists) => {
-    callback(err, R.without(conf.get('adminListName'), lists || []));
-  });
-}
-
-function groupsForRetriever(retriever, callback) {
-  async.waterfall([retriever],
-    (err, lists) => {
-      if (err) { return callback(err); }
-      groupstore.groupsByLists(lists, callback);
-    });
-}
-
 module.exports = {
-  getSubscribedGroupsForUser: function getSubscribedGroupsForUser(userMail, callback) {
-    groupsForRetriever(cb => subscribedListsForUser(userMail, cb), callback);
+  // API geändert von email() auf member und Methode umbenannt
+  getSubscribedGroupsForMember: function getSubscribedGroupsForMember(member, callback) {
+    groupstore.allGroups((err, groups) => {
+      if (err) { return callback(err); }
+      callback(null, groups.filter(g => g.subscribedMembers.includes(member.id())));
+    });
   },
 
   getAllAvailableGroups: function getAllAvailableGroups(callback) {
-    groupsForRetriever(cb => listAdapter.getAllAvailableLists(cb), callback);
+    groupstore.allGroups(callback);
   },
 
   allGroupColors: function allGroupColors(callback) {
@@ -44,10 +31,6 @@ module.exports = {
         return result;
       }, {}));
     });
-  },
-
-  getMailinglistUsersOfList: function getMailinglistUsersOfList(groupname, callback) {
-    listAdapter.getUsersOfList(groupname, callback);
   },
 
   isGroupValid: function isGroupValid(group, callback) {
@@ -69,70 +52,48 @@ module.exports = {
   },
 
   createOrSaveGroup: function createOrSaveGroup(newGroup, callback) {
-    groupstore.getGroup(newGroup.id, (err, existingGroup) => {
-      if (err) { return callback(err, existingGroup); }
+    groupstore.saveGroup(newGroup, callback);
+  },
 
-      async.parallel(
-        [
-          cb => {
-            if (!existingGroup) {
-              listAdapter.createList(newGroup.id, newGroup.emailPrefix, cb);
-            } else {
-              cb();
-            }
-          },
-          cb => groupstore.saveGroup(newGroup, cb)
-        ],
-        err1 => callback(err1, existingGroup)
-      );
+  // API change email() -> member and renamed
+  addMemberToGroupNamed: function addMemberToGroupNamed(member, groupname, callback) {
+    groupstore.getGroup(groupname, (err, group) => {
+      if (err) { return callback(err); }
+      group.subscribe(member);
+      groupstore.saveGroup(group, callback);
     });
   },
 
-  addUserToList: function addUserToList(userMail, listname, callback) {
-    listAdapter.addUserToList(userMail, listname, callback);
+  // API change email() -> member and renamed
+  removeMemberFromGroupNamed: function removeMemberFromGroupNamed(member, groupname, callback) {
+    groupstore.getGroup(groupname, (err, group) => {
+      if (err) { return callback(err); }
+      group.unsubscribe(member);
+      groupstore.saveGroup(group, callback);
+    });
   },
 
-  removeUserFromList: function removeUserFromList(userMail, list, callback) {
-    listAdapter.removeUserFromList(userMail, list, callback);
+  // API change: email() -> member, oldUserMail removed
+  updateSubscriptions: function updateSubscriptions(member, newSubscriptions, callback) {
+    groupstore.allGroups((err, groups) => {
+      if (err) { return callback(err); }
+      const subscribedGroups = groups.filter(g => g.subscribedMembers.includes(member.id()));
+      const groupsForNewSubscriptions = groups.filter(g => newSubscriptions.includes(g.id));
+
+      const groupsToSubscribe = R.difference(groupsForNewSubscriptions, subscribedGroups);
+      const groupsToUnsubscribe = R.difference(subscribedGroups, groupsForNewSubscriptions);
+
+      groupsToSubscribe.forEach(g => g.subscribe(member));
+      groupsToUnsubscribe.forEach(g => g.unsubscribe(member));
+
+      const groupsToSave = groupsToSubscribe.concat(groupsToUnsubscribe);
+      async.each(groupsToSave, groupstore.saveGroup, callback);
+    });
   },
 
-  updateSubscriptions: function updateSubscriptions(userMail, oldUserMail, newSubscriptions, callback) {
-    async.waterfall(
-      [
-        cb => subscribedListsForUser(oldUserMail, cb)
-      ],
-      (err, subscribedLists) => {
-        if (err) { return callback(err); }
-        newSubscriptions = misc.toArray(newSubscriptions);
-        const emailChanged = userMail !== oldUserMail;
-        const listsToSubscribe = emailChanged ? newSubscriptions : R.difference(newSubscriptions, subscribedLists);
-        const listsToUnsubscribe = emailChanged ? subscribedLists : R.difference(subscribedLists, newSubscriptions);
-        async.series(
-          [
-            funCallback => {
-              function subscribe(list, cb) {
-                listAdapter.addUserToList(userMail, list, cb);
-              }
-
-              async.each(listsToSubscribe, subscribe, funCallback);
-            },
-            funCallback => {
-              function unsubscribe(list, cb) {
-                listAdapter.removeUserFromList(oldUserMail, list, cb);
-              }
-
-              async.each(listsToUnsubscribe, unsubscribe, funCallback);
-            }
-          ],
-          err1 => callback(err1)
-        );
-      }
-    );
-  },
-
-  combineSubscribedAndAvailableGroups: function combineSubscribedAndAvailableGroups(subscribedGroups, availableGroups) {
+  markGroupsSelected: function markGroupsSelected(groupsToMark, availableGroups) {
     return availableGroups.map(group => {
-      return {group, selected: subscribedGroups.some(subG => subG.id === group.id)};
+      return {group, selected: groupsToMark.some(subG => subG.id === group.id)};
     });
   },
 

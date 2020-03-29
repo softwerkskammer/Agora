@@ -173,7 +173,8 @@ function renderActivityCombinedWithGroups(res, next, activity) {
     });
   }
 
-  groupsService.getSubscribedGroupsForUser(res.locals.user.member.email(), function (err, subscribedGroups) {
+  // API geändert von email() auf member und Methode umbenannt
+  groupsService.getSubscribedGroupsForMember(res.locals.user.member, function (err, subscribedGroups) {
     if (err) { return next(err); }
     return render(Group.regionalsFrom(subscribedGroups).concat(Group.thematicsFrom(subscribedGroups)));
   });

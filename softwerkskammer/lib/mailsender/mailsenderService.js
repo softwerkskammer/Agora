@@ -42,8 +42,8 @@ module.exports = {
         if (err || !results.activity) { return globalCallback(err); }
         const activity = results.activity;
         const invitationGroup = results.groups.find(group => group.id === activity.assignedGroup());
-        const regionalgroups = groupsService.combineSubscribedAndAvailableGroups([invitationGroup], Group.regionalsFrom(results.groups));
-        const themegroups = groupsService.combineSubscribedAndAvailableGroups([invitationGroup], Group.thematicsFrom(results.groups));
+        const regionalgroups = groupsService.markGroupsSelected([invitationGroup], Group.regionalsFrom(results.groups));
+        const themegroups = groupsService.markGroupsSelected([invitationGroup], Group.thematicsFrom(results.groups));
 
         const message = new Message();
         message.setSubject('Einladung: ' + activity.title());

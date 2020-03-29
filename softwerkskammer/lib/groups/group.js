@@ -54,6 +54,7 @@ class Group {
       this.mapY = object.mapY;
       this.shortName = object.shortName;
       this.contactingOrganizersEnabled = !!object.contactingOrganizersEnabled;
+      this.subscribedMembers = object.subscribedMembers || [];
     } else {
       this.color = '#FF00FF';
     }
@@ -114,6 +115,23 @@ class Group {
 
   hasOrganizers() {
     return !R.isEmpty(this.organizers);
+  }
+
+  subscribe(member) {
+    this.subscribedMembers.push(member.id());
+    this.subscribedMembers = R.uniq(this.subscribedMembers);
+  }
+
+  unsubscribe(member) {
+    this.subscribedMembers = R.without(member.id(), this.subscribedMembers);
+  }
+
+  isMemberSubscribed(member) {
+    return this.subscribedMembers.includes(member.id());
+  }
+
+  membercount() {
+    return this.subscribedMembers.length;
   }
 
   // Helper functions (static) -> look for a better place to implement
