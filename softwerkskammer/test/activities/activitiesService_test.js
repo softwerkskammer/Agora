@@ -1,15 +1,10 @@
 'use strict';
 
-const chado = require('chado');
-const cb = chado.callback;
-const verify = chado.verify;
-
 const sinon = require('sinon').createSandbox();
 const expect = require('must-dist');
 
 const conf = require('../../testutil/configureForTest');
 const beans = conf.get('beans');
-const reservedURLs = conf.get('reservedActivityURLs');
 
 const activitiesService = beans.get('activitiesService');
 const activitystore = beans.get('activitystore');
@@ -150,38 +145,40 @@ describe('Activities Service', () => {
     expectedActivity.participants = [member1, member2];
     expectedActivity.ownerNickname = 'owner';
 
-    verify('activitiesService')
-      .canHandle('getActivityWithGroupAndParticipants')
-      .withArgs('urlOfTheActivity', cb)
-      .andCallsCallbackWith(null, expectedActivity)
-      .on(activitiesService, done);
+    activitiesService.getActivityWithGroupAndParticipants('urlOfTheActivity', function (err, activity) {
+      expect(activity, 'Activity').to.exist();
+      expect(activity.group, 'Group').to.equal(group);
+      expect(activity.participants.length).to.equal(2);
+      expect(activity.ownerNickname, 'Owner').to.equal('owner');
+      const partsIDs = activity.participants.map(p => p.id());
+      expect(partsIDs, 'Participants').to.contain(member1.id());
+      expect(partsIDs, 'Participants').to.contain(member2.id());
+      done(err);
+    });
   });
 
   describe('checks the validity of URLs and', () => {
 
     it('does not allow the URL \'edit\'', done => {
-      verify('activitiesService')
-        .canHandle('isValidUrl')
-        .withArgs(reservedURLs, 'edit', cb)
-        .andCallsCallbackWith(null, false)
-        .on(activitiesService, done);
+      activitiesService.isValidUrl('edit', '^edit$', function (err, result) {
+        expect(result).to.be(false);
+        done(err);
+      });
     });
 
     it('allows the untrimmed URL \'uhu\'', done => {
       sinon.stub(activitystore, 'getActivity').callsFake((id, callback) => { callback(null, null); });
-      verify('activitiesService')
-        .canHandle('isValidUrl')
-        .withArgs(reservedURLs, 'uhu', cb)
-        .andCallsCallbackWith(null, true)
-        .on(activitiesService, done);
+      activitiesService.isValidUrl(' edit ', '^edit$', function (err, result) {
+        expect(result).to.be(true);
+        done(err);
+      });
     });
 
     it('does not allow a URL containing a "/"', done => {
-      verify('activitiesService')
-        .canHandle('isValidUrl')
-        .withArgs(reservedURLs, 'legal/egal', cb)
-        .andCallsCallbackWith(null, false)
-        .on(activitiesService, done);
+      activitiesService.isValidUrl('', 'legal/egal', function (err, result) {
+        expect(result).to.be(false);
+        done(err);
+      });
     });
   });
 

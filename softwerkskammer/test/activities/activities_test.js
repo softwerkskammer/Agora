@@ -4,10 +4,6 @@ const request = require('supertest');
 const sinon = require('sinon').createSandbox();
 const expect = require('must-dist');
 
-const chado = require('chado');
-const cb = chado.callback;
-const assume = chado.assume;
-
 const createApp = require('../../testutil/testHelper')('activitiesApp').createApp;
 
 const beans = require('../../testutil/configureForTest').get('beans');
@@ -140,28 +136,15 @@ describe('Activity application', () => {
   });
 
   it('shows enriched activities when in detail', done => {
-    chado.createDouble('activitiesService', activitiesService);
-    const expectedActivity = new Activity({
-      title: 'Title of the Activity',
-      url: 'urlOfTheActivity',
-      assignedGroup: 'groupname',
-      owner: 'ownerId'
-    });
-    expectedActivity.group = group;
-    expectedActivity.participants = [member1, member2];
-    expectedActivity.ownerNickname = 'owner';
-
-    assume(activitiesService)
-      .canHandle('getActivityWithGroupAndParticipants')
-      .withArgs('urlOfTheActivity', cb)
-      .andCallsCallbackWith(null, expectedActivity);
+    emptyActivity.group = group;
+    emptyActivity.participants = [member1, member2];
+    emptyActivity.ownerNickname = 'owner';
 
     request(createApp({member: member1}))
       .get('/' + 'urlOfTheActivity')
       .expect(200)
       .expect(/<h2>Title of the Activity/)
       .expect(/Bislang haben 2 Mitglieder ihre Teilnahme zugesagt\./, err => {
-        chado.reset();
         done(err);
       });
   });
