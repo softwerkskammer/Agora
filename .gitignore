@@ -35,7 +35,6 @@ dev-goodies
 **/public/stylesheets
 **/public/webfonts
 
-softwerkskammer/chado-result.json
 softwerkskammer/version.pug
 local
 

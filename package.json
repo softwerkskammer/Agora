@@ -83,7 +83,6 @@
     "select2": "4.0.13",
     "select2-theme-bootstrap4": "0.2.0-beta.6",
     "serve-favicon": "2.5.0",
-    "sharp": "^0.25.2",
     "simple-configure": "0.1.6",
     "simple-timepicker": "1.1.1",
     "smartmenus": "1.1.0",
