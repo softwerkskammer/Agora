@@ -45,7 +45,8 @@ function createConfiguration() {
     'mailsender-config.json',
     'wikirepo-config.json',
     'activityresults-config.json',
-    'socrates-config.json'];
+    'socrates-config.json',
+    'ezmlm-config.json'];
   conf.addFiles(files.map(file => configdir + file));
 
   return conf;
