@@ -9,6 +9,7 @@ const groupsAndMembersService = beans.get('groupsAndMembersService');
 const activitiesService = beans.get('activitiesService');
 const membersService = beans.get('membersService');
 const icalService = beans.get('icalService');
+const groupstore = beans.get('groupstore');
 const memberstore = beans.get('memberstore');
 const activitystore = beans.get('activitystore');
 const Message = beans.get('message');
@@ -36,7 +37,7 @@ module.exports = {
     async.parallel(
       {
         activity: callback => activitiesService.getActivityWithGroupAndParticipants(activityURL, callback),
-        groups: callback => groupsService.getAllAvailableGroups(callback)
+        groups: callback => groupstore.allGroups(callback)
       },
       (err, results) => {
         if (err || !results.activity) { return globalCallback(err); }

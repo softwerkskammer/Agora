@@ -3,7 +3,7 @@ const async = require('async');
 const beans = require('simple-configure').get('beans');
 const membersService = beans.get('membersService');
 const memberstore = beans.get('memberstore');
-const groupsService = beans.get('groupsService');
+const groupstore = beans.get('groupstore');
 const activitystore = beans.get('activitystore');
 const activitiesService = beans.get('activitiesService');
 const misc = beans.get('misc');
@@ -21,7 +21,7 @@ app.get('/memberTable', (req, res, next) => {
 app.get('/memberAndGroupTable', (req, res, next) => {
   async.parallel(
     {
-      groups: groupsService.getAllAvailableGroups,
+      groups: groupstore.allGroups,
       members: memberstore.allMembers
     },
     (err, results) => {
@@ -32,7 +32,7 @@ app.get('/memberAndGroupTable', (req, res, next) => {
 });
 
 app.get('/groupTable', (req, res, next) => {
-  groupsService.getAllAvailableGroups((err, groups) => {
+  groupstore.allGroups((err, groups) => {
     if (err) { return next(err); }
     res.render('groupTable', {groups, groupTypes: Group.allTypes()});
   });

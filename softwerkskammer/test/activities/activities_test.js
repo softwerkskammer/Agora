@@ -9,6 +9,7 @@ const createApp = require('../../testutil/testHelper')('activitiesApp').createAp
 const beans = require('../../testutil/configureForTest').get('beans');
 const fieldHelpers = beans.get('fieldHelpers');
 const activitystore = beans.get('activitystore');
+const groupstore = beans.get('groupstore');
 const Activity = beans.get('activity');
 const Member = beans.get('member');
 const Group = beans.get('group');
@@ -430,7 +431,7 @@ describe('Activity application', () => {
     const groupA = new Group({id: 'groupA', longName: 'groupA', type: 'Themengruppe'});
     const groupB = new Group({id: 'groupB', longName: 'groupB', type: 'Themengruppe'});
     const groupC = new Group({id: 'groupC', longName: 'groupC', type: 'Themengruppe'});
-    sinon.stub(groupsService, 'getAllAvailableGroups').callsFake(callback => { callback(null, [groupA, groupB, groupC]); });
+    sinon.stub(groupstore, 'allGroups').callsFake(callback => { callback(null, [groupA, groupB, groupC]); });
     sinon.stub(groupsService, 'getSubscribedGroupsForMember').callsFake((member, callback) => { callback(null, [groupA, groupB]); });
 
     request(createApp({id: 'owner'}))
@@ -448,7 +449,7 @@ describe('Activity application', () => {
     const groupA = new Group({id: 'groupA', longName: 'groupA'});
     const groupB = new Group({id: 'groupB', longName: 'groupB'});
     const groupC = new Group({id: 'groupC', longName: 'groupC'});
-    sinon.stub(groupsService, 'getAllAvailableGroups').callsFake(callback => { callback(null, [groupA, groupB, groupC]); });
+    sinon.stub(groupstore, 'allGroups').callsFake(callback => { callback(null, [groupA, groupB, groupC]); });
 
     request(createApp({id: 'superuserID'}))
       .get('/new')
@@ -463,7 +464,7 @@ describe('Activity application', () => {
     const groupA = new Group({id: 'groupA', longName: 'groupA', type: 'Themengruppe'});
     const groupB = new Group({id: 'groupB', longName: 'groupB', type: 'Themengruppe'});
     const groupC = new Group({id: 'groupC', longName: 'groupC', type: 'Regionalgruppe'});
-    sinon.stub(groupsService, 'getAllAvailableGroups').callsFake(callback => { callback(null, [groupA, groupB, groupC]); });
+    sinon.stub(groupstore, 'allGroups').callsFake(callback => { callback(null, [groupA, groupB, groupC]); });
 
     request(createApp({id: 'superuserID'}))
       .get('/new')

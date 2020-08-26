@@ -17,7 +17,7 @@ module.exports = {
     async.parallel(
       {
         activities: activitiesFetcher,
-        groups: groupsService.getAllAvailableGroups,
+        groups: groupstore.allGroups,
         groupColors: groupsService.allGroupColors.bind(groupsService)
       },
 

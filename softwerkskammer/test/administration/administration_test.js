@@ -9,7 +9,7 @@ const memberstore = beans.get('memberstore');
 const Member = beans.get('member');
 const dummymember = new Member({id: 'memberID', nickname: 'hada', email: 'a@b.c', site: 'http://my.blog', firstname: 'Hans', lastname: 'Dampf', authentications: []});
 
-const groupsService = beans.get('groupsService');
+const groupstore = beans.get('groupstore');
 const membersService = beans.get('membersService');
 const Group = beans.get('group');
 
@@ -31,7 +31,7 @@ describe('Administration application', () => {
   });
 
   beforeEach(() => {
-    sinon.stub(groupsService, 'getAllAvailableGroups').callsFake(
+    sinon.stub(groupstore, 'allGroups').callsFake(
       callback => callback(null, [new Group({id: 'id', longName: 'GRUPPO', description: 'desc'})])
     );
     sinon.stub(memberstore, 'allMembers').callsFake(callback => callback(null, [dummymember]));

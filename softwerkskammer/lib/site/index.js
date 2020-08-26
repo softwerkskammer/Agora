@@ -7,7 +7,7 @@ const qrimage = require('qr-image');
 const conf = require('simple-configure');
 const beans = conf.get('beans');
 const Renderer = beans.get('renderer');
-const groupsService = beans.get('groupsService');
+const groupstore = beans.get('groupstore');
 const Group = beans.get('group');
 const misc = beans.get('misc');
 
@@ -16,7 +16,7 @@ app.locals.pretty = true;
 
 app.get('/', (req, res, next) => {
   // display all groups
-  groupsService.getAllAvailableGroups((err, groups) => {
+  groupstore.allGroups((err, groups) => {
     if (err) { return next(err); }
     res.render('index', {regionalgroups: Group.regionalsFrom(groups)});
   });

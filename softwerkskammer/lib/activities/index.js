@@ -8,6 +8,7 @@ const CONFLICTING_VERSIONS = beans.get('constants').CONFLICTING_VERSIONS;
 const activitiesService = beans.get('activitiesService');
 const calendarService = beans.get('calendarService');
 const icalService = beans.get('icalService');
+const groupstore = beans.get('groupstore');
 const groupsService = beans.get('groupsService');
 const activitystore = beans.get('activitystore');
 const memberstore = beans.get('memberstore');
@@ -167,7 +168,7 @@ function renderActivityCombinedWithGroups(res, next, activity) {
   };
 
   if (res.locals.accessrights.isSuperuser()) {
-    return groupsService.getAllAvailableGroups(function (err, allGroups) {
+    return groupstore.allGroups(function (err, allGroups) {
       if (err) { return next(err); }
       return render(allGroups);
     });

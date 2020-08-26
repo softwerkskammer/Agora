@@ -7,6 +7,7 @@ const validation = beans.get('validation');
 const Member = beans.get('member');
 const Group = beans.get('group');
 const membersService = beans.get('membersService');
+const groupstore = beans.get('groupstore');
 const memberstore = beans.get('memberstore');
 const groupsAndMembersService = beans.get('groupsAndMembersService');
 const groupsService = beans.get('groupsService');
@@ -82,7 +83,7 @@ app.get('/new', (req, res, next) => {
   }
   async.parallel(
     {
-      allGroups: callback => groupsService.getAllAvailableGroups(callback),
+      allGroups: callback => groupstore.allGroups(callback),
       allTags: callback => tagsFor(callback)
     },
     (err, results) => {
@@ -101,8 +102,8 @@ app.get('/new', (req, res, next) => {
 app.get('/edit/:nickname', (req, res, next) => {
   async.parallel(
     {
-      member: callback => { groupsAndMembersService.getMemberWithHisGroups(req.params.nickname, callback); },
-      allGroups: callback => { groupsService.getAllAvailableGroups(callback); },
+      member: callback => groupsAndMembersService.getMemberWithHisGroups(req.params.nickname, callback),
+      allGroups: callback => groupstore.allGroups(callback),
       allTags: callback => tagsFor(callback)
     },
     (err, results) => {

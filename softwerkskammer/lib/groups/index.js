@@ -38,7 +38,7 @@ function groupSubmitted(req, res, next) {
 
 // display all groups
 app.get('/', (req, res, next) => {
-  groupsService.getAllAvailableGroups((err, groups) => {
+  groupstore.allGroups((err, groups) => {
     if (err) { return next(err); }
     res.render('index', {
       regionalgroups: Group.regionalsFrom(groups),

@@ -93,7 +93,7 @@ describe('Groups Service (getAllAvailableGroups)', () => {
       callback(null, []);
     });
 
-    groupsService.getAllAvailableGroups((err, lists) => {
+    groupstore.allGroups((err, lists) => {
       expect(spy.called).to.be(true);
       expect(lists).to.not.be(null);
       expect(lists.length).to.equal(0);

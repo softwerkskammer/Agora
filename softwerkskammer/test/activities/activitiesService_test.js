@@ -52,7 +52,7 @@ describe('Activities Service', () => {
 
     sinon.stub(activitystore, 'allActivities').callsFake(callback => {callback(null, [dummyActivity]); });
 
-    sinon.stub(groupsService, 'getAllAvailableGroups').callsFake(callback => {
+    sinon.stub(groupstore, 'allGroups').callsFake(callback => {
       callback(null, [
         {id: 'assignedGroup', longName: 'The name of the assigned Group'}
       ]);

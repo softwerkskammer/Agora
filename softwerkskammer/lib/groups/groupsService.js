@@ -20,12 +20,8 @@ module.exports = {
     });
   },
 
-  getAllAvailableGroups: function getAllAvailableGroups(callback) {
-    groupstore.allGroups(callback);
-  },
-
   allGroupColors: function allGroupColors(callback) {
-    this.getAllAvailableGroups((err, groups) => {
+    groupstore.allGroups((err, groups) => {
       callback(err, (groups || []).reduce((result, group) => {
         result[group.id] = group.color;
         return result;

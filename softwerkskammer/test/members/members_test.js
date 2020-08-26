@@ -8,6 +8,7 @@ const beans = require('../../testutil/configureForTest').get('beans');
 const Member = beans.get('member');
 const membersService = beans.get('membersService');
 const memberstore = beans.get('memberstore');
+const groupstore = beans.get('groupstore');
 const groupsService = beans.get('groupsService');
 const groupsAndMembersService = beans.get('groupsAndMembersService');
 const wikiService = beans.get('wikiService');
@@ -52,7 +53,7 @@ describe('Members application', () => {
     sinon.stub(activitiesService, 'getOrganizedOrEditedActivitiesOfMember').callsFake((member, callback) => {
       callback(null, []);
     });
-    sinon.stub(groupsService, 'getAllAvailableGroups').callsFake(callback => {
+    sinon.stub(groupstore, 'allGroups').callsFake(callback => {
       callback(null, []);
     });
     sinon.stub(wikiService, 'listFilesModifiedByMember').callsFake((nickname, callback) => {
