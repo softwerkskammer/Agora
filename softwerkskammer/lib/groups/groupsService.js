@@ -78,8 +78,7 @@ module.exports = {
       groupsToSubscribe.forEach(g => g.subscribe(member));
       groupsToUnsubscribe.forEach(g => g.unsubscribe(member));
 
-      const groupsToSave = groupsToSubscribe.concat(groupsToUnsubscribe);
-      async.each(groupsToSave, groupstore.saveGroup, callback);
+      async.each(groupsToSubscribe.concat(groupsToUnsubscribe), groupstore.saveGroup, callback);
     });
   },
 
