@@ -47,10 +47,6 @@ module.exports = {
     });
   },
 
-  createOrSaveGroup: function createOrSaveGroup(newGroup, callback) {
-    groupstore.saveGroup(newGroup, callback);
-  },
-
   // API change email() -> member and renamed
   addMemberToGroupNamed: function addMemberToGroupNamed(member, groupname, callback) {
     groupstore.getGroup(groupname, (err, group) => {

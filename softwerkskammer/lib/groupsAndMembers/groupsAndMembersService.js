@@ -89,7 +89,7 @@ module.exports = {
   },
 
   saveGroup: function saveGroup(group, callback) {
-    groupsService.createOrSaveGroup(group, callback);
+    groupstore.saveGroup(group, callback);
   },
 
   subscribeMemberToGroup: function subscribeMemberToGroup(member, groupname, callback) {

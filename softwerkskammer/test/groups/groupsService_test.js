@@ -113,7 +113,7 @@ describe('Groups Service (createOrSaveGroup)', () => {
       callback(null);
     });
 
-    groupsService.createOrSaveGroup({}, err => {
+    groupstore.saveGroup({}, err => {
       expect(spy.calledOnce).to.be(true);
       done(err);
     });

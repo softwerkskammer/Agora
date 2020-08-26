@@ -7,6 +7,7 @@ const expect = require('must-dist');
 
 const Member = beans.get('member');
 const Group = beans.get('group');
+const groupstore = beans.get('groupstore');
 const groupsService = beans.get('groupsService');
 const groupsAndMembersService = beans.get('groupsAndMembersService');
 
@@ -32,7 +33,7 @@ describe('Groups and Members Service (Subscriptions)', () => {
     let createOrSaveGroupSpy;
 
     beforeEach(() => {
-      createOrSaveGroupSpy = sinon.stub(groupsService, 'createOrSaveGroup').callsFake((group, callback) => { callback(); });
+      createOrSaveGroupSpy = sinon.stub(groupstore, 'saveGroup').callsFake((group, callback) => { callback(); });
     });
 
     it('calls groupService to perform saving', done => {
