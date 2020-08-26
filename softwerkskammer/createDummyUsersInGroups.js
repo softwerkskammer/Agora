@@ -26,7 +26,7 @@ memberstore.allMembers((err, members) => {
   function addEmailsToListAndSave(list, cb) {
     // eslint-disable-next-line no-unused-vars
     list.users = emails.filter(e => Math.random() < 0.5);
-    console.log('saving ' + list.users.length + ' users an Liste ' + list.id);
+    console.log('saving ' + list.users.length + ' users in mailinglist ' + list.id);
     mailPersistence.save(list, cb);
   }
 
