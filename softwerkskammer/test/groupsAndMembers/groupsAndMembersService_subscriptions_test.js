@@ -7,7 +7,6 @@ const expect = require('must-dist');
 
 const Member = beans.get('member');
 const Group = beans.get('group');
-const groupstore = beans.get('groupstore');
 const groupsService = beans.get('groupsService');
 const groupsAndMembersService = beans.get('groupsAndMembersService');
 
@@ -28,22 +27,6 @@ describe('Groups and Members Service (Subscriptions)', () => {
     sinon.restore();
     groupA.organizers = [];
   });
-
-  describe('saveGroup', () => {
-    let createOrSaveGroupSpy;
-
-    beforeEach(() => {
-      createOrSaveGroupSpy = sinon.stub(groupstore, 'saveGroup').callsFake((group, callback) => { callback(); });
-    });
-
-    it('calls groupService to perform saving', done => {
-      groupsAndMembersService.saveGroup(groupA, err => {
-        expect(createOrSaveGroupSpy.called, 'save in GroupsService is called').to.be(true);
-        done(err);
-      });
-    });
-  });
-
 
   describe('(un)subscribe one group', () => {
     it('calls groupService to perform saving and subscribes only to groupA', done => {

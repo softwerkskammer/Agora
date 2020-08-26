@@ -88,10 +88,6 @@ module.exports = {
     });
   },
 
-  saveGroup: function saveGroup(group, callback) {
-    groupstore.saveGroup(group, callback);
-  },
-
   subscribeMemberToGroup: function subscribeMemberToGroup(member, groupname, callback) {
     groupsService.addMemberToGroupNamed(member, groupname, callback);
   },
