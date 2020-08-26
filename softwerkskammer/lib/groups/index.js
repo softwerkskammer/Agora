@@ -93,7 +93,7 @@ app.get('/checkemailprefix', (req, res) => {
 });
 
 app.post('/subscribe', (req, res) => {
-  groupsAndMembers.subscribeMemberToGroup(req.user.member, req.body.groupname, err => {
+  groupsService.addMemberToGroupNamed(req.user.member, req.body.groupname, err => {
     if (err) {
       statusmessage.errorMessage('message.title.problem', 'message.content.save_error_reason', {err: err.toString()}).putIntoSession(req);
     } else {
@@ -104,7 +104,7 @@ app.post('/subscribe', (req, res) => {
 });
 
 app.post('/unsubscribe', (req, res) => {
-  groupsAndMembers.unsubscribeMemberFromGroup(req.user.member, req.body.groupname, err => {
+  groupsService.removeMemberFromGroupNamed(req.user.member, req.body.groupname, err => {
     if (err) {
       statusmessage.errorMessage('message.title.problem', 'message.content.save_error_reason', {err: err.toString()}).putIntoSession(req);
     } else {

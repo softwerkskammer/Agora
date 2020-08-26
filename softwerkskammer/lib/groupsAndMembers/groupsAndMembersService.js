@@ -27,10 +27,6 @@ module.exports = {
     });
   },
 
-  unsubscribeMemberFromGroup: function unsubscribeMemberFromGroup(member, groupname, callback) {
-    groupsService.removeMemberFromGroupNamed(member, groupname, callback);
-  },
-
   removeMember: function removeMember(nickname, callback) {
     this.getMemberWithHisGroups(nickname, (err, member) => {
       if (err || !member) { return callback(err); }
@@ -86,10 +82,6 @@ module.exports = {
         callback(err1, group);
       });
     });
-  },
-
-  subscribeMemberToGroup: function subscribeMemberToGroup(member, groupname, callback) {
-    groupsService.addMemberToGroupNamed(member, groupname, callback);
   },
 
   updateAndSaveSubmittedMember: function updateAndSaveSubmittedMember(sessionUser, memberformData, accessrights, notifyNewMemberRegistration, callback) {
