@@ -83,9 +83,7 @@ module.exports = {
   },
 
   markGroupsSelected: function markGroupsSelected(groupsToMark, availableGroups) {
-    return availableGroups.map(group => {
-      return {group, selected: groupsToMark.some(subG => subG.id === group.id)};
-    });
+    return availableGroups.map(group => ({group, selected: groupsToMark.some(subG => subG.id === group.id)}));
   },
 
   isGroupNameAvailable: function isGroupNameAvailable(groupname, callback) {
