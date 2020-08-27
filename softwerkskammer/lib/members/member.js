@@ -192,14 +192,8 @@ class Member {
     return Member.isSuperuser(this.id());
   }
 
-  fillSubscribedGroups(groupNamesWithEmails, groups) {
-    const result = [];
-    R.keys(groupNamesWithEmails).forEach(name => {
-      if (groupNamesWithEmails[name].includes(this.email().toLowerCase())) {
-        result.push(groups.find(group => group.id === name));
-      }
-    });
-    this.subscribedGroups = result;
+  fillSubscribedGroups(groups) {
+    this.subscribedGroups = groups.filter(g => g.subscribedMembers.includes(this.id()));
   }
 
   updatePassword(newPassword) {
@@ -230,6 +224,10 @@ class Member {
 
   static superuserEmails(members) {
     return members.filter(member => member.isSuperuser()).map(member => member.email());
+  }
+
+  static memberIsInMemberList(id, members) {
+    return members.some(member => member.id() === id);
   }
 }
 

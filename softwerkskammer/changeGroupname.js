@@ -8,6 +8,7 @@ const beans = require('simple-configure').get('beans');
 const mailsPersistence = beans.get('mailsPersistence');
 const groupsPersistence = beans.get('groupsPersistence');
 const groupsAndMembers = beans.get('groupsAndMembersService');
+const groupsService = beans.get('groupsService');
 const activitiesPersistence = beans.get('activitiesPersistence');
 const Git = beans.get('gitmech');
 
@@ -41,7 +42,7 @@ function handle(err) {
 groupsAndMembers.getGroupAndMembersForList(oldId, (err, group) => {
   handle(err);
   async.each(group.members, (member, callback) => {
-    groupsAndMembers.subscribeMemberToGroup(member, newId, callback);
+    groupsService.addMemberToGroupNamed(member, newId, callback);
   }, err1 => {
     handle(err1);
 

@@ -9,7 +9,7 @@ const beans = require('../../testutil/configureForTest').get('beans');
 
 const setupApp = require('../../testutil/testHelper');
 const memberstore = beans.get('memberstore');
-const groupsService = beans.get('groupsService');
+const groupstore = beans.get('groupstore');
 const groupsAndMembersService = beans.get('groupsAndMembersService');
 const Member = beans.get('member');
 const addCsrfTokenToLocals = beans.get('addCsrfTokenToLocals');
@@ -44,7 +44,7 @@ describe('Security regarding', () => {
         id: 'memberId', nickname: 'hada', email: 'a@b.c', site: 'http://my.blog',
         firstname: 'Hans', lastname: 'Dampf', authentications: [], subscribedGroups: []
       });
-      sinon.stub(groupsService, 'getAllAvailableGroups').callsFake(callback => { callback(null, []); });
+      sinon.stub(groupstore, 'allGroups').callsFake(callback => { callback(null, []); });
       sinon.stub(groupsAndMembersService, 'getMemberWithHisGroups').callsFake((nickname, callback) => { callback(null, dummymember); });
       sinon.stub(memberstore, 'allMembers').callsFake(callback => { callback(null, [dummymember]); });
     });

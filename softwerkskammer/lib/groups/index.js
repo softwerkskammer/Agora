@@ -1,6 +1,5 @@
 const conf = require('simple-configure');
 const beans = conf.get('beans');
-const async = require('async');
 const R = require('ramda');
 const Feed = require('feed').Feed;
 
@@ -9,6 +8,7 @@ const groupsService = beans.get('groupsService');
 const groupstore = beans.get('groupstore');
 const wikiService = beans.get('wikiService');
 const Group = beans.get('group');
+const Member = beans.get('member');
 const groupsAndMembers = beans.get('groupsAndMembersService');
 const meetupActivitiesService = beans.get('meetupActivitiesService');
 const activitystore = beans.get('activitystore');
@@ -22,17 +22,15 @@ function groupSubmitted(req, res, next) {
     if (errors.length !== 0) { return res.render('../../../views/errorPages/validationError', {errors}); }
     groupstore.getGroup(group.id, (err1, existingGroup) => {
       if (err1) { return next(err1); }
-      groupsAndMembers.saveGroup(group, err2 => {
+      if (!existingGroup) {
+        group.subscribe(req.user.member);
+      } else {
+        group.subscribedMembers = existingGroup.subscribedMembers;
+      }
+      groupstore.saveGroup(group, err2 => {
         if (err2) { return next(err2); }
         statusmessage.successMessage('message.title.save_successful', 'message.content.groups.saved').putIntoSession(req);
-        if (!existingGroup) {
-          groupsAndMembers.subscribeMemberToGroup(req.user.member, group.id, err3 => {
-            if (err3) { return next(err3); }
-            res.redirect('/groups/' + group.id);
-          });
-        } else {
-          res.redirect('/groups/' + group.id);
-        }
+        res.redirect('/groups/' + group.id);
       });
     });
   });
@@ -40,16 +38,12 @@ function groupSubmitted(req, res, next) {
 
 // display all groups
 app.get('/', (req, res, next) => {
-  groupsService.getAllAvailableGroups((err, groups) => {
+  groupstore.allGroups((err, groups) => {
     if (err) { return next(err); }
-    async.map(groups, (group, callback) => groupsAndMembers.addMembercountToGroup(group, callback),
-      (err1, groupsWithMembers) => {
-        if (err1) { return next(err1); }
-        res.render('index', {
-          regionalgroups: Group.regionalsFrom(groupsWithMembers),
-          themegroups: Group.thematicsFrom(groupsWithMembers)
-        });
-      });
+    res.render('index', {
+      regionalgroups: Group.regionalsFrom(groups),
+      themegroups: Group.thematicsFrom(groups)
+    });
   });
 });
 
@@ -99,7 +93,7 @@ app.get('/checkemailprefix', (req, res) => {
 });
 
 app.post('/subscribe', (req, res) => {
-  groupsAndMembers.subscribeMemberToGroup(req.user.member, req.body.groupname, err => {
+  groupsService.addMemberToGroupNamed(req.user.member, req.body.groupname, err => {
     if (err) {
       statusmessage.errorMessage('message.title.problem', 'message.content.save_error_reason', {err: err.toString()}).putIntoSession(req);
     } else {
@@ -110,7 +104,7 @@ app.post('/subscribe', (req, res) => {
 });
 
 app.post('/unsubscribe', (req, res) => {
-  groupsAndMembers.unsubscribeMemberFromGroup(req.user.member, req.body.groupname, err => {
+  groupsService.removeMemberFromGroupNamed(req.user.member, req.body.groupname, err => {
     if (err) {
       statusmessage.errorMessage('message.title.problem', 'message.content.save_error_reason', {err: err.toString()}).putIntoSession(req);
     } else {
@@ -128,6 +122,7 @@ app.get('/:groupname', (req, res, next) => {
     });
     return activities;
   }
+
   groupsAndMembers.getGroupAndMembersForList(req.params.groupname, (err, group) => {
     if (err || !group) { return next(err); }
     wikiService.getBlogpostsForGroup(req.params.groupname, (err1, blogposts) => {
@@ -140,7 +135,7 @@ app.get('/:groupname', (req, res, next) => {
           res.render('get', {
             group,
             users: group.members,
-            userIsGroupMember: groupsAndMembers.memberIsInMemberList(registeredUserId, group.members),
+            userIsGroupMember: Member.memberIsInMemberList(registeredUserId, group.members),
             organizers: group.organizers,
             blogposts,
             blogpostsFeedUrl: req.originalUrl + '/feed',

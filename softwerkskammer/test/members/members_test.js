@@ -8,6 +8,7 @@ const beans = require('../../testutil/configureForTest').get('beans');
 const Member = beans.get('member');
 const membersService = beans.get('membersService');
 const memberstore = beans.get('memberstore');
+const groupstore = beans.get('groupstore');
 const groupsService = beans.get('groupsService');
 const groupsAndMembersService = beans.get('groupsAndMembersService');
 const wikiService = beans.get('wikiService');
@@ -43,7 +44,7 @@ describe('Members application', () => {
     sinon.stub(membersService, 'putAvatarIntoMemberAndSave').callsFake((member, callback) => {
       callback();
     });
-    getSubscribedGroupsForUser = sinon.stub(groupsService, 'getSubscribedGroupsForUser').callsFake((email, callback) => {
+    getSubscribedGroupsForUser = sinon.stub(groupsService, 'getSubscribedGroupsForMember').callsFake((member, callback) => {
       callback(null, []);
     });
     sinon.stub(activitiesService, 'getPastActivitiesOfMember').callsFake((member, callback) => {
@@ -52,7 +53,7 @@ describe('Members application', () => {
     sinon.stub(activitiesService, 'getOrganizedOrEditedActivitiesOfMember').callsFake((member, callback) => {
       callback(null, []);
     });
-    sinon.stub(groupsService, 'getAllAvailableGroups').callsFake(callback => {
+    sinon.stub(groupstore, 'allGroups').callsFake(callback => {
       callback(null, []);
     });
     sinon.stub(wikiService, 'listFilesModifiedByMember').callsFake((nickname, callback) => {
@@ -81,7 +82,7 @@ describe('Members application', () => {
       .expect(200)
       .expect(/http:\/\/my\.blog/, err => {
         expect(getMember.calledWith(dummymember.nickname())).to.be(true);
-        expect(getSubscribedGroupsForUser.calledWith(dummymember.email())).to.be(true);
+        expect(getSubscribedGroupsForUser.calledWith(dummymember)).to.be(true);
         done(err);
       });
   });
@@ -228,7 +229,7 @@ describe('Members application', () => {
   it('saves an existing member and does not trigger notification sending', done => {
     sinon.stub(membersService, 'isValidNickname').callsFake((nickname, callback) => { callback(null, true); });
     sinon.stub(membersService, 'isValidEmail').callsFake((nickname, callback) => { callback(null, true); });
-    sinon.stub(groupsAndMembersService, 'updateSubscriptions').callsFake((member, oldEmail, subscriptions, callback) => { callback(); });
+    sinon.stub(groupsService, 'updateSubscriptions').callsFake((member, subscriptions, callback) => { callback(); });
     sinon.stub(memberstore, 'saveMember').callsFake((member, callback) => { callback(null); });
     const notificationCall = sinon.stub(notifications, 'newMemberRegistered').callsFake(() => undefined);
 
@@ -249,7 +250,7 @@ describe('Members application', () => {
   it('saves a new member and triggers notification sending', done => {
     sinon.stub(membersService, 'isValidNickname').callsFake((nickname, callback) => { callback(null, true); });
     sinon.stub(membersService, 'isValidEmail').callsFake((nickname, callback) => { callback(null, true); });
-    sinon.stub(groupsAndMembersService, 'updateSubscriptions').callsFake((member, oldEmail, subscriptions, callback) => { callback(); });
+    sinon.stub(groupsService, 'updateSubscriptions').callsFake((member, subscriptions, callback) => { callback(); });
     sinon.stub(memberstore, 'saveMember').callsFake((member, callback) => { callback(null); });
     const notificationCall = sinon.stub(notifications, 'newMemberRegistered').callsFake(() => undefined);
 

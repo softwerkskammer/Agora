@@ -31,9 +31,5 @@ block content
                 td: +linkedMember(member.nickname())
                 for group in groups
                   td.center
-                    if member.isInGroup(group.id)
+                    if group.isMemberSubscribed(member)
                       i.fas.fa-check &nbsp;
-      dl.dl-horizontal
-        for groupinfo in groupsWithExtraEmailAddresses
-          dt #{groupinfo.group}
-          dd #{groupinfo.extraAddresses.join(', ')}

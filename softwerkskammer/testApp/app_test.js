@@ -4,7 +4,6 @@ const httpRequest = require('request');
 const sinon = require('sinon').createSandbox();
 const conf = require('../testutil/configureForTest');
 const beans = conf.get('beans');
-const groupsService = beans.get('groupsService');
 const groupstore = beans.get('groupstore');
 
 const baseUri = 'http://localhost:' + parseInt(conf.get('port'), 10);
@@ -14,7 +13,6 @@ const app = require('../app.js');
 describe('SWK Plattform server', () => {
   beforeEach(done => {
     sinon.stub(groupstore, 'allGroups').callsFake(callback => callback(null, []));
-    sinon.stub(groupsService, 'getAllAvailableGroups').callsFake(callback => callback(null, []));
     app.start(done);
   });
 
@@ -76,7 +74,6 @@ describe('SWK Plattform server', () => {
 describe('SWK Plattform server with Error', () => {
   beforeEach(done => {
     sinon.stub(groupstore, 'allGroups').callsFake(callback => callback(new Error(), []));
-    sinon.stub(groupsService, 'getAllAvailableGroups').callsFake(callback => callback(null, []));
     app.start(done);
   });
 

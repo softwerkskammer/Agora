@@ -5,14 +5,14 @@ const expect = require('must-dist');
 const sinon = require('sinon').createSandbox();
 
 const beans = require('../../testutil/configureForTest').get('beans');
-const groupsPersistence = beans.get('groupsPersistence');
-const membersPersistence = beans.get('membersPersistence');
 const membersService = beans.get('membersService');
-const groupsAndMembersService = beans.get('groupsAndMembersService');
+const memberstore = beans.get('memberstore');
+const Member = beans.get('member');
+const groupsPersistence = beans.get('groupsPersistence');
+const groupstore = beans.get('groupstore');
 const activitystore = beans.get('activitystore');
 const Group = beans.get('group');
 const Activity = beans.get('activity');
-const fakeListAdapter = beans.get('fakeListAdapter');
 const fieldHelpers = beans.get('fieldHelpers');
 const wikiObjects = beans.get('wikiObjects');
 const wikiService = beans.get('wikiService');
@@ -26,57 +26,64 @@ const GroupA = new Group({
   type: 'Themengruppe',
   emailPrefix: 'Group-A',
   organizers: ['organizer'],
-  color: '#FFF'
+  color: '#FFF',
+  subscribedMembers: ['id1', 'id2']
 });
+
+let upcomingActivities = [];
+let blogposts = [];
 
 describe('Groups application', () => {
 
   before(() => {
-    sinon.stub(fakeListAdapter, 'getAllAvailableLists').callsFake(callback => callback(null, ['GroupA']));
-
-    sinon.stub(fakeListAdapter, 'getUsersOfList').callsFake((groupname, callback) => {
-      if (groupname === 'groupa') {
-        return callback(null, ['peter@google.de', 'hans@aol.com']);
-      }
-      callback(null, []);
-    });
-
-    sinon.stub(membersPersistence, 'list').callsFake((sortorder, callback) => {
-      callback(null, [
-        {nickname: 'hada', firstname: 'Hans', lastname: 'Dampf', email: 'hans@aol.com'},
-        {nickname: 'pepe', firstname: 'Peter', lastname: 'Meyer', email: 'peter@google.de'}
-      ]);
-    });
-
-    sinon.stub(membersPersistence, 'listByField').callsFake((email, sortOrder, callback) => {
-      callback(null, [
-        {nickname: 'hada', firstname: 'Hans', lastname: 'Dampf', email: 'hans@aol.com'},
-        {nickname: 'pepe', firstname: 'Peter', lastname: 'Meyer', email: 'peter@google.de'}
-      ]);
+    sinon.stub(memberstore, 'getMembersForIds').callsFake((memberIds, callback) => {
+      const members = [
+        new Member({id: 'id1', nickname: 'hada', firstname: 'Hans', lastname: 'Dampf', email: 'hans@aol.com'}),
+        new Member({id: 'id2', nickname: 'pepe', firstname: 'Peter', lastname: 'Meyer', email: 'peter@google.de'})
+      ];
+      callback(null, members.filter(m => memberIds.includes(m.id())));
     });
 
     sinon.stub(membersService, 'putAvatarIntoMemberAndSave').callsFake((member, callback) => {
       callback();
     });
 
-    sinon.stub(groupsPersistence, 'listByIds').callsFake((list, sortOrder, callback) => {
+    sinon.stub(groupstore, 'groupsByLists').callsFake((list, callback) => {
       if (list[0] === 'GroupA') { return callback(null, [GroupA]); }
       return callback(null, []);
     });
 
-    sinon.stub(groupsPersistence, 'getById').callsFake((list, callback) => {
-      if (list.test('GroupA')) { return callback(null, GroupA); }
+    sinon.stub(groupstore, 'getGroup').callsFake((list, callback) => {
+      if (list === 'GroupA') { return callback(null, GroupA); }
       return callback(null, null);
     });
 
-    sinon.stub(groupsPersistence, 'getByField').callsFake((list, callback) => {
-      if (list.emailPrefix.test('Group-A')) { return callback(null, GroupA); }
+    sinon.stub(groupstore, 'getGroupForPrefix').callsFake((list, callback) => {
+      if (list === 'Group-A') { return callback(null, GroupA); }
       return callback(null, null);
+    });
+
+    sinon.stub(groupstore, 'allGroups').callsFake(callback => {
+      return callback(null, [GroupA]);
+    });
+
+    sinon.stub(wikiService, 'getBlogpostsForGroup').callsFake((groupname, callback) => {
+      return callback(null, blogposts);
+    });
+
+    sinon.stub(activitystore, 'pastActivitiesForGroupIds').callsFake((groupIds, callback) => {
+      return callback(null, []);
+    });
+
+    sinon.stub(activitystore, 'upcomingActivitiesForGroupIds').callsFake((groupIds, callback) => {
+      return callback(null, upcomingActivities);
     });
   });
 
   after(() => {
     sinon.restore();
+    upcomingActivities = [];
+    blogposts = [];
   });
 
   describe('index page', () => {
@@ -184,13 +191,13 @@ describe('Groups application', () => {
       const date1 = fieldHelpers.parseToDateTimeUsingDefaultTimezone('01.01.2013').toJSDate();
       const date2 = fieldHelpers.parseToDateTimeUsingDefaultTimezone('01.05.2013').toJSDate();
 
-      sinon.stub(activitystore, 'upcomingActivitiesForGroupIds').callsFake((list, callback) => callback(null, [new Activity({
+      upcomingActivities = [new Activity({
         title: 'Erste Aktivität',
         startDate: date1
       }), new Activity({
         title: 'Zweite Aktivität',
         startDate: date2
-      })]));
+      })];
 
       request(createApp())
         .get('/GroupA')
@@ -208,12 +215,10 @@ describe('Groups application', () => {
 
   describe('group feed', () => {
     it('renders blog posts as XML', done => {
-      sinon.stub(wikiService, 'getBlogpostsForGroup').callsFake((groupid, callback) => {
-        callback(null, [
-          new wikiObjects.Blogpost('blog_2018-01-02_foo', '#Foo\n\nTeaser 1'),
-          new wikiObjects.Blogpost('blog_2018-02-03_bar', '#Bar\n\nTeaser 2')
-        ]);
-      });
+      blogposts = [
+        new wikiObjects.Blogpost('blog_2018-01-02_foo', '#Foo\n\nTeaser 1'),
+        new wikiObjects.Blogpost('blog_2018-02-03_bar', '#Bar\n\nTeaser 2')
+      ];
       request(createApp())
         .get('/GroupA/feed')
         .expect('Content-Type', /xml/)
@@ -280,32 +285,11 @@ describe('Groups application', () => {
     });
 
     describe('of a new group', () => {
-      let createdList;
       let savedGroup;
-      let memberId;
-      let subscribedMemberInfo;
 
       before(() => {
-        createdList = null;
-        savedGroup = null;
-
-        sinon.stub(fakeListAdapter, 'createList').callsFake((groupid, emailPrefix, callback) => {
-          createdList = {groupid, emailPrefix};
-          callback();
-        });
-
         sinon.stub(groupsPersistence, 'save').callsFake((group, callback) => {
           savedGroup = group;
-          callback();
-        });
-
-        sinon.stub(groupsAndMembersService, 'updateAdminlistSubscriptions').callsFake((id, callback) => {
-          memberId = id;
-          callback();
-        });
-
-        sinon.stub(groupsAndMembersService, 'subscribeMemberToGroup').callsFake((member, groupid, callback) => {
-          subscribedMemberInfo = {subscribedMemberId: member.id(), subscribedGroupId: groupid};
           callback();
         });
       });
@@ -315,10 +299,7 @@ describe('Groups application', () => {
       });
 
       beforeEach(() => {
-        createdList = null;
         savedGroup = null;
-        memberId = null;
-        subscribedMemberInfo = null;
       });
 
       it('saves the whole group info to the database and redirects to the new group\'s page', done => {
@@ -329,38 +310,9 @@ describe('Groups application', () => {
           .expect(/Found. Redirecting to \/groups\/newgroup/, err => {
             expect(savedGroup).to.eql(new Group({
               id: 'newgroup', longName: 'ANewGroup', description: 'WeLoveIt', type: 'Regionalgruppe',
-              emailPrefix: 'SONEW', color: '#AABBCC', organizers: ['someMember'], mapX: undefined, mapY: undefined, shortName: undefined, contactingOrganizersEnabled: true
+              emailPrefix: 'SONEW', color: '#AABBCC', organizers: ['someMember'], subscribedMembers: ['someMember'],
+              mapX: undefined, mapY: undefined, shortName: undefined, contactingOrganizersEnabled: true
             }));
-            done(err);
-          });
-      });
-
-      it('creates a new list for the group', done => {
-        request(createApp({id: 'someMember'}))
-          .post('/submit')
-          .send('id=newgroup&emailPrefix=SONEW&longName=ANewGroup&color=#AABBCC&description=WeLoveIt&type=Regionalgruppe&organizers=someMember')
-          .end(err => {
-            expect(createdList).to.eql({groupid: 'newgroup', emailPrefix: 'SONEW'});
-            done(err);
-          });
-      });
-
-      it('adds the current user to the admins list', done => {
-        request(createApp({id: 'someMember'}))
-          .post('/submit')
-          .send('id=newgroup&emailPrefix=SONEW&longName=ANewGroup&color=#AABBCC&description=WeLoveIt&type=Regionalgruppe&organizers=someMember')
-          .end(err => {
-            expect(memberId).to.eql('someMember');
-            done(err);
-          });
-      });
-
-      it('adds the current user to the group', done => {
-        request(createApp({id: 'someMember'}))
-          .post('/submit')
-          .send('id=newgroup&emailPrefix=SONEW&longName=ANewGroup&color=#AABBCC&description=WeLoveIt&type=Regionalgruppe&organizers=someMember')
-          .end(err => {
-            expect(subscribedMemberInfo).to.eql({subscribedMemberId: 'someMember', subscribedGroupId: 'newgroup'});
             done(err);
           });
       });

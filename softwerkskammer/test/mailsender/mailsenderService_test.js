@@ -5,6 +5,7 @@ const sinon = require('sinon').createSandbox();
 const beans = require('../../testutil/configureForTest').get('beans');
 
 const memberstore = beans.get('memberstore');
+const groupstore = beans.get('groupstore');
 const groupsService = beans.get('groupsService');
 const groupsAndMembersService = beans.get('groupsAndMembersService');
 const activitiesService = beans.get('activitiesService');
@@ -49,7 +50,7 @@ describe('MailsenderService', () => {
       startDate: fieldHelpers.parseToDateTimeUsingDefaultTimezone('01.01.2013').toJSDate(),
       url: 'urlOfTheActivity'
     });
-    sinon.stub(groupsService, 'getAllAvailableGroups').callsFake(callback => { callback(null, availableGroups); });
+    sinon.stub(groupstore, 'allGroups').callsFake(callback => { callback(null, availableGroups); });
     sinon.stub(activitiesService, 'getActivityWithGroupAndParticipants').callsFake((actURL, callback) => {
       if (actURL === null) { return callback(new Error()); }
       callback(null, emptyActivity);
@@ -264,7 +265,6 @@ describe('MailsenderService', () => {
         if (group === null) { return callback(null); }
         if (group === groupA) { group.members = [new Member({email: 'memberA'})]; }
         if (group === groupB) { group.members = [new Member({email: 'memberB'})]; }
-        group.membercount = 1;
         callback(null, group);
       });
       mailsenderService.sendMailToInvitedGroups(['GroupA', 'GroupB'], 'activityUrlForMock', message, (err, statusmessage) => {
@@ -284,7 +284,6 @@ describe('MailsenderService', () => {
         if (group === null) { return callback(null); }
         if (group === groupA) { group.members = [new Member({email: 'memberA'})]; }
         if (group === groupB) { group.members = [new Member({email: 'memberB'})]; }
-        group.membercount = 1;
         callback(null, group);
       });
       mailsenderService.sendMailToInvitedGroups(['GroupA', 'GroupB'], 'errorProvokingUrl', message, (err, statusmessage) => {

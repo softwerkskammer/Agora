@@ -3,8 +3,7 @@ const async = require('async');
 const beans = require('simple-configure').get('beans');
 const membersService = beans.get('membersService');
 const memberstore = beans.get('memberstore');
-const groupsService = beans.get('groupsService');
-const groupsAndMembersService = beans.get('groupsAndMembersService');
+const groupstore = beans.get('groupstore');
 const activitystore = beans.get('activitystore');
 const activitiesService = beans.get('activitiesService');
 const misc = beans.get('misc');
@@ -22,18 +21,18 @@ app.get('/memberTable', (req, res, next) => {
 app.get('/memberAndGroupTable', (req, res, next) => {
   async.parallel(
     {
-      groups: groupsService.getAllAvailableGroups,
-      membersAndInfo: groupsAndMembersService.getAllMembersWithTheirGroups
+      groups: groupstore.allGroups,
+      members: memberstore.allMembers
     },
     (err, results) => {
       if (err) { return next(err); }
-      res.render('memberAndGroupTable', {members: results.membersAndInfo[0], groupsWithExtraEmailAddresses: results.membersAndInfo[1], groups: results.groups});
+      res.render('memberAndGroupTable', {members: results.members, groups: results.groups});
     }
   );
 });
 
 app.get('/groupTable', (req, res, next) => {
-  groupsService.getAllAvailableGroups((err, groups) => {
+  groupstore.allGroups((err, groups) => {
     if (err) { return next(err); }
     res.render('groupTable', {groups, groupTypes: Group.allTypes()});
   });

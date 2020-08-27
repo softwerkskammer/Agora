@@ -2,7 +2,9 @@
 
 const expect = require('must-dist');
 
-const Member = require('../../testutil/configureForTest').get('beans').get('member');
+const beans = require('../../testutil/configureForTest').get('beans');
+const Member = beans.get('member');
+const Group = beans.get('group');
 
 describe('Member initial filling', () => {
 
@@ -243,20 +245,22 @@ describe('utility functions', () => {
   });
 
   it('fills its only subscribed group', () => {
-    const member = new Member({email: 'myEmail'});
-    const group = {id: 'group'};
-    member.fillSubscribedGroups({group: ['myemail']}, [group, {id: 'groupb'}]);
+    const member = new Member({id: 'id1'});
+    const groupa = new Group({id: 'groupa', subscribedMembers: ['id1']});
+    const groupb = new Group({id: 'groupb'});
+    member.fillSubscribedGroups([groupa, groupb]);
     expect(member.subscribedGroups).to.have.length(1);
-    expect(member.subscribedGroups).to.contain(group);
+    expect(member.subscribedGroups).to.contain(groupa);
+    expect(member.subscribedGroups).not.to.contain(groupb);
   });
 
   it('fills its more than one subscribed group', () => {
-    const member = new Member({email: 'myEmail'});
-    const group = {id: 'group'};
-    const groupb = {id: 'groupb'};
-    member.fillSubscribedGroups({group: ['myemail'], groupb: ['myemail']}, [group, groupb]);
+    const member = new Member({id: 'id1'});
+    const groupa = new Group({id: 'groupa', subscribedMembers: ['id1']});
+    const groupb = new Group({id: 'groupb', subscribedMembers: ['id1']});
+    member.fillSubscribedGroups([groupa, groupb]);
     expect(member.subscribedGroups).to.have.length(2);
-    expect(member.subscribedGroups).to.contain(group);
+    expect(member.subscribedGroups).to.contain(groupa);
     expect(member.subscribedGroups).to.contain(groupb);
   });
 
@@ -334,3 +338,26 @@ describe('The interests', () => {
     expect(member.interestsForSelect2()).to.eql(['peter', 'paul und mary']);
   });
 });
+
+
+describe('memberIsInMemberList', () => {
+  const dummymember = new Member({id: 'id1'});
+  const dummymember2 = new Member({id: 'id2'});
+
+  it('returns false if the user id is undefined', () => {
+    expect(Member.memberIsInMemberList(undefined, [dummymember, dummymember2])).to.be(false);
+  });
+
+  it('returns false if the member list is empty', () => {
+    expect(Member.memberIsInMemberList('hada', [])).to.be(false);
+  });
+
+  it('returns false if the user is not in the member list', () => {
+    expect(Member.memberIsInMemberList('trallala', [dummymember])).to.be(false);
+  });
+
+  it('returns true if the user is in the member list', () => {
+    expect(Member.memberIsInMemberList('id1', [dummymember, dummymember2])).to.be(true);
+  });
+});
+

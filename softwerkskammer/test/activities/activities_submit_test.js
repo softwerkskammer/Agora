@@ -1,36 +1,26 @@
 'use strict';
 
 const request = require('supertest');
+const sinon = require('sinon').createSandbox();
 
 const conf = require('../../testutil/configureForTest');
 const beans = conf.get('beans');
-const reservedURLs = conf.get('reservedActivityURLs');
 
 const activitiesService = beans.get('activitiesService');
-
-const chado = require('chado');
-const cb = chado.callback;
-const assume = chado.assume;
 
 const createApp = require('../../testutil/testHelper')('activitiesApp').createApp;
 
 describe('Activity application - on submit -', () => {
 
   beforeEach(() => {
-    // will enhance the activitiesService with chado properties
-    chado.createDouble('activitiesService', activitiesService);
   });
+
 
   afterEach(() => {
-    // will undo the enhancements of the activitiesService with chado properties
-    chado.reset();
+    sinon.restore();
   });
-
   it('rejects an activity with invalid and different url', done => {
-    assume(activitiesService)
-      .canHandle('isValidUrl')
-      .withArgs(reservedURLs, 'edit', cb)
-      .andCallsCallbackWith(null, false);
+    sinon.stub(activitiesService, 'isValidUrl').callsFake((resURLs, url, callback) => { callback(null, false); });
 
     request(createApp())
       .post('/submit')
@@ -42,10 +32,7 @@ describe('Activity application - on submit -', () => {
   });
 
   it('rejects an activity with a url containing "/"', done => {
-    assume(activitiesService)
-      .canHandle('isValidUrl')
-      .withArgs(reservedURLs, 'legal/egal', cb)
-      .andCallsCallbackWith(null, false);
+    sinon.stub(activitiesService, 'isValidUrl').callsFake((resURLs, url, callback) => { callback(null, false); });
 
     request(createApp())
       .post('/submit')
@@ -77,10 +64,7 @@ describe('Activity application - on submit -', () => {
   });
 
   it('accepts an activity with valid and different url', done => {
-    assume(activitiesService)
-      .canHandle('isValidUrl')
-      .withArgs(reservedURLs, 'uhu', cb)
-      .andCallsCallbackWith(null, true);
+    sinon.stub(activitiesService, 'isValidUrl').callsFake((resURLs, url, callback) => { callback(null, false); });
 
     request(createApp())
       .post('/submit')
@@ -100,10 +84,7 @@ describe('Activity application - on submit -', () => {
   });
 
   it('rejects an activity with different but valid url and with empty title', done => {
-    assume(activitiesService)
-      .canHandle('isValidUrl')
-      .withArgs(reservedURLs, 'uhu', cb)
-      .andCallsCallbackWith(null, true);
+    sinon.stub(activitiesService, 'isValidUrl').callsFake((resURLs, url, callback) => { callback(null, true); });
 
     request(createApp())
       .post('/submit')

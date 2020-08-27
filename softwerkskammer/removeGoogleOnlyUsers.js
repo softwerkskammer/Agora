@@ -7,6 +7,7 @@ require('./../softwerkskammer/configure'); // initializing parameters
 const beans = require('simple-configure').get('beans');
 const memberstore = beans.get('memberstore');
 const gamService = beans.get('groupsAndMembersService');
+const groupsService = beans.get('groupsService');
 
 const really = process.argv[2];
 if (!really || really !== 'really') {
@@ -29,7 +30,7 @@ gamService.getAllMembersWithTheirGroups((err, members) => {
       member.subscribedGroups,
       (group, cb2) => {
         console.log('Unsubscribing ' + member.displayName() + ' from ' + group.longName);
-        gamService.unsubscribeMemberFromGroup(member, group.id, cb2);
+        groupsService.removeMemberFromGroupNamed(member, group.id, cb2);
       },
       // callback when the one member has been unsubscribed from all groups:
       err1 => {
