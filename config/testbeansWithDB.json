@@ -12,10 +12,6 @@
       "collectionName": "teststore"
     }},
   "mailsPersistence": {"module": "./softwerkskammer/teststubs/testpersistence"},
-  "mailinglistPersistence": {"module": "./softwerkskammer/lib/persistence/persistence",
-    "constructorArgs": {
-      "collectionName": "teststore"
-    }},
 
   "nodemailerTransport": {"module": "./softwerkskammer/teststubs/nodemailerTransportForTests"}
 }

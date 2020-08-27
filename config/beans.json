@@ -32,9 +32,6 @@
   "groupstore": {"module": "./softwerkskammer/lib/groups/groupstore"},
   "memberstore": {"module": "./softwerkskammer/lib/members/memberstore"},
 
-  "ezmlmAdapter": {"module": "./softwerkskammer/lib/groups/ezmlmAdapter"},
-  "fakeListAdapter": {"module": "./softwerkskammer/lib/groups/fakeListAdapter"},
-
   "activitiesPersistence": {
     "module": "./softwerkskammer/lib/persistence/persistence",
     "constructorArgs": { "collectionName": "activitystore" }
@@ -54,10 +51,6 @@
   "settingsPersistence": {
     "module": "./softwerkskammer/lib/persistence/persistence",
     "constructorArgs": { "collectionName": "settingsstore" }
-  },
-  "mailinglistPersistence": {
-    "module": "./softwerkskammer/lib/persistence/persistence",
-    "constructorArgs": { "collectionName": "sympastore" }
   },
 
   "activity": {"module": "./softwerkskammer/lib/activities/activity"},

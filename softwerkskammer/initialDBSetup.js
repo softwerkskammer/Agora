@@ -6,7 +6,6 @@ require('./configure'); // initializing parameters
 const beans = require('simple-configure').get('beans');
 const membersPersistence = beans.get('membersPersistence');
 const groupsPersistence = beans.get('groupsPersistence');
-const mailinglistPersistence = beans.get('mailinglistPersistence');
 const Group = beans.get('group');
 const Member = beans.get('member');
 
@@ -26,22 +25,6 @@ function logResult(err, message) {
 
 async.parallel(
   [
-    callback => { // create lists
-      const lists = [
-        {id: 'alle'},
-        {id: 'commercial'},
-        {id: 'neueplattform'},
-        {id: 'craftsmanswap'},
-        {id: 'internet'}
-      ];
-      async.map(lists, (list, cb) => {
-        mailinglistPersistence.save({id: list.id, users: []}, function (err) {
-          cb(err, 'List "' + list.id + '"');
-        });
-      }, (err, results) => {
-        callback(err, results.join(', '));
-      });
-    },
     callback => { // create groups
       const groups = [
         {id: 'alle', emailPrefix: 'alleAlle', description: 'D-Scription', shortName: 'Alle', longName: 'Alle', type: 'Themengruppe', color: '#ff0000', mapX: '100', mapY: '100'},
