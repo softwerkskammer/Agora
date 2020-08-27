@@ -30,16 +30,15 @@ function initParameterisedCalendar(id, date) {
   if (!calElement) { return; }
   var calendar;
   var options = {
-    plugins: ['bootstrap', 'dayGrid'],
-    defaultView: 'dayGridMonth',
+    initialView: 'dayGridMonth',
     themeSystem: 'bootstrap',
-    locales: ['de', 'en-GB'],
     locale: fc_lang,
-    defaultDate: date,
-    header: {
-      left: 'title',
+    initialDate: date,
+    eventDisplay: 'block',
+    headerToolbar: {
+      start: 'title',
       center: '',
-      right: isForActivities ? 'prev,today,next' : ''
+      end: isForActivities ? 'prev,today,next' : ''
     },
     timezone: 'Europe/Berlin',
     displayEventTime: false,
