@@ -10,17 +10,17 @@
     describe('surround with link', function () {
       it('surrounds a text starting with "http" with a link consisting of the text', function () {
         var result = surroundWithLink('http://my.link');
-        expect(result).to.equal('<a href="http://my.link" target="_blank"><i class="fa fa-external-link"/> http://my.link </a>');
+        expect(result).to.equal('<a href="http://my.link" target="_blank"><i class="fa fa-external-link"></i> http://my.link </a>');
       });
 
       it('surrounds each link in a text with two "http" links', function () {
         var result = surroundWithLink('http://my.link, http://your.link');
-        expect(result).to.equal('<a href="http://my.link" target="_blank"><i class="fa fa-external-link"/> http://my.link </a>, <a href="http://your.link" target="_blank"><i class="fa fa-external-link"/> http://your.link </a>');
+        expect(result).to.equal('<a href="http://my.link" target="_blank"><i class="fa fa-external-link"></i> http://my.link </a>, <a href="http://your.link" target="_blank"><i class="fa fa-external-link"></i> http://your.link </a>');
       });
 
       it('surrounds only links in a text', function () {
         var result = surroundWithLink('http://my.link, your.link');
-        expect(result).to.equal('<a href="http://my.link" target="_blank"><i class="fa fa-external-link"/> http://my.link </a>, your.link');
+        expect(result).to.equal('<a href="http://my.link" target="_blank"><i class="fa fa-external-link"></i> http://my.link </a>, your.link');
       });
 
       it('links an element inside class "urlify"', function () {

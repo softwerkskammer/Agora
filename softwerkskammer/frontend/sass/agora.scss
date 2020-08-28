@@ -78,7 +78,7 @@ h6 > small {
 }
 
 // fullcalendar *BEGIN*
-.fc-content {
+.fc-event-title {
   white-space: normal !important;
   max-height: 30px;
 }
@@ -274,7 +274,7 @@ a {
 }
 
 // transform fullcalendar's primary to light button
-.fc-right .btn-primary {
+.fc-toolbar-chunk .btn-primary {
   color: #212529;
   background-color: #f8f9fa;
   border-color: #f8f9fa;

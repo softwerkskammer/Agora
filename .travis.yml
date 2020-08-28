@@ -17,7 +17,7 @@ matrix:
     before_script:
       - npm install -g grunt-cli
       - mongod --version
-  - node_js: "10.1.0"
+  - node_js: "10.8.0"
     services:
     - mongodb
     before_script:
