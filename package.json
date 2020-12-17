@@ -37,7 +37,7 @@
     "connect-mongo": "3.2.0",
     "cookie-parser": "1.4.5",
     "csurf": "1.11.0",
-    "datatables.net": "1.10.21",
+    "datatables.net": "1.10.22",
     "datatables.net-bs4": "1.10.21",
     "express": "4.17.1",
     "express-session": "1.17.1",
