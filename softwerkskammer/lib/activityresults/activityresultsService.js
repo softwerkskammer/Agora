@@ -26,7 +26,7 @@ module.exports = {
           if (err) { return cb(err); }
           let date = new Date();
           if (metadata && metadata.exif) {
-            date = metadata.exif.dateTime || metadata.exif.dateTimeOriginal || metadata.exif.dateTimeDigitized || new Date();
+            date = metadata.exif.DateTime || metadata.exif.DateTimeOriginal || metadata.exif.DateTimeDigitized || new Date();
           }
           const picturesDate = DateTime.fromJSDate(date);
           const now = DateTime.local();

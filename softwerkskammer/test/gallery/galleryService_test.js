@@ -27,7 +27,7 @@ describe('the gallery repository on real files', () => {
       service.storeImage(exifPath, (err, imageId) => {
         if (err) { return done(err); }
         service.getMetadataForImage(imageId, (err1, metadata) => {
-          expect(metadata.exif).to.have.property('dateTimeOriginal');
+          expect(metadata.exif).to.have.property('DateTimeOriginal');
           done(err1);
         });
       });
@@ -105,8 +105,7 @@ describe('the gallery repository on real files', () => {
 
   describe('avatar images', () => {
     it('stores an avatar image', done => {
-      const params = {geometry: '100x100+10+10', scale: '0.5', angle: '0'};
-      service.storeAvatar(sourceImage, params, (err, name) => {
+      service.storeAvatar(sourceImage, {}, (err, name) => {
         expect(err).to.not.exist();
         service.retrieveScaledImage(name, undefined, err1 => {
           done(err1);
@@ -115,8 +114,7 @@ describe('the gallery repository on real files', () => {
     });
 
     it('stores a miniavatar image', done => {
-      const params = {geometry: '100x100+10+10', scale: '0.5', angle: '0'};
-      service.storeAvatar(sourceImage, params, (err, name) => {
+      service.storeAvatar(sourceImage, {}, (err, name) => {
         expect(err).to.not.exist();
         service.retrieveScaledImage(name, 'mini', (err1, lname) => {
           expect(lname).to.match(/_16\.jpg/);
@@ -126,8 +124,7 @@ describe('the gallery repository on real files', () => {
     });
 
     it('deletes an existing avatar image', done => {
-      const params = {geometry: '100x100+10+10', scale: '0.5', angle: '0'};
-      service.storeAvatar(sourceImage, params, (err, name) => {
+      service.storeAvatar(sourceImage, {}, (err, name) => {
         if (err) { return done(err); }
         expect(exists(name)).to.be.true();
         service.deleteImage(name, err1 => {
@@ -138,8 +135,7 @@ describe('the gallery repository on real files', () => {
     });
 
     it('is happy with "deleting" a non-existing avatar image', done => {
-      const params = {geometry: '100x100+10+10', scale: '0.5', angle: '0'};
-      service.storeAvatar(sourceImage, params, (err, name) => {
+      service.storeAvatar(sourceImage, {}, (err, name) => {
         if (err) { return done(err); }
         expect(exists(name)).to.be.true();
         service.deleteImage('nonexisting' + name, err1 => {
