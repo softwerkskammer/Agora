@@ -11,13 +11,7 @@ notifications:
 # run for mongo 3 requires mongodb service to pull in all dependencies
 matrix:
   include:
-  - node_js: "8.10"
-    services:
-    - mongodb
-    before_script:
-      - npm install -g grunt-cli
-      - mongod --version
-  - node_js: "10.8.0"
+  - node_js: "10.20.0"
     services:
     - mongodb
     before_script:
