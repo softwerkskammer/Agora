@@ -16,7 +16,6 @@ On Mac OS you can use Homebrew (https://brew.sh/) to install binary dependencies
 
 On Windows there are currently issues when running the tests:
 * most tests that verify pathnames will fail because of the ` \ ` used by Windows as a separator
-* furthermore all tests that need imagemagick will fail as there is no binary version for Windows available
 
 ### Git
 * Git must be in the system path.
@@ -40,9 +39,6 @@ On Windows there are currently issues when running the tests:
 1. `mongo swk` to connect to the database
 1. `db.memberstore.find().pretty()` to prettry print the content of `memberstore` 
 1. `db.groupstore.update( { _id : ObjectId("5bf9d641b68a0cb25fa4515c") }, { $unset: {contactingOrganizersEnabled: ""} } );` to remove property `contactingOrganizersEnabled` from the group with id `ObjectId("5bf9d641b68a0cb25fa4515c")` 
-
-### ImageMagick
-    brew install imagemagick
 
 ### Grunt-CLI
 

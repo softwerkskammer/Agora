@@ -1,5 +1,6 @@
 const conf = require('simple-configure');
-const magick = require('imagemagick');
+const sharp = require('sharp');
+const exifr = require('exifr');
 const uuid = require('uuid');
 const path = require('path');
 const fs = require('fs');
@@ -10,14 +11,26 @@ const misc = conf.get('beans').get('misc');
 const widths = {mini: 16, thumb: 400};
 
 function autoOrient(sourceImagePath, targetPath, callback) {
-  magick.convert([sourceImagePath, '-auto-orient', targetPath], err => callback(err, targetPath));
+  sharp(sourceImagePath)
+    .rotate()
+    .withMetadata()
+    .toFile(targetPath, err => callback(err, targetPath));
 }
 
 function convert(sourceImagePath, targetPath, params, callback) {
-  const angle = params.angle || '0';
-  const scale = params.scale || '1';
-  const geometry = params.geometry || '100x100+0+0';
-  magick.convert([sourceImagePath, '-rotate', angle, '-resize', parseFloat(scale * 100) + '%', '-crop', geometry, targetPath], err => callback(err, targetPath));
+  const angle = params.angle || 0;
+  const scale = params.scale || 1;
+  const geometry = params.geometry || {left: 0, top: 0, width: 100, height: 100};
+  const image = sharp(sourceImagePath);
+  image
+    .metadata((err, metadata) => {
+      const targetWidth = Math.round(scale * (angle === 90 || angle === 270 ? metadata.height : metadata.width));
+      image
+        .resize({width: targetWidth})
+        .rotate(angle)
+        .extract(geometry)
+        .toFile(targetPath, err1 => callback(err1, targetPath));
+    });
 }
 
 function scaledImageId(id, width) {
@@ -56,7 +69,14 @@ module.exports = {
   },
 
   getMetadataForImage: function getMetadataForImage(id, callback) {
-    magick.readMetadata(fullPathFor(id), callback);
+    async function callExifr(imagepath, cb) {
+      try {
+        const exif = await exifr.parse(imagepath);
+        cb(null, {exif});
+      } catch (e) {cb(e);}
+    }
+
+    callExifr(fullPathFor(id), callback);
   },
 
   retrieveScaledImage: function retrieveScaledImage(id, miniOrThumb, callback) {
@@ -69,7 +89,9 @@ module.exports = {
       const scaledImage = fullPathFor(scaledImageId(id, width));
       fs.exists(scaledImage, existsScaledImage => {
         if (existsScaledImage) { return callback(null, scaledImage); }
-        magick.convert([image, '-quality', '75', '-scale', width, scaledImage], err => callback(err, scaledImage));
+        sharp(image)
+          .resize({width})
+          .toFile(scaledImage, err => callback(err, scaledImage));
       });
     });
   }

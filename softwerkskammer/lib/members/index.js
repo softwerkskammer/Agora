@@ -186,9 +186,9 @@ app.post('/submitavatar', (req, res, next) => {
       return res.redirect('/members/' + nickname);
     }
     const params = {
-      geometry: fields.w[0] + 'x' + fields.h[0] + '+' + fields.x[0] + '+' + fields.y[0],
-      scale: fields.scale[0],
-      angle: fields.angle[0]
+      scale: parseFloat(fields.scale[0]),
+      angle: parseFloat(fields.angle[0]),
+      geometry: {width: parseInt(fields.w[0]), height: parseInt(fields.h[0]), left: parseInt(fields.x[0]), top: parseInt(fields.y[0])}
     };
     membersService.saveCustomAvatarForNickname(nickname, files, params, err1 => {
       if (err1) { return next(err1); }
