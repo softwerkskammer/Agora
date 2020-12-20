@@ -12,7 +12,7 @@ mixin memberlist(members, organizers)
             a(href='#', rel='tooltip', data-content=member.nickname(), title='<div style="height: 128px;"><img src=' + member.avatarUrl(128) + ' width="128" height="128"/></div>')
               img.d-print-none(src=member.inlineAvatar(), width='16', height='16')
           else
-            img.d-print-none(src='#', width='16', height='16')
+            div(style='width:16px; display:inline-block')
           | &nbsp;#{member.firstname()} #{member.lastname()}
           if member.location()
             |, #{member.location()}
