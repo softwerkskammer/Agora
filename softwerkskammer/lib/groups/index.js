@@ -135,7 +135,7 @@ app.get('/:groupname', (req, res, next) => {
           res.render('get', {
             group,
             users: group.members,
-            userIsGroupMember: Member.memberIsInMemberList(registeredUserId, group.members),
+            userIsGroupMember: registeredUserId && group.isMemberSubscribed(req.user.member),
             organizers: group.organizers,
             blogposts,
             blogpostsFeedUrl: req.originalUrl + '/feed',

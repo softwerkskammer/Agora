@@ -248,6 +248,36 @@ describe('MailsenderService', () => {
     });
   });
 
+  describe('sending mail to a group\'s members', () => {
+    const groupA = new Group({id: 'groupA'});
+
+    beforeEach(() => {
+      sinon.stub(groupsService, 'getGroups').callsFake((groupnames, callback) => {
+        if (groupnames === null) { return callback(new Error()); }
+        if (groupnames.length === 0) { return callback(null, []); }
+        callback(null, [groupA]);
+      });
+    });
+
+    it('sends to members of selected groups', done => {
+      sinon.stub(groupsAndMembersService, 'addMembersToGroup').callsFake((group, callback) => {
+        if (group === null) { return callback(null); }
+        if (group === groupA) { group.members = [new Member({email: 'memberA'})]; }
+        callback(null, group);
+      });
+      mailsenderService.sendMailToInvitedGroups(['GroupA'], undefined, message, (err, statusmessage) => {
+        const sentMail = singleSentEmail();
+        expect(sentMail.bcc).to.contain('memberA');
+        expect(sentMail.html).to.contain('mark down');
+        expect(sentMail.icalEvent).to.not.contain('BEGIN:VCALENDAR');
+        expect(sentMail.icalEvent).to.not.contain('URL:http://localhost:17125/activities/urlOfTheActivity');
+        expect(statusmessage.contents().type).to.equal('alert-success');
+        done(err);
+      });
+    });
+
+  });
+
   describe('sending mail as invitation for activity ', () => {
     const groupA = new Group({id: 'groupA'});
     const groupB = new Group({id: 'groupB'});

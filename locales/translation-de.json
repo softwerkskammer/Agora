@@ -261,6 +261,7 @@
     "contact": "Ansprechpartner",
     "contacts": "Ansprechpartner",
     "mail_the_contact_persons": "E-Mail an die Ansprechpartner",
+    "mail_to_group": "E-Mail an alle Gruppenmitglieder",
     "create": "Gruppe anlegen",
     "edit": "Gruppe \"{{groupId}}\" bearbeiten",
     "email_prefix": "Präfix für E-Mail-Subjects",
@@ -315,6 +316,7 @@
     "subject": "Betreff",
     "to_member": "An Mitglied",
     "to_contact_persons": "An die Ansprechpartner der Gruppe",
+    "to_group": "An die Gruppe",
     "to_participants": "nur an die Teilnehmer der Aktivität (nicht an Gruppen)",
     "why-resign": "Warum willst Du austreten",
     "write": "Nachricht schreiben"

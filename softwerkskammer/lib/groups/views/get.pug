@@ -34,10 +34,11 @@ block content
           a.btn.btn-success(href='/mailsender/contactGroupContactPersons/' + group.id)
             i.far.fa-envelope
             | &nbsp;#{t('groups.mail_the_contact_persons')}
-      p
-        strong #{t('groups.mailinglist')}: #{' '}
-        a(href='mailto:' + group.id + '@softwerkskammer.org')
-          | #{group.id}@softwerkskammer.org
+      if (userIsGroupMember || accessrights.isSuperuser())
+        p
+          a.btn.btn-success(href='/mailsender/contactMembersOfGroup/' + group.id)
+            i.far.fa-envelope
+            | &nbsp;#{t('groups.mail_to_group')}
   .row
     .col-lg-6
       | !{group.descriptionHTML()}

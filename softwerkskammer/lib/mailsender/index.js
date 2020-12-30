@@ -5,6 +5,7 @@ const validation = beans.get('validation');
 const statusmessage = beans.get('statusmessage');
 const mailsenderService = beans.get('mailsenderService');
 const groupsAndMembersService = beans.get('groupsAndMembersService');
+const groupstore = beans.get('groupstore');
 const Message = beans.get('message');
 
 function messageSubmitted(req, res, next) {
@@ -33,6 +34,10 @@ function messageSubmitted(req, res, next) {
   }
   if (req.body.invitedGroups) {
     return mailsenderService.sendMailToInvitedGroups(req.body.invitedGroups, activityURL, message, processResult);
+  }
+  if (req.body.groupName) {
+    message.subject = `[${req.body.emailPrefix}] ${message.subject}`;
+    return mailsenderService.sendMailToInvitedGroups([req.body.groupName], undefined, message, processResult);
   }
   if (req.body.nickname) {
     return mailsenderService.sendMailToMember(req.body.nickname, message, processResult);
@@ -67,12 +72,27 @@ app.get('/contactMember/:nickname', (req, res, next) => {
   });
 });
 
+app.get('/contactMembersOfGroup/:groupname', (req, res) => {
+  const groupName = req.params.groupname;
+  groupstore.getGroup(groupName, (err, group) => {
+    if (err || (!group.isMemberSubscribed(res.locals.accessrights.member()) && !res.locals.accessrights.isSuperuser())) {
+      return res.redirect('/groups/' + encodeURIComponent(groupName));
+    }
+    return res.render('compose', {
+      message: new Message(),
+      successURL: '/groups/' + encodeURIComponent(groupName),
+      groupName,
+      emailPrefix: group.emailPrefix
+    });
+  });
+});
+
 app.get('/contactGroupContactPersons/:groupname', (req, res) => {
   const groupName = req.params.groupname;
 
   res.render('compose', {
     message: new Message(),
-    successURL: '/groups/' + groupName,
+    successURL: '/groups/' + encodeURIComponent(groupName),
     contactPersons: {
       groupName: groupName
     }
