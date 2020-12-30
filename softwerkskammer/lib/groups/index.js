@@ -8,7 +8,6 @@ const groupsService = beans.get('groupsService');
 const groupstore = beans.get('groupstore');
 const wikiService = beans.get('wikiService');
 const Group = beans.get('group');
-const Member = beans.get('member');
 const groupsAndMembers = beans.get('groupsAndMembersService');
 const meetupActivitiesService = beans.get('meetupActivitiesService');
 const activitystore = beans.get('activitystore');
