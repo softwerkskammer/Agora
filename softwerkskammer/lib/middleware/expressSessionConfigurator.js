@@ -6,9 +6,9 @@ const oneHour = 3600;
 let sessionStore;
 
 if (!conf.get('dontUsePersistentSessions')) {
-  const MongoStore = require('connect-mongo')(expressSession);
-  sessionStore = new MongoStore({
-    url: conf.get('mongoURL'),
+  const MongoStore = require('connect-mongo');
+  sessionStore = MongoStore.create({
+    mongoUrl: conf.get('mongoURL'),
     touchAfter: oneHour,
     mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true }
   });
