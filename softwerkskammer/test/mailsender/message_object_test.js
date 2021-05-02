@@ -127,6 +127,20 @@ describe('Message Object to TransportObject', () => {
     const transportObject = message.toTransportObject('dummy');
     expect(transportObject.text).to.contain('[link](http://bild.de/url)');
   });
+
+  it('includes footer in plain text', () => {
+    const message = new Message();
+    message.setMarkdown('Mail-Text');
+    const transportObject = message.toTransportObject('dummy');
+    expect(transportObject.text).to.contain('Mail-Text\n-- \nVersendet über ');
+  });
+
+  it('includes footer in html text', () => {
+    const message = new Message();
+    message.setMarkdown('Mail-Text');
+    const transportObject = message.toTransportObject('dummy');
+    expect(transportObject.html).to.match(new RegExp('<p>-- </p>\\s*<p>Versendet über '));
+  });
 });
 
 describe('Message Object\'s buttons', () => {

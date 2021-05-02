@@ -45,10 +45,13 @@ html
           text-decoration: none;
           vertical-align: middle;
           white-space: nowrap;
-        }  
+        }
   body
     | !{content}
-    
+
     each button in buttons
       a.btn(href=button.url) #{button.text}
-    
+
+    p -- #{$n}
+    p.
+     Versendet über die E-Mail-Infratruktur des Hosters #[a(href='https://deltatree.de/') DeltaTree]
