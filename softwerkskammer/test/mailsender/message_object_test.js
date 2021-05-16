@@ -132,14 +132,14 @@ describe('Message Object to TransportObject', () => {
     const message = new Message();
     message.setMarkdown('Mail-Text');
     const transportObject = message.toTransportObject('dummy');
-    expect(transportObject.text).to.contain('Mail-Text\n-- \nVersendet über ');
+    expect(transportObject.text).to.contain('Mail-Text\n\n\n\n-- \nDie Softwerkskammer versendet ');
   });
 
   it('includes footer in html text', () => {
     const message = new Message();
     message.setMarkdown('Mail-Text');
     const transportObject = message.toTransportObject('dummy');
-    expect(transportObject.html).to.match(new RegExp('<p>-- </p>\\s*<p>Versendet über '));
+    expect(transportObject.html).to.match(new RegExp('<hr>\\s*<p>Die Softwerkskammer versendet '));
   });
 });
 
