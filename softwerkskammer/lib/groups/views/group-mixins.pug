@@ -5,7 +5,7 @@ mixin grouplist(title, groupsOfAKind)
       li
         span.badge.text-white(style='background-color: ' + group.color + '; min-width:32px; text-align:right; display:inline-block') #{group.membercount()}
         | &nbsp;&nbsp;
-        span.popover-highlight(rel='tooltip-in-body', data-content=group.descriptionHTMLFiltered('img'))
+        span.popover-highlight(rel='tooltip-in-body', data-bs-content=group.descriptionHTMLFiltered('img'))
           strong: a(href=group.id) #{group.longName}
         | &nbsp;&nbsp;
         if (wikisubdirs && wikisubdirs.indexOf(group.id) > -1)
@@ -16,7 +16,7 @@ mixin placeGroupLabels(groupsOfAKind)
   each group in groupsOfAKind
     if (group.mapX && group.mapY && group.shortName)
       .badge.group.position-absolute(style='background-color: ' +group.color + '; top: ' + group.mapYrelative() + '%; left: ' + group.mapXrelative() + '%; transform: translate(-50%, -50%);')
-        span(rel='tooltip-in-body', data-title='<h4>' + group.longName + '</h4>', data-content=group.descriptionHTMLFiltered('img'))
+        span(rel='tooltip-in-body', title='<h4>' + group.longName + '</h4>', data-bs-content=group.descriptionHTMLFiltered('img'))
           a.group(href='/groups/' + group.id) #{group.shortName}
 
 mixin placeGroupLabelsForActivities(activities)
@@ -26,7 +26,7 @@ mixin placeGroupLabelsForActivities(activities)
     -counter[group.longName] = counter[group.longName] + 1 || 0;
     if (group.mapX && group.mapY && group.shortName)
       .badge.group.position-absolute(style='background-color: ' + activity.colorRGB + '; top: ' + ((group.mapYrelative() || 0) + (counter[group.longName] * 2)) + '%; left: ' + (group.mapXrelative() || 2) + '%; transform: translate(-50%, -50%);')
-        span(rel='tooltip-in-body', data-title='<h4>' + activity.title() + '</h4>', data-content=activity.descriptionHTML().substring(0,500))
+        span(rel='tooltip-in-body', title='<h4>' + activity.title() + '</h4>', data-bs-content=activity.descriptionHTML().substring(0,500))
           a.group(href=activity.fullyQualifiedUrl()) #{group.shortName}
 
 mixin addMapStyle

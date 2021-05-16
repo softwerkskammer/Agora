@@ -59,11 +59,11 @@ mixin hightextarea(name, label, value, tooltip, placeholder)
   +textareaInternal('md-textarea', '15', name, label, value, tooltip, placeholder)
 
 mixin checkboxWithDescription(name, label, checked, description, optionalValue)
-  .form-check.abc-checkbox.abc-checkbox-success
+  .form-check
     input.form-check-input(type='checkbox', id=name + optionalValue, name=name, value=optionalValue, checked=(checked ? 'true' : undefined))
     label.form-check-label(for=name + optionalValue)
       -if (description)
-        span.popover-highlight(rel='tooltip-in-body', data-content=description) #{label}
+        span.popover-highlight(rel='tooltip-in-body', data-bs-content=description) #{label}
       -else
         | !{label}
 

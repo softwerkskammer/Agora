@@ -1,4 +1,4 @@
-/* global FullCalendar, fc_lang, datepicker_format, datepicker_lang, help */
+/* global FullCalendar, fc_lang, datepicker_format, datepicker_lang, help, bootstrap */
 
 var displayedActivityStart;
 
@@ -187,7 +187,7 @@ function interestify() {
     });
 
     $('.c-picker').each(function () {
-      $(this).colorpicker({format: 'hex'});
+      $(this).colorpicker({format: 'hex', popover: false});
     });
 
     $('.enhance').each(function () {
@@ -236,12 +236,12 @@ function interestify() {
   }
 
   function initTooltipsAndHovers() {
-    $('[rel=tooltip]').each(function () {
-      $(this).popover({html: true, trigger: 'hover', delay: {hide: 50}, placement: 'auto'});
+    [].slice.call(document.querySelectorAll('[rel=tooltip]')).map(function (popoverTriggerEl) {
+      return new bootstrap.Popover(popoverTriggerEl, {html: true, trigger: 'hover', delay: {hide: 50}, placement: 'auto'});
     });
 
-    $('[rel=tooltip-in-body]').each(function () {
-      $(this).popover({container: 'body', html: true, trigger: 'hover', delay: {hide: 50}, placement: 'auto'});
+    [].slice.call(document.querySelectorAll('[rel=tooltip-in-body]')).map(function (popoverTriggerEl) {
+      return new bootstrap.Popover(popoverTriggerEl, {container: 'body', html: true, trigger: 'hover', delay: {hide: 50}, placement: 'auto'});
     });
 
     $('.tooltipify').each(function () {
