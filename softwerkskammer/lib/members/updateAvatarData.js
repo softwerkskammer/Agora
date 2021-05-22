@@ -11,13 +11,13 @@ const persistence = beans.get('membersPersistence');
 const service = beans.get('membersService');
 
 store.allMembers((err, members) => {
-  if (err || !members) { console.log('avatar updater had problems loading members'); }
-  console.log('starting avatar update');
+  if (err || !members) {
+    console.log('avatar updater had problems loading members'); // for cron mail
+  }
   async.each(members, service.updateImage, err2 => {
     if (err2) {
-      console.log('avatar updater encountered an error: ' + err2.message);
+      console.log('avatar updater encountered an error: ' + err2.message); // for cron mail
     }
-    console.log('finishing avatar update');
     persistence.closeDB(() => {
       process.exit();
     });

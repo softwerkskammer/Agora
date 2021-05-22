@@ -39,26 +39,27 @@ persistence.getByField({id: lastNotifications}, (err, result) => {
 
     if (err1) {
       logger.error('Error when finding pages for Digest: ' + err1);
+      console.log('Error when finding pages for Digest: ' + err1); // for cron mail
       return closeAndExit();
     }
     if (changes.length === 0) {
       logger.info('no changes to report');
-      console.log('no changes to report'); // for cron mail
       return closeAndExit();
     }
     notifications.wikiChanges(changes, err2 => {
       if (err2) {
         logger.error(err2);
+        console.log(err2); // for cron mail
         return closeAndExit();
       }
       lastNotified.moment = new Date();
       persistence.save(lastNotified, err3 => {
         if (err3) {
           logger.error(err3);
+          console.log(err3); // for cron mail
           return closeAndExit();
         }
         logger.info('Wiki-Changes notified at: ' + lastNotified.moment);
-        console.log('wiki-changes were reported'); // for cron mail
         return closeAndExit();
       });
     });
