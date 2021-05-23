@@ -20,8 +20,8 @@ function statusmessageForSuccess(type) {
   return statusmessage.successMessage('message.title.email_successful', 'message.content.mailsender.success', {type});
 }
 
-function sendMail(message, type, senderAddress, callback) {
-  transport.sendMail(message.toTransportObject(senderAddress), err => {
+function sendMail(message, type, senderAddress, includeFooter, callback) {
+  transport.sendMail(message.toTransportObject(senderAddress, includeFooter), err => {
     if (err) { logger.error(err.stack); }
     callback(null, err ? statusmessageForError(type, err) : statusmessageForSuccess(type));
   });

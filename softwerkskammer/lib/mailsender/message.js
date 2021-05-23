@@ -62,7 +62,7 @@ class Message {
     this.buttons = [this.buttons[0]];
   }
 
-  toTransportObject(senderAddress) {
+  toTransportObject(senderAddress, includeFooter) {
     const formatEMailAddress = function (name, email) {
       return '"' + name + '" <' + email + '>';
     };
@@ -73,7 +73,8 @@ class Message {
       pretty: true,
       content: Renderer.render(modifiedMarkdown),
       plain: modifiedMarkdown,
-      buttons: this.buttons
+      buttons: this.buttons,
+      includeFooter
     };
     const filename = path.join(__dirname, 'views/mailtemplate.pug');
     const filenameTextonly = path.join(__dirname, 'views/mailtemplate-textonly.pug');
