@@ -9,5 +9,5 @@
   },
   "sender-name": "Softwerkskammer Benachrichtigungen",
   "sender-address": "info@my-domain.org",
-  "include-mail-footer": false
+  "include-footer": false
 }
