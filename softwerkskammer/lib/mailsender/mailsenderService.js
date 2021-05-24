@@ -19,7 +19,7 @@ const misc = beans.get('misc');
 const mailtransport = beans.get('mailtransport');
 
 function sendMail(message, type, callback) {
-  mailtransport.sendMail(message, type, conf.get('sender-address'), callback);
+  mailtransport.sendMail(message, type, conf.get('sender-address'), conf.get('include-footer'), callback);
 }
 
 function activityMarkdown(activity, language) {

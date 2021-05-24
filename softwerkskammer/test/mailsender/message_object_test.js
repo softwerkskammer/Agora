@@ -9,6 +9,8 @@ const expect = require('must-dist');
 const Message = beans.get('message');
 const Member = beans.get('member');
 
+const includeFooter = false;
+
 describe('Message Object\'s bcc', () => {
   it('can handle "null" groups', () => {
     const message = new Message();
@@ -89,43 +91,71 @@ describe('Message Object to TransportObject', () => {
   it('converts the sender address to use the provided technical email address', () => {
     const member = new Member({firstname: 'Hans', lastname: 'Dampf', email: 'E-Mail'});
     const message = new Message({}, member);
-    const transportObject = message.toTransportObject('dummy');
+    const transportObject = message.toTransportObject('dummy', includeFooter);
     expect(transportObject.from).to.equal('"Hans Dampf via softwerkskammer.org" <dummy>');
   });
 
   it('converts the sender address to use it as replyTo', () => {
     const member = new Member({firstname: 'Hans', lastname: 'Dampf', email: 'E-Mail'});
     const message = new Message({}, member);
-    const transportObject = message.toTransportObject('dummy');
+    const transportObject = message.toTransportObject('dummy', includeFooter);
     expect(transportObject.replyTo).to.equal('"Hans Dampf" <E-Mail>');
   });
 
   it('uses absolute URLs in html (relative)', () => {
     const message = new Message();
     message.setMarkdown('[link](/url)');
-    const transportObject = message.toTransportObject('dummy');
+    const transportObject = message.toTransportObject('dummy', includeFooter);
     expect(transportObject.html).to.contain('<a href="' + publicUrlPrefix + '/url">link</a>');
   });
 
   it('uses absolute URLs in text (relative)', () => {
     const message = new Message();
     message.setMarkdown('[link](/url)');
-    const transportObject = message.toTransportObject('dummy');
+    const transportObject = message.toTransportObject('dummy', includeFooter);
     expect(transportObject.text).to.contain('[link](' + publicUrlPrefix + '/url)');
   });
 
   it('uses absolute URLs in html (already absolute)', () => {
     const message = new Message();
     message.setMarkdown('[link](http://bild.de/url)');
-    const transportObject = message.toTransportObject('dummy');
+    const transportObject = message.toTransportObject('dummy', includeFooter);
     expect(transportObject.html).to.contain('<a href="http://bild.de/url">link</a>');
   });
 
   it('uses absolute URLs in text (already absolute)', () => {
     const message = new Message();
     message.setMarkdown('[link](http://bild.de/url)');
-    const transportObject = message.toTransportObject('dummy');
+    const transportObject = message.toTransportObject('dummy', includeFooter);
     expect(transportObject.text).to.contain('[link](http://bild.de/url)');
+  });
+
+  it('does not include footer in plain text when includeFooter is false', () => {
+    const message = new Message();
+    message.setMarkdown('Mail-Text');
+    const transportObject = message.toTransportObject('dummy', false);
+    expect(transportObject.text).not.to.contain('Mail-Text\n\n\n\n-- \nDie Softwerkskammer versendet ');
+  });
+
+  it('includes footer in plain text when includeFooter is true', () => {
+    const message = new Message();
+    message.setMarkdown('Mail-Text');
+    const transportObject = message.toTransportObject('dummy', true);
+    expect(transportObject.text).to.contain('Mail-Text\n\n\n\n-- \nDie Softwerkskammer versendet ');
+  });
+
+  it('does not include footer in html text when includeFooter is false', () => {
+    const message = new Message();
+    message.setMarkdown('Mail-Text');
+    const transportObject = message.toTransportObject('dummy', false);
+    expect(transportObject.html).not.to.match(new RegExp('<hr>\\s*<p>Die Softwerkskammer versendet '));
+  });
+
+  it('includes footer in html text when includeFooter is true', () => {
+    const message = new Message();
+    message.setMarkdown('Mail-Text');
+    const transportObject = message.toTransportObject('dummy', true);
+    expect(transportObject.html).to.match(new RegExp('<hr>\\s*<p>Die Softwerkskammer versendet '));
   });
 });
 

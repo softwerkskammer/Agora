@@ -45,10 +45,16 @@ html
           text-decoration: none;
           vertical-align: middle;
           white-space: nowrap;
-        }  
+        }
   body
     | !{content}
-    
+
     each button in buttons
       a.btn(href=button.url) #{button.text}
-    
+if includeFooter
+    br
+    br
+    br
+    hr
+    p.
+      Die Softwerkskammer versendet ihre E-Mails mit freundlicher Unterstützung von #[a(href='https://deltatree.de/') DeltaTree].
