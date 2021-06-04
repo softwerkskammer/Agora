@@ -78,6 +78,7 @@ function initParameterisedCalendar(id, date) {
   };
   calendar = new FullCalendar.Calendar(calElement, options);
   calendar.render();
+  document.getElementsByClassName("");
 }
 
 function surroundWithLink(text) {
@@ -139,8 +140,9 @@ function interestify() {
               title: help,
               icon: 'fa fa-question-circle',
               callback: function () {
+                var myModal = new bootstrap.Modal(document.getElementById('cheatsheet'));
                 $('#cheatsheet .modal-content').load('/cheatsheet.html');
-                $('#cheatsheet').modal();
+                myModal.show();
               }
             }]
           }]],

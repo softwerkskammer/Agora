@@ -17,6 +17,13 @@ class Activity {
       this.state.resources = {};
       this.state.resources[standardName] = {_registeredMembers: [], _registrationOpen: true};
     }
+
+    if (!this.state.startDate) {
+      this.state.startDate = new Date();
+    }
+    if (!this.state.endDate) {
+      this.state.endDate = new Date();
+    }
   }
 
   id() {

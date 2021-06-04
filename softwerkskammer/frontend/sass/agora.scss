@@ -36,7 +36,7 @@ pre code {
 }
 
 //.navbar-right {
-  //margin-right: 0 !important;
+//margin-right: 0 !important;
 //}
 
 .page-header {
@@ -144,14 +144,14 @@ h6 > small {
   margin-left: auto;
 }
 
+a,
+a:visited {
+  text-decoration: none !important;
+}
+
 @media print {
   .btn {
     display: none !important;
-  }
-
-  a,
-  a:visited {
-    text-decoration: none !important;
   }
 
   a[href]:after {
@@ -206,6 +206,7 @@ a.inherit-color {
 }
 
 legend {
+  float: none;
   font-weight: bold;
 }
 
@@ -246,6 +247,7 @@ a {
 .btn-file {
   position: relative;
   overflow: hidden;
+
   input[type=file] {
     position: absolute;
     top: 0;
@@ -268,7 +270,7 @@ a {
 }
 
 // needed to find the right font
-.abc-checkbox input[type=checkbox]:checked+label::after, .abc-checkbox input[type=radio]:checked+label::after {
+.abc-checkbox input[type=checkbox]:checked + label::after, .abc-checkbox input[type=radio]:checked + label::after {
   font-weight: 900;
 }
 
