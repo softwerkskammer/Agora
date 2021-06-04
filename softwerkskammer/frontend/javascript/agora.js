@@ -1,4 +1,4 @@
-/* global FullCalendar, fc_lang, datepicker_format, datepicker_lang, help, bootstrap */
+/* global FullCalendar, fc_lang, datepicker_format, datepicker_lang, help, bootstrap BootstrapTheme*/
 
 var displayedActivityStart;
 
@@ -31,7 +31,7 @@ function initParameterisedCalendar(id, date) {
   var calendar;
   var options = {
     initialView: 'dayGridMonth',
-    themeSystem: 'bootstrap',
+    themeSystem: 'standard',
     locale: fc_lang,
     initialDate: date,
     eventDisplay: 'block',
@@ -78,7 +78,6 @@ function initParameterisedCalendar(id, date) {
   };
   calendar = new FullCalendar.Calendar(calElement, options);
   calendar.render();
-  document.getElementsByClassName("");
 }
 
 function surroundWithLink(text) {
@@ -189,7 +188,7 @@ function interestify() {
     });
 
     $('.c-picker').each(function () {
-      $(this).colorpicker({format: 'hex', popover: false});
+      $(this).colorpicker({format: 'hex'});
     });
 
     $('.enhance').each(function () {
@@ -246,13 +245,12 @@ function interestify() {
       return new bootstrap.Popover(popoverTriggerEl, {container: 'body', html: true, trigger: 'hover', delay: {hide: 50}, placement: 'auto'});
     });
 
-    $('.tooltipify').each(function () {
-      $(this).tooltip();
-      $(this).addClass('popover-highlight');
+    [].slice.call(document.querySelectorAll('.tooltipify, .tooltiplabel')).map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
-    $('.tooltiplabel').each(function () {
-      $(this).tooltip();
+    $('.tooltipify').each(function () {
+      $(this).addClass('popover-highlight');
     });
   }
 
@@ -276,4 +274,7 @@ function interestify() {
   $(document).ready(initTooltipsAndHovers);
   $.fn.select2.defaults.set('theme', 'bootstrap-5');
   document.addEventListener('DOMContentLoaded', initActivitiesCalendar);
+
+  BootstrapTheme.prototype.classes.table = 'table table-bordered';
+
 }());

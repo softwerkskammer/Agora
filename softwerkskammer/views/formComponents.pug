@@ -113,8 +113,7 @@ mixin colorPicker(name, value)
   .form-group
     +controlLabel(name, t('colors.color'))
     .input-group.c-picker
-      span.input-group-append
-        span.input-group-text.colorpicker-input-addon: i
+      span.input-group-text.colorpicker-input-addon: i
       input.form-control(id=name, type='text', name=name, value=value)
 
 mixin twitter(name, label, value)
@@ -131,7 +130,7 @@ mixin csrf
 mixin controlLabel(name, label, tooltip)
   label.form-label(for=name)
     -if (tooltip)
-      span.tooltiplabel(data-original-title=tooltip) #{label}:&nbsp;
+      span.tooltiplabel(data-bs-toggle='tooltip', data-bs-original-title=tooltip) #{label}:&nbsp;
         i.fas.fa-question-circle
     -else
       | #{label}:

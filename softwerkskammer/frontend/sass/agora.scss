@@ -88,6 +88,20 @@ h6 > small {
   overflow-x: parent !important;
 }
 
+.fc-button-primary {
+  color: $body-color !important;
+  background-color: $light !important;
+  border: none !important;
+}
+
+.fc-icon {
+  vertical-align: inherit !important;
+  font-size: inherit !important;
+}
+
+.fc a {
+  color: inherit !important;
+}
 // fullcalendar *END*
 
 .verySmall {

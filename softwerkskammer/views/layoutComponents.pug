@@ -80,10 +80,10 @@ mixin bottomNavbar
 mixin notificationsBlock(notificationmessage)
   -notificationmessage.kill()
   -var contents = notificationmessage.contents()
-  #notifications(class='alert alert-block hidden-print ' + contents.type)
-    button.close(type='button', data-dismiss='alert') &times;
+  #notifications(class='alert alert-block alert-dismissible hidden-print ' + contents.type)
     h4 #{t(contents.title)}
     | #{t(contents.text, contents.additionalArguments)}
+    button.btn-close(type='button', data-bs-dismiss='alert', aria-hidden='true')
 
 mixin topNavbar()
   a.navbar-brand.py-0(href='/')
@@ -124,6 +124,6 @@ mixin topNavbar()
           i.fas.fa-user.fa-fw
           span.d-sm-none.d-md-inline &nbsp;#{t('members.members')}
       +loginMenu(true)
-    ul.navbar-nav.ml-md-auto.d-none.d-md-flex.mr-3(data-sm-options='{ hideOnClick: false }', data-sm-skip-collapsible-behavior=true)
+    ul.navbar-nav.ms-md-auto.d-none.d-md-flex.mr-3(data-sm-options='{ hideOnClick: false }', data-sm-skip-collapsible-behavior=true)
       +loginMenu
 
