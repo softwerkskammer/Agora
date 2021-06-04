@@ -18,7 +18,7 @@ block content
         form(role='form', method='POST', action='clone-from-meetup-for-group/')
           +csrf
           +hidden('groupname', group.id)
-          .btn-group.float-right
+          .btn-group.float-end
             a.btn.btn-light(href='/wiki/' + group.id + '/')
               i.fas.fa-book.fa-fw
               | &nbsp;#{t('wiki.wiki')}

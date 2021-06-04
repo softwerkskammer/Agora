@@ -272,6 +272,6 @@ function interestify() {
   $(document).ready(extendDataTables);
   $(document).ready(createLinks);
   $(document).ready(initTooltipsAndHovers);
-  $.fn.select2.defaults.set('theme', 'bootstrap');
+  $.fn.select2.defaults.set('theme', 'bootstrap-5');
   document.addEventListener('DOMContentLoaded', initActivitiesCalendar);
 }());

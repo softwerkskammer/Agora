@@ -60,7 +60,7 @@ mixin memberform(member, regionalgroups, themegroups, tags)
         if (accessrights.isMember(member))
           .row
             .col-md-6
-              span.btn.btn-primary.modaldialog(data-toggle='modal', data-target='#login', data-link='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))
+              span.btn.btn-primary.modaldialog(data-bs-toggle='modal', data-bs-target='#login', data-link='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))
                 i.far.fa-plus-square.fa-fw
                 | &nbsp;#{t('members.authenticate')}
             .col-md-6

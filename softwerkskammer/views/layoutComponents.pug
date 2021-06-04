@@ -45,7 +45,7 @@ mixin loginMenu(forInline)
           i.fas.fa-ban.fa-fw
           | &nbsp;#{t('members.resign')}
       else
-        li: .modaldialog.button.dropdown-item.nav-link(data-toggle='modal', data-target='#login', data-link='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))
+        li: .modaldialog.button.dropdown-item.nav-link(data-bs-toggle='modal', data-bs-target='#login', data-link='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))
           i.fas.fa-sign-in-alt.fa-fw
           | &nbsp;#{t('general.login')}
       li: a.dropdown-item.nav-link(href='https://github.com/softwerkskammer/Agora/issues', title=t('general.what_does_not_work'), target='_blank')

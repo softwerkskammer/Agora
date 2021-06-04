@@ -222,7 +222,7 @@
       "p Mach's gut - bis zum nächsten Mal!",
       "hr",
       "p.text-right Oder magst Du nochmal reinschauen? ",
-      "  span.modaldialog.btn.btn-primary(data-toggle='modal', data-target='#login', data-link='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))",
+      "  span.modaldialog.btn.btn-primary(data-bs-toggle='modal', data-bs-target='#login', data-link='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))",
       "    i.fas.fa-sign-in-alt.fa-fw",
       "    | &nbsp;$t(general.login)"
     ],

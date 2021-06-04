@@ -27,7 +27,7 @@ block content
         .page-header
           h2 #{activity.title()} #{' '}
             small #{t('activities.waitinglist')}
-            a.btn.float-right.btn-light(href=activity.fullyQualifiedUrl()) Zurück
+            a.btn.float-end.btn-light(href=activity.fullyQualifiedUrl()) Zurück
         .panel
           table.table.table-sm.table-hover.table-striped#waitinglisttable
             thead
@@ -70,4 +70,4 @@ block content
           input.form-control#nickname(type='text', name='nickname', placeholder=t('members.nickname'))
         .col-sm-4
         .col-sm-4
-          button.btn.btn-primary.float-right(type='submit') #{t('general.add')}
+          button.btn.btn-primary.float-end(type='submit') #{t('general.add')}

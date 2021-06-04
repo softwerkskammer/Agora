@@ -10,7 +10,7 @@ block content
     fieldset
       .row
         .col-12
-          .btn-group.float-right
+          .btn-group.float-end
             a.btn.btn-light(href='javascript:history.back()', type='cancel') #{t('general.back')}
             -var deleteoptions = {url: '/mailsender/resign', params: {nickname: nickname}}
             +reallyDeleteModalPost('members.delete', deleteoptions)
@@ -19,8 +19,8 @@ block content
           !=t('mailsender.resign_info', { postProcess: 'pug' })
           +textareaPure('why', t('mailsender.why-resign'), why)
           +textareaPure('notes', t('mailsender.notes-resign'), notes)
-          .btn-group.float-right
+          .btn-group.float-end
             a.btn.btn-light(href='javascript:history.back()', type='cancel') #{t('general.back')}
             -var deleteoptions = {url: '/mailsender/resign', params: {nickname: nickname}}
             +reallyDeleteModalPost('members.delete', deleteoptions)
-          
+

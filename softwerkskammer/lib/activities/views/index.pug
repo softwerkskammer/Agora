@@ -11,9 +11,9 @@ block content
       .page-header
         form(role='form', method='POST', action='clone-from-meetup/')
           +csrf
-          .btn-group.float-right
+          .btn-group.float-end
             .dropdown
-              a.btn.btn-light.dropdown-toggle(data-toggle='dropdown')
+              a.btn.btn-light.dropdown-toggle(data-bs-toggle='dropdown')
                 | #{range} &nbsp;
                 span.caret
               .dropdown-menu

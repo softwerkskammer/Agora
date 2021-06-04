@@ -84,12 +84,12 @@ mixin groupCheckboxes(checkboxName, regionalgroups, themegroups)
           +checkboxWithDescription(checkboxName, markedGroup.group.displaynameInSubscriptionList(), markedGroup.selected, markedGroup.group.descriptionHTMLFiltered('img'), markedGroup.group.id)
 
 mixin submitButtons(submitTextToken)
-  .btn-group.float-right
+  .btn-group.float-end
     a.btn.btn-light(href='javascript:history.back()', type='cancel') #{t('general.back')}
     button.btn.btn-primary(type='submit') #{t(submitTextToken)}
 
 mixin memberSubmitButtons(submitText)
-  .btn-group.float-right
+  .btn-group.float-end
     if (accessrights.isRegistered())
       a.btn.btn-light(href='javascript:history.back()', type='cancel') #{t('general.back')}
     else
@@ -129,7 +129,7 @@ mixin csrf
   +hidden('_csrf', csrf_token)
 
 mixin controlLabel(name, label, tooltip)
-  label.control-label(for=name)
+  label.form-label(for=name)
     -if (tooltip)
       span.tooltiplabel(data-original-title=tooltip) #{label}:&nbsp;
         i.fas.fa-question-circle
@@ -159,7 +159,7 @@ mixin reallyDeleteModalOnly(header, options)
             +csrf
             each val, param in options.params
               +hidden(param, val)
-            .btn-group.float-right
+            .btn-group.float-end
               button.btn.btn-default(type='cancel', data-dismiss='modal', aria-hidden='true') #{t('general.No')}
               button.btn.btn-primary(type='submit')
                 i.far.fa-trash-alt.fa-fw &nbsp;

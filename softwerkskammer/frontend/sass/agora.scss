@@ -196,9 +196,13 @@ a.inherit-color {
   color: inherit !important;
 }
 
-.control-label {
+.form-label {
   font-weight: bold;
   margin-bottom: 0 !important;
+}
+
+.form-group {
+  margin-bottom: 1rem;
 }
 
 legend {

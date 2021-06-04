@@ -8,6 +8,6 @@ block content
       !=t('authentication.required_text', { postProcess: 'pug' })
     .col-lg-6
       h3 #{t('authentication.please_authenticate')}
-      p.modaldialog.btn.btn-primary(data-toggle='modal', data-target='#login', data-link='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))
+      p.modaldialog.btn.btn-primary(data-bs-toggle='modal', data-bs-target='#login', data-link='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))
         i.fas.fa-sign-in-alt.fa-fw
         | &nbsp;#{t('general.login')}
