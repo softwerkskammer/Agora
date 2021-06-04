@@ -1,4 +1,4 @@
-/* global FullCalendar, fc_lang, datepicker_format, datepicker_lang, help, bootstrap BootstrapTheme*/
+/* global FullCalendar, fc_lang, datepicker_format, datepicker_lang, help, bootstrap*/
 
 var displayedActivityStart;
 
@@ -274,7 +274,5 @@ function interestify() {
   $(document).ready(initTooltipsAndHovers);
   $.fn.select2.defaults.set('theme', 'bootstrap-5');
   document.addEventListener('DOMContentLoaded', initActivitiesCalendar);
-
-  BootstrapTheme.prototype.classes.table = 'table table-bordered';
 
 }());
