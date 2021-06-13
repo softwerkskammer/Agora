@@ -1,4 +1,4 @@
-/* global FullCalendar, fc_lang, datepicker_format, datepicker_lang, help */
+/* global FullCalendar, fc_lang, datepicker_format, datepicker_lang, help, bootstrap*/
 
 var displayedActivityStart;
 
@@ -31,7 +31,7 @@ function initParameterisedCalendar(id, date) {
   var calendar;
   var options = {
     initialView: 'dayGridMonth',
-    themeSystem: 'bootstrap',
+    themeSystem: 'standard',
     locale: fc_lang,
     initialDate: date,
     eventDisplay: 'block',
@@ -139,8 +139,9 @@ function interestify() {
               title: help,
               icon: 'fa fa-question-circle',
               callback: function () {
+                var myModal = new bootstrap.Modal(document.getElementById('cheatsheet'));
                 $('#cheatsheet .modal-content').load('/cheatsheet.html');
-                $('#cheatsheet').modal();
+                myModal.show();
               }
             }]
           }]],
@@ -236,21 +237,20 @@ function interestify() {
   }
 
   function initTooltipsAndHovers() {
-    $('[rel=tooltip]').each(function () {
-      $(this).popover({html: true, trigger: 'hover', delay: {hide: 50}, placement: 'auto'});
+    [].slice.call(document.querySelectorAll('[rel=tooltip]')).map(function (popoverTriggerEl) {
+      return new bootstrap.Popover(popoverTriggerEl, {html: true, trigger: 'hover', delay: {hide: 50}, placement: 'auto'});
     });
 
-    $('[rel=tooltip-in-body]').each(function () {
-      $(this).popover({container: 'body', html: true, trigger: 'hover', delay: {hide: 50}, placement: 'auto'});
+    [].slice.call(document.querySelectorAll('[rel=tooltip-in-body]')).map(function (popoverTriggerEl) {
+      return new bootstrap.Popover(popoverTriggerEl, {container: 'body', html: true, trigger: 'hover', delay: {hide: 50}, placement: 'auto'});
+    });
+
+    [].slice.call(document.querySelectorAll('.tooltipify, .tooltiplabel')).map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl);
     });
 
     $('.tooltipify').each(function () {
-      $(this).tooltip();
       $(this).addClass('popover-highlight');
-    });
-
-    $('.tooltiplabel').each(function () {
-      $(this).tooltip();
     });
   }
 
@@ -272,6 +272,7 @@ function interestify() {
   $(document).ready(extendDataTables);
   $(document).ready(createLinks);
   $(document).ready(initTooltipsAndHovers);
-  $.fn.select2.defaults.set('theme', 'bootstrap');
+  $.fn.select2.defaults.set('theme', 'bootstrap-5');
   document.addEventListener('DOMContentLoaded', initActivitiesCalendar);
+
 }());

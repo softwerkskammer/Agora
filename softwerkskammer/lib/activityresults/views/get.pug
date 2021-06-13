@@ -17,7 +17,7 @@ block content
     .row
       .col-xs-12
         .page-header
-          .float-right
+          .float-end
             form#recordForm(role='form', method='POST', action='/activityresults/' + encodeURIComponent(activityResult.id()) + '/upload' + '?_csrf=' + encodeURIComponent(csrf_token), enctype='multipart/form-data')
               +imageUpload
           h1 #{activityResult.id()}
@@ -35,7 +35,7 @@ block content
                     span(style='display:inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 70%;') #{photo.title()}
                     if (accessrights.canEditPhoto(photo))
                       span &nbsp;
-                        a.float-right(href='/activityresults/' + activityResult.id() + '/photo/' + photo.id() + '/edit', title=t('general.edit'))
+                        a.float-end(href='/activityresults/' + activityResult.id() + '/photo/' + photo.id() + '/edit', title=t('general.edit'))
                           i.fas.fa-fw.fa-edit
-                    span.float-right #{photo.time().setLocale(language).toLocaleString({})}
+                    span.float-end #{photo.time().setLocale(language).toLocaleString({})}
       hr

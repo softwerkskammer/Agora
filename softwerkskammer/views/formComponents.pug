@@ -59,11 +59,11 @@ mixin hightextarea(name, label, value, tooltip, placeholder)
   +textareaInternal('md-textarea', '15', name, label, value, tooltip, placeholder)
 
 mixin checkboxWithDescription(name, label, checked, description, optionalValue)
-  .form-check.abc-checkbox.abc-checkbox-success
+  .form-check
     input.form-check-input(type='checkbox', id=name + optionalValue, name=name, value=optionalValue, checked=(checked ? 'true' : undefined))
     label.form-check-label(for=name + optionalValue)
       -if (description)
-        span.popover-highlight(rel='tooltip-in-body', data-content=description) #{label}
+        span.popover-highlight(rel='tooltip-in-body', data-bs-content=description) #{label}
       -else
         | !{label}
 
@@ -84,12 +84,12 @@ mixin groupCheckboxes(checkboxName, regionalgroups, themegroups)
           +checkboxWithDescription(checkboxName, markedGroup.group.displaynameInSubscriptionList(), markedGroup.selected, markedGroup.group.descriptionHTMLFiltered('img'), markedGroup.group.id)
 
 mixin submitButtons(submitTextToken)
-  .btn-group.float-right
+  .btn-group.float-end
     a.btn.btn-light(href='javascript:history.back()', type='cancel') #{t('general.back')}
     button.btn.btn-primary(type='submit') #{t(submitTextToken)}
 
 mixin memberSubmitButtons(submitText)
-  .btn-group.float-right
+  .btn-group.float-end
     if (accessrights.isRegistered())
       a.btn.btn-light(href='javascript:history.back()', type='cancel') #{t('general.back')}
     else
@@ -113,8 +113,7 @@ mixin colorPicker(name, value)
   .form-group
     +controlLabel(name, t('colors.color'))
     .input-group.c-picker
-      span.input-group-append
-        span.input-group-text.colorpicker-input-addon: i
+      span.input-group-text.colorpicker-input-addon: i
       input.form-control(id=name, type='text', name=name, value=value)
 
 mixin twitter(name, label, value)
@@ -129,9 +128,9 @@ mixin csrf
   +hidden('_csrf', csrf_token)
 
 mixin controlLabel(name, label, tooltip)
-  label.control-label(for=name)
+  label.form-label(for=name)
     -if (tooltip)
-      span.tooltiplabel(data-original-title=tooltip) #{label}:&nbsp;
+      span.tooltiplabel(data-bs-toggle='tooltip', data-bs-original-title=tooltip) #{label}:&nbsp;
         i.fas.fa-question-circle
     -else
       | #{label}:
@@ -159,7 +158,7 @@ mixin reallyDeleteModalOnly(header, options)
             +csrf
             each val, param in options.params
               +hidden(param, val)
-            .btn-group.float-right
+            .btn-group.float-end
               button.btn.btn-default(type='cancel', data-dismiss='modal', aria-hidden='true') #{t('general.No')}
               button.btn.btn-primary(type='submit')
                 i.far.fa-trash-alt.fa-fw &nbsp;

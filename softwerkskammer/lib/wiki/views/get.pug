@@ -14,23 +14,23 @@ block content
         .modal-body
           .row
             .col-md-12
-              !=t('wiki.rename_info', { postProcess: 'pug' }) 
+              !=t('wiki.rename_info', { postProcess: 'pug' })
               form#addonform(action='/wiki/rename/' + subdir + '/' + pageName, method='post')
                 +csrf
                 fieldset
                   +text('newName', t('wiki.newname'), '')
-                  button.btn.btn-primary.float-right(type='submit') #{t('general.save')}
+                  button.btn.btn-primary.float-end(type='submit') #{t('general.save')}
 
 
   .row
     .col-12
-      .btn-group.float-right
+      .btn-group.float-end
           a.btn.btn-light(href='/wiki/list/' + subdir + '/', title=t('wiki.all_pages') + ' "' + subdir + '"'): i.fas.fa-list.fa-fw
           a.btn.btn-light(href='/wiki/versions/' + subdir + '/' + pageName, title=t('wiki.revisions')): i.fas.fa-sort-amount-down.fa-fw
           if (canEdit)
             a.btn.btn-light(data-toggle='modal', href='#renameDialog', title=t('general.rename')): i.fas.fa-cogs.fa-fw
             a.btn.btn-light(href='/wiki/edit/' + subdir + '/' + pageName, title=t('general.edit')): i.fas.fa-edit.fa-fw
-      form.d-print-none.form-search.float-right(action='/wiki/search', method='post')
+      form.d-print-none.form-search.float-end(action='/wiki/search', method='post')
         +csrf
         input.form-control(type='text', name='searchtext', placeholder=t('wiki.search'))
       h1 #{title}

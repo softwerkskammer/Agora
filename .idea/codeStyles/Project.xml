@@ -7,9 +7,6 @@
       <option name="FORCE_QUOTE_STYlE" value="true" />
       <option name="OBJECT_LITERAL_WRAP" value="0" />
     </JSCodeStyleSettings>
-    <XML>
-      <option name="XML_LEGACY_SETTINGS_IMPORTED" value="true" />
-    </XML>
     <codeStyleSettings language="HTML">
       <indentOptions>
         <option name="INDENT_SIZE" value="2" />

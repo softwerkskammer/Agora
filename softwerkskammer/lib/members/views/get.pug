@@ -11,7 +11,7 @@ block content
   .row
     .col-12
       .page-header
-        .btn-group.float-right
+        .btn-group.float-end
           if (accessrights.canEditMember(member))
             a.btn.btn-light(href='/members/edit/' + encodeURIComponent(member.nickname())): i.fas.fa-edit.fa-fw
           if (accessrights.canDeleteMember(member))

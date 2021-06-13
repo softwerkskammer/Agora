@@ -1,7 +1,6 @@
 @import "variables";
 @import "../../../../node_modules/bootstrap/scss/bootstrap";
-@import "../../../../node_modules/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.scss";
-@import "../../../../node_modules/select2-theme-bootstrap4/src/select2-bootstrap.scss";
+@import "../../../../node_modules/select2-bootstrap-5-theme/src/include-all";
 @import "bootstrap-markdown-patched";
 
 // adapt syntaxhighlighted code in textboxes to bootstrap *BEGIN*
@@ -37,7 +36,7 @@ pre code {
 }
 
 //.navbar-right {
-  //margin-right: 0 !important;
+//margin-right: 0 !important;
 //}
 
 .page-header {
@@ -89,6 +88,20 @@ h6 > small {
   overflow-x: parent !important;
 }
 
+.fc-button-primary {
+  color: $body-color !important;
+  background-color: $light !important;
+  border: none !important;
+}
+
+.fc-icon {
+  vertical-align: inherit !important;
+  font-size: inherit !important;
+}
+
+.fc a {
+  color: inherit !important;
+}
 // fullcalendar *END*
 
 .verySmall {
@@ -145,14 +158,14 @@ h6 > small {
   margin-left: auto;
 }
 
+a,
+a:visited {
+  text-decoration: none !important;
+}
+
 @media print {
   .btn {
     display: none !important;
-  }
-
-  a,
-  a:visited {
-    text-decoration: none !important;
   }
 
   a[href]:after {
@@ -197,12 +210,17 @@ a.inherit-color {
   color: inherit !important;
 }
 
-.control-label {
+.form-label {
   font-weight: bold;
   margin-bottom: 0 !important;
 }
 
+.form-group {
+  margin-bottom: 1rem;
+}
+
 legend {
+  float: none;
   font-weight: bold;
 }
 
@@ -243,6 +261,7 @@ a {
 .btn-file {
   position: relative;
   overflow: hidden;
+
   input[type=file] {
     position: absolute;
     top: 0;
@@ -256,10 +275,6 @@ a {
   }
 }
 
-.photo-day > .photo-room:nth-child(odd) {
-  background-color: $table-accent-bg;
-}
-
 .select2-container--bootstrap {
   width: inherit !important;
 }
@@ -269,7 +284,7 @@ a {
 }
 
 // needed to find the right font
-.abc-checkbox input[type=checkbox]:checked+label::after, .abc-checkbox input[type=radio]:checked+label::after {
+.abc-checkbox input[type=checkbox]:checked + label::after, .abc-checkbox input[type=radio]:checked + label::after {
   font-weight: 900;
 }
 

@@ -15,9 +15,9 @@ block content
   .row
     .col-12
       .page-header
-        .float-right.d-print-flex.d-none
+        .float-end.d-print-flex.d-none
           img(height='80px', src='/qrcode?url=' + encodeURIComponent(activity.fullyQualifiedUrl()))
-        .btn-group.float-right
+        .btn-group.float-end
           a.btn.btn-light(href='/activities/ical/' + encodeURIComponent(activity.url()), title=t('activities.export')): i.far.fa-calendar-alt.fa-fw
           a.btn.btn-light(href='/wiki/' + activity.blogEntryUrl(), title=t('activities.blog_entry')): i.fas.fa-pen-nib.fa-fw
           if (accessrights.canCreateActivity())

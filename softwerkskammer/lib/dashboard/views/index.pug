@@ -4,7 +4,7 @@ include ../../activities/views/activities-mixins
 block scripts
   script.
     $(document).ready(function () {
-      $('a.chevron').click(function() {$(this).find('i').toggleClass('fa-toggle-down fa-toggle-right')});
+      $('a.chevron').click(function() {$(this).find('i').toggleClass('fa-caret-square-down fa-caret-square-right')});
     });
 
 block title
@@ -31,10 +31,10 @@ mixin my_groups
           -var panelid = group.id + '-grouppanel'
           .card.mb-2
             h5.card-header(style='background-color: ' + group.color + '; color: #FFFFFF;')
-              a.inherit-color.chevron(data-toggle='collapse', data-target='#' + panelid): b
+              a.inherit-color.chevron(data-bs-toggle='collapse', data-bs-target='#' + panelid): b
                 i.far.fa-caret-square-down.fa-fw.blog
                 | &nbsp;#{group.longName}
-              a.inherit-color(href='/groups/' + group.id): span.float-right: i.fas.fa-users.fa-fw.tooltipify(data-toggle='tooltip', title=t('groups.tooltip.gotogroup'))
+              a.inherit-color(href='/groups/' + group.id): span.float-end: i.fas.fa-users.fa-fw.tooltipify(data-bs-toggle='tooltip', title=t('groups.tooltip.gotogroup'))
             .collapse.show(id=panelid)
               .card-body
                 +wikichangesOrBlogs(postsByGroup[group.id], panelid, 'blogs', t('wiki.blogposts'))
@@ -49,23 +49,23 @@ mixin my_activities
         -var angemeldet = (member && activity.allRegisteredMembers().indexOf(member.id()) > -1)
         li.list-group-item
           if (angemeldet)
-            i.fas.fa-check.fa-fw.text-success.tooltipify(data-toggle='tooltip', title=t('activities.tooltip.registered'))
+            i.fas.fa-check.fa-fw.text-success.tooltipify(data-bs-toggle='tooltip', title=t('activities.tooltip.registered'))
           else
-            i.fas.fa-question.fa-fw.tooltipify(data-toggle='tooltip', title=t('activities.tooltip.unknown'))
+            i.fas.fa-question.fa-fw.tooltipify(data-bs-toggle='tooltip', title=t('activities.tooltip.unknown'))
           | &nbsp; #{activity.startDateTime().setLocale(language).toLocaleString(DateTime.DATE_SHORT)} &nbsp;
           a(href=activity.fullyQualifiedUrl()) #{activity.title()}
-          a.float-right(href='/groups/' + activity.assignedGroup())
+          a.float-end(href='/groups/' + activity.assignedGroup())
             .badge.text-white(style='background-color: ' + activity.colorRGB) #{activity.groupName()}
 
 mixin wikichangesOrBlogs(items, panelid, prefix, title)
   if (items.length > 0)
     h5.card-title.my-2
-      a.chevron(data-toggle='collapse', data-target='#' + panelid + ' .' + prefix)
+      a.chevron(data-bs-toggle='collapse', data-bs-target='#' + panelid + ' .' + prefix)
         i.far.fa-caret-square-down.fa-fw.blog
         | &nbsp;#{title}
     ul.list-group.list-group-flush(class=prefix + ' collapse show')
       each item in items
         li.list-group-item.py-0
-          a.modaldialog(data-toggle='modal', data-target='#wikidialog', data-link=item.dialogUrl(), href='#') #{item.pureName()}
-          small.float-right #{item.date().setLocale(language).toLocaleString(DateTime.DATE_SHORT)}&nbsp;
-            a(href=item.url()): i.fas.fa-book.fa-fw.tooltipify(data-toggle='tooltip', title=t('wiki.tooltip.gotopage'))
+          a.modaldialog(data-bs-toggle='modal', data-bs-target='#wikidialog', data-link=item.dialogUrl(), href='#') #{item.pureName()}
+          small.float-end #{item.date().setLocale(language).toLocaleString(DateTime.DATE_SHORT)}&nbsp;
+            a(href=item.url()): i.fas.fa-book.fa-fw.tooltipify(data-bs-toggle='tooltip', title=t('wiki.tooltip.gotopage'))
