@@ -4,7 +4,7 @@ include ../../activities/views/activities-mixins
 block scripts
   script.
     $(document).ready(function () {
-      $('a.chevron').click(function() {$(this).find('i').toggleClass('fa-toggle-down fa-toggle-right')});
+      $('a.chevron').click(function() {$(this).find('i').toggleClass('fa-caret-square-down fa-caret-square-right')});
     });
 
 block title
@@ -31,7 +31,7 @@ mixin my_groups
           -var panelid = group.id + '-grouppanel'
           .card.mb-2
             h5.card-header(style='background-color: ' + group.color + '; color: #FFFFFF;')
-              a.inherit-color.chevron(data-toggle='collapse', data-target='#' + panelid): b
+              a.inherit-color.chevron(data-bs-toggle='collapse', data-bs-target='#' + panelid): b
                 i.far.fa-caret-square-down.fa-fw.blog
                 | &nbsp;#{group.longName}
               a.inherit-color(href='/groups/' + group.id): span.float-end: i.fas.fa-users.fa-fw.tooltipify(data-bs-toggle='tooltip', title=t('groups.tooltip.gotogroup'))
@@ -60,7 +60,7 @@ mixin my_activities
 mixin wikichangesOrBlogs(items, panelid, prefix, title)
   if (items.length > 0)
     h5.card-title.my-2
-      a.chevron(data-toggle='collapse', data-target='#' + panelid + ' .' + prefix)
+      a.chevron(data-bs-toggle='collapse', data-bs-target='#' + panelid + ' .' + prefix)
         i.far.fa-caret-square-down.fa-fw.blog
         | &nbsp;#{title}
     ul.list-group.list-group-flush(class=prefix + ' collapse show')
