@@ -1,6 +1,6 @@
 .modal-header
   h3.modal-title #{t('authentication.authentication')}
-  button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+  button.btn-close(type='button', data-bs-dismiss='modal', aria-hidden='true')
 .modal-body
   .row
     .col-12
@@ -25,12 +25,12 @@
       p &nbsp;
         .card.mb-2
           h5.card-header.p-2(class=(loginChoice.userPass ? 'alert-success' : 'bg-light'))
-            a.inherit-color(href='#userPass', data-toggle='collapse') #{t('authentication.user_pass')}:
+            a.inherit-color(href='#userPass', data-bs-toggle='collapse') #{t('authentication.user_pass')}:
           #userPass.mt-2.collapse(class=(loginChoice.userPass ? 'show' : ''))
             ul.nav.nav-tabs
-              li.nav-item: a.nav-link.active(data-toggle='tab', href='#sign-in-contents') #{t('authentication.sign_in')}
-              li.nav-item: a.nav-link(data-toggle='tab', href='#sign-up-contents') #{t('authentication.sign_up')}
-              li.nav-item: a.nav-link(data-toggle='tab', href='#add-to-existing-contents') #{t('authentication.add_to_existing')}
+              li.nav-item: a.nav-link.active(data-bs-toggle='tab', href='#sign-in-contents') #{t('authentication.sign_in')}
+              li.nav-item: a.nav-link(data-bs-toggle='tab', href='#sign-up-contents') #{t('authentication.sign_up')}
+              li.nav-item: a.nav-link(data-bs-toggle='tab', href='#add-to-existing-contents') #{t('authentication.add_to_existing')}
 
             .tab-content
               #sign-in-contents.tab-pane.fade.show.active
@@ -77,7 +77,7 @@
         input(type='hidden', name='returnTo', value=returnUrl)
         .card.mb-2
           h5.card-header.p-2(class=(loginChoice.provider ? 'alert-success' : 'bg-light'))
-            a.inherit-color(href='#openIDinput', data-toggle='collapse') #{t('authentication.alternative_url')}:
+            a.inherit-color(href='#openIDinput', data-bs-toggle='collapse') #{t('authentication.alternative_url')}:
           #openIDinput.collapse(class=(loginChoice.provider ? 'show' : ''))
             .input-group
               input.form-control#openid_identifier(type='text', name='openid_identifier', value=(loginChoice.provider ? loginChoice.provider : ''))
@@ -89,7 +89,7 @@
         p &nbsp;
         .card.mb-2
           h5.card-header.p-2
-            a.inherit-color(href='#magicLinkInput', data-toggle='collapse') #{t('authentication.magic_link')}:
+            a.inherit-color(href='#magicLinkInput', data-bs-toggle='collapse') #{t('authentication.magic_link')}:
           #magicLinkInput.collapse(class=('btn-default'))
             .input-group
               input.form-control#magicLinkEmail(type='email', name='magic_link_email', value='', placeholder='myaddress@example.com')
