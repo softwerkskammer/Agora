@@ -45,7 +45,7 @@ module.exports = function (grunt) {
       'node_modules/smartmenus/dist/addons/bootstrap-4/jquery.smartmenus.bootstrap-4.css',
       'node_modules/@fortawesome/fontawesome-free/css/all.css',
       'node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css',
-      'node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css',
+      'node_modules/datatables.net-bs5/css/dataTables.bootstrap5.css',
       'node_modules/select2/dist/css/select2.css',
       'softwerkskammer/build/stylesheets/sass/out/agora.css'
     ]
@@ -65,7 +65,7 @@ module.exports = function (grunt) {
         flatten: true
       },
       datatablesBootstrapAndGermanJS: {
-        src: ['node_modules/datatables.net-bs4/js/dataTables*',
+        src: ['node_modules/datatables.net-bs5/js/dataTables*',
           'softwerkskammer/frontend/3rd_party_js/dataTables*'],
         dest: 'softwerkskammer/public/clientscripts',
         expand: true,
