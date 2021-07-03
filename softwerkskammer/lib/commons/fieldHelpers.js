@@ -69,7 +69,7 @@ module.exports = {
     if (dateString) {
       const timeStringOrDefault = timeString || '00:00';
       // HACK to follow
-      const dateformat = (dateString.indexOf('/')) ? 'd/M/yyyy' : 'd.M.yyyy';
+      const dateformat = (dateString && dateString.indexOf('/') > -1) ? 'd/M/yyyy' : 'd.M.yyyy';
       return DateTime.fromFormat(dateString + ' ' + timeStringOrDefault, `${dateformat} H:m`, { zone: timezoneName });
     }
     return undefined;
