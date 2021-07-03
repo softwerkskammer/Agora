@@ -68,7 +68,9 @@ module.exports = {
   parseToDateTimeUsingTimezone: function parseToDateTimeUsingTimezone(dateString, timeString, timezoneName) {
     if (dateString) {
       const timeStringOrDefault = timeString || '00:00';
-      return DateTime.fromFormat(dateString + ' ' + timeStringOrDefault, 'd.M.yyyy H:m', { zone: timezoneName });
+      // HACK to follow
+      const dateformat = (dateString.indexOf('/')) ? 'd/M/yyyy' : 'd.M.yyyy';
+      return DateTime.fromFormat(dateString + ' ' + timeStringOrDefault, `${dateformat} H:m`, { zone: timezoneName });
     }
     return undefined;
   },
