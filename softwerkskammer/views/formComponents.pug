@@ -151,7 +151,7 @@ mixin reallyDeleteModalOnly(header, options)
       .modal-content
         .modal-header
           h3.modal-title #{t(header)}
-          button.close(type='button', data-dismiss='modal', aria-hidden='true') &times;
+          button.btn-close(type='button', data-bs-dismiss='modal', aria-hidden='true')
         .modal-body
           p #{t('general.are_you_sure')}
           form(action=options.url, role='form', method='post')
@@ -159,14 +159,14 @@ mixin reallyDeleteModalOnly(header, options)
             each val, param in options.params
               +hidden(param, val)
             .btn-group.float-end
-              button.btn.btn-default(type='cancel', data-dismiss='modal', aria-hidden='true') #{t('general.No')}
+              button.btn.btn-default(type='cancel', data-bs-dismiss='modal', aria-hidden='true') #{t('general.No')}
               button.btn.btn-primary(type='submit')
                 i.far.fa-trash-alt.fa-fw &nbsp;
                 | #{t('general.delete')}
 
 mixin reallyDeleteButtonOnly(header, options, extraclasses)
   -var theID = 'reallyDelete' + header.replace('\.', '')
-  span.btn.btn-danger(data-toggle='modal', data-target='#' + theID, class=extraclasses)
+  span.btn.btn-danger(data-bs-toggle='modal', data-bs-target='#' + theID, class=extraclasses)
     i.far.fa-trash-alt.fa-fw
     if (extraclasses)
       | &nbsp; #{t('general.delete')}
