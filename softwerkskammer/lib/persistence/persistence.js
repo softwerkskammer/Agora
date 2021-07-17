@@ -117,7 +117,9 @@ module.exports = function persistenceFunc(collectionName) {
       performInDB((err, db) => {
         if (err) { return callback(err); }
         const collection = db.collection(collectionName);
-        collection.deleteOne({id: objectId}, {w: 1}, err1 => {
+        collection.deleteOne({id: objectId}, {
+          writeConcern: {w: 1}
+        }, err1 => {
           callback(err1);
         });
       });

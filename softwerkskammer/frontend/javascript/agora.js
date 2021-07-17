@@ -193,8 +193,7 @@ function interestify() {
 
     $('.enhance').each(function () {
       $(this).select2({
-        width: null,
-        containerCssClass: ':all:',
+        selectionCssClass: ':all:',
         minimumResultsForSearch: 20
       });
     });
