@@ -1,4 +1,6 @@
 'use strict';
+const sass = require('sass');
+
 module.exports = function (grunt) {
   /*eslint camelcase: 0*/
 
@@ -149,6 +151,9 @@ module.exports = function (grunt) {
       }
     },
     sass: {
+      options: {
+        implementation: sass
+      },
       dist: {
         files: {
           'softwerkskammer/build/stylesheets/sass/out/agora.css': 'softwerkskammer/build/stylesheets/sass/agora.scss'
@@ -282,12 +287,12 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-pug');
-  grunt.loadNpmTasks('grunt-contrib-sassjs');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-mocha-cli');
   grunt.loadNpmTasks('grunt-puglint');
+  grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-simple-nyc');
 
   grunt.registerTask('prepare', ['clean', 'copy']);
