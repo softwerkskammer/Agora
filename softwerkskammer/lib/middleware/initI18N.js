@@ -1,5 +1,5 @@
 const i18n = require('i18next');
-const middleware = require('i18next-express-middleware');
+const middleware = require('i18next-http-middleware');
 const Backend = require('i18next-node-fs-backend');
 const intervalPlural = require('i18next-intervalplural-postprocessor');
 const pug = require('pug');
@@ -17,6 +17,7 @@ module.exports = function initI18N(languages) {
     .use(pugPostProcessor)
     .use(intervalPlural)
     .init({
+      compatibilityJSON: 'v3',
       debug: false,
       supportedLngs: langs,
       preload: langs,
