@@ -1,4 +1,4 @@
-const marked = require('marked');
+const marked = require('marked').marked;
 const Crypto = require('crypto');
 const Nsh = require('node-syntaxhighlighter');
 const iconv = require('iconv-lite');
@@ -81,7 +81,7 @@ module.exports = {
     if (content === undefined || content === null) { return undefined; }
     const tokens = marked.lexer(evalTags(content, subdir)).filter(tok => tok.type !== 'space');
     return tokens[1] && tokens[1].text !== undefined && tokens[1].text !== null
-      ? marked(evalTags(tokens[1].text, subdir)) : undefined;
+      ? marked.parse(evalTags(tokens[1].text, subdir)) : undefined;
   },
   titleAndRenderedTail: function titleAndRenderedTail(content, subdir) {
     if (content === undefined || content === null) { return ''; }
