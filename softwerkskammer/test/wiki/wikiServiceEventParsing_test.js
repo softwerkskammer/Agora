@@ -15,7 +15,7 @@ describe('Wiki Service - Event Parsing', () => {
     const wikifile =
       '## Europaweite Veranstaltungen 2016\n' +
       '\n' +
-      'Diese Seite bietet eine Übersicht über Konferenzen und ähnliche Veranstaltungen rund um Craftsmanship und Softwareentwicklung.\n' +
+      'Diese Seite bietet eine Übersicht über Konferenzen und ähnliche Veranstaltungen rund um Craft, Testing und Softwareentwicklung.\n' +
       '\n' +
       'Konferenzen, bei denen kein Datum angegeben ist, haben in den Vorjahren um diese Zeit stattgefunden. Wir haben jedoch noch keine aktuellen Informationen. (Weißt Du mehr? Dann trag das Datum und den Link einfach ein!)\n' +
       '\n' +

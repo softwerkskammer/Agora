@@ -124,8 +124,8 @@ describe('the gitmech module', () => {
           'leider\n' +
           '2014-03-01 18:36:29 +0100\n' +
           'rename: "blog_vonheute" -> "blog_2014-03-19_der_blog"\n' +
-          'craftsmanswap/blog_2014-03-19_der_blog.md\n' +
-          'craftsmanswap/blog_vonheute.md\n\n' +
+          'crafterswap/blog_2014-03-19_der_blog.md\n' +
+          'crafterswap/blog_vonheute.md\n\n' +
           '7f91fc6\n' +
           '7f91fc607da7947e62b2d8a52088ee0ce29a88c8\n' +
           'leider\n' +
@@ -137,7 +137,7 @@ describe('the gitmech module', () => {
         let metadata = metadatas[0];
         expect(metadatas).to.have.length(2);
 
-        expect(metadata.name).to.equal('craftsmanswap/blog_2014-03-19_der_blog.md');
+        expect(metadata.name).to.equal('crafterswap/blog_2014-03-19_der_blog.md');
         expect(metadata.hashRef).to.equal('HEAD');
         expect(metadata.fullhash).to.equal('7f91fc607da7947e62b2d8a52088ee0ce29a88c8');
         expect(metadata.author).to.equal('leider');

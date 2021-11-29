@@ -8,14 +8,14 @@ const Diff = beans.get('gitDiff');
 describe('Git Diff', () => {
 
   it('formats changes', () => {
-    const changesFromConsole = 'diff --git a/craftsmanswap/index.md b/craftsmanswap/index.md\n' +
+    const changesFromConsole = 'diff --git a/crafterswap/index.md b/crafterswap/index.md\n' +
       'index 07ce5cf..1537b92 100644\n' +
-      '--- a/craftsmanswap/index.md\n' +
-      '+++ b/craftsmanswap/index.md\n' +
+      '--- a/crafterswap/index.md\n' +
+      '+++ b/crafterswap/index.md\n' +
       '@@ -1,3 +1,14 @@\n' +
       'HiHo!\n' +
       '\n' +
-      '### Craftsman Swapper\n' +
+      '### Crafter Swapper\n' +
       '+\n' +
       '+```javascript\n' +
       '+"use strict";\n' +
@@ -37,7 +37,7 @@ describe('Git Diff', () => {
         {text: '@@ -1,3 +1,14 @@', ldln: '...', rdln: '...', 'class': 'gc'},
         {text: 'HiHo!', ldln: 0, rdln: 2, 'class': undefined},
         {text: '', ldln: 0, rdln: 4, 'class': undefined},
-        {text: '### Craftsman Swapper', ldln: 0, rdln: 6, 'class': undefined},
+        {text: '### Crafter Swapper', ldln: 0, rdln: 6, 'class': undefined},
         {text: '+', ldln: '', rdln: 7, 'class': 'gi'},
         {text: '+```javascript', ldln: '', rdln: 8, 'class': 'gi'},
         {text: '+"use strict";', ldln: '', rdln: 9, 'class': 'gi'},

@@ -134,16 +134,16 @@ describe('Groups Service (groupFromObject)', () => {
 
   it('returns a valid Group object if there is valid group data', () => {
     const result = new Group({
-      id: 'craftsmanswap',
-      longName: 'Craftsman Swaps',
+      id: 'crafterswap',
+      longName: 'Crafter Swaps',
       description: 'A group for organizing CS',
       type: 'Themengruppe'
     });
 
     expect(result).to.not.be(null);
     expect(result).to.be.instanceOf(Group);
-    expect(result.id).to.equal('craftsmanswap');
-    expect(result.longName).to.equal('Craftsman Swaps');
+    expect(result.id).to.equal('crafterswap');
+    expect(result.longName).to.equal('Crafter Swaps');
     expect(result.description).to.equal('A group for organizing CS');
     expect(result.type).to.equal('Themengruppe');
   });
