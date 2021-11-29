@@ -10,5 +10,5 @@ Co-ordination via the mailinglist at https://www.softwerkskammer.org/groups/agor
 Slack
 -----
 
-There is an Agora slack channel on the [Software Craftsmanship Slack](https://softwarecraftsmanship.slack.com/messages/agora/). Invite yourself via http://slack.softwarecraftsmanship.org/.
+There is an Agora slack channel on the [Software Crafters Slack](https://softwarecrafters.slack.com/messages/agora/). Invite yourself via https://slack.softwarecrafters.org/.
 

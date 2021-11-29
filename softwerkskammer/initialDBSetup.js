@@ -30,7 +30,7 @@ async.parallel(
         {id: 'alle', emailPrefix: 'alleAlle', description: 'D-Scription', shortName: 'Alle', longName: 'Alle', type: 'Themengruppe', color: '#ff0000', mapX: '100', mapY: '100'},
         {id: 'commercial', emailPrefix: 'commercial', description: 'D-Scription', longName: 'Commercial', type: 'Regionalgruppe', color: '#ff00ff', mapX: '200', mapY: '100', shortName: 'C'},
         {id: 'neueplattform', emailPrefix: 'neueplattform', description: 'D-Scription', longName: 'Agora', type: 'Regionalgruppe', color: '#ffff00', mapX: '180', mapY: '100', shortName: 'A'},
-        {id: 'craftsmanswap', emailPrefix: 'craftsmanswap', description: 'D-Scription', longName: 'Craftsman Swaps', type: 'Regionalgruppe', color: '#0000ff', mapX: '100', mapY: '200', shortName: 'CS'},
+        {id: 'crafterswap', emailPrefix: 'crafterswap', description: 'D-Scription', longName: 'Crafter Swaps', type: 'Regionalgruppe', color: '#0000ff', mapX: '100', mapY: '200', shortName: 'CS'},
         {id: 'internet', emailPrefix: 'internet', description: 'D-Scription', longName: 'Virtual Group', type: 'Regionalgruppe', color: '#00ff00', mapX: '100', mapY: '300', shortName: 'VG'}
       ];
       async.map(groups, (group, cb) => {

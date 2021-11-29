@@ -45,7 +45,7 @@ describe('SWK Plattform server', () => {
 
   it('renders the i18n translated text on the home page correctly', done => {
     httpRequest({uri: baseUri}, (req, resp) => {
-      expect(resp.body).to.contain('Die Softwerkskammer hat sich 2011 gegründet, um den Austausch Interessierter zum Thema Software Craftsmanship\nzu vereinfachen.');
+      expect(resp.body).to.contain('Die Softwerkskammer hat sich 2011 gegründet, um den Austausch Interessierter zum Thema Software Craft und Testing\nzu vereinfachen.');
       done(); // without error check
     });
   });

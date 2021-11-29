@@ -191,7 +191,7 @@
     "about_us_text": [
       "h4 About us",
       "p.",
-      "  Softwerkskammer founded itself in 2011 in order to simplify the exchange of experiences among people interested in Software Craftsmanship.",
+      "  Softwerkskammer founded itself in 2011 in order to simplify the exchange of experiences among people interested in Software Craft and Testing.",
       "p.",
       "  The local communities use it to organise their meetings and other events like Code Retreats or Open Spaces,",
       "  or they simply share ideas or discuss interesting things on their mailing list.",
@@ -205,7 +205,7 @@
     "back": "Back",
     "cancel": "Cancel",
     "close": "Close",
-    "communities": "Software Craftsmanship Communities in Germany, Austria and Switzerland.",
+    "communities": "Software Craft and Testing Communities in Germany, Austria and Switzerland.",
     "compare": "Compare",
     "create": "Create",
     "credits": "Credits",
