@@ -60,7 +60,7 @@
     "jsonwebtoken": "8.5.1",
     "leaflet": "1.7.1",
     "luxon": "2.1.1",
-    "marked": "4.0.5",
+    "marked": "4.0.10",
     "mime-types": "2.1.34",
     "mongodb": "4.2.0",
     "morgan": "1.10.0",
