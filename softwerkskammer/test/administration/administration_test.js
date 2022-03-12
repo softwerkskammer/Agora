@@ -74,7 +74,7 @@ describe('Administration application', () => {
     appWithSuperuser
       .get('/activityTable')
       .expect(200)
-      .expect(/<h2>Verwaltung  <small> Aktivitäten /)
+      .expect(/<h2>Verwaltung  <small> Aktivitäten/)
       .expect(/Title of the Activity/)
       .expect(/1\.1\.2013/, done);
   });

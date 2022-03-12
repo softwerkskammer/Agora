@@ -27,7 +27,7 @@ block content
           tbody
             for group in groups
               tr
-                td: a.btn-sm(href='/groups/edit/' + encodeURIComponent(group.id)): i.fas.fa-edit.fa-fw
+                td: a.btn-sm(href='/groups/edit/' + encodeURIComponent(group.id)): i.fa-solid.fa-pen-to-square.fa-fw
                 td: b #{group.id}
                 td #{group.longName}
                 td #{group.emailPrefix}

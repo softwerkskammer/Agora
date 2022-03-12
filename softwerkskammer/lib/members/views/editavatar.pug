@@ -27,17 +27,17 @@ mixin editavatar(member, returnToParticipantsListing)
           img#preview
         .clearfix
         .btn-group.mt-2.mx-auto.d-table
-          span#rotate-left.btn.btn-sm.btn-light(title=t('photo.rotate-left')): i.fas.fa-fw.fa-undo
-          span#zoom-in.btn.btn-sm.btn-light(title=t('photo.zoom-in')): i.fas.fa-fw.fa-search-plus
-          span#fit.btn.btn-sm.btn-light(title=t('photo.fit')): i.fas.fa-fw.fa-arrows-alt
-          span#zoom-out.btn.btn-sm.btn-light(title=t('photo.zoom-out')): i.fas.fa-fw.fa-search-minus
-          span#rotate-right.btn.btn-sm.btn-light(title=t('photo.rotate-right')): i.fas.fa-fw.fa-redo
+          span#rotate-left.btn.btn-sm.btn-light(title=t('photo.rotate-left')): i.fa-solid.fa-fw.fa-arrow-rotate-left
+          span#zoom-in.btn.btn-sm.btn-light(title=t('photo.zoom-in')): i.fa-solid.fa-fw.fa-magnifying-glass-plus
+          span#fit.btn.btn-sm.btn-light(title=t('photo.fit')): i.fa-solid.fa-fw.fa-up-down-left-right
+          span#zoom-out.btn.btn-sm.btn-light(title=t('photo.zoom-out')): i.fa-solid.fa-fw.fa-magnifying-glass-minus
+          span#rotate-right.btn.btn-sm.btn-light(title=t('photo.rotate-right')): i.fa-solid.fa-fw.fa-arrow-rotate-right
         .btn-group
           span#btn-cancel.btn.btn-sm.btn-danger(title=t('general.cancel'))
-            i.fas.fa-fw.fa-times
+            i.fa-solid.fa-fw.fa-xmark
             | &nbsp; #{t('general.cancel')}
           button.btn.btn-sm.btn-primary(type='submit', title=t('general.save'))
-            i.fas.fa-fw.fa-check
+            i.fa-solid.fa-fw.fa-check
             | &nbsp; #{t('general.save')}
 
       +hidden('nickname', member.nickname())

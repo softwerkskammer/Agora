@@ -13,7 +13,7 @@ block content
       .page-header
         .btn-group.float-end
           if (accessrights.canEditMember(member))
-            a.btn.btn-light(href='/members/edit/' + encodeURIComponent(member.nickname())): i.fas.fa-edit.fa-fw
+            a.btn.btn-light(href='/members/edit/' + encodeURIComponent(member.nickname())): i.fa-solid.fa-pen-to-square.fa-fw
           if (accessrights.canDeleteMember(member))
             -var deleteoptions = {url: '/members/delete', params: {nickname: member.nickname()}}
             +reallyDeleteModalPost('members.delete', deleteoptions)
@@ -60,7 +60,7 @@ block content
   .row
     .col-12
       a.btn.btn-primary(href='/mailsender/contactMember/' + encodeURIComponent(member.nickname()))
-        i.far.fa-envelope
+        i.fa-regular.fa-envelope
         | &nbsp;#{t('members.send_email', {firstname: member.firstname(), lastname: member.lastname()})}
 
       h3.mt-2 #{t('members.member_of')}:

@@ -20,24 +20,24 @@ block content
           +hidden('groupname', group.id)
           .btn-group.float-end
             a.btn.btn-light(href='/wiki/' + group.id + '/')
-              i.fas.fa-book.fa-fw
+              i.fa-solid.fa-book.fa-fw
               | &nbsp;#{t('wiki.wiki')}
-            a.btn.btn-light(href=webcalURL, title=t('activities.export_subscribe')): i.far.fa-calendar-alt.fa-fw
+            a.btn.btn-light(href=webcalURL, title=t('activities.export_subscribe')): i.fa-regular.fa-calendar-alt.fa-fw
             if (accessrights.canEditGroup(group))
               if (group.meetupUrlName())
-                button.btn.btn-light(type='submit', title=t('groups.meetup_clone_title')): i.fab.fa-meetup.fa-fw
-              a.btn.btn-light(href='/groups/edit/' + group.id, title=t('general.edit')): i.fas.fa-edit
+                button.btn.btn-light(type='submit', title=t('groups.meetup_clone_title')): i.fa-brands.fa-meetup.fa-fw
+              a.btn.btn-light(href='/groups/edit/' + group.id, title=t('general.edit')): i.fa-solid.fa-pen-to-square
         h1 #{group.longName} #{' '}
           small #{group.type}
       if (accessrights.canContactTheOrganizers(group))
         p
           a.btn.btn-success(href='/mailsender/contactGroupContactPersons/' + group.id)
-            i.far.fa-envelope
+            i.fa-regular.fa-envelope
             | &nbsp;#{t('groups.mail_the_contact_persons')}
       if (userIsGroupMember || accessrights.isSuperuser())
         p
           a.btn.btn-success(href='/mailsender/contactMembersOfGroup/' + group.id)
-            i.far.fa-envelope
+            i.fa-regular.fa-envelope
             | &nbsp;#{t('groups.mail_to_group')}
   .row
     .col-lg-6
