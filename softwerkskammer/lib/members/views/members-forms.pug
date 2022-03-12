@@ -45,14 +45,14 @@ mixin memberform(member, regionalgroups, themegroups, tags)
       .row
         .col-md-12
           legend
-            i.far.fa-eye-slash.fa-fw
+            i.fa-regular.fa-eye-slash.fa-fw
             | #{' '}#{t('general.settings')}
           +checkbox('notifyOnWikiChanges', t('members.notifyOnWikiChanges'), member.notifyOnWikiChanges())
       if (accessrights.isRegistered())
         .row
           .col-md-12
             legend
-              i.far.fa-eye-slash.fa-fw
+              i.fa-regular.fa-eye-slash.fa-fw
               | #{' '}#{t('members.authenticated_via')}:
             ul
               each auth in member.authentications()
@@ -61,11 +61,11 @@ mixin memberform(member, regionalgroups, themegroups, tags)
           .row
             .col-md-6
               span.btn.btn-primary.modaldialog(data-bs-toggle='modal', data-bs-target='#login', data-link='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))
-                i.far.fa-plus-square.fa-fw
+                i.fa-regular.fa-plus-square.fa-fw
                 | &nbsp;#{t('members.authenticate')}
             .col-md-6
               span.btn.btn-primary.modaldialog(data-bs-toggle='modal', data-bs-target='#passwordDialog', data-link='/passwordDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))
-                i.fas.fa-key.fa-fw
+                i.fa-solid.fa-key.fa-fw
                 | &nbsp;#{t('authentication.change_password')}
         if (accessrights.isSuperuser())
           .row

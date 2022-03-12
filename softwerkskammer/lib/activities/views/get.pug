@@ -18,14 +18,14 @@ block content
         .float-end.d-print-flex.d-none
           img(height='80px', src='/qrcode?url=' + encodeURIComponent(activity.fullyQualifiedUrl()))
         .btn-group.float-end
-          a.btn.btn-light(href='/activities/ical/' + encodeURIComponent(activity.url()), title=t('activities.export')): i.far.fa-calendar-alt.fa-fw
-          a.btn.btn-light(href='/wiki/' + activity.blogEntryUrl(), title=t('activities.blog_entry')): i.fas.fa-pen-nib.fa-fw
+          a.btn.btn-light(href='/activities/ical/' + encodeURIComponent(activity.url()), title=t('activities.export')): i.fa-regular.fa-calendar-alt.fa-fw
+          a.btn.btn-light(href='/wiki/' + activity.blogEntryUrl(), title=t('activities.blog_entry')): i.fa-solid.fa-pen-nib.fa-fw
           if (accessrights.canCreateActivity())
-            a.btn.btn-light(href='/activities/newLike/' + encodeURIComponent(activity.url()), title=t('activities.new_copy')): i.far.fa-copy.fa-fw
+            a.btn.btn-light(href='/activities/newLike/' + encodeURIComponent(activity.url()), title=t('activities.new_copy')): i.fa-regular.fa-copy.fa-fw
           if (accessrights.canEditActivity(activity))
-            a.btn.btn-light(href='/waitinglist/' + encodeURIComponent(activity.url()), title=t('activities.waitinglist')): i.far.fa-clock.fa-fw
-            a.btn.btn-light(href='/mailsender/invitation/' + encodeURIComponent(activity.url()), title=t('activities.invitation')): i.far.fa-envelope.fa-fw
-            a.btn.btn-light(href='/activities/edit/' + encodeURIComponent(activity.url()), title=t('general.edit')): i.far.fa-edit.fa-fw
+            a.btn.btn-light(href='/waitinglist/' + encodeURIComponent(activity.url()), title=t('activities.waitinglist')): i.fa-regular.fa-clock.fa-fw
+            a.btn.btn-light(href='/mailsender/invitation/' + encodeURIComponent(activity.url()), title=t('activities.invitation')): i.fa-regular.fa-envelope.fa-fw
+            a.btn.btn-light(href='/activities/edit/' + encodeURIComponent(activity.url()), title=t('general.edit')): i.fa-regular.fa-pen-to-square.fa-fw
           if (accessrights.canDeleteActivity(activity))
             -var deleteoptions = {url: '/activities/delete', params: {activityUrl: activity.url()}}
             +reallyDeleteModalPost('activities.delete', deleteoptions)

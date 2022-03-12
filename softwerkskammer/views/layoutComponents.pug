@@ -3,29 +3,29 @@ mixin administrationMenu
     ul.navbar-nav.ml-md-auto.mr-3(data-sm-options='{ hideOnClick: false }', data-sm-skip-collapsible-behavior=true)
       li.nav-item.dropdown(data-agoranav='administration')
         a.nav-link.dropdown-toggle(href='#')
-          i.fas.fa-tachometer-alt.fa-fw
+          i.fa-solid.fa-gauge.fa-fw
           | &nbsp;#{t('general.administration')}&nbsp;
         ul.dropdown-menu
           li: a.dropdown-item.nav-link(href='/administration/activityTable')
-            i.far.fa-calendar-alt.fa-fw
+            i.fa-regular.fa-calendar-alt.fa-fw
             | &nbsp;#{t('activities.activities')}
           li: a.dropdown-item.nav-link(href='/administration/groupTable')
-            i.fas.fa-users.fa-fw
+            i.fa-solid.fa-users.fa-fw
             | &nbsp;#{t('groups.groups')}
           li: a.dropdown-item.nav-link(href='/administration/memberTable')
-            i.fas.fa-user.fa-fw
+            i.fa-solid.fa-user.fa-fw
             | &nbsp;#{t('members.members')}
           li: a.dropdown-item.nav-link(href='/administration/memberAndGroupTable')
-            i.fas.fa-user-check.fa-fw
+            i.fa-solid.fa-user-check.fa-fw
             | &nbsp;#{t('members.members') + ' & ' + t('groups.groups')}
           li: a.dropdown-item.nav-link(href='/administration/interests')
-            i.far.fa-thumbs-up.fa-fw
+            i.fa-regular.fa-thumbs-up.fa-fw
             | &nbsp; Interessen
 
 mixin loginMenu(forInline)
   li.nav-item.dropdown(class=forInline ? 'd-sm-none': '')
     a.nav-link.dropdown-toggle(href='#')
-      i.fas.fa-info-circle.fa-fw
+      i.fa-solid.fa-circle-info.fa-fw
       if accessrights.isRegistered()
         | &nbsp;#{user.member.nickname()}
       else
@@ -33,23 +33,23 @@ mixin loginMenu(forInline)
     ul.dropdown-menu
       if accessrights.isRegistered()
         li: a.dropdown-item.nav-link(href='/members/' + encodeURIComponent(user.member.nickname()))
-          i.fas.fa-eye.fa-fw
+          i.fa-solid.fa-eye.fa-fw
           | &nbsp;#{t('members.view')}
         li: a.dropdown-item.nav-link(href='/members/edit/' + encodeURIComponent(user.member.nickname()))
-          i.fas.fa-edit.fa-fw
+          i.fa-solid.fa-pen-to-square.fa-fw
           | &nbsp;#{t('members.edit')}
         li: a.dropdown-item.nav-link(href='/auth/logout')
-          i.fas.fa-sign-out-alt.fa-fw
+          i.fa-solid.fa-right-from-bracket.fa-fw
           | &nbsp;#{t('general.logout')}
         li: a.dropdown-item.nav-link(href='/mailsender/resign/' + encodeURIComponent(user.member.nickname()))
-          i.fas.fa-ban.fa-fw
+          i.fa-solid.fa-ban.fa-fw
           | &nbsp;#{t('members.resign')}
       else
         li: .modaldialog.button.dropdown-item.nav-link(data-bs-toggle='modal', data-bs-target='#login', data-link='/loginDialog?returnUrl=' + encodeURIComponent(currentUrl ||  '/'))
-          i.fas.fa-sign-in-alt.fa-fw
+          i.fa-solid.fa-right-to-bracket.fa-fw
           | &nbsp;#{t('general.login')}
       li: a.dropdown-item.nav-link(href='https://github.com/softwerkskammer/Agora/issues', title=t('general.what_does_not_work'), target='_blank')
-        i.fas.fa-ambulance.fa-fw
+        i.fa-solid.fa-truck-medical.fa-fw
         | &nbsp;#{t('general.feedback')}
       li: include ../version
   if language === 'de'
@@ -90,22 +90,22 @@ mixin topNavbar()
     img(src='/img/SoftwerkskammerWappenLinks.png', alt='Softwerkskammer', width='234', height='60')
   button.navbar-toggler.d-inline.d-sm-none(type='button', data-bs-toggle='collapse', data-bs-target='.collapse-top')
     span.sr-only Toggle
-    i.fas.fa-bars.fa-lg
+    i.fa-solid.fa-bars.fa-lg
 
   .navbar-collapse.collapse.collapse-top.align-self-end
     ul.nav.navbar-nav(data-sm-options='{ hideOnClick: false }', data-sm-skip-collapsible-behavior=true)
       li.nav-item(data-agoranav='dashboard'): a.nav-link(href='/dashboard')
-        i.fas.fa-th-list.fa-fw
+        i.fa-solid.fa-table-list.fa-fw
         span.d-sm-none.d-md-inline &nbsp;#{t('dashboard.dashboard')}
       li.nav-item(data-agoranav='activities'): a.nav-link(href='/activities/upcoming')
-        i.fas.fa-calendar-alt.fa-fw
+        i.fa-solid.fa-calendar-days.fa-fw
         span.d-sm-none.d-md-inline &nbsp;#{t('activities.activities')}
       li.nav-item(data-agoranav='groups'): a.nav-link(href='/groups')
-        i.fas.fa-users.fa-fw
+        i.fa-solid.fa-users.fa-fw
         span.d-sm-none.d-md-inline &nbsp;#{t('groups.groups')}
       li.nav-item.dropdown(data-agoranav='wiki')
         a.nav-link.dropdown-toggle(href='#')
-          i.fas.fa-book.fa-fw
+          i.fa-solid.fa-book.fa-fw
           span.d-sm-none.d-md-inline &nbsp;#{t('wiki.wiki')}&nbsp;
         ul.dropdown-menu
           if (structuredWikisubdirs)
@@ -121,7 +121,7 @@ mixin topNavbar()
                     li.nav-item: a.nav-link(href='#') <i>#{t('general.none')}</i>
       if (accessrights.isRegistered())
         li.nav-item(data-agoranav='members'): a.nav-link(href='/members')
-          i.fas.fa-user.fa-fw
+          i.fa-solid.fa-user.fa-fw
           span.d-sm-none.d-md-inline &nbsp;#{t('members.members')}
       +loginMenu(true)
     ul.navbar-nav.ms-md-auto.d-none.d-md-flex.mr-3(data-sm-options='{ hideOnClick: false }', data-sm-skip-collapsible-behavior=true)
