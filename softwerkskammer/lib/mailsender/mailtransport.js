@@ -47,7 +47,7 @@ function sendBulkMail(receiverEmailAddresses, subject, html, fromName, fromAddre
   transport.sendMail(mailoptions, (err, info) => {
     if (err) { return logger.error(err); }
     logger.info('Notification sent. Content: ' + JSON.stringify(mailoptions));
-    logger.info('Nodemailer send report: ' + JSON.stringify(info));
+    logger.info('Nodemailer sendMail report: ' + JSON.stringify(info));
   });
 }
 
