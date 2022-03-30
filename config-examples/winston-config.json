@@ -56,6 +56,16 @@
         "level": "info"
       }
     },
+    "nodemailer": {
+      "file": {
+        "timestamp": true,
+        "json": false,
+        "filename": "log/nodemailer.log",
+        "maxFiles": 5,
+        "maxsize": 10485760,
+        "level": "silly"
+      }
+    },
     "socrates": {
       "console": {
         "level": "info",
