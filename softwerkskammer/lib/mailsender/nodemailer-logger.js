@@ -3,7 +3,7 @@ const winstonLogger = require('winston').loggers.get('nodemailer');
 
 /**
  * Copied over from https://github.com/nodemailer/nodemailer/blob/master/lib/shared/index.js#L339
- * to adapt the custome logger from nodemailer to winston
+ * to adapt the custom logger from nodemailer to winston
  */
 // https://github.com/winstonjs/winston/tree/2.x#logging-levels
 const nodeMailerLogLevelToWinstonNpmLevels = {
