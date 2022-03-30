@@ -44,9 +44,10 @@ function sendBulkMail(receiverEmailAddresses, subject, html, fromName, fromAddre
 
   if (callback) { return transport.sendMail(mailoptions, callback); }
 
-  transport.sendMail(mailoptions, err => {
+  transport.sendMail(mailoptions, (err, info) => {
     if (err) { return logger.error(err); }
     logger.info('Notification sent. Content: ' + JSON.stringify(mailoptions));
+    logger.info('Nodemailer send report: ' + JSON.stringify(info));
   });
 }
 
