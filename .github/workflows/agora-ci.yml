@@ -22,7 +22,5 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
-      - run: |
-          npm install
-          grunt
-
+      - run: npm install
+      - run: grunt
