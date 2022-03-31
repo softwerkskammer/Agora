@@ -1,5 +1,11 @@
-name: GitHub Actions Demo
-on: [push]
+name: Agora Ci
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - '*'
 
 jobs:
   build:
