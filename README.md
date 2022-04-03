@@ -1,7 +1,7 @@
 Agora
 =====
 
-[![Build Status](https://travis-ci.org/softwerkskammer/Agora.png)](https://travis-ci.org/softwerkskammer/Agora)
+[![Build Status](https://github.com/softwerkskammer/Agora/actions/workflows/agora-ci.yml/badge.svg)](https://github.com/softwerkskammer/Agora/actions/workflows/agora-ci.yml)
 
 This is the project to build the new groupware platform for the German Software Craft and Testing communities. It can be seen in action on https://www.softwerkskammer.org
 
