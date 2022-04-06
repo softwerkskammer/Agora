@@ -21,8 +21,9 @@ function statusmessageForSuccess(type) {
 }
 
 function sendMail(message, type, senderAddress, includeFooter, callback) {
-  transport.sendMail(message.toTransportObject(senderAddress, includeFooter), err => {
+  transport.sendMail(message.toTransportObject(senderAddress, includeFooter), (err, info) => {
     if (err) { logger.error(err.stack); }
+    if (info) {logger.info('Nodemailer sendMail report: ' + JSON.stringify(info));}
     callback(null, err ? statusmessageForError(type, err) : statusmessageForSuccess(type));
   });
 }
@@ -47,7 +48,7 @@ function sendBulkMail(receiverEmailAddresses, subject, html, fromName, fromAddre
   transport.sendMail(mailoptions, (err, info) => {
     if (err) { return logger.error(err); }
     logger.info('Notification sent. Content: ' + JSON.stringify(mailoptions));
-    logger.info('Nodemailer sendMail report: ' + JSON.stringify(info));
+    logger.info('Nodemailer sendBulkMail report: ' + JSON.stringify(info));
   });
 }
 
