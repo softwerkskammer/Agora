@@ -74,8 +74,7 @@ module.exports = function (grunt) {
         flatten: true
       },
       pickersJS: {
-        src: ['node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.*',
-          'node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js',
+        src: ['node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js',
           'node_modules/bootstrap-datepicker/dist/locales/bootstrap-datepicker.de.min.js',
           'node_modules/bootstrap-datepicker/dist/locales/bootstrap-datepicker.en-GB.min.js',
           'node_modules/simple-timepicker/dist/simple-timepicker.min.js',
@@ -86,8 +85,7 @@ module.exports = function (grunt) {
         flatten: true
       },
       pickerCSS: {
-        src: ['node_modules/bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.*',
-          'node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css',
+        src: ['node_modules/bootstrap-datepicker/dist/css/bootstrap-datepicker3.min.css',
           'node_modules/guillotine/css/jquery.guillotine.css'],
         dest: 'softwerkskammer/public/stylesheets',
         expand: true,
