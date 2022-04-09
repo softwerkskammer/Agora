@@ -112,9 +112,7 @@ mixin time(name, value, readonly)
 mixin colorPicker(name, value)
   .form-group
     +controlLabel(name, t('colors.color'))
-    .input-group.c-picker
-      span.input-group-text.colorpicker-input-addon: i
-      input.form-control(id=name, type='text', name=name, value=value)
+    input.form-control(id=name, type='color', name=name, value=value, style='height: 38px')
 
 mixin twitter(name, label, value)
   .form-group

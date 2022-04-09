@@ -187,10 +187,6 @@ function interestify() {
       });
     });
 
-    $('.c-picker').each(function () {
-      $(this).colorpicker({format: 'hex'});
-    });
-
     $('.enhance').each(function () {
       $(this).select2({
         selectionCssClass: ':all:',

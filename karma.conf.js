@@ -13,7 +13,6 @@ module.exports = function (config) {
     files: [
       'node_modules/intl/locale-data/jsonp/de.js',
       'softwerkskammer/public/clientscripts/global_de.js',
-      'softwerkskammer/public/clientscripts/bootstrap-colorpicker.min.js',
       'softwerkskammer/public/clientscripts/bootstrap-datepicker.min.js',
       'softwerkskammer/public/clientscripts/simple-timepicker.min.js',
       'softwerkskammer/public/clientscripts/activityDateModel.js',
