@@ -30,6 +30,9 @@ module.exports = function initI18N(languages) {
       detection: {
         order: ['session'],
         lookupSession: 'language'
+      },
+      interpolation: {
+        skipOnVariables: false
       }
     });
   return middleware.handle(i18n, {});

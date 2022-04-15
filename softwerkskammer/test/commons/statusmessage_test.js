@@ -2,6 +2,10 @@
 
 const statusmessage = require('../../testutil/configureForTest').get('beans').get('statusmessage');
 const expect = require('must-dist');
+const i18n = require('i18next');
+require('../../testutil/configureForTest');
+const beans = require('simple-configure').get('beans');
+beans.get('initI18N');
 
 describe('Statusmessage', () => {
 
@@ -23,4 +27,14 @@ describe('Statusmessage', () => {
     expect(locals.statusmessage.contents().type).to.equal('alert-success');
   });
 
+  describe('translation', () => {
+    it('', () => {
+      expect(i18n.t('mailsender.notification')).to.equal('Nachricht');
+
+      const nestedTranslated = i18n.t('message.content.mailsender.success', {type: '$t(mailsender.notification)'});
+      expect(nestedTranslated).to.equal('Deine Nachricht ist unterwegs.');
+    });
+
+  });
 });
+
