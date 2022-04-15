@@ -2,6 +2,7 @@
 
 const express = require('express');
 const http = require('http');
+const fs = require('fs');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const favicon = require('serve-favicon');
@@ -10,7 +11,11 @@ const bodyparser = require('body-parser');
 const compress = require('compression');
 const csurf = require('csurf');
 
-require('./initWinston')(path.join(__dirname, '../config/winston-config.json'));
+const winstonConfigPath = path.join(__dirname, '../config/winston-config.json');
+// eslint-disable-next-line no-sync
+if (fs.existsSync(winstonConfigPath)) {
+  require('./initWinston')(winstonConfigPath);
+}
 
 function useApp(parent, url, child) {
   function ensureRequestedUrlEndsWithSlash(req, res, next) {
@@ -30,7 +35,6 @@ const conf = require('simple-configure');
 const beans = conf.get('beans');
 
 // initialize winston and two concrete loggers
-/*eslint no-sync: 0 */
 const winston = require('winston');
 
 const appLogger = winston.loggers.get('application');
