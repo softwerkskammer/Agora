@@ -48,18 +48,9 @@ module.exports = function persistenceFunc(collectionName) {
       performInDB((err, db) => {
         if (err) { return callback(err); }
         const cursor = db.collection(collectionName).find(searchObject, options).sort(sortOrder);
-        cursor.count((err1, result) => {
-          if (err1) { return callback(err1); }
-          if (!result) {
-            // If not items found, return empty array
-            return callback(null, []);
-          }
-          cursor.batchSize(result);
-          cursor.toArray((err2, result1) => {
-            if (err2) { return callback(err2); }
-            callback(null, result1);
-          });
-        });
+        return cursor.toArray()
+          .then(res => callback(null, res))
+          .catch(err1 => callback(err1));
       });
     },
 

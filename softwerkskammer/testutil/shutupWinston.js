@@ -5,12 +5,11 @@ function shutup() {
   winston.loggers = {
     add: () => undefined,
     get: () => {
-      const dummyLogger = {
+      return {
         warn: () => undefined,
         info: () => undefined,
         error: () => undefined
       };
-      return dummyLogger;
     }
   };
 
