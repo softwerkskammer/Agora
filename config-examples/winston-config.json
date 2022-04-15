@@ -1,69 +1,49 @@
 {
   "logging": {
     "application": {
+      "level": "info",
       "console": {
-        "level": "info",
         "colorize": true
       },
       "file": {
-        "timestamp": true,
-        "json": false,
         "filename": "log/server.log",
-        "maxFiles": 5,
-        "maxsize": 10485760,
-        "level": "info"
+        "maxFiles": 5
       }
     },
     "authorization": {
+      "level": "warn",
       "console": {
-        "level": "warn",
         "colorize": true
       },
       "file": {
-        "timestamp": true,
-        "json": false,
         "filename": "log/authorization.log",
-        "maxFiles": 5,
-        "maxsize": 10485760,
-        "level": "info"
+        "maxFiles": 5
       }
     },
     "http": {
+      "level": "warn",
       "console": {
-        "level": "warn",
         "colorize": true
       },
       "file": {
-        "timestamp": true,
-        "json": false,
         "filename": "log/http.log",
-        "maxFiles": 5,
-        "maxsize": 10485760,
-        "level": "info"
+        "maxFiles": 5
       }
     },
     "transactions": {
+      "level": "info",
       "console": {
-        "level": "info",
         "colorize": true
       },
       "file": {
-        "timestamp": true,
-        "json": false,
         "filename": "log/transactions.log",
-        "maxFiles": 5,
-        "maxsize": 10485760,
-        "level": "info"
+        "maxFiles": 5
       }
     },
     "nodemailer": {
       "file": {
-        "timestamp": true,
-        "json": false,
         "filename": "log/nodemailer.log",
-        "maxFiles": 5,
-        "maxsize": 10485760,
-        "level": "silly"
+        "maxFiles": 5
       }
     }
   }

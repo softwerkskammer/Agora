@@ -10,6 +10,8 @@ const bodyparser = require('body-parser');
 const compress = require('compression');
 const csurf = require('csurf');
 
+require('./initWinston')(path.join(__dirname, '../config/winston-config.json'));
+
 function useApp(parent, url, child) {
   function ensureRequestedUrlEndsWithSlash(req, res, next) {
     if (!(/\/$/).test(req.url)) { return res.redirect(req.url + '/'); }
@@ -29,7 +31,7 @@ const beans = conf.get('beans');
 
 // initialize winston and two concrete loggers
 /*eslint no-sync: 0 */
-const winston = require('winston-config').fromFileSync(path.join(__dirname, '../config/winston-config.json'));
+const winston = require('winston');
 
 const appLogger = winston.loggers.get('application');
 const httpLogger = winston.loggers.get('http');

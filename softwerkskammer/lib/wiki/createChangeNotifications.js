@@ -1,8 +1,8 @@
-const path = require('path');
 require('../../configure'); // initializing parameters
 
-/*eslint no-sync: 0 */
-const winston = require('winston-config').fromFileSync(path.join(__dirname, '../../../config/winston-config.json'));
+require('../../initWinston')('../../../config/winston-config.json');
+
+const winston = require('winston');
 const logger = winston.loggers.get('scripts');
 
 const beans = require('simple-configure').get('beans');
