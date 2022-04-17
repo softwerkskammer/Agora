@@ -1,6 +1,8 @@
 require('../../configure'); // initializing parameters
+const path = require('path');
 
-require('../../initWinston')('../../../config/winston-config.json');
+const winstonConfigPath = path.join(__dirname, '../../../config/winston-config.json');
+require('../../initWinston')(winstonConfigPath);
 
 const winston = require('winston');
 const logger = winston.loggers.get('scripts');

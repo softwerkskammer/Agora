@@ -39,8 +39,61 @@ function fileFrom(options) {
 }
 
 module.exports = function initWinston(filename) {
+  let winstonConfig = {
+    'logging': {
+      'application': {
+        'level': 'info',
+        'console': {
+          'colorize': true
+        },
+        'file': {
+          'filename': 'log/server.log',
+          'maxFiles': 5
+        }
+      },
+      'authorization': {
+        'level': 'warn',
+        'console': {
+          'colorize': true
+        },
+        'file': {
+          'filename': 'log/authorization.log',
+          'maxFiles': 5
+        }
+      },
+      'http': {
+        'level': 'warn',
+        'console': {
+          'colorize': true
+        },
+        'file': {
+          'filename': 'log/http.log',
+          'maxFiles': 5
+        }
+      },
+      'transactions': {
+        'level': 'info',
+        'console': {
+          'colorize': true
+        },
+        'file': {
+          'filename': 'log/transactions.log',
+          'maxFiles': 5
+        }
+      },
+      'nodemailer': {
+        'file': {
+          'filename': 'log/nodemailer.log',
+          'maxFiles': 5
+        }
+      }
+    }
+  };
   // eslint-disable-next-line no-sync
-  const winstonConfig = JSON.parse(fs.readFileSync(filename));
+  if (fs.existsSync(filename)) {
+    // eslint-disable-next-line no-sync
+    winstonConfig = JSON.parse(fs.readFileSync(filename));
+  }
 
   const loggerDescriptions = Object.entries(winstonConfig.logging);
 
