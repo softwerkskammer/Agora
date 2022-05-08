@@ -61,12 +61,12 @@ module.exports = {
     });
   },
 
-  cloneActivitiesFromMeetup: function cloneActivitiesFromMeetup(callback) {
-    groupstore.getGroupsWithMeetupURL((err, groups) => {
-      if (err) {
-        return callback(err);
-      }
+  cloneActivitiesFromMeetup: async function cloneActivitiesFromMeetup(callback) {
+    try {
+      const groups = await groupstore.getGroupsWithMeetupURL();
       async.each(groups, this.cloneActivitiesFromMeetupForGroup, callback);
-    });
+    } catch (e) {
+      callback(e);
+    }
   },
 };

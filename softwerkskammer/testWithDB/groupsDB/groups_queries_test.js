@@ -44,12 +44,10 @@ describe("Groups application with DB", () => {
       });
     });
 
-    it("returns only the group that has a nonempty URL", (done) => {
-      groupstore.getGroupsWithMeetupURL((err, groups) => {
-        expect(groups).to.have.length(1);
-        expect(groups[0].id).to.be("withurl");
-        done(err);
-      });
+    it("returns only the group that has a nonempty URL", async () => {
+      const groups = await groupstore.getGroupsWithMeetupURL();
+      expect(groups).to.have.length(1);
+      expect(groups[0].id).to.be("withurl");
     });
   });
 });

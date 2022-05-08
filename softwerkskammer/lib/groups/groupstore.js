@@ -1,11 +1,8 @@
 const beans = require("simple-configure").get("beans");
-const R = require("ramda");
 
 const persistence = beans.get("groupsPersistence");
 const Group = beans.get("group");
 const misc = beans.get("misc");
-
-const toGroupList = R.partial(misc.toObjectList, [Group]);
 
 module.exports = {
   allGroups: async function allGroups() {
@@ -28,12 +25,12 @@ module.exports = {
     return new Group(group);
   },
 
-  getGroupsWithMeetupURL: function getGroupsWithMeetupURL(callback) {
-    persistence.listByField(
+  getGroupsWithMeetupURL: async function getGroupsWithMeetupURL() {
+    const groups = await persistence.listByFieldAsync(
       { meetupURL: { $exists: true, $nin: ["", null, undefined] } },
-      {},
-      R.partial(toGroupList, [callback])
+      {}
     );
+    return groups.map((each) => new Group(each));
   },
 
   saveGroup: function saveGroup(group, callback) {
