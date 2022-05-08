@@ -1,14 +1,14 @@
-'use strict';
+"use strict";
 
-const sinon = require('sinon').createSandbox();
-const expect = require('must-dist');
+const sinon = require("sinon").createSandbox();
+const expect = require("must-dist");
 
-const beans = require('../../testutil/configureForTestWithDB').get('beans');
-const activitystore = beans.get('activitystore');
-const persistence = beans.get('activitiesPersistence');
-const Activity = beans.get('activity');
+const beans = require("../../testutil/configureForTestWithDB").get("beans");
+const activitystore = beans.get("activitystore");
+const persistence = beans.get("activitiesPersistence");
+const Activity = beans.get("activity");
 
-describe('Activity application with DB - shows activities for Group-Ids -', () => {
+describe("Activity application with DB - shows activities for Group-Ids -", () => {
   const tomorrowEarly = new Date(Date.now() + 86400000); // + 1 day
   const tomorrowLate = new Date(Date.now() + 90000000); // + 1 day + 1 hour
   const dayAfterTomorrow = new Date(Date.now() + 86400000 + 86400000); // + 2 days
@@ -17,92 +17,121 @@ describe('Activity application with DB - shows activities for Group-Ids -', () =
   const threeDaysAgo = new Date(Date.now() - 86400000 - 86400000 - 86400000); // - 3 days
 
   const futureActivity1 = new Activity({
-    id: 'futureActivity1', title: 'Future Activity 1', description: 'description1', assignedGroup: 'groupname1',
-    location: 'location1', direction: 'direction1', startDate: tomorrowEarly, endDate: dayAfterTomorrow,
-    url: 'url_future', owner: 'owner', resources: {
-      Veranstaltung: {_registeredMembers: [{memberId: 'memberId2'}], _registrationOpen: true},
-      AndereVeranstaltung: {_registeredMembers: [{memberId: 'memberId2'}], _registrationOpen: true}
-    }, version: 1
+    id: "futureActivity1",
+    title: "Future Activity 1",
+    description: "description1",
+    assignedGroup: "groupname1",
+    location: "location1",
+    direction: "direction1",
+    startDate: tomorrowEarly,
+    endDate: dayAfterTomorrow,
+    url: "url_future",
+    owner: "owner",
+    resources: {
+      Veranstaltung: { _registeredMembers: [{ memberId: "memberId2" }], _registrationOpen: true },
+      AndereVeranstaltung: { _registeredMembers: [{ memberId: "memberId2" }], _registrationOpen: true },
+    },
+    version: 1,
   });
   const futureActivity2 = new Activity({
-    id: 'futureActivity2',
-    title: 'Future Activity 2',
-    description: 'description1',
-    assignedGroup: 'groupname2',
-    location: 'location1',
-    direction: 'direction1',
+    id: "futureActivity2",
+    title: "Future Activity 2",
+    description: "description1",
+    assignedGroup: "groupname2",
+    location: "location1",
+    direction: "direction1",
     startDate: tomorrowLate,
     endDate: dayAfterTomorrow,
-    url: 'url_future',
-    owner: 'owner',
-    resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId'}], _registrationOpen: true}},
-    version: 1
+    url: "url_future",
+    owner: "owner",
+    resources: { Veranstaltung: { _registeredMembers: [{ memberId: "memberId" }], _registrationOpen: true } },
+    version: 1,
   });
 
   const currentActivity1 = new Activity({
-    id: 'currentActivity1',
-    title: 'Current Activity 1',
-    description: 'description1',
-    assignedGroup: 'groupname1',
-    location: 'location1',
-    direction: 'direction1',
+    id: "currentActivity1",
+    title: "Current Activity 1",
+    description: "description1",
+    assignedGroup: "groupname1",
+    location: "location1",
+    direction: "direction1",
     startDate: yesterday,
     endDate: tomorrowEarly,
-    url: 'url_current',
-    owner: 'owner',
-    resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId'}], _registrationOpen: true}},
-    version: 1
+    url: "url_current",
+    owner: "owner",
+    resources: { Veranstaltung: { _registeredMembers: [{ memberId: "memberId" }], _registrationOpen: true } },
+    version: 1,
   });
   const currentActivity2 = new Activity({
-    id: 'currentActivity2', title: 'Current Activity 2', description: 'description1', assignedGroup: 'groupname2',
-    location: 'location1', direction: 'direction1', startDate: yesterday, endDate: tomorrowEarly,
-    url: 'url_current', owner: 'owner', resources: {Veranstaltung: {}}, version: 1
+    id: "currentActivity2",
+    title: "Current Activity 2",
+    description: "description1",
+    assignedGroup: "groupname2",
+    location: "location1",
+    direction: "direction1",
+    startDate: yesterday,
+    endDate: tomorrowEarly,
+    url: "url_current",
+    owner: "owner",
+    resources: { Veranstaltung: {} },
+    version: 1,
   }); // resource has no registered members!
 
   const pastActivity1 = new Activity({
-    id: 'pastActivity1',
-    title: 'Past Activity 1',
-    description: 'description1',
-    assignedGroup: 'groupname',
-    location: 'location1',
-    direction: 'direction1',
+    id: "pastActivity1",
+    title: "Past Activity 1",
+    description: "description1",
+    assignedGroup: "groupname",
+    location: "location1",
+    direction: "direction1",
     startDate: dayBeforeYesterday,
     endDate: yesterday,
-    url: 'url_past',
-    owner: 'owner',
-    resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId'}], _registrationOpen: true}},
-    version: 1
+    url: "url_past",
+    owner: "owner",
+    resources: { Veranstaltung: { _registeredMembers: [{ memberId: "memberId" }], _registrationOpen: true } },
+    version: 1,
   });
 
   const pastActivity2 = new Activity({
-    id: 'pastActivity2',
-    title: 'Past Activity 2',
-    description: 'description1',
-    assignedGroup: 'groupname',
-    location: 'location1',
-    direction: 'direction1',
+    id: "pastActivity2",
+    title: "Past Activity 2",
+    description: "description1",
+    assignedGroup: "groupname",
+    location: "location1",
+    direction: "direction1",
     startDate: threeDaysAgo,
     endDate: threeDaysAgo,
-    url: 'url_past',
-    owner: 'owner',
-    resources: {Veranstaltung: {_registeredMembers: [{memberId: 'memberId'}], _registrationOpen: true}},
-    version: 1
+    url: "url_past",
+    owner: "owner",
+    resources: { Veranstaltung: { _registeredMembers: [{ memberId: "memberId" }], _registrationOpen: true } },
+    version: 1,
   });
 
-  beforeEach(done => { // if this fails, you need to start your mongo DB
+  beforeEach((done) => {
+    // if this fails, you need to start your mongo DB
 
     persistence.drop(() => {
-      activitystore.saveActivity(pastActivity1, err => {
-        if (err) { done(err); }
-        activitystore.saveActivity(pastActivity2, err1 => {
-          if (err1) { done(err1); }
-          activitystore.saveActivity(futureActivity1, err2 => {
-            if (err2) { done(err2); }
-            activitystore.saveActivity(futureActivity2, err3 => {
-              if (err3) { done(err3); }
-              activitystore.saveActivity(currentActivity1, err4 => {
-                if (err4) { done(err4); }
-                activitystore.saveActivity(currentActivity2, err5 => {
+      activitystore.saveActivity(pastActivity1, (err) => {
+        if (err) {
+          done(err);
+        }
+        activitystore.saveActivity(pastActivity2, (err1) => {
+          if (err1) {
+            done(err1);
+          }
+          activitystore.saveActivity(futureActivity1, (err2) => {
+            if (err2) {
+              done(err2);
+            }
+            activitystore.saveActivity(futureActivity2, (err3) => {
+              if (err3) {
+                done(err3);
+              }
+              activitystore.saveActivity(currentActivity1, (err4) => {
+                if (err4) {
+                  done(err4);
+                }
+                activitystore.saveActivity(currentActivity2, (err5) => {
                   done(err5);
                 });
               });
@@ -117,79 +146,70 @@ describe('Activity application with DB - shows activities for Group-Ids -', () =
     sinon.restore();
   });
 
-  it('shows only current and future activities of Group 1', done => {
-
-    activitystore.upcomingActivitiesForGroupIds(['groupname1'], (err, activities) => {
+  it("shows only current and future activities of Group 1", (done) => {
+    activitystore.upcomingActivitiesForGroupIds(["groupname1"], (err, activities) => {
       expect(activities.length).to.equal(2);
-      expect(activities[0].title()).to.equal('Current Activity 1');
-      expect(activities[1].title()).to.equal('Future Activity 1');
+      expect(activities[0].title()).to.equal("Current Activity 1");
+      expect(activities[1].title()).to.equal("Future Activity 1");
       done(err);
     });
   });
 
-  it('shows current and future activities of Group 1 and activities with subscribed member', done => {
-
-    activitystore.activitiesForGroupIdsAndRegisteredMemberId(['groupname1'], 'memberId', true, (err, activities) => {
+  it("shows current and future activities of Group 1 and activities with subscribed member", (done) => {
+    activitystore.activitiesForGroupIdsAndRegisteredMemberId(["groupname1"], "memberId", true, (err, activities) => {
       expect(activities.length).to.equal(3);
-      expect(activities[0].title()).to.equal('Current Activity 1');
-      expect(activities[1].title()).to.equal('Future Activity 1');
-      expect(activities[2].title()).to.equal('Future Activity 2');
+      expect(activities[0].title()).to.equal("Current Activity 1");
+      expect(activities[1].title()).to.equal("Future Activity 1");
+      expect(activities[2].title()).to.equal("Future Activity 2");
       done(err);
     });
   });
 
-  it('shows activity only once even if member is subscribed to multiple resources', done => {
-
-    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], 'memberId2', true, (err, activities) => {
+  it("shows activity only once even if member is subscribed to multiple resources", (done) => {
+    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], "memberId2", true, (err, activities) => {
       expect(activities.length).to.equal(1);
-      expect(activities[0].title()).to.equal('Future Activity 1');
+      expect(activities[0].title()).to.equal("Future Activity 1");
       done(err);
     });
   });
 
-  it('shows past activities of Group 1 and activities with subscribed member', done => {
-
-    activitystore.activitiesForGroupIdsAndRegisteredMemberId(['groupname1'], 'memberId', false, (err, activities) => {
+  it("shows past activities of Group 1 and activities with subscribed member", (done) => {
+    activitystore.activitiesForGroupIdsAndRegisteredMemberId(["groupname1"], "memberId", false, (err, activities) => {
       expect(activities.length).to.equal(2);
-      expect(activities[0].title()).to.equal('Past Activity 1');
-      expect(activities[1].title()).to.equal('Past Activity 2');
+      expect(activities[0].title()).to.equal("Past Activity 1");
+      expect(activities[1].title()).to.equal("Past Activity 2");
       done(err);
     });
   });
 
-  it('shows current and future activities of activities with subscribed member', done => {
-
-    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], 'memberId', true, (err, activities) => {
+  it("shows current and future activities of activities with subscribed member", (done) => {
+    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], "memberId", true, (err, activities) => {
       expect(activities.length).to.equal(2);
-      expect(activities[0].title()).to.equal('Current Activity 1');
-      expect(activities[1].title()).to.equal('Future Activity 2');
+      expect(activities[0].title()).to.equal("Current Activity 1");
+      expect(activities[1].title()).to.equal("Future Activity 2");
       done(err);
     });
   });
 
-  it('returns an empty list if no matching activities are found', done => {
-
-    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], 'unknownMemberId', true, (err, activities) => {
+  it("returns an empty list if no matching activities are found", (done) => {
+    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], "unknownMemberId", true, (err, activities) => {
       expect(activities.length).to.equal(0);
       done(err);
     });
   });
-
 });
 
-describe('Activity application with DB - activitiesForGroupIdsAndRegisteredMemberId without activities -', () => {
-
-  beforeEach(done => { // if this fails, you need to start your mongo DB
+describe("Activity application with DB - activitiesForGroupIdsAndRegisteredMemberId without activities -", () => {
+  beforeEach((done) => {
+    // if this fails, you need to start your mongo DB
     persistence.drop(done);
   });
 
-  it('returns an empty list if there is no collection at all', done => {
-
-    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], 'unknownMemberId', true, (err, activities) => {
+  it("returns an empty list if there is no collection at all", (done) => {
+    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], "unknownMemberId", true, (err, activities) => {
       expect(err).to.not.exist();
       expect(activities.length).to.equal(0);
       done(err);
     });
   });
-
 });

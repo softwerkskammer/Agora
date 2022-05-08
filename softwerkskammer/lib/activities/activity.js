@@ -1,12 +1,12 @@
-const {DateTime} = require('luxon');
+const { DateTime } = require("luxon");
 
-const conf = require('simple-configure');
-const beans = conf.get('beans');
-const Resources = beans.get('resources');
-const fieldHelpers = beans.get('fieldHelpers');
-const Renderer = beans.get('renderer');
+const conf = require("simple-configure");
+const beans = conf.get("beans");
+const Resources = beans.get("resources");
+const fieldHelpers = beans.get("fieldHelpers");
+const Renderer = beans.get("renderer");
 
-const standardName = 'Veranstaltung';
+const standardName = "Veranstaltung";
 
 class Activity {
   /* eslint no-underscore-dangle: 0 */
@@ -15,7 +15,7 @@ class Activity {
 
     if (!this.state.resources) {
       this.state.resources = {};
-      this.state.resources[standardName] = {_registeredMembers: [], _registrationOpen: true};
+      this.state.resources[standardName] = { _registeredMembers: [], _registrationOpen: true };
     }
 
     if (!this.state.startDate) {
@@ -35,7 +35,7 @@ class Activity {
   }
 
   fullyQualifiedUrl() {
-    return this.url() ? conf.get('publicUrlPrefix') + '/activities/' + encodeURIComponent(this.url()) : undefined;
+    return this.url() ? conf.get("publicUrlPrefix") + "/activities/" + encodeURIComponent(this.url()) : undefined;
   }
 
   title() {
@@ -93,8 +93,12 @@ class Activity {
     this.state.clonedFromMeetup = object.clonedFromMeetup;
     this.state.meetupRSVPCount = object.meetupRSVPCount;
 
-    if (!this.id() || this.id() === 'undefined') {
-      this.state.id = fieldHelpers.createLinkFrom([this.assignedGroup(), this.title(), this.startDateTime().toFormat('dd.MM.yyyy HH:mm:ss')]);
+    if (!this.id() || this.id() === "undefined") {
+      this.state.id = fieldHelpers.createLinkFrom([
+        this.assignedGroup(),
+        this.title(),
+        this.startDateTime().toFormat("dd.MM.yyyy HH:mm:ss"),
+      ]);
     }
 
     // these are the resource definitions in the edit page:
@@ -132,7 +136,7 @@ class Activity {
   }
 
   descriptionPlain() {
-    return this.descriptionHTML().replace(/<(?:\S|\s)*?>/gm, '');
+    return this.descriptionHTML().replace(/<(?:\S|\s)*?>/gm, "");
   }
 
   hasDirection() {
@@ -144,15 +148,15 @@ class Activity {
   }
 
   groupName() {
-    return this.group ? this.group.longName : '';
+    return this.group ? this.group.longName : "";
   }
 
   groupFrom(groups) {
-    this.group = groups.find(group => group.id === this.assignedGroup());
+    this.group = groups.find((group) => group.id === this.assignedGroup());
   }
 
   blogEntryUrl() {
-    const dateString = this.startDateTime().toFormat('yyyy-MM-dd');
+    const dateString = this.startDateTime().toFormat("yyyy-MM-dd");
     return `${this.assignedGroup()}/blog_${dateString}_${Renderer.normalize(this.title())}`;
   }
 
@@ -192,7 +196,7 @@ class Activity {
 
   // Waitinglist stuff
   isAlreadyOnWaitinglist(memberID) {
-    return this.allWaitinglistEntries().find(entry => entry.registrantId() === memberID);
+    return this.allWaitinglistEntries().find((entry) => entry.registrantId() === memberID);
   }
 
   allWaitinglistEntries() {
@@ -238,9 +242,8 @@ class Activity {
   }
 
   colorFrom(groupsColors) {
-    return groupsColors && groupsColors[this.assignedGroup()] ? groupsColors[this.assignedGroup()] : '#353535';
+    return groupsColors && groupsColors[this.assignedGroup()] ? groupsColors[this.assignedGroup()] : "#353535";
   }
-
 }
 
 module.exports = Activity;

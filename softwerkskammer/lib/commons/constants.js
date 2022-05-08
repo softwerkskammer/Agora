@@ -1,1 +1,1 @@
-module.exports.CONFLICTING_VERSIONS = 'Conflicting versions.';
+module.exports.CONFLICTING_VERSIONS = "Conflicting versions.";

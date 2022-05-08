@@ -1,10 +1,10 @@
-const R = require('ramda');
-const beans = require('simple-configure').get('beans');
-const misc = beans.get('misc');
-const Renderer = beans.get('renderer');
+const R = require("ramda");
+const beans = require("simple-configure").get("beans");
+const misc = beans.get("misc");
+const Renderer = beans.get("renderer");
 
-const themengruppe = 'Themengruppe';
-const regionalgruppe = 'Regionalgruppe';
+const themengruppe = "Themengruppe";
+const regionalgruppe = "Regionalgruppe";
 
 /**
  * Max latitude of Germany.
@@ -23,7 +23,7 @@ const MAP_COORDINATES_EAST = 17.160749;
  *
  * according to: https://de.wikipedia.org/wiki/Geographische_Extrempunkte_der_Schweiz
  */
-const MAP_COORDINATES_SOUTH = 45.817920;
+const MAP_COORDINATES_SOUTH = 45.81792;
 /**
  * Min longitude of Germany.
  *
@@ -56,7 +56,7 @@ class Group {
       this.contactingOrganizersEnabled = !!object.contactingOrganizersEnabled;
       this.subscribedMembers = object.subscribedMembers || [];
     } else {
-      this.color = '#FF00FF';
+      this.color = "#FF00FF";
     }
   }
 
@@ -66,16 +66,35 @@ class Group {
   }
 
   descriptionHTMLFiltered(tagToFilter) {
-    const matchTag = new RegExp('(' + '<' + tagToFilter + '[^>]*>[^>]*/' + tagToFilter + '>' + '|' + '<' + tagToFilter + '[^/]*/>' + '|' + '<' + tagToFilter + '[^>]*>' + ')', 'g');
-    return this.descriptionHTML().replace(matchTag, '');
+    const matchTag = new RegExp(
+      "(" +
+        "<" +
+        tagToFilter +
+        "[^>]*>[^>]*/" +
+        tagToFilter +
+        ">" +
+        "|" +
+        "<" +
+        tagToFilter +
+        "[^/]*/>" +
+        "|" +
+        "<" +
+        tagToFilter +
+        "[^>]*>" +
+        ")",
+      "g"
+    );
+    return this.descriptionHTML().replace(matchTag, "");
   }
 
   checkedOrganizers(members) {
-    return members.map(member => {return {member, checked: this.isOrganizer(member.id())}; });
+    return members.map((member) => {
+      return { member, checked: this.isOrganizer(member.id()) };
+    });
   }
 
   membersThatAreOrganizers(members) {
-    return members.filter(member => this.isOrganizer(member.id()));
+    return members.filter((member) => this.isOrganizer(member.id()));
   }
 
   mapYrelative() {
@@ -83,13 +102,13 @@ class Group {
     mapY = mapY - MAP_COORDINATES_SOUTH;
     // swap the origin of the coordinate system:
     mapY = MAP_COORDINATES_HEIGHT - mapY;
-    return 100 * mapY / MAP_COORDINATES_HEIGHT;
+    return (100 * mapY) / MAP_COORDINATES_HEIGHT;
   }
 
   mapXrelative() {
     let mapX = parseFloat(this.mapX);
     mapX = mapX - MAP_COORDINATES_WEST;
-    return 100 * mapX / MAP_COORDINATES_WIDTH;
+    return (100 * mapX) / MAP_COORDINATES_WIDTH;
   }
 
   isOrganizer(memberId) {
@@ -97,13 +116,13 @@ class Group {
   }
 
   displaynameInSubscriptionList() {
-    return this.longName + ' [' + this.emailPrefix + '] - ' + this.id;
+    return this.longName + " [" + this.emailPrefix + "] - " + this.id;
   }
 
   meetupUrlName() {
     if (this.meetupURL) {
       const strippedURL = misc.stripTrailingSlash(this.meetupURL);
-      return strippedURL.substr(strippedURL.lastIndexOf('/') + 1);
+      return strippedURL.substr(strippedURL.lastIndexOf("/") + 1);
     } else {
       return null;
     }
@@ -136,11 +155,11 @@ class Group {
 
   // Helper functions (static) -> look for a better place to implement
   static regionalsFrom(groups) {
-    return groups.filter(group => group.type === regionalgruppe);
+    return groups.filter((group) => group.type === regionalgruppe);
   }
 
   static thematicsFrom(groups) {
-    return groups.filter(group => group.type === themengruppe);
+    return groups.filter((group) => group.type === themengruppe);
   }
 
   static allTypes() {
@@ -150,7 +169,6 @@ class Group {
   static organizersOnlyInOneOf(groupA, groupB) {
     return R.symmetricDifference(!groupA ? [] : groupA.organizers, !groupB ? [] : groupB.organizers);
   }
-
 }
 
 module.exports = Group;

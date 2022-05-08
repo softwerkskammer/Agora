@@ -1,46 +1,50 @@
-const conf = require('simple-configure');
+const conf = require("simple-configure");
 
-const logger = require('winston').loggers.get('authorization');
+const logger = require("winston").loggers.get("authorization");
 
-const beans = conf.get('beans');
-const membersService = beans.get('membersService');
-const memberstore = beans.get('memberstore');
+const beans = conf.get("beans");
+const membersService = beans.get("membersService");
+const memberstore = beans.get("memberstore");
 
 function createUserObject(req, authenticationId, profile, done) {
-  process.nextTick(membersService.findMemberFor(req.user, authenticationId, (err, member) => {
-    if (err) { return done(err); }
-    if (!member) { return done(null, {authenticationId, profile}); }
-    return done(null, {authenticationId, member});
-  }));
+  process.nextTick(
+    membersService.findMemberFor(req.user, authenticationId, (err, member) => {
+      if (err) {
+        return done(err);
+      }
+      if (!member) {
+        return done(null, { authenticationId, profile });
+      }
+      return done(null, { authenticationId, member });
+    })
+  );
 }
 
-const pwdAuthenticationPrefix = 'password:';
+const pwdAuthenticationPrefix = "password:";
 
 module.exports = {
   pwdAuthenticationPrefix,
 
   createUserObjectFromOpenID: (req, authenticationId, openidProfile, done) => {
-    const minimalProfile = openidProfile &&
-      {
-        emails: openidProfile.emails && [openidProfile.emails[0]],
-        name: openidProfile.name,
-        profileUrl: openidProfile.profileUrl
-      };
+    const minimalProfile = openidProfile && {
+      emails: openidProfile.emails && [openidProfile.emails[0]],
+      name: openidProfile.name,
+      profileUrl: openidProfile.profileUrl,
+    };
 
     createUserObject(req, authenticationId, minimalProfile, done);
   },
 
   createUserObjectFromGithub: (req, accessToken, refreshToken, githubProfile, done) => {
-    const minimalProfile = githubProfile &&
-      {
-        emails: [githubProfile._json.email],
-        profileUrl: githubProfile.profileUrl,
-        _json: {
-          blog: githubProfile._json && githubProfile._json.blog
-        }
-      };
+    const minimalProfile = githubProfile && {
+      emails: [githubProfile._json.email],
+      profileUrl: githubProfile.profileUrl,
+      _json: {
+        blog: githubProfile._json && githubProfile._json.blog,
+      },
+    };
 
-    createUserObject(req, githubProfile.provider + ':' + githubProfile.id, minimalProfile, done);
+    createUserObject(req, githubProfile.provider + ":" + githubProfile.id, minimalProfile, done);
   },
 
   createUserObjectFromGooglePlus: (req, iss, sub, profile, jwtClaims, accessToken, refreshToken, params, done) => {
@@ -49,10 +53,10 @@ module.exports = {
     const minimalProfile = googleProfile && {
       emails: googleProfile.emails && [googleProfile.emails[0]],
       name: googleProfile.name,
-      profileUrl: googleProfile.url
+      profileUrl: googleProfile.url,
     };
 
-    createUserObject(req, 'https://plus.google.com/' + sub, minimalProfile, done);
+    createUserObject(req, "https://plus.google.com/" + sub, minimalProfile, done);
   },
 
   createUserObjectFromMagicLink: (req, authenticationId, done) => {
@@ -62,8 +66,7 @@ module.exports = {
   createUserObjectFromPassword: (req, email, password, done) => {
     const authenticationId = pwdAuthenticationPrefix + email;
 
-    if (req.route.path === '/login') {
-
+    if (req.route.path === "/login") {
       createUserObject(req, authenticationId, {}, (err, userObject) => {
         if (err || !userObject) {
           return done(err);
@@ -71,21 +74,20 @@ module.exports = {
         if (userObject.member && userObject.member.passwordMatches(password)) {
           return done(null, userObject);
         }
-        done(null, null, 'authentication.wrong_credentials');
+        done(null, null, "authentication.wrong_credentials");
       });
-
-    } else if (req.route.path === '/signup') {
-
+    } else if (req.route.path === "/signup") {
       memberstore.getMemberForEMail(email, (err, member) => {
-        if (err) { return done(err); }
+        if (err) {
+          return done(err);
+        }
 
         if (member) {
           logger.error(new Error('On Signup: Member with email address "' + email + '" already exists'));
-          return done(null, null, 'authentication.error_member_exists');
+          return done(null, null, "authentication.error_member_exists");
         }
-        createUserObject(req, authenticationId, {emails: [{value: email}], password}, done);
+        createUserObject(req, authenticationId, { emails: [{ value: email }], password }, done);
       });
-
     }
-  }
+  },
 };

@@ -1,6 +1,6 @@
 {
-  "githubClientID" : "00000000000000000000",
-  "githubClientSecret" : "0000000000000000000000000000000000000000",
-  "superuser" : ["userIDofSuperuser1", "userIDofSuperuser2"],
-  "magicLinkSecret" : ""
+  "githubClientID": "00000000000000000000",
+  "githubClientSecret": "0000000000000000000000000000000000000000",
+  "superuser": ["userIDofSuperuser1", "userIDofSuperuser2"],
+  "magicLinkSecret": ""
 }

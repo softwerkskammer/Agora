@@ -1,2 +1,2 @@
-'use strict';
-module.exports = require('./abstractConfigureForTest')('testbeans.json');
+"use strict";
+module.exports = require("./abstractConfigureForTest")("testbeans.json");

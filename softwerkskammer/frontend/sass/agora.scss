@@ -105,7 +105,7 @@ h6 > small {
 // fullcalendar *END*
 
 .verySmall {
-  font-size: .8em;
+  font-size: 0.8em;
   line-height: 1.1em;
 }
 
@@ -128,7 +128,7 @@ h6 > small {
 
 .compare td {
   padding: 0 3px;
-  border-top-width: 0
+  border-top-width: 0;
 }
 
 .compare .gd {
@@ -137,7 +137,7 @@ h6 > small {
 
 .compare .gc {
   color: #999999;
-  background-color: #EAF2F5;
+  background-color: #eaf2f5;
 }
 
 .compare .gi {
@@ -146,7 +146,7 @@ h6 > small {
 
 .compare .ln {
   color: #999999;
-  background-color: #EAF2F5;
+  background-color: #eaf2f5;
   text-align: right;
   border-bottom-color: transparent;
 }
@@ -181,7 +181,6 @@ a:visited {
   .popover {
     max-width: 450px;
   }
-
 }
 
 @media (max-width: 767px) {
@@ -225,7 +224,7 @@ legend {
 }
 
 .label.group {
-  padding: .3em .4em .2em .4em;
+  padding: 0.3em 0.4em 0.2em 0.4em;
   position: absolute;
   font-size: 0.8em;
 }
@@ -262,7 +261,7 @@ a {
   position: relative;
   overflow: hidden;
 
-  input[type=file] {
+  input[type="file"] {
     position: absolute;
     top: 0;
     right: 0;
@@ -284,7 +283,8 @@ a {
 }
 
 // needed to find the right font
-.abc-checkbox input[type=checkbox]:checked + label::after, .abc-checkbox input[type=radio]:checked + label::after {
+.abc-checkbox input[type="checkbox"]:checked + label::after,
+.abc-checkbox input[type="radio"]:checked + label::after {
   font-weight: 900;
 }
 

@@ -1,6 +1,6 @@
-const beans = require('simple-configure').get('beans');
-const passport = require('passport');
-const memberstore = beans.get('memberstore');
+const beans = require("simple-configure").get("beans");
+const passport = require("passport");
+const memberstore = beans.get("memberstore");
 
 function serializeUser(user, done) {
   if (user.profile) {
@@ -11,10 +11,14 @@ function serializeUser(user, done) {
 }
 
 function deserializeUser(user, done) {
-  if (user.profile) { return done(null, user); } // new user
+  if (user.profile) {
+    return done(null, user);
+  } // new user
   memberstore.getMemberForAuthentication(user.authenticationId, (err, member) => {
-    if (err) { return done(err); }
-    done(null, {authenticationId: user.authenticationId, member});
+    if (err) {
+      return done(err);
+    }
+    done(null, { authenticationId: user.authenticationId, member });
   });
 }
 

@@ -1,363 +1,366 @@
-'use strict';
+"use strict";
 
-const expect = require('must-dist');
+const expect = require("must-dist");
 
-const beans = require('../../testutil/configureForTest').get('beans');
-const Member = beans.get('member');
-const Group = beans.get('group');
+const beans = require("../../testutil/configureForTest").get("beans");
+const Member = beans.get("member");
+const Group = beans.get("group");
 
-describe('Member initial filling', () => {
-
-  it('is correctly filled from small database record', () => {
-    const dbRecord = {id: 'ID', nickname: 'NICK'};
+describe("Member initial filling", () => {
+  it("is correctly filled from small database record", () => {
+    const dbRecord = { id: "ID", nickname: "NICK" };
     const member = new Member(dbRecord);
     expect(member.id()).to.equal(dbRecord.id);
     expect(member.nickname()).to.equal(dbRecord.nickname);
   });
 
-  it('is populated by Google OpenID record', () => {
+  it("is populated by Google OpenID record", () => {
     const userdata = {
-      authenticationId: 'https://www.google.com/accounts/o8/id?id=someGoogelID',
-      profile: {displayName: 'Hans Dampf', emails: [{value: 'hada@web.de'}], name: {familyName: 'Dampf', givenName: 'Hans'}}
+      authenticationId: "https://www.google.com/accounts/o8/id?id=someGoogelID",
+      profile: {
+        displayName: "Hans Dampf",
+        emails: [{ value: "hada@web.de" }],
+        name: { familyName: "Dampf", givenName: "Hans" },
+      },
     };
 
     const member = new Member().initFromSessionUser(userdata);
 
-    expect(member.firstname()).to.equal('Hans');
-    expect(member.lastname()).to.equal('Dampf');
-    expect(member.email()).to.equal('hada@web.de');
+    expect(member.firstname()).to.equal("Hans");
+    expect(member.lastname()).to.equal("Dampf");
+    expect(member.email()).to.equal("hada@web.de");
   });
 
-  it('is populated by GitHub record', () => {
+  it("is populated by GitHub record", () => {
     const userdata = {
-      authenticationId: 'github:123456',
+      authenticationId: "github:123456",
       profile: {
-        provider: 'github', id: 123456, displayName: 'Hans Dampf', username: 'hada', profileUrl: 'https://github.com/hansdampf', emails: [{value: null}],
-        _json: {'html_url': 'https://github.com/hansdampf', blog: 'http://hada.wordpress.com'}
-      }
+        provider: "github",
+        id: 123456,
+        displayName: "Hans Dampf",
+        username: "hada",
+        profileUrl: "https://github.com/hansdampf",
+        emails: [{ value: null }],
+        _json: { html_url: "https://github.com/hansdampf", blog: "http://hada.wordpress.com" },
+      },
     };
 
     const member = new Member().initFromSessionUser(userdata);
     expect(member.firstname()).not.to.exist();
     expect(member.lastname()).not.to.exist();
-    expect(member.site()).to.equal('https://github.com/hansdampf, http://hada.wordpress.com');
+    expect(member.site()).to.equal("https://github.com/hansdampf, http://hada.wordpress.com");
   });
 
-  it('is populated by GitHub record with only github url', () => {
+  it("is populated by GitHub record with only github url", () => {
     const userdata = {
-      authenticationId: 'github:123456',
+      authenticationId: "github:123456",
       profile: {
-        provider: 'github', id: 123456, displayName: 'Hans Dampf', username: 'hada', profileUrl: 'https://github.com/hansdampf', emails: [{value: null}],
-        _json: {'html_url': 'https://github.com/hansdampf', blog: undefined}
-      }
+        provider: "github",
+        id: 123456,
+        displayName: "Hans Dampf",
+        username: "hada",
+        profileUrl: "https://github.com/hansdampf",
+        emails: [{ value: null }],
+        _json: { html_url: "https://github.com/hansdampf", blog: undefined },
+      },
     };
 
     const member = new Member().initFromSessionUser(userdata);
     expect(member.firstname()).not.to.exist();
     expect(member.lastname()).not.to.exist();
-    expect(member.site()).to.equal('https://github.com/hansdampf');
+    expect(member.site()).to.equal("https://github.com/hansdampf");
   });
 
-  it('is populated by UserPass record with only email', () => {
+  it("is populated by UserPass record with only email", () => {
     const userdata = {
-      authenticationId: 'password:peter@pan.de',
+      authenticationId: "password:peter@pan.de",
       profile: {
-        emails: [{value: 'peter@pan.de'}]
-      }
+        emails: [{ value: "peter@pan.de" }],
+      },
     };
 
     const member = new Member().initFromSessionUser(userdata);
     expect(member.firstname()).not.to.exist();
     expect(member.lastname()).not.to.exist();
-    expect(member.email()).to.equal('peter@pan.de');
+    expect(member.email()).to.equal("peter@pan.de");
     expect(member.salt()).not.to.exist();
     expect(member.hashedPassword()).not.to.exist();
   });
 
-  it('is populated with empty fields where no information is given', () => {
+  it("is populated with empty fields where no information is given", () => {
     const record = {
-      id: 'testuser',
-      nickname: 'testNick',
-      email: 'mail@google.de',
-      firstname: 'Test',
-      lastname: 'User'
+      id: "testuser",
+      nickname: "testNick",
+      email: "mail@google.de",
+      firstname: "Test",
+      lastname: "User",
     };
     const member = new Member(record);
     expect(member.twitter()).not.to.exist();
     expect(member.location()).not.to.exist();
     expect(member.profession()).not.to.exist();
     expect(member.state.interests).not.to.exist();
-    expect(member.interests()).to.eql('');
+    expect(member.interests()).to.eql("");
     expect(member.site()).not.to.exist();
     expect(member.reference()).not.to.exist();
   });
 
-  it('shows the full name as display-name', () => {
-    const dbRecord = {nickname: 'Nick', firstname: 'Hans', lastname: 'Dampf'};
+  it("shows the full name as display-name", () => {
+    const dbRecord = { nickname: "Nick", firstname: "Hans", lastname: "Dampf" };
     const member = new Member(dbRecord);
-    expect(member.displayName()).to.equal('Hans Dampf');
+    expect(member.displayName()).to.equal("Hans Dampf");
   });
 });
 
-describe('fillFromUI', () => {
-  it('leaves fields undefined / false where no information is given', () => {
+describe("fillFromUI", () => {
+  it("leaves fields undefined / false where no information is given", () => {
     const record = {
-      nickname: 'testNick',
-      email: 'mail@google.de',
-      firstname: 'Test',
-      lastname: 'User'
+      nickname: "testNick",
+      email: "mail@google.de",
+      firstname: "Test",
+      lastname: "User",
     };
     const member = new Member().fillFromUI(record);
     expect(member.twitter()).not.to.exist();
     expect(member.location()).not.to.exist();
     expect(member.profession()).not.to.exist();
     expect(member.state.interests).not.to.exist();
-    expect(member.interests()).to.eql('');
+    expect(member.interests()).to.eql("");
     expect(member.site()).not.to.exist();
     expect(member.reference()).not.to.exist();
     expect(member.notifyOnWikiChanges()).to.be.false();
   });
 
-  it('trims the contents of all fields', () => {
+  it("trims the contents of all fields", () => {
     const record = {
-      nickname: ' testNick ',
-      email: ' mail@google.de ',
-      firstname: ' Test ',
-      lastname: ' User ',
-      twitter: ' @twitti ',
-      location: ' somewhere ',
-      profession: ' My Job ',
-      interests: ['Everything'],
-      site: ' www.mypage.de ',
-      reference: ' A friend ',
-      customAvatar: ' avatar-url ',
-      notifyOnWikiChanges: ' X '
+      nickname: " testNick ",
+      email: " mail@google.de ",
+      firstname: " Test ",
+      lastname: " User ",
+      twitter: " @twitti ",
+      location: " somewhere ",
+      profession: " My Job ",
+      interests: ["Everything"],
+      site: " www.mypage.de ",
+      reference: " A friend ",
+      customAvatar: " avatar-url ",
+      notifyOnWikiChanges: " X ",
     };
     const member = new Member().fillFromUI(record);
-    expect(member.nickname()).to.equal('testNick');
-    expect(member.email()).to.equal('mail@google.de');
-    expect(member.firstname()).to.equal('Test');
-    expect(member.lastname()).to.equal('User');
-    expect(member.twitter()).to.equal('twitti');
-    expect(member.location()).to.equal('somewhere');
-    expect(member.profession()).to.equal('My Job');
-    expect(member.interests()).to.equal('Everything');
-    expect(member.site()).to.equal('http://www.mypage.de');
-    expect(member.reference()).to.equal('A friend');
-    expect(member.customAvatar()).to.equal('avatar-url');
+    expect(member.nickname()).to.equal("testNick");
+    expect(member.email()).to.equal("mail@google.de");
+    expect(member.firstname()).to.equal("Test");
+    expect(member.lastname()).to.equal("User");
+    expect(member.twitter()).to.equal("twitti");
+    expect(member.location()).to.equal("somewhere");
+    expect(member.profession()).to.equal("My Job");
+    expect(member.interests()).to.equal("Everything");
+    expect(member.site()).to.equal("http://www.mypage.de");
+    expect(member.reference()).to.equal("A friend");
+    expect(member.customAvatar()).to.equal("avatar-url");
     expect(member.notifyOnWikiChanges()).to.be.true();
   });
 
-  it('handles interests correctly - saving as string without blanks for legacy compatibilty - but displaying it with blanks', () => {
+  it("handles interests correctly - saving as string without blanks for legacy compatibilty - but displaying it with blanks", () => {
     const record = {
-      interests: ['Everything', 'And more'],
+      interests: ["Everything", "And more"],
     };
     const member = new Member().fillFromUI(record);
-    expect(member.state.interests).to.equal('Everything,And more');
-    expect(member.interests()).to.equal('Everything, And more');
+    expect(member.state.interests).to.equal("Everything,And more");
+    expect(member.interests()).to.equal("Everything, And more");
   });
 
-  it('handles given password correctly and creates hash and encrypted password', () => {
+  it("handles given password correctly and creates hash and encrypted password", () => {
     const record = {
-      password: 'ZickZack',
+      password: "ZickZack",
     };
     const member = new Member().fillFromUI(record);
     expect(member.state.password).not.to.exist();
     expect(member.hashedPassword()).to.exist();
     expect(member.salt()).to.exist();
   });
-
 });
 
-describe('Passwords can be compared', () => {
-  it('is using the saved salt', () => {
+describe("Passwords can be compared", () => {
+  it("is using the saved salt", () => {
     const member = new Member();
     expect(member.hashedPassword()).not.to.exist();
     expect(member.salt()).not.to.exist();
-    member.updatePassword('Hühnerkacke');
+    member.updatePassword("Hühnerkacke");
     expect(member.hashedPassword()).to.exist();
     expect(member.salt()).to.exist();
-    expect(member.passwordMatches('Hühnerkacke')).to.be.true();
+    expect(member.passwordMatches("Hühnerkacke")).to.be.true();
   });
 });
 
-describe('Member twitter field autocorrection', () => {
-  it('is autocorrecting the twittername removing leading @', () => {
-    const member = new Member().fillFromUI({twitter: '@twitter'});
-    expect(member.twitter()).to.equal('twitter');
+describe("Member twitter field autocorrection", () => {
+  it("is autocorrecting the twittername removing leading @", () => {
+    const member = new Member().fillFromUI({ twitter: "@twitter" });
+    expect(member.twitter()).to.equal("twitter");
   });
 
-  it('is not autocorrecting the twittername when already no leading @', () => {
-    const member = new Member().fillFromUI({twitter: 'twitter'});
-    expect(member.twitter()).to.equal('twitter');
+  it("is not autocorrecting the twittername when already no leading @", () => {
+    const member = new Member().fillFromUI({ twitter: "twitter" });
+    expect(member.twitter()).to.equal("twitter");
   });
 
-  it('is adding http:// when not provided', () => {
-    const member = new Member().fillFromUI({site: 'twitter'});
-    expect(member.site()).to.equal('http://twitter');
+  it("is adding http:// when not provided", () => {
+    const member = new Member().fillFromUI({ site: "twitter" });
+    expect(member.site()).to.equal("http://twitter");
   });
 
-  it('is not adding http:// when already provided', () => {
-    const member = new Member().fillFromUI({site: 'http://twitter'});
-    expect(member.site()).to.equal('http://twitter');
+  it("is not adding http:// when already provided", () => {
+    const member = new Member().fillFromUI({ site: "http://twitter" });
+    expect(member.site()).to.equal("http://twitter");
   });
 
-  it('is not adding http:// when already https:// provided', () => {
-    const member = new Member().fillFromUI({site: 'https://twitter'});
-    expect(member.site()).to.equal('https://twitter');
-  });
-
-});
-
-describe('display functionalities', () => {
-  it('produces a valid git author', () => {
-    const member = new Member({nickname: 'Nick'});
-    expect(member.asGitAuthor()).to.equal('Nick <Nick@softwerkskammer.org>');
+  it("is not adding http:// when already https:// provided", () => {
+    const member = new Member().fillFromUI({ site: "https://twitter" });
+    expect(member.site()).to.equal("https://twitter");
   });
 });
 
-describe('utility functions', () => {
-  it('gives superuser email addresses', () => {
-    const member = new Member({id: 'superuserID', email: 'email1'});
-    expect(Member.superuserEmails([member])).to.contain('email1');
+describe("display functionalities", () => {
+  it("produces a valid git author", () => {
+    const member = new Member({ nickname: "Nick" });
+    expect(member.asGitAuthor()).to.equal("Nick <Nick@softwerkskammer.org>");
+  });
+});
+
+describe("utility functions", () => {
+  it("gives superuser email addresses", () => {
+    const member = new Member({ id: "superuserID", email: "email1" });
+    expect(Member.superuserEmails([member])).to.contain("email1");
   });
 
-  it('gives wikichange email addresses', () => {
-    const member = new Member({notifyOnWikiChanges: true, email: 'email1'});
-    expect(Member.wikiNotificationMembers([member])).to.contain('email1');
+  it("gives wikichange email addresses", () => {
+    const member = new Member({ notifyOnWikiChanges: true, email: "email1" });
+    expect(Member.wikiNotificationMembers([member])).to.contain("email1");
   });
 
-  it('can tell if the member is member of a group', () => {
+  it("can tell if the member is member of a group", () => {
     const member = new Member();
-    member.subscribedGroups = [
-      {id: 'group'},
-      {id: 'anotherGroup'}
-    ];
-    expect(member.isInGroup('group')).to.be(true);
+    member.subscribedGroups = [{ id: "group" }, { id: "anotherGroup" }];
+    expect(member.isInGroup("group")).to.be(true);
   });
 
-  it('can tell if the member is not member of a group', () => {
+  it("can tell if the member is not member of a group", () => {
     const member = new Member();
-    member.subscribedGroups = [
-      {id: 'anotherGroup'}
-    ];
-    expect(member.isInGroup('group')).to.be(false);
+    member.subscribedGroups = [{ id: "anotherGroup" }];
+    expect(member.isInGroup("group")).to.be(false);
   });
 
-  it('fills its only subscribed group', () => {
-    const member = new Member({id: 'id1'});
-    const groupa = new Group({id: 'groupa', subscribedMembers: ['id1']});
-    const groupb = new Group({id: 'groupb'});
+  it("fills its only subscribed group", () => {
+    const member = new Member({ id: "id1" });
+    const groupa = new Group({ id: "groupa", subscribedMembers: ["id1"] });
+    const groupb = new Group({ id: "groupb" });
     member.fillSubscribedGroups([groupa, groupb]);
     expect(member.subscribedGroups).to.have.length(1);
     expect(member.subscribedGroups).to.contain(groupa);
     expect(member.subscribedGroups).not.to.contain(groupb);
   });
 
-  it('fills its more than one subscribed group', () => {
-    const member = new Member({id: 'id1'});
-    const groupa = new Group({id: 'groupa', subscribedMembers: ['id1']});
-    const groupb = new Group({id: 'groupb', subscribedMembers: ['id1']});
+  it("fills its more than one subscribed group", () => {
+    const member = new Member({ id: "id1" });
+    const groupa = new Group({ id: "groupa", subscribedMembers: ["id1"] });
+    const groupb = new Group({ id: "groupb", subscribedMembers: ["id1"] });
     member.fillSubscribedGroups([groupa, groupb]);
     expect(member.subscribedGroups).to.have.length(2);
     expect(member.subscribedGroups).to.contain(groupa);
     expect(member.subscribedGroups).to.contain(groupb);
   });
 
-  it('does not add a subscription only if it is empty', () => {
+  it("does not add a subscription only if it is empty", () => {
     const member = new Member({});
-    member.addAuthentication('');
+    member.addAuthentication("");
     expect(member.authentications()).to.have.length(0);
   });
 
-  it('adds a subscription if it is not empty', () => {
+  it("adds a subscription if it is not empty", () => {
     const member = new Member({});
-    member.addAuthentication('auth');
+    member.addAuthentication("auth");
     expect(member.authentications()).to.have.length(1);
-    expect(member.authentications()).to.contain('auth');
+    expect(member.authentications()).to.contain("auth");
   });
 });
 
-describe('avatar handling', () => {
-  it('constructs avatar from mail address using gravatar URL with https', () => {
-    const email = 'member@mail.com';
-    const dbRecord = {nickname: 'Nick', email};
+describe("avatar handling", () => {
+  it("constructs avatar from mail address using gravatar URL with https", () => {
+    const email = "member@mail.com";
+    const dbRecord = { nickname: "Nick", email };
     const member = new Member(dbRecord);
 
-    expect(member.avatarUrl(10)).to.contain('https://www.gravatar.com/avatar/');
-    expect(member.avatarUrl(10)).to.contain('?d=mm&s=10');
+    expect(member.avatarUrl(10)).to.contain("https://www.gravatar.com/avatar/");
+    expect(member.avatarUrl(10)).to.contain("?d=mm&s=10");
   });
 
-  it('uses size 200 if no size is given', () => {
-    const email = 'member@mail.com';
-    const dbRecord = {nickname: 'Nick', email};
+  it("uses size 200 if no size is given", () => {
+    const email = "member@mail.com";
+    const dbRecord = { nickname: "Nick", email };
     const member = new Member(dbRecord);
 
-    expect(member.avatarUrl()).to.contain('?d=mm&s=200');
+    expect(member.avatarUrl()).to.contain("?d=mm&s=200");
   });
 
-  it('saves miniicon from gravatar', () => {
+  it("saves miniicon from gravatar", () => {
     const member = new Member();
-    const gravatarIcon = {image: null, hasNoImage: true};
+    const gravatarIcon = { image: null, hasNoImage: true };
     member.setAvatarData(gravatarIcon);
 
     expect(member.state.avatardata).to.be(gravatarIcon);
   });
 
-  it('sets avatar miniicon on load if available', () => {
-    const gravatarIcon = {image: 'theImage', hasNoImage: false};
-    const member = new Member({avatardata: gravatarIcon});
+  it("sets avatar miniicon on load if available", () => {
+    const gravatarIcon = { image: "theImage", hasNoImage: false };
+    const member = new Member({ avatardata: gravatarIcon });
 
     expect(member.state.avatardata).to.be(gravatarIcon);
-    expect(member.inlineAvatar()).to.be('theImage');
+    expect(member.inlineAvatar()).to.be("theImage");
     expect(member.hasImage()).to.be(true);
   });
 
-  it('does also save custom icons', () => {
+  it("does also save custom icons", () => {
     const member = new Member();
-    const gravatarIcon = {image: 'theImage', hasNoImage: false};
+    const gravatarIcon = { image: "theImage", hasNoImage: false };
     member.setAvatarData(gravatarIcon);
 
     expect(member.state.avatardata).to.exist();
-    expect(member.inlineAvatar()).to.be('theImage');
+    expect(member.inlineAvatar()).to.be("theImage");
     expect(member.hasImage()).to.be(true);
   });
 });
 
-describe('The interests', () => {
-
-  it('creates an array for the select2 widget (good case)', () => {
+describe("The interests", () => {
+  it("creates an array for the select2 widget (good case)", () => {
     const member = new Member();
-    member.state.interests = 'peter,paul und mary';
-    expect(member.interestsForSelect2()).to.eql(['peter', 'paul und mary']);
+    member.state.interests = "peter,paul und mary";
+    expect(member.interestsForSelect2()).to.eql(["peter", "paul und mary"]);
   });
 
-  it('creates an array for the select2 widget (with blanks)', () => {
+  it("creates an array for the select2 widget (with blanks)", () => {
     const member = new Member();
-    member.state.interests = 'peter , paul und mary';
-    expect(member.interestsForSelect2()).to.eql(['peter', 'paul und mary']);
+    member.state.interests = "peter , paul und mary";
+    expect(member.interestsForSelect2()).to.eql(["peter", "paul und mary"]);
   });
 });
 
+describe("memberIsInMemberList", () => {
+  const dummymember = new Member({ id: "id1" });
+  const dummymember2 = new Member({ id: "id2" });
 
-describe('memberIsInMemberList', () => {
-  const dummymember = new Member({id: 'id1'});
-  const dummymember2 = new Member({id: 'id2'});
-
-  it('returns false if the user id is undefined', () => {
+  it("returns false if the user id is undefined", () => {
     expect(Member.memberIsInMemberList(undefined, [dummymember, dummymember2])).to.be(false);
   });
 
-  it('returns false if the member list is empty', () => {
-    expect(Member.memberIsInMemberList('hada', [])).to.be(false);
+  it("returns false if the member list is empty", () => {
+    expect(Member.memberIsInMemberList("hada", [])).to.be(false);
   });
 
-  it('returns false if the user is not in the member list', () => {
-    expect(Member.memberIsInMemberList('trallala', [dummymember])).to.be(false);
+  it("returns false if the user is not in the member list", () => {
+    expect(Member.memberIsInMemberList("trallala", [dummymember])).to.be(false);
   });
 
-  it('returns true if the user is in the member list', () => {
-    expect(Member.memberIsInMemberList('id1', [dummymember, dummymember2])).to.be(true);
+  it("returns true if the user is in the member list", () => {
+    expect(Member.memberIsInMemberList("id1", [dummymember, dummymember2])).to.be(true);
   });
 });
-

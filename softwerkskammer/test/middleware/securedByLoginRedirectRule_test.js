@@ -1,102 +1,96 @@
-'use strict';
+"use strict";
 
-const conf = require('../../testutil/configureForTest');
-const securedByLoginURLRegex = new RegExp(conf.get('securedByLoginURLPattern'));
-const expect = require('must-dist');
+const conf = require("../../testutil/configureForTest");
+const securedByLoginURLRegex = new RegExp(conf.get("securedByLoginURLPattern"));
+const expect = require("must-dist");
 
-describe('SecuredByLoginURLRedirect Rule (members)', () => {
-
-  it('secures members/', () => {
-    const url = 'http://host/members/';
+describe("SecuredByLoginURLRedirect Rule (members)", () => {
+  it("secures members/", () => {
+    const url = "http://host/members/";
     expect(securedByLoginURLRegex.test(url)).to.be(true);
   });
 
-  it('secures members', () => {
-    const url = 'http://host/members';
+  it("secures members", () => {
+    const url = "http://host/members";
     expect(securedByLoginURLRegex.test(url)).to.be(true);
   });
 
-  it('secures members/edit', () => {
-    const url = 'http://host/members/edit';
+  it("secures members/edit", () => {
+    const url = "http://host/members/edit";
     expect(securedByLoginURLRegex.test(url)).to.be(true);
   });
 
-  it('secures members/new', () => {
-    const url = 'http://host/members/new';
+  it("secures members/new", () => {
+    const url = "http://host/members/new";
     expect(securedByLoginURLRegex.test(url)).to.be(true);
   });
 
-  it('secures members/something', () => {
-    const url = 'http://host/members/something';
+  it("secures members/something", () => {
+    const url = "http://host/members/something";
     expect(securedByLoginURLRegex.test(url)).to.be(true);
   });
 
-  it('secures members/submit', () => {
-    const url = 'http://host/members/submit';
+  it("secures members/submit", () => {
+    const url = "http://host/members/submit";
     expect(securedByLoginURLRegex.test(url)).to.be(true);
   });
-
 });
 
-describe('SecuredByLoginURLRedirect Rule (*/new)', () => {
-
-  it('secures URLs with activities/new', () => {
-    const url = 'http://host/activities/new';
+describe("SecuredByLoginURLRedirect Rule (*/new)", () => {
+  it("secures URLs with activities/new", () => {
+    const url = "http://host/activities/new";
     expect(securedByLoginURLRegex.test(url)).to.be(true);
   });
 
-  it('secures URLs with groups/new', () => {
-    const url = 'http://host/groups/new';
+  it("secures URLs with groups/new", () => {
+    const url = "http://host/groups/new";
     expect(securedByLoginURLRegex.test(url)).to.be(true);
   });
 
-  it('does secure members/new', () => {
-    const url = 'http://host/members/new';
+  it("does secure members/new", () => {
+    const url = "http://host/members/new";
     expect(securedByLoginURLRegex.test(url)).to.be(true);
   });
 
-  it('does secure something/new', () => {
-    const url = 'http://host/something/new';
+  it("does secure something/new", () => {
+    const url = "http://host/something/new";
     expect(securedByLoginURLRegex.test(url)).to.be(true);
   });
 
-  it('secures URLs with something/new/something', () => {
-    const url = 'http://host/something/new/something';
+  it("secures URLs with something/new/something", () => {
+    const url = "http://host/something/new/something";
     expect(securedByLoginURLRegex.test(url)).to.be(true);
   });
-
 });
 
-describe('SecuredByLoginURLRedirect Rule (*/edit)', () => {
-
-  it('secures URLs with activities/edit', () => {
-    const url = 'http://host/activities/edit';
+describe("SecuredByLoginURLRedirect Rule (*/edit)", () => {
+  it("secures URLs with activities/edit", () => {
+    const url = "http://host/activities/edit";
     expect(securedByLoginURLRegex.test(url)).to.be(true);
   });
 
-  it('secures URLs with groups/edit', () => {
-    const url = 'http://host/groups/edit';
+  it("secures URLs with groups/edit", () => {
+    const url = "http://host/groups/edit";
     expect(securedByLoginURLRegex.test(url)).to.be(true);
   });
 
-  it('does secure members/edit', () => {
-    const url = 'http://host/members/edit';
+  it("does secure members/edit", () => {
+    const url = "http://host/members/edit";
     expect(securedByLoginURLRegex.test(url)).to.be(true);
   });
 
-  it('does secure something/edit', () => {
-    const url = 'http://host/something/edit';
+  it("does secure something/edit", () => {
+    const url = "http://host/something/edit";
     expect(securedByLoginURLRegex.test(url)).to.be(true);
   });
 
-  it('secures URLs with something/edit/something', () => {
-    const url = 'http://host/something/edit/something';
+  it("secures URLs with something/edit/something", () => {
+    const url = "http://host/something/edit/something";
     expect(securedByLoginURLRegex.test(url)).to.be(true);
   });
 
-  it('does not secure URLs with something/something', () => {
-    const url = 'http://host/something/something';
+  it("does not secure URLs with something/something", () => {
+    const url = "http://host/something/something";
     expect(securedByLoginURLRegex.test(url)).to.be(false);
   });
-
 });
