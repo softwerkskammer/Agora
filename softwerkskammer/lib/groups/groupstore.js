@@ -14,8 +14,9 @@ module.exports = {
     return result.map((each) => new Group(each));
   },
 
-  groupsByLists: function groupsByLists(lists, callback) {
-    persistence.listByIds(lists, { longName: 1 }, R.partial(toGroupList, [callback]));
+  groupsByLists: async function groupsByLists(lists) {
+    const groups = await persistence.listByIds(lists, { longName: 1 });
+    return groups.map((each) => new Group(each));
   },
 
   getGroup: function getGroup(groupname, callback) {

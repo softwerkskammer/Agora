@@ -136,8 +136,13 @@ module.exports = {
     groupstore.getGroupForPrefix(prefix.trim(), (err, group) => callback(err, group === null));
   },
 
-  getGroups: function getGroups(groupnames, callback) {
-    groupstore.groupsByLists(misc.toArray(groupnames), callback);
+  getGroups: async function getGroups(groupnames, callback) {
+    try {
+      const groups = await groupstore.groupsByLists(misc.toArray(groupnames));
+      callback(null, groups);
+    } catch (e) {
+      callback(e);
+    }
   },
 
   isReserved,
