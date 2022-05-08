@@ -19,8 +19,9 @@ module.exports = {
     return groups.map((each) => new Group(each));
   },
 
-  getGroup: function getGroup(groupname, callback) {
-    persistence.getById(misc.toLowerCaseRegExp(groupname), R.partial(toGroup, [callback]));
+  getGroup: async function getGroup(groupname) {
+    const group = await persistence.getByIdAsync(misc.toLowerCaseRegExp(groupname));
+    return new Group(group);
   },
 
   getGroupForPrefix: function getGroupForPrefix(prefix, callback) {

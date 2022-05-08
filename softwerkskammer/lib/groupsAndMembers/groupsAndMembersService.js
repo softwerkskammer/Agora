@@ -78,7 +78,7 @@ module.exports = {
   getGroupAndMembersForList: function getGroupAndMembersForList(groupname, globalCallback) {
     async.waterfall(
       [
-        (callback) => groupstore.getGroup(groupname, callback),
+        async.asyncify(async () => await groupstore.getGroup(groupname)),
         (group, callback) => this.addMembersToGroup(group, callback),
       ],
       globalCallback

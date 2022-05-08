@@ -103,18 +103,13 @@ function thereIsNoGroupFor(groupId) {
   sinon
     .stub(groupstore, "getGroup")
     .withArgs(groupId, sinon.match.any)
-    .callsFake((groupname, callback) => {
-      callback(null, null);
+    .callsFake(() => {
+      return null;
     });
 }
 
 function thereIsGroup(group) {
-  sinon
-    .stub(groupstore, "getGroup")
-    .withArgs(group.id, sinon.match.any)
-    .callsFake((groupname, callback) => {
-      callback(null, group);
-    });
+  sinon.stub(groupstore, "getGroup").returns(group);
 }
 
 function thereAreNoMailingListUsers() {
@@ -172,9 +167,7 @@ describe("Groups and Members Service (getGroupAndMembersForList)", () => {
   it("returns the group with the given name and an empty list of subscribed users when there is no mailing-list or when there are no subscribers", (done) => {
     const groupId = GroupA.id;
     thereAreNoMailingListUsers();
-    sinon.stub(groupstore, "getGroup").callsFake((groupname, callback) => {
-      callback(null, GroupA);
-    });
+    sinon.stub(groupstore, "getGroup").returns(GroupA);
     sinon.stub(memberstore, "getMembersForEMails").callsFake((member, callback) => {
       callback(null, []);
     });
@@ -204,9 +197,7 @@ describe("Groups and Members Service (getGroupAndMembersForList)", () => {
     sinon.stub(memberstore, "getMembersForIds").callsFake((someMembers, callback) => {
       callback(new Error());
     });
-    sinon.stub(groupstore, "getGroup").callsFake((groupname, callback) => {
-      callback(null, GroupA);
-    });
+    sinon.stub(groupstore, "getGroup").returns(GroupA);
 
     groupsAndMembersService.getGroupAndMembersForList("GroupA", (err) => {
       expect(err).to.exist();

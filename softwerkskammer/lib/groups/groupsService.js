@@ -46,56 +46,56 @@ module.exports = {
     }
   },
 
-  isGroupValid: function isGroupValid(group, callback) {
-    const self = this;
+  isGroupValid: async function isGroupValid(group, callback) {
     const errors = validation.isValidGroup(group);
-    groupstore.getGroup(group.id, (err, existingGroup) => {
-      if (err) {
-        errors.push("Technical error validating the group.");
-      }
+    try {
+      const existingGroup = await groupstore.getGroup(group.id);
       if (existingGroup) {
         return callback(errors);
       }
-      self.isGroupNameAvailable(group.id, (err1, result) => {
-        if (err1) {
-          errors.push("Technical error validating name of group.");
+    } catch (e) {
+      errors.push("Technical error validating the group.");
+    }
+    const self = this;
+    self.isGroupNameAvailable(group.id, (err1, result) => {
+      if (err1) {
+        errors.push("Technical error validating name of group.");
+      }
+      if (!result) {
+        errors.push("Dieser Gruppenname ist bereits vergeben.");
+      }
+      self.isEmailPrefixAvailable(group.emailPrefix, (err2, result1) => {
+        if (err2) {
+          errors.push("Technical error validating email prefix.");
         }
-        if (!result) {
-          errors.push("Dieser Gruppenname ist bereits vergeben.");
+        if (!result1) {
+          errors.push("Dieses Präfix ist bereits vergeben.");
         }
-        self.isEmailPrefixAvailable(group.emailPrefix, (err2, result1) => {
-          if (err2) {
-            errors.push("Technical error validating email prefix.");
-          }
-          if (!result1) {
-            errors.push("Dieses Präfix ist bereits vergeben.");
-          }
-          callback(errors);
-        });
+        callback(errors);
       });
     });
   },
 
   // API change email() -> member and renamed
-  addMemberToGroupNamed: function addMemberToGroupNamed(member, groupname, callback) {
-    groupstore.getGroup(groupname, (err, group) => {
-      if (err) {
-        return callback(err);
-      }
+  addMemberToGroupNamed: async function addMemberToGroupNamed(member, groupname, callback) {
+    try {
+      const group = await groupstore.getGroup(groupname);
       group.subscribe(member);
       groupstore.saveGroup(group, callback);
-    });
+    } catch (e) {
+      callback(e);
+    }
   },
 
   // API change email() -> member and renamed
-  removeMemberFromGroupNamed: function removeMemberFromGroupNamed(member, groupname, callback) {
-    groupstore.getGroup(groupname, (err, group) => {
-      if (err) {
-        return callback(err);
-      }
+  removeMemberFromGroupNamed: async function removeMemberFromGroupNamed(member, groupname, callback) {
+    try {
+      const group = await groupstore.getGroup(groupname);
       group.unsubscribe(member);
       groupstore.saveGroup(group, callback);
-    });
+    } catch (e) {
+      return callback(e);
+    }
   },
 
   // API change: email() -> member, oldUserMail removed
@@ -121,12 +121,17 @@ module.exports = {
     return availableGroups.map((group) => ({ group, selected: groupsToMark.some((subG) => subG.id === group.id) }));
   },
 
-  isGroupNameAvailable: function isGroupNameAvailable(groupname, callback) {
+  isGroupNameAvailable: async function isGroupNameAvailable(groupname, callback) {
     const trimmedGroupname = groupname.trim();
     if (isReserved(trimmedGroupname)) {
       return callback(null, false);
     }
-    groupstore.getGroup(trimmedGroupname, (err, group) => callback(err, group === null));
+    try {
+      const group = await groupstore.getGroup(trimmedGroupname);
+      callback(null, group === null);
+    } catch (e) {
+      callback(e, false);
+    }
   },
 
   isEmailPrefixAvailable: function isEmailPrefixAvailable(prefix, callback) {

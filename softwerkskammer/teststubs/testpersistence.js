@@ -37,6 +37,10 @@ module.exports = {
     throw new Error("Testpersistence - function getById not implemented");
   },
 
+  getByIdAsync: function () {
+    throw new Error("Testpersistence - function getById not implemented");
+  },
+
   getByField: function () {
     throw new Error("Testpersistence - function getByField not implemented");
   },

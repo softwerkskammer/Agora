@@ -17,14 +17,12 @@ const app = misc.expressAppIn(__dirname);
 
 function groupSubmitted(req, res, next) {
   const group = new Group(req.body);
-  groupsService.isGroupValid(group, (errors) => {
+  groupsService.isGroupValid(group, async (errors) => {
     if (errors.length !== 0) {
       return res.render("../../../views/errorPages/validationError", { errors });
     }
-    groupstore.getGroup(group.id, (err1, existingGroup) => {
-      if (err1) {
-        return next(err1);
-      }
+    try {
+      const existingGroup = await groupstore.getGroup(group.id);
       if (!existingGroup) {
         group.subscribe(req.user.member);
       } else {
@@ -39,7 +37,9 @@ function groupSubmitted(req, res, next) {
           .putIntoSession(req);
         res.redirect("/groups/" + group.id);
       });
-    });
+    } catch (e) {
+      return next(e);
+    }
   });
 }
 
@@ -78,18 +78,18 @@ app.get("/edit/:groupname", (req, res, next) => {
   });
 });
 
-app.post("/clone-from-meetup-for-group", (req, res, next) => {
-  groupstore.getGroup(req.body.groupname, (err, group) => {
-    if (err || !group) {
-      return next(err);
-    }
+app.post("/clone-from-meetup-for-group", async (req, res, next) => {
+  try {
+    const group = await groupstore.getGroup(req.body.groupname);
     meetupActivitiesService.cloneActivitiesFromMeetupForGroup(group, (err2) => {
       if (err2) {
         return next(err2);
       }
       res.redirect("/groups/" + req.body.groupname);
     });
-  });
+  } catch (e) {
+    return next(e);
+  }
 });
 
 app.get("/checkgroupname", (req, res) => {

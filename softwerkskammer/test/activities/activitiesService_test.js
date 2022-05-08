@@ -136,11 +136,11 @@ describe("Activities Service", () => {
     sinon.stub(memberstore, "getMemberForId").callsFake((id, callback) => {
       callback(null, owner);
     });
-    sinon.stub(groupstore, "getGroup").callsFake((groupname, callback) => {
+    sinon.stub(groupstore, "getGroup").callsFake((groupname) => {
       if (groupname === "groupname") {
-        return callback(null, group);
+        return group;
       }
-      return callback(null, null);
+      return null;
     });
 
     const expectedActivity = new Activity({

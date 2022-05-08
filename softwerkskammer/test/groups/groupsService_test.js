@@ -160,15 +160,15 @@ describe("Groups Service (isGroupNameAvailable)", () => {
   const GroupB = groups.GroupB;
 
   before(() => {
-    sinon.stub(groupstore, "getGroup").callsFake((groupname, callback) => {
+    sinon.stub(groupstore, "getGroup").callsFake((groupname) => {
       if (groupname === "GroupA") {
-        callback(null, GroupA);
+        return GroupA;
       } else if (groupname === "GroupB") {
-        callback(null, GroupB);
+        return GroupB;
       } else if (groupname === "ErrorGroup") {
-        callback(new Error("Ouch! Something bad happened..."));
+        throw new Error("Ouch! Something bad happened...");
       } else {
-        callback(null, null);
+        return null;
       }
     });
   });

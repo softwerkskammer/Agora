@@ -82,13 +82,11 @@ app.get("/contactMember/:nickname", (req, res, next) => {
   });
 });
 
-app.get("/contactMembersOfGroup/:groupname", (req, res) => {
+app.get("/contactMembersOfGroup/:groupname", async (req, res) => {
   const groupName = req.params.groupname;
-  groupstore.getGroup(groupName, (err, group) => {
-    if (
-      err ||
-      (!group.isMemberSubscribed(res.locals.accessrights.member()) && !res.locals.accessrights.isSuperuser())
-    ) {
+  try {
+    const group = await groupstore.getGroup(groupName);
+    if (!group.isMemberSubscribed(res.locals.accessrights.member()) && !res.locals.accessrights.isSuperuser()) {
       return res.redirect("/groups/" + encodeURIComponent(groupName));
     }
     return res.render("compose", {
@@ -97,7 +95,9 @@ app.get("/contactMembersOfGroup/:groupname", (req, res) => {
       groupName,
       emailPrefix: group.emailPrefix,
     });
-  });
+  } catch (e) {
+    return res.redirect("/groups/" + encodeURIComponent(groupName));
+  }
 });
 
 app.get("/contactGroupContactPersons/:groupname", (req, res) => {

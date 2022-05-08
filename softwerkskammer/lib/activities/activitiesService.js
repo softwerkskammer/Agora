@@ -75,7 +75,7 @@ module.exports = {
 
       async.parallel(
         {
-          group: (cb) => groupstore.getGroup(activity.assignedGroup(), cb),
+          group: async.asyncify(async () => await groupstore.getGroup(activity.assignedGroup())),
           participants: participantsLoader,
           owner: (cb) => memberstore.getMemberForId(activity.owner(), cb),
         },
