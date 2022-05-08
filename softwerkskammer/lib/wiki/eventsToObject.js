@@ -1,11 +1,13 @@
-const beans = require('simple-configure').get('beans');
-const misc = beans.get('misc');
+const beans = require("simple-configure").get("beans");
+const misc = beans.get("misc");
 
 function contentsToObject(contents, year) {
-  if (!contents) { return {}; }
+  if (!contents) {
+    return {};
+  }
 
   function titleAndLinkToObject(element) {
-    const titleAndLink = element.replace(/[[)]/g, '').split(/\]\s*\(/);
+    const titleAndLink = element.replace(/[[)]/g, "").split(/\]\s*\(/);
     if (titleAndLink.length === 2) {
       return titleAndLink;
     }
@@ -13,7 +15,7 @@ function contentsToObject(contents, year) {
 
   function dates(element) {
     function toDate(dayMonthString, plusMillis = 0) {
-      const dayMonth = dayMonthString ? dayMonthString.split('.') : [];
+      const dayMonth = dayMonthString ? dayMonthString.split(".") : [];
       if (dayMonth.length < 2) {
         return null;
       }
@@ -21,7 +23,7 @@ function contentsToObject(contents, year) {
     }
 
     if (element.trim()) {
-      const fromAndUntil = misc.compact(element.split('-').map(each => each.trim()));
+      const fromAndUntil = misc.compact(element.split("-").map((each) => each.trim()));
       const from = toDate(fromAndUntil[0]);
       const until = toDate(fromAndUntil[1] || fromAndUntil[0], 79200000); // 22 hours
       if (from && until) {
@@ -32,7 +34,7 @@ function contentsToObject(contents, year) {
   }
 
   function lineToObject(line) {
-    const elements = line.split('|');
+    const elements = line.split("|");
     if (elements.length === 3) {
       const titleAndLink = titleAndLinkToObject(elements[0]);
       const fromUntil = dates(elements[2]);
@@ -41,8 +43,8 @@ function contentsToObject(contents, year) {
           start: fromUntil[0],
           end: fromUntil[1],
           url: titleAndLink[1].trim(),
-          title: titleAndLink[0].trim() + ' (' + elements[1].trim() + ')',
-          color: '#999'
+          title: titleAndLink[0].trim() + " (" + elements[1].trim() + ")",
+          color: "#999",
         };
       }
     }

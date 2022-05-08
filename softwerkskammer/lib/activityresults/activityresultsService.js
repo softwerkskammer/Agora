@@ -1,14 +1,16 @@
-const async = require('async');
-const {DateTime} = require('luxon');
+const async = require("async");
+const { DateTime } = require("luxon");
 
-const beans = require('simple-configure').get('beans');
-const persistence = beans.get('activityresultsPersistence');
-const galleryService = beans.get('galleryService');
-const ActivityResult = beans.get('activityresult');
+const beans = require("simple-configure").get("beans");
+const persistence = beans.get("activityresultsPersistence");
+const galleryService = beans.get("galleryService");
+const ActivityResult = beans.get("activityresult");
 
 function load(activityResultName, callback) {
   persistence.getById(activityResultName, (err, data) => {
-    if (err || !data) { return callback(err); }
+    if (err || !data) {
+      return callback(err);
+    }
     callback(null, new ActivityResult(data));
   });
 }
@@ -17,38 +19,57 @@ module.exports = {
   getActivityResultByName: load,
 
   addPhotoToActivityResult: function addPhotoToActivityResult(activityResultName, image, memberId, callback) {
-    async.waterfall([
-      cb => galleryService.storeImage(image.path, cb),
-      (imageUri, cb) => galleryService.getMetadataForImage(imageUri, (err, metadata) => cb(err, metadata, imageUri)),
-      (metadata, imageUri, cb) => {
-        load(activityResultName, (err, activityResult) => {
-          /* eslint camelcase: 0 */
-          if (err) { return cb(err); }
-          let date = new Date();
-          if (metadata && metadata.exif) {
-            date = metadata.exif.DateTime || metadata.exif.DateTimeOriginal || metadata.exif.DateTimeDigitized || new Date();
-          }
-          const picturesDate = DateTime.fromJSDate(date);
-          const now = DateTime.local();
-          activityResult.addPhoto({
-            id: imageUri,
-            timestamp: (picturesDate < now ? picturesDate : now).toJSDate(),
-            uploaded_by: memberId
+    async.waterfall(
+      [
+        (cb) => galleryService.storeImage(image.path, cb),
+        (imageUri, cb) => galleryService.getMetadataForImage(imageUri, (err, metadata) => cb(err, metadata, imageUri)),
+        (metadata, imageUri, cb) => {
+          load(activityResultName, (err, activityResult) => {
+            /* eslint camelcase: 0 */
+            if (err) {
+              return cb(err);
+            }
+            let date = new Date();
+            if (metadata && metadata.exif) {
+              date =
+                metadata.exif.DateTime ||
+                metadata.exif.DateTimeOriginal ||
+                metadata.exif.DateTimeDigitized ||
+                new Date();
+            }
+            const picturesDate = DateTime.fromJSDate(date);
+            const now = DateTime.local();
+            activityResult.addPhoto({
+              id: imageUri,
+              timestamp: (picturesDate < now ? picturesDate : now).toJSDate(),
+              uploaded_by: memberId,
+            });
+            persistence.save(activityResult.state, (err1) => cb(err1, imageUri));
           });
-          persistence.save(activityResult.state, err1 => cb(err1, imageUri));
-        });
-      }
-    ], callback);
+        },
+      ],
+      callback
+    );
   },
 
-  updatePhotoOfActivityResult: function updatePhotoOfActivityResult(activityResultName, photoId, data, accessrights, callback) {
+  updatePhotoOfActivityResult: function updatePhotoOfActivityResult(
+    activityResultName,
+    photoId,
+    data,
+    accessrights,
+    callback
+  ) {
     load(activityResultName, (err, activityResult) => {
-      if (err || !activityResult) { return callback(err); }
+      if (err || !activityResult) {
+        return callback(err);
+      }
       let photo = activityResult.getPhotoById(photoId);
-      if (!photo) { return callback(err); }
+      if (!photo) {
+        return callback(err);
+      }
       if (accessrights.canEditPhoto(photo)) {
         activityResult.updatePhotoById(photoId, data);
-        return persistence.save(activityResult.state, err1 => callback(err1));
+        return persistence.save(activityResult.state, (err1) => callback(err1));
       }
       callback();
     });
@@ -56,12 +77,16 @@ module.exports = {
 
   deletePhotoOfActivityResult: function deletePhotoOfActivityResult(activityResultName, photoId, callback) {
     load(activityResultName, (err, activityResult) => {
-      if (err) { callback(err); }
+      if (err) {
+        callback(err);
+      }
       activityResult.deletePhotoById(photoId);
-      persistence.save(activityResult.state, err1 => {
-        if (err1) { callback(err1); }
+      persistence.save(activityResult.state, (err1) => {
+        if (err1) {
+          callback(err1);
+        }
         galleryService.deleteImage(photoId, callback);
       });
     });
-  }
+  },
 };

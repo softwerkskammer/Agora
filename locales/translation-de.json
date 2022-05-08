@@ -30,8 +30,8 @@
     "export": "Für Kalender exportieren",
     "export_subscribe": "$t(activities.export). Zum Abo: URL in Kalenderprogramm abonnieren",
     "full": "Alle Plätze sind belegt.",
-    "helptext" : "Nicht sicher, wie Du es ausfüllen sollst? - ",
-    "helplink" : "Hier gibt es Hilfe",
+    "helptext": "Nicht sicher, wie Du es ausfüllen sollst? - ",
+    "helplink": "Hier gibt es Hilfe",
     "home_address": "Privatanschrift",
     "ical": "SoCraTes only",
     "impossible": "nicht möglich",
@@ -152,9 +152,7 @@
   },
   "dashboard": {
     "dashboard": "Überblick",
-    "description": [
-      "Deine persönliche Softwerkskammer"
-    ],
+    "description": ["Deine persönliche Softwerkskammer"],
     "upcoming_activities": "$t(activities.upcoming_activities) Deiner Gruppen",
     "your_groups": "Deine Gruppen"
   },

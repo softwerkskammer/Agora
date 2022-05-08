@@ -1,11 +1,11 @@
-const {DateTime} = require('luxon');
-const R = require('ramda');
+const { DateTime } = require("luxon");
+const R = require("ramda");
 
-const conf = require('simple-configure');
-const beans = conf.get('beans');
-const fieldHelpers = beans.get('fieldHelpers');
-const avatarProvider = beans.get('avatarProvider');
-const {genSalt, hashPassword} = beans.get('hashPassword');
+const conf = require("simple-configure");
+const beans = conf.get("beans");
+const fieldHelpers = beans.get("fieldHelpers");
+const avatarProvider = beans.get("avatarProvider");
+const { genSalt, hashPassword } = beans.get("hashPassword");
 
 class Member {
   constructor(object) {
@@ -13,17 +13,21 @@ class Member {
   }
 
   fillFromUI(object) {
-    ['nickname', 'firstname', 'lastname', 'email', 'location', 'profession', 'reference', 'customAvatar'].forEach(property => {
-      if (object[property]) { this.state[property] = object[property].trim(); }
-    });
-    ['notifyOnWikiChanges'].forEach(property => {
+    ["nickname", "firstname", "lastname", "email", "location", "profession", "reference", "customAvatar"].forEach(
+      (property) => {
+        if (object[property]) {
+          this.state[property] = object[property].trim();
+        }
+      }
+    );
+    ["notifyOnWikiChanges"].forEach((property) => {
       this.state[property] = !!object[property];
     });
     if (object.twitter) {
-      this.state.twitter = fieldHelpers.removePrefixFrom('@', object.twitter.trim());
+      this.state.twitter = fieldHelpers.removePrefixFrom("@", object.twitter.trim());
     }
     if (object.site) {
-      this.state.site = fieldHelpers.addPrefixTo('http://', object.site.trim(), 'https://');
+      this.state.site = fieldHelpers.addPrefixTo("http://", object.site.trim(), "https://");
     }
     if (object.interests) {
       this.state.interests = object.interests.toString();
@@ -36,7 +40,7 @@ class Member {
   }
 
   displayName() {
-    return this.firstname() + ' ' + this.lastname();
+    return this.firstname() + " " + this.lastname();
   }
 
   initFromSessionUser(sessionUser) {
@@ -45,11 +49,14 @@ class Member {
     if (!sessionUser || this.id()) {
       return this;
     }
-    this.state.created = DateTime.local().toFormat('dd.MM.yy');
+    this.state.created = DateTime.local().toFormat("dd.MM.yy");
     this.state.id = sessionUser.authenticationId;
     const profile = sessionUser.profile;
     if (profile) {
-      this.state.email = fieldHelpers.valueOrFallback(profile.emails && profile.emails[0] && profile.emails[0].value, this.email());
+      this.state.email = fieldHelpers.valueOrFallback(
+        profile.emails && profile.emails[0] && profile.emails[0].value,
+        this.email()
+      );
       const name = profile.name;
       if (name) {
         this.state.firstname = fieldHelpers.valueOrFallback(name.givenName, this.firstname());
@@ -60,7 +67,8 @@ class Member {
       }
       this.state.site = fieldHelpers.valueOrFallback(profile.profileUrl, this.site());
       if (profile._json && fieldHelpers.isFilled(profile._json.blog)) {
-        this.state.site += (this.site() ? ', ' : '') + fieldHelpers.addPrefixTo('http://', profile._json.blog, 'https://');
+        this.state.site +=
+          (this.site() ? ", " : "") + fieldHelpers.addPrefixTo("http://", profile._json.blog, "https://");
       }
     }
     return this;
@@ -68,7 +76,7 @@ class Member {
 
   avatarUrl(size) {
     if (this.hasCustomAvatar()) {
-      return '/gallery/avatarFor/' + this.customAvatar();
+      return "/gallery/avatarFor/" + this.customAvatar();
     }
     return avatarProvider.avatarUrl(this.email(), size || 200);
   }
@@ -86,7 +94,7 @@ class Member {
   }
 
   inlineAvatar() {
-    return (this.getAvatarData() && this.getAvatarData().image) || '';
+    return (this.getAvatarData() && this.getAvatarData().image) || "";
   }
 
   hasCustomAvatar() {
@@ -107,7 +115,7 @@ class Member {
   }
 
   asGitAuthor() {
-    return this.nickname() + ' <' + this.nickname() + '@softwerkskammer.org>';
+    return this.nickname() + " <" + this.nickname() + "@softwerkskammer.org>";
   }
 
   addAuthentication(authenticationId) {
@@ -149,11 +157,11 @@ class Member {
   }
 
   interests() {
-    return this.interestsForSelect2().join(', ');
+    return this.interestsForSelect2().join(", ");
   }
 
   interestsForSelect2() {
-    return (this.state.interests || '').split(',').map(s => s.trim());
+    return (this.state.interests || "").split(",").map((s) => s.trim());
   }
 
   reference() {
@@ -181,11 +189,14 @@ class Member {
   }
 
   isContactperson() {
-    return this.subscribedGroups && R.flatten(this.subscribedGroups.map(group => group.organizers)).some(organizer => organizer === this.id());
+    return (
+      this.subscribedGroups &&
+      R.flatten(this.subscribedGroups.map((group) => group.organizers)).some((organizer) => organizer === this.id())
+    );
   }
 
   isInGroup(groupId) {
-    return this.subscribedGroups && this.subscribedGroups.some(group => group.id === groupId);
+    return this.subscribedGroups && this.subscribedGroups.some((group) => group.id === groupId);
   }
 
   isSuperuser() {
@@ -193,7 +204,7 @@ class Member {
   }
 
   fillSubscribedGroups(groups) {
-    this.subscribedGroups = groups.filter(g => g.subscribedMembers.includes(this.id()));
+    this.subscribedGroups = groups.filter((g) => g.subscribedMembers.includes(this.id()));
   }
 
   updatePassword(newPassword) {
@@ -214,20 +225,20 @@ class Member {
   }
 
   static isSuperuser(id) {
-    const superusers = conf.get('superuser');
+    const superusers = conf.get("superuser");
     return superusers && superusers.indexOf(id) > -1;
   }
 
   static wikiNotificationMembers(members) {
-    return members.filter(member => member.notifyOnWikiChanges()).map(member => member.email());
+    return members.filter((member) => member.notifyOnWikiChanges()).map((member) => member.email());
   }
 
   static superuserEmails(members) {
-    return members.filter(member => member.isSuperuser()).map(member => member.email());
+    return members.filter((member) => member.isSuperuser()).map((member) => member.email());
   }
 
   static memberIsInMemberList(id, members) {
-    return members.some(member => member.id() === id);
+    return members.some((member) => member.id() === id);
   }
 }
 

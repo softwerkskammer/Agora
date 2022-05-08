@@ -1,17 +1,23 @@
 {
-  "groupsPersistence": {"module": "./softwerkskammer/lib/persistence/persistence",
+  "groupsPersistence": {
+    "module": "./softwerkskammer/lib/persistence/persistence",
     "constructorArgs": {
       "collectionName": "teststore"
-    }},
-  "membersPersistence": {"module": "./softwerkskammer/lib/persistence/persistence",
+    }
+  },
+  "membersPersistence": {
+    "module": "./softwerkskammer/lib/persistence/persistence",
     "constructorArgs": {
       "collectionName": "teststore"
-    }},
-  "activitiesPersistence": {"module": "./softwerkskammer/lib/persistence/persistence",
+    }
+  },
+  "activitiesPersistence": {
+    "module": "./softwerkskammer/lib/persistence/persistence",
     "constructorArgs": {
       "collectionName": "teststore"
-    }},
-  "mailsPersistence": {"module": "./softwerkskammer/teststubs/testpersistence"},
+    }
+  },
+  "mailsPersistence": { "module": "./softwerkskammer/teststubs/testpersistence" },
 
-  "nodemailerTransport": {"module": "./softwerkskammer/teststubs/nodemailerTransportForTests"}
+  "nodemailerTransport": { "module": "./softwerkskammer/teststubs/nodemailerTransportForTests" }
 }

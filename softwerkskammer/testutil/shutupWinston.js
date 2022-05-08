@@ -1,5 +1,5 @@
-'use strict';
-const winston = require('winston');
+"use strict";
+const winston = require("winston");
 
 function shutup() {
   winston.loggers = {
@@ -8,11 +8,10 @@ function shutup() {
       return {
         warn: () => undefined,
         info: () => undefined,
-        error: () => undefined
+        error: () => undefined,
       };
-    }
+    },
   };
-
 }
 
 module.exports = shutup;

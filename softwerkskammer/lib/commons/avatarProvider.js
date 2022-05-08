@@ -1,8 +1,8 @@
-const crypto = require('crypto');
-const request = require('request').defaults({encoding: null});
+const crypto = require("crypto");
+const request = require("request").defaults({ encoding: null });
 
 function md5(emailAddress) {
-  return emailAddress ? crypto.createHash('md5').update(emailAddress).digest('hex') : '';
+  return emailAddress ? crypto.createHash("md5").update(emailAddress).digest("hex") : "";
 }
 
 function imageDataFromGravatar(url, callback) {
@@ -10,23 +10,29 @@ function imageDataFromGravatar(url, callback) {
     if (error) {
       return callback();
     }
-    const image = 'data:' + response.headers['content-type'] + ';base64,' + Buffer.from(body).toString('base64');
-    const data = {image, hasNoImage: body.length < 150};
+    const image = "data:" + response.headers["content-type"] + ";base64," + Buffer.from(body).toString("base64");
+    const data = { image, hasNoImage: body.length < 150 };
     callback(data);
   });
 }
 
 module.exports = {
   avatarUrl: function avatarUrl(emailAddress, size, optionalTunneledGravatarUrl) {
-    return (optionalTunneledGravatarUrl || 'https://www.gravatar.com/avatar/') + md5(emailAddress) + '?d=' + (size === 16 ? 'blank' : 'mm') + '&s=' + size;
+    return (
+      (optionalTunneledGravatarUrl || "https://www.gravatar.com/avatar/") +
+      md5(emailAddress) +
+      "?d=" +
+      (size === 16 ? "blank" : "mm") +
+      "&s=" +
+      size
+    );
   },
 
   getImage: function getImage(member, callback, optionalTunneledGravatarUrl) {
     const url = this.avatarUrl(member.email(), 16, optionalTunneledGravatarUrl);
-    imageDataFromGravatar(url, data => {
+    imageDataFromGravatar(url, (data) => {
       member.setAvatarData(data);
       callback(data);
     });
-  }
+  },
 };
-

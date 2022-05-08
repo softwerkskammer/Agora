@@ -1,5 +1,5 @@
-const {DateTime} = require('luxon');
-const Member = require('simple-configure').get('beans').get('member');
+const { DateTime } = require("luxon");
+const Member = require("simple-configure").get("beans").get("member");
 
 module.exports = function accessrights(req, res, next) {
   res.locals.accessrights = {
@@ -30,12 +30,18 @@ module.exports = function accessrights(req, res, next) {
     },
 
     canEditActivity: function canEditActivity(activity) {
-      return this.isSuperuser() || (activity.group && activity.group.isOrganizer(this.memberId())) || activity.owner() === this.memberId()
-        || activity.editorIds().indexOf(this.memberId()) > -1;
+      return (
+        this.isSuperuser() ||
+        (activity.group && activity.group.isOrganizer(this.memberId())) ||
+        activity.owner() === this.memberId() ||
+        activity.editorIds().indexOf(this.memberId()) > -1
+      );
     },
 
     canDeleteActivity: function canDeleteActivity(activity) {
-      return this.isSuperuser() || (activity.owner() === this.memberId() && activity.startDateTime() > DateTime.local());
+      return (
+        this.isSuperuser() || (activity.owner() === this.memberId() && activity.startDateTime() > DateTime.local())
+      );
     },
 
     canCreateGroup: function canCreateGroup() {
@@ -84,8 +90,7 @@ module.exports = function accessrights(req, res, next) {
 
     canDeletePhoto: function canDeletePhoto() {
       return this.isSuperuser();
-    }
-
+    },
   };
   next();
 };

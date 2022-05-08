@@ -1,11 +1,11 @@
 /* eslint no-underscore-dangle: 0 */
 
-const {DateTime} = require('luxon');
+const { DateTime } = require("luxon");
 
 class WaitinglistEntry {
   constructor(object) {
     this.state = object || {};
-    this._resourceName = 'Veranstaltung';
+    this._resourceName = "Veranstaltung";
   }
 
   registrantId() {
@@ -13,24 +13,30 @@ class WaitinglistEntry {
   }
 
   registrationDate() {
-    return this.state._registeredAt ? DateTime.fromJSDate(this.state._registeredAt).toFormat('dd.MM.yyyy HH:mm') : undefined;
+    return this.state._registeredAt
+      ? DateTime.fromJSDate(this.state._registeredAt).toFormat("dd.MM.yyyy HH:mm")
+      : undefined;
   }
 
   registrationValidUntil() {
-    return this.state._registrationValidUntil ? DateTime.fromJSDate(this.state._registrationValidUntil).toFormat('dd.MM.yyyy HH:mm') : undefined;
+    return this.state._registrationValidUntil
+      ? DateTime.fromJSDate(this.state._registrationValidUntil).toFormat("dd.MM.yyyy HH:mm")
+      : undefined;
   }
 
   setRegistrationValidityFor(hoursString) {
     if (hoursString) {
       const validHours = parseInt(hoursString, 10);
-      this.state._registrationValidUntil = DateTime.local().plus({hours: validHours}).toJSDate();
+      this.state._registrationValidUntil = DateTime.local().plus({ hours: validHours }).toJSDate();
     } else {
       delete this.state._registrationValidUntil;
     }
   }
 
   canSubscribe() {
-    if (!this.state._registrationValidUntil) { return false; }
+    if (!this.state._registrationValidUntil) {
+      return false;
+    }
     return DateTime.local() < this.state._registrationValidUntil;
   }
 
@@ -41,5 +47,3 @@ class WaitinglistEntry {
 }
 
 module.exports = WaitinglistEntry;
-
-

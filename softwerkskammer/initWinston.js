@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
-const {format, loggers, transports} = require('winston');
-const fs = require('fs');
+const { format, loggers, transports } = require("winston");
+const fs = require("fs");
 
 function console(options) {
   let consoleformat;
@@ -20,7 +20,7 @@ function console(options) {
     );
   }
 
-  return new transports.Console({format: consoleformat});
+  return new transports.Console({ format: consoleformat });
 }
 
 function fileFrom(options) {
@@ -40,54 +40,54 @@ function fileFrom(options) {
 
 module.exports = function initWinston(filename) {
   let winstonConfig = {
-    'logging': {
-      'application': {
-        'level': 'info',
-        'console': {
-          'colorize': true
+    logging: {
+      application: {
+        level: "info",
+        console: {
+          colorize: true,
         },
-        'file': {
-          'filename': 'log/server.log',
-          'maxFiles': 5
-        }
-      },
-      'authorization': {
-        'level': 'warn',
-        'console': {
-          'colorize': true
+        file: {
+          filename: "log/server.log",
+          maxFiles: 5,
         },
-        'file': {
-          'filename': 'log/authorization.log',
-          'maxFiles': 5
-        }
       },
-      'http': {
-        'level': 'warn',
-        'console': {
-          'colorize': true
+      authorization: {
+        level: "warn",
+        console: {
+          colorize: true,
         },
-        'file': {
-          'filename': 'log/http.log',
-          'maxFiles': 5
-        }
-      },
-      'transactions': {
-        'level': 'info',
-        'console': {
-          'colorize': true
+        file: {
+          filename: "log/authorization.log",
+          maxFiles: 5,
         },
-        'file': {
-          'filename': 'log/transactions.log',
-          'maxFiles': 5
-        }
       },
-      'nodemailer': {
-        'file': {
-          'filename': 'log/nodemailer.log',
-          'maxFiles': 5
-        }
-      }
-    }
+      http: {
+        level: "warn",
+        console: {
+          colorize: true,
+        },
+        file: {
+          filename: "log/http.log",
+          maxFiles: 5,
+        },
+      },
+      transactions: {
+        level: "info",
+        console: {
+          colorize: true,
+        },
+        file: {
+          filename: "log/transactions.log",
+          maxFiles: 5,
+        },
+      },
+      nodemailer: {
+        file: {
+          filename: "log/nodemailer.log",
+          maxFiles: 5,
+        },
+      },
+    },
   };
   // eslint-disable-next-line no-sync
   if (fs.existsSync(filename)) {
@@ -97,7 +97,7 @@ module.exports = function initWinston(filename) {
 
   const loggerDescriptions = Object.entries(winstonConfig.logging);
 
-  loggerDescriptions.forEach(desc => {
+  loggerDescriptions.forEach((desc) => {
     const content = desc[1];
     const trans = [];
     if (content.console) {
@@ -106,7 +106,7 @@ module.exports = function initWinston(filename) {
     if (content.file) {
       trans.push(fileFrom(content.file));
     }
-    const options = {level: content.level || content.file.level, transports: trans};
+    const options = { level: content.level || content.file.level, transports: trans };
     loggers.add(desc[0], options);
   });
 };

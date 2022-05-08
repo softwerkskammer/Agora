@@ -1,14 +1,14 @@
-const conf = require('simple-configure');
-const beans = conf.get('beans');
-const Activity = beans.get('activity');
+const conf = require("simple-configure");
+const beans = conf.get("beans");
+const Activity = beans.get("activity");
 
 class SoCraTesActivity extends Activity {
   fullyQualifiedUrl() {
-    return conf.get('socratesURL');
+    return conf.get("socratesURL");
   }
 
   assignedGroup() {
-    return 'G'; // this must not return undefined for SoCraTes to work
+    return "G"; // this must not return undefined for SoCraTes to work
   }
 
   groupName() {
@@ -16,7 +16,7 @@ class SoCraTesActivity extends Activity {
   }
 
   colorFrom() {
-    return '#3771C8';
+    return "#3771C8";
   }
 
   groupFrom() {
@@ -24,7 +24,7 @@ class SoCraTesActivity extends Activity {
   }
 
   description() {
-    return ''; // required for ical export
+    return ""; // required for ical export
   }
 }
 

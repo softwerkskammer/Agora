@@ -1,17 +1,23 @@
-const {DateTime} = require('luxon');
-const R = require('ramda');
-const path = require('path');
+const { DateTime } = require("luxon");
+const R = require("ramda");
+const path = require("path");
 
-const beans = require('simple-configure').get('beans');
-const Renderer = beans.get('renderer');
+const beans = require("simple-configure").get("beans");
+const Renderer = beans.get("renderer");
 
 const BLOG_ENTRY_REGEX = /blog_(\d{4}-\d{1,2}-\d{1,2})/;
 
 function pathFunctions(name) {
   return {
-    dialogUrl: function () { return '/wiki/modal/' + this.dialogId('/'); },
-    url: function () { return '/wiki/' + this.dialogId('/'); },
-    dialogId: function (separator) { return path.dirname(name) + (separator || '-') + path.basename(name, '.md'); }
+    dialogUrl: function () {
+      return "/wiki/modal/" + this.dialogId("/");
+    },
+    url: function () {
+      return "/wiki/" + this.dialogId("/");
+    },
+    dialogId: function (separator) {
+      return path.dirname(name) + (separator || "-") + path.basename(name, ".md");
+    },
   };
 }
 
@@ -30,15 +36,19 @@ class Metadata {
     this.url = pf.url;
   }
 
-  date() {return DateTime.fromFormat(this.datestring, 'yyyy-MM-dd HH:mm:ss ZZZ'); }
+  date() {
+    return DateTime.fromFormat(this.datestring, "yyyy-MM-dd HH:mm:ss ZZZ");
+  }
 
-  pureName() { return path.basename(this.name, '.md'); }
+  pureName() {
+    return path.basename(this.name, ".md");
+  }
 }
 
 class Blogpost {
   constructor(name, post) {
     this.name = name;
-    this.title = Renderer.firstTokentextOf(post).replace(/^(#|\s)*/, '');
+    this.title = Renderer.firstTokentextOf(post).replace(/^(#|\s)*/, "");
     this.teaser = Renderer.secondTokentextOf(post);
     this.post = post;
 
@@ -51,13 +61,21 @@ class Blogpost {
     this.url = pf.url;
   }
 
-  isValid() { return !!this.title && this.date().isValid; }
+  isValid() {
+    return !!this.title && this.date().isValid;
+  }
 
-  date() {return DateTime.fromFormat(this.datestring || '', 'yyyy-M-d');}
+  date() {
+    return DateTime.fromFormat(this.datestring || "", "yyyy-M-d");
+  }
 
-  pureName() { return this.title; }
+  pureName() {
+    return this.title;
+  }
 
-  renderBody() { return Renderer.titleAndRenderedTail(this.post).body; }
+  renderBody() {
+    return Renderer.titleAndRenderedTail(this.post).body;
+  }
 }
 
 class FileWithChangelist {
@@ -67,7 +85,9 @@ class FileWithChangelist {
     this.diff = object.diff;
   }
 
-  authorsString() { return R.uniq(this.changelist.map(change => change.author)).toString(); }
+  authorsString() {
+    return R.uniq(this.changelist.map((change) => change.author)).toString();
+  }
 }
 
 class DirectoryWithChangedFiles {
@@ -76,9 +96,15 @@ class DirectoryWithChangedFiles {
     this.files = object.files;
   }
 
-  sortedFiles() { return this.files.sort((a, b) => {return a.file.localeCompare(b.file);}); }
+  sortedFiles() {
+    return this.files.sort((a, b) => {
+      return a.file.localeCompare(b.file);
+    });
+  }
 
-  addFile(fileWithChanges) { this.files.push(fileWithChanges); }
+  addFile(fileWithChanges) {
+    this.files.push(fileWithChanges);
+  }
 }
 
 module.exports.Metadata = Metadata;

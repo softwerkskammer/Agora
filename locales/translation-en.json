@@ -28,8 +28,8 @@
     "export": "Export to calendar",
     "export_subscribe": "$t(activities.export). To subscribe: Subscribe URL in calendar application",
     "full": "All spots are taken.",
-    "helptext" : "Unsure, what to fill in? - ",
-    "helplink" : "Help available here",
+    "helptext": "Unsure, what to fill in? - ",
+    "helplink": "Help available here",
     "home_address": "Home address",
     "ical": "ical",
     "impossible": "impossible",
@@ -158,9 +158,7 @@
   },
   "dashboard": {
     "dashboard": "Dashboard",
-    "description": [
-      "Your personal view to softwerkskammer"
-    ],
+    "description": ["Your personal view to softwerkskammer"],
     "upcoming_activities": "$t(activities.upcoming_activities) of your groups",
     "your_groups": "Your groups"
   },
@@ -232,10 +230,7 @@
       "    | &nbsp;$t(general.login)"
     ],
     "goodbye_text_bottom": "Or maybe you want to return?",
-    "goodbye_text_top": [
-      "h2 Great you've been here.",
-      "p Take care - see you soon!"
-    ],
+    "goodbye_text_top": ["h2 Great you've been here.", "p Take care - see you soon!"],
     "guest": "Guest",
     "info": "Information",
     "legal_notice": "Legal Notice and Privacy Declaration",

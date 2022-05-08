@@ -5,7 +5,7 @@ function statusMessage(type, title, text, additionalArguments) {
         type,
         title,
         text,
-        additionalArguments
+        additionalArguments,
       };
     },
 
@@ -21,7 +21,7 @@ function statusMessage(type, title, text, additionalArguments) {
         this.req = req;
         res.locals.statusmessage = this;
       }
-    }
+    },
   };
 }
 
@@ -31,10 +31,10 @@ module.exports = {
   },
 
   errorMessage: function errorMessage(title, text, additionalArguments) {
-    return statusMessage('alert-danger', title, text, additionalArguments);
+    return statusMessage("alert-danger", title, text, additionalArguments);
   },
 
   successMessage: function successMessage(title, text, additionalArguments) {
-    return statusMessage('alert-success', title, text, additionalArguments);
-  }
+    return statusMessage("alert-success", title, text, additionalArguments);
+  },
 };

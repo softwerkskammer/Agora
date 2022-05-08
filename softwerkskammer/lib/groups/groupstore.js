@@ -1,20 +1,20 @@
-const beans = require('simple-configure').get('beans');
-const R = require('ramda');
+const beans = require("simple-configure").get("beans");
+const R = require("ramda");
 
-const persistence = beans.get('groupsPersistence');
-const Group = beans.get('group');
-const misc = beans.get('misc');
+const persistence = beans.get("groupsPersistence");
+const Group = beans.get("group");
+const misc = beans.get("misc");
 
 const toGroup = R.partial(misc.toObject, [Group]);
 const toGroupList = R.partial(misc.toObjectList, [Group]);
 
 module.exports = {
   allGroups: function allGroups(callback) {
-    persistence.list({longName: 1}, R.partial(toGroupList, [callback]));
+    persistence.list({ longName: 1 }, R.partial(toGroupList, [callback]));
   },
 
   groupsByLists: function groupsByLists(lists, callback) {
-    persistence.listByIds(lists, {longName: 1}, R.partial(toGroupList, [callback]));
+    persistence.listByIds(lists, { longName: 1 }, R.partial(toGroupList, [callback]));
   },
 
   getGroup: function getGroup(groupname, callback) {
@@ -22,12 +22,12 @@ module.exports = {
   },
 
   getGroupForPrefix: function getGroupForPrefix(prefix, callback) {
-    persistence.getByField({emailPrefix: misc.toLowerCaseRegExp(prefix)}, R.partial(toGroup, [callback]));
+    persistence.getByField({ emailPrefix: misc.toLowerCaseRegExp(prefix) }, R.partial(toGroup, [callback]));
   },
 
   getGroupsWithMeetupURL: function getGroupsWithMeetupURL(callback) {
     persistence.listByField(
-      {meetupURL: {$exists: true, $nin: ['', null, undefined]}},
+      { meetupURL: { $exists: true, $nin: ["", null, undefined] } },
       {},
       R.partial(toGroupList, [callback])
     );
@@ -36,6 +36,5 @@ module.exports = {
   saveGroup: function saveGroup(group, callback) {
     delete group.members; // we do not want to persist the group members
     persistence.save(group, callback);
-  }
+  },
 };
-

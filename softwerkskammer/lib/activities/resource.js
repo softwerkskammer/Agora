@@ -1,19 +1,19 @@
-const WaitinglistEntry = require('simple-configure').get('beans').get('waitinglistEntry');
+const WaitinglistEntry = require("simple-configure").get("beans").get("waitinglistEntry");
 
 class Resource {
   constructor(resourceObject) {
-    this.resourceName = 'Veranstaltung';
+    this.resourceName = "Veranstaltung";
     this.state = resourceObject || {}; // this must be *the* object that is referenced by activity.resources.Veranstaltung
   }
 
   fillFromUI(uiInputObject) {
     /* eslint no-underscore-dangle: 0 */
 
-    this.state._registrationOpen = uiInputObject.isRegistrationOpen === 'yes';
-    this.state._canUnsubscribe = uiInputObject.canUnsubscribe === 'yes';
+    this.state._registrationOpen = uiInputObject.isRegistrationOpen === "yes";
+    this.state._canUnsubscribe = uiInputObject.canUnsubscribe === "yes";
     this.state._position = uiInputObject.position;
 
-    if (uiInputObject.hasWaitinglist === 'yes') {
+    if (uiInputObject.hasWaitinglist === "yes") {
       this.state._waitinglist = this.state._waitinglist || [];
     } else {
       delete this.state._waitinglist;
@@ -34,14 +34,14 @@ class Resource {
     if (!this.state._registeredMembers) {
       this.state._registeredMembers = [];
     }
-    return this.state._registeredMembers.map(each => each.memberId);
+    return this.state._registeredMembers.map((each) => each.memberId);
   }
 
   registrationDateOf(memberId) {
     if (!this.state._registeredMembers) {
       this.state._registeredMembers = [];
     }
-    const registration = this.state._registeredMembers.find(each => each.memberId === memberId);
+    const registration = this.state._registeredMembers.find((each) => each.memberId === memberId);
     return registration ? new Date(registration.registeredAt) : undefined;
   }
 
@@ -50,11 +50,13 @@ class Resource {
       if (this.registeredMembers().indexOf(memberId) === -1) {
         this.state._registeredMembers.push({
           memberId,
-          registeredAt: millisOfRegistration ? new Date(millisOfRegistration) : new Date()
+          registeredAt: millisOfRegistration ? new Date(millisOfRegistration) : new Date(),
         });
       }
       this.removeFromWaitinglist(memberId);
-      if (this.isFull()) { this.state._registrationOpen = false; }
+      if (this.isFull()) {
+        this.state._registrationOpen = false;
+      }
       return true;
     }
     return false;
@@ -74,33 +76,43 @@ class Resource {
   }
 
   addToWaitinglist(memberId, millisOfRegistration) {
-    if (!this.hasWaitinglist()) { return false; }
-    if (this.isAlreadyRegistered(memberId)) { return false; }
+    if (!this.hasWaitinglist()) {
+      return false;
+    }
+    if (this.isAlreadyRegistered(memberId)) {
+      return false;
+    }
     if (!this.waitinglistEntryFor(memberId)) {
       this.state._waitinglist.push({
         _memberId: memberId,
-        _registeredAt: millisOfRegistration ? new Date(millisOfRegistration) : new Date()
+        _registeredAt: millisOfRegistration ? new Date(millisOfRegistration) : new Date(),
       });
     }
     return true;
   }
 
   removeFromWaitinglist(memberId) {
-    if (!this.hasWaitinglist()) { return; }
-    const index = this.state._waitinglist.findIndex(each => each._memberId === memberId);
+    if (!this.hasWaitinglist()) {
+      return;
+    }
+    const index = this.state._waitinglist.findIndex((each) => each._memberId === memberId);
     if (index > -1) {
       this.state._waitinglist.splice(index, 1);
     }
   }
 
   waitinglistEntries() {
-    if (!this.hasWaitinglist()) { return []; }
-    return this.state._waitinglist.map(waitinglistEntry => new WaitinglistEntry(waitinglistEntry));
+    if (!this.hasWaitinglist()) {
+      return [];
+    }
+    return this.state._waitinglist.map((waitinglistEntry) => new WaitinglistEntry(waitinglistEntry));
   }
 
   waitinglistEntryFor(memberId) {
-    if (!this.hasWaitinglist()) { return undefined; }
-    const entry = this.state._waitinglist.find(waitinglistEntry => waitinglistEntry._memberId === memberId);
+    if (!this.hasWaitinglist()) {
+      return undefined;
+    }
+    const entry = this.state._waitinglist.find((waitinglistEntry) => waitinglistEntry._memberId === memberId);
     return entry ? new WaitinglistEntry(entry) : undefined;
   }
 
@@ -116,7 +128,7 @@ class Resource {
   }
 
   isFull() {
-    return (this.limit() >= 0) && (this.limit() <= this.registeredMembers().length);
+    return this.limit() >= 0 && this.limit() <= this.registeredMembers().length;
   }
 
   canSubscribe() {
@@ -132,7 +144,7 @@ class Resource {
     if (this.limit() >= 0) {
       return Math.max(0, this.limit() - this.registeredMembers().length);
     }
-    return 'unbegrenzt';
+    return "unbegrenzt";
   }
 
   isRegistrationOpen() {
@@ -140,7 +152,7 @@ class Resource {
   }
 
   canUnsubscribe() {
-    return (this.state._canUnsubscribe === undefined) || this.state._canUnsubscribe;
+    return this.state._canUnsubscribe === undefined || this.state._canUnsubscribe;
   }
 
   hasWaitinglist() {
@@ -175,14 +187,14 @@ class Resource {
 
 // registration states
 
-Resource.fixed = 'fixed'; // registered and locked (no unsubscribe possible)
-Resource.registered = 'registered';
-Resource.registrationPossible = 'registrationPossible';
-Resource.registrationElsewhere = 'registrationElsewhere';
-Resource.registrationClosed = 'registrationClosed';
-Resource.waitinglistPossible = 'waitinglistPossible';
-Resource.onWaitinglist = 'onWaitinglist';
-Resource.full = 'full';
-Resource.canSubscribeFromWaitinglist = 'canSubscribeFromWaitinglist'; // is on waitinglist and entitled to subscribe
+Resource.fixed = "fixed"; // registered and locked (no unsubscribe possible)
+Resource.registered = "registered";
+Resource.registrationPossible = "registrationPossible";
+Resource.registrationElsewhere = "registrationElsewhere";
+Resource.registrationClosed = "registrationClosed";
+Resource.waitinglistPossible = "waitinglistPossible";
+Resource.onWaitinglist = "onWaitinglist";
+Resource.full = "full";
+Resource.canSubscribeFromWaitinglist = "canSubscribeFromWaitinglist"; // is on waitinglist and entitled to subscribe
 
 module.exports = Resource;

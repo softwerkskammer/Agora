@@ -1,5 +1,5 @@
-const util = require('util');
-const winstonLogger = require('winston').loggers.get('nodemailer');
+const util = require("util");
+const winstonLogger = require("winston").loggers.get("nodemailer");
 
 /**
  * Copied over from https://github.com/nodemailer/nodemailer/blob/master/lib/shared/index.js#L339
@@ -7,19 +7,19 @@ const winstonLogger = require('winston').loggers.get('nodemailer');
  */
 // https://github.com/winstonjs/winston/tree/2.x#logging-levels
 const nodeMailerLogLevelToWinstonNpmLevels = {
-  'fatal': 'error',
-  'error': 'error',
-  'warn': 'warn',
-  'info': 'info',
+  fatal: "error",
+  error: "error",
+  warn: "warn",
+  info: "info",
   //'': 'verbose', //no match for verbose
-  'debug': 'debug',
-  'trace': 'silly'
+  debug: "debug",
+  trace: "silly",
 };
 
 function logFunc(logger, level, data, message, ...args) {
   let entry = {};
-  Object.keys(data || {}).forEach(key => {
-    if (key !== 'level') {
+  Object.keys(data || {}).forEach((key) => {
+    if (key !== "level") {
       entry[key] = data[key];
     }
   });
@@ -41,34 +41,34 @@ function createDefaultLogger(levels) {
     }
   });
 
-  levels.forEach(level => {
+  levels.forEach((level) => {
     let levelName = level.toUpperCase();
     if (levelName.length < levelMaxLen) {
-      levelName += ' '.repeat(levelMaxLen - levelName.length);
+      levelName += " ".repeat(levelMaxLen - levelName.length);
     }
     levelNames.set(level, levelName);
   });
 
   let print = (level, entry, message, ...args) => {
-    let prefix = '';
+    let prefix = "";
     if (entry) {
-      if (entry.tnx === 'server') {
-        prefix = 'S: ';
-      } else if (entry.tnx === 'client') {
-        prefix = 'C: ';
+      if (entry.tnx === "server") {
+        prefix = "S: ";
+      } else if (entry.tnx === "client") {
+        prefix = "C: ";
       }
 
       if (entry.sid) {
-        prefix = '[' + entry.sid + '] ' + prefix;
+        prefix = "[" + entry.sid + "] " + prefix;
       }
 
       if (entry.cid) {
-        prefix = '[#' + entry.cid + '] ' + prefix;
+        prefix = "[#" + entry.cid + "] " + prefix;
       }
     }
 
     message = util.format(message, ...args);
-    message.split(/\r?\n/).forEach(line => {
+    message.split(/\r?\n/).forEach((line) => {
       const winstonNpmLevel = nodeMailerLogLevelToWinstonNpmLevels[level];
       winstonLogger.log(winstonNpmLevel, prefix + line);
     });
@@ -90,10 +90,10 @@ function createDefaultLogger(levels) {
  */
 const getLogger = () => {
   let response = {};
-  const levels = ['trace', 'debug', 'info', 'warn', 'error', 'fatal'];
+  const levels = ["trace", "debug", "info", "warn", "error", "fatal"];
   let logger = createDefaultLogger(levels);
 
-  levels.forEach(level => {
+  levels.forEach((level) => {
     response[level] = (data, message, ...args) => {
       logFunc(logger, level, data, message, ...args);
     };
@@ -103,5 +103,5 @@ const getLogger = () => {
 };
 
 module.exports = {
-  getLogger
+  getLogger,
 };
