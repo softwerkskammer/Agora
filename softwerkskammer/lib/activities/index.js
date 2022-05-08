@@ -138,7 +138,7 @@ app.get('/eventsForSidebar', (req, res, next) => {
       groupColors: function (callback) { groupsService.allGroupColors(callback); }
     },
     function (err, collectedColors) {
-      if (err) { next(err); }
+      if (err) { return next(err); }
       calendarService.eventsBetween(start, end, collectedColors.groupColors, (err1, events) => {
         if (err1) { return next(err1); }
         res.end(JSON.stringify(events));
