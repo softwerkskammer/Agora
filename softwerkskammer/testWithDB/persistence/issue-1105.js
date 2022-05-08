@@ -12,4 +12,10 @@ describe("Persistence", () => {
       persistence.listByField({ foo: "bar" }, {}, (err) => done(err));
     });
   });
+
+  describe("listByFieldWithOptionsAsync()", () => {
+    it("should not throw error if list is empty", async () => {
+      await persistence.listByFieldAsync({ foo: "bar" }, {});
+    });
+  });
 });

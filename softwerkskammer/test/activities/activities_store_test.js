@@ -36,7 +36,9 @@ describe("Activity store", () => {
     sampleList = [activity1, activity2];
 
     list = sinon.stub(persistence, "list").callsFake((sortOrder, callback) => callback(null, sampleList));
+    sinon.stub(persistence, "listAsync").returns(sampleList);
     sinon.stub(persistence, "listByField").callsFake((searchObject, sortOrder, callback) => callback(null, sampleList));
+    sinon.stub(persistence, "listByFieldAsync").returns(sampleList);
     getByField = sinon.stub(persistence, "getByField").callsFake((object, callback) => callback(null, activity1));
     getById = sinon.stub(persistence, "getById").callsFake((id, callback) => {
       if (id === "socrates") {
@@ -58,6 +60,14 @@ describe("Activity store", () => {
       expect(activities[1].descriptionHTML()).to.contain("bla");
       done(err);
     });
+  });
+
+  it("calls persistence.list for store.allActivities and transforms the result to an Activity", async () => {
+    const activities = await store.allActivitiesAsync();
+    expect(activities[0].title()).to.equal(activity1.title);
+    expect(activities[1].title()).to.equal(activity2.title);
+    expect(activities[0].descriptionHTML()).to.contain("bli");
+    expect(activities[1].descriptionHTML()).to.contain("bla");
   });
 
   it("calls persistence.getByField for store.getActivity and transforms the result to an Activity", (done) => {

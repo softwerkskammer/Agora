@@ -27,6 +27,10 @@ function toActivityList(callback, err, jsobjects) {
   );
 }
 
+function toActivityListAsync(jsobjects) {
+  return jsobjects.map((record) => (record && record.isSoCraTes ? new SoCraTesActivity(record) : new Activity(record)));
+}
+
 function allActivitiesByDateRange(rangeFrom, rangeTo, sortOrder, callback) {
   persistence.listByField(
     {
@@ -52,6 +56,11 @@ function flattenAndSortMongoResultCollection(collection) {
 module.exports = {
   allActivities: function allActivities(callback) {
     persistence.list({ startDate: 1 }, R.partial(toActivityList, [callback]));
+  },
+
+  allActivitiesAsync: async function allActivitiesAsync() {
+    const result = await persistence.listAsync({ startDate: 1 });
+    return toActivityListAsync(result);
   },
 
   allActivitiesByDateRangeInAscendingOrder,

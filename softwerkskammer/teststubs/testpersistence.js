@@ -5,19 +5,31 @@ module.exports = {
     throw new Error("Testpersistence - function list not implemented");
   },
 
+  listAsync: async function () {
+    throw new Error("Testpersistence - function list not implemented");
+  },
+
   listByIds: function () {
     throw new Error("Testpersistence - function listByIds not implemented");
   },
 
-  listByEMails: function () {
-    throw new Error("Testpersistence - function listByEMails not implemented");
+  listByIdsAsync: async function () {
+    throw new Error("Testpersistence - function listByIds not implemented");
   },
 
   listByField: function () {
     throw new Error("Testpersistence - function listByField not implemented");
   },
 
+  listByFieldAsync: async function () {
+    throw new Error("Testpersistence - function listByField not implemented");
+  },
+
   listByFieldWithOptions: function () {
+    throw new Error("Testpersistence - function listByFieldWithOptions not implemented");
+  },
+
+  listByFieldWithOptionsAsync: async function () {
     throw new Error("Testpersistence - function listByFieldWithOptions not implemented");
   },
 

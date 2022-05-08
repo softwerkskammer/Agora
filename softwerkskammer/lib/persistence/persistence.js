@@ -25,10 +25,20 @@ module.exports = function persistenceFunc(collectionName) {
       return callback(null, ourDB);
     }
     logInfo("connection is " + ourDBConnectionState + ", opening it and retrying");
-    persistence.openDB();
     setTimeout(function () {
       performInDB(callback);
     }, 100);
+  }
+
+  async function getOpenDb() {
+    if (ourDBConnectionState === DBSTATE.OPEN) {
+      logInfo("connection is open");
+      return ourDB;
+    }
+    logInfo("connection is " + ourDBConnectionState + ", opening it and retrying");
+    await persistence.openDBAsync();
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    await getOpenDb();
   }
 
   persistence = {
@@ -57,6 +67,23 @@ module.exports = function persistenceFunc(collectionName) {
       });
     },
 
+    listAsync: async function listAsync(sortOrder) {
+      return this.listByFieldAsync({}, sortOrder);
+    },
+
+    listByIdsAsync: async function listByIdsAsync(list, sortOrder) {
+      return this.listByFieldAsync({ id: { $in: list } }, sortOrder);
+    },
+
+    listByFieldAsync: async function listByFieldAsync(searchObject, sortOrder) {
+      return this.listByFieldWithOptionsAsync(searchObject, {}, sortOrder);
+    },
+
+    listByFieldWithOptionsAsync: async function listByFieldWithOptionsAsync(searchObject, options, sortOrder) {
+      const db = await getOpenDb();
+      return db.collection(collectionName).find(searchObject, options).sort(sortOrder).toArray();
+    },
+
     getById: function getById(id, callback) {
       this.getByField({ id }, callback);
     },
@@ -77,6 +104,16 @@ module.exports = function persistenceFunc(collectionName) {
       });
     },
 
+    getByIdAsync: async function getByIdAsync(id) {
+      return this.getByFieldAsync({ id });
+    },
+
+    getByFieldAsync: async function getByFieldAsync(fieldAsObject) {
+      const db = await getOpenDb();
+      const result = await db.collection(collectionName).find(fieldAsObject).toArray();
+      return result[0];
+    },
+
     mapReduce: function mapReduce(map, reduce, options, callback) {
       performInDB((err, db) => {
         if (err) {
@@ -93,6 +130,16 @@ module.exports = function persistenceFunc(collectionName) {
           }
         });
       });
+    },
+
+    mapReduceAsync: async function mapReduceAsync(map, reduce, options) {
+      const db = await getOpenDb();
+      const names = await db.listCollections({ name: collectionName }).toArray();
+      if (names.length === 0) {
+        return [];
+      } else {
+        return db.collection(collectionName).mapReduce(map, reduce, options);
+      }
     },
 
     save: function save(object, callback) {
@@ -139,6 +186,32 @@ module.exports = function persistenceFunc(collectionName) {
       });
     },
 
+    saveAsync: async function saveAsync(object) {
+      return this.updateAsync(object, object.id);
+    },
+
+    updateAsync: async function updateAsync(object, storedId) {
+      if (object.id === null || object.id === undefined) {
+        throw new Error("Given object has no valid id");
+      }
+      const db = await getOpenDb();
+      const collection = db.collection(collectionName);
+      return collection.replaceOne({ id: storedId }, object, { upsert: true });
+    },
+
+    removeAsync: async function removeAsync(objectId) {
+      if (objectId === null || objectId === undefined) {
+        throw new Error("Given object has no valid id");
+      }
+      const db = await getOpenDb();
+      return db.collection(collectionName).deleteOne(
+        { id: objectId },
+        {
+          writeConcern: { w: 1 },
+        }
+      );
+    },
+
     saveWithVersion: function saveWithVersion(object, callback) {
       const self = this;
       if (object.id === null || object.id === undefined) {
@@ -182,6 +255,36 @@ module.exports = function persistenceFunc(collectionName) {
       });
     },
 
+    saveWithVersionAsync: async function saveWithVersionAsync(object) {
+      const self = this;
+      if (object.id === null || object.id === undefined) {
+        throw new Error("Given object has no valid id");
+      }
+      const db = await getOpenDb();
+      const collection = db.collection(collectionName);
+      const oldVersion = object.version;
+      object.version = oldVersion ? oldVersion + 1 : 1;
+      const result = await this.getByIdAsync(object.id);
+      if (result) {
+        // object exists
+        const newObject = await collection.findOneAndUpdate(
+          { id: object.id, version: oldVersion },
+          { $set: object },
+          { new: true, upsert: false }
+        );
+        if (!newObject.value) {
+          // something went wrong: restore old version count
+          object.version = oldVersion;
+          throw new Error(CONFLICTING_VERSIONS);
+        }
+        //logger.info(object.constructor.name + ' found and modified: ' + JSON.stringify(object));
+        return newObject.value;
+      } else {
+        // object is not yet persisted
+        return self.saveAsync(object);
+      }
+    },
+
     saveAll: function saveAll(objects, outerCallback) {
       const self = this;
       async.each(
@@ -205,7 +308,17 @@ module.exports = function persistenceFunc(collectionName) {
       });
     },
 
-    openDB: function openDB() {
+    saveAllAsync: async function saveAllAsync(objects) {
+      return Promise.all(objects.map((obj) => this.saveAsync(obj)));
+    },
+
+    dropAsync: async function dropAsync() {
+      const db = await getOpenDb();
+      logger.info("Drop " + collectionName + " called!");
+      return db.dropCollection(collectionName);
+    },
+
+    openDBAsync: async function openDBAsync() {
       if (ourDBConnectionState !== DBSTATE.CLOSED) {
         logInfo("connection state is " + ourDBConnectionState + ". Returning.");
         return;
@@ -216,40 +329,36 @@ module.exports = function persistenceFunc(collectionName) {
 
       const MongoClient = require("mongodb").MongoClient;
       logInfo("Connecting to Mongo");
-      MongoClient.connect(conf.get("mongoURL"), { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-        var db = client.db("swk");
+      try {
         logInfo("In connect callback");
-        if (err) {
-          logInfo("An error occurred: " + err);
-          ourDBConnectionState = DBSTATE.CLOSED;
-          return logger.error(err);
-        }
+        const client = await MongoClient.connect(conf.get("mongoURL"), {
+          useNewUrlParser: true,
+          useUnifiedTopology: true,
+        });
+        var db = client.db("swk");
         ourDB = db;
         ourClient = client;
         ourDBConnectionState = DBSTATE.OPEN;
         logInfo("DB state is now OPEN, db = " + db);
-      });
+      } catch (err) {
+        logInfo("An error occurred: " + err);
+        ourDBConnectionState = DBSTATE.CLOSED;
+        logger.error(err);
+      }
     },
 
-    closeDB: function closeDB(callback) {
+    closeDBAsync: async function closeDBAsync() {
       if (ourDBConnectionState === DBSTATE.CLOSED) {
-        if (callback) {
-          callback();
-        }
         return;
       }
-      performInDB(() => {
-        ourClient.close();
-        ourClient = undefined;
-        ourDBConnectionState = DBSTATE.CLOSED;
-        logInfo("connection closed");
-        if (callback) {
-          callback();
-        }
-      });
+      await ourClient.close();
+      ourClient = undefined;
+      ourDB = undefined;
+      ourDBConnectionState = DBSTATE.CLOSED;
+      logInfo("connection closed");
     },
   };
 
-  persistence.openDB();
+  persistence.openDBAsync();
   return persistence;
 };
