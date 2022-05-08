@@ -134,11 +134,16 @@ module.exports = {
     }
   },
 
-  isEmailPrefixAvailable: function isEmailPrefixAvailable(prefix, callback) {
+  isEmailPrefixAvailable: async function isEmailPrefixAvailable(prefix, callback) {
     if (!prefix) {
       return callback(null, false);
     }
-    groupstore.getGroupForPrefix(prefix.trim(), (err, group) => callback(err, group === null));
+    try {
+      const group = await groupstore.getGroupForPrefix(prefix.trim());
+      callback(null, group === null);
+    } catch (e) {
+      callback(e);
+    }
   },
 
   getGroups: async function getGroups(groupnames, callback) {

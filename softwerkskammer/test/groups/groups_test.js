@@ -64,11 +64,11 @@ describe("Groups application", () => {
       return null;
     });
 
-    sinon.stub(groupstore, "getGroupForPrefix").callsFake((list, callback) => {
+    sinon.stub(groupstore, "getGroupForPrefix").callsFake((list) => {
       if (list === "Group-A") {
-        return callback(null, GroupA);
+        return GroupA;
       }
-      return callback(null, null);
+      return null;
     });
 
     sinon.stub(groupstore, "allGroups").returns([GroupA]);

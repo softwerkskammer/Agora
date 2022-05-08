@@ -5,7 +5,6 @@ const persistence = beans.get("groupsPersistence");
 const Group = beans.get("group");
 const misc = beans.get("misc");
 
-const toGroup = R.partial(misc.toObject, [Group]);
 const toGroupList = R.partial(misc.toObjectList, [Group]);
 
 module.exports = {
@@ -24,8 +23,9 @@ module.exports = {
     return new Group(group);
   },
 
-  getGroupForPrefix: function getGroupForPrefix(prefix, callback) {
-    persistence.getByField({ emailPrefix: misc.toLowerCaseRegExp(prefix) }, R.partial(toGroup, [callback]));
+  getGroupForPrefix: async function getGroupForPrefix(prefix) {
+    const group = await persistence.getByField({ emailPrefix: misc.toLowerCaseRegExp(prefix) });
+    return new Group(group);
   },
 
   getGroupsWithMeetupURL: function getGroupsWithMeetupURL(callback) {
