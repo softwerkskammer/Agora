@@ -57,9 +57,7 @@ describe("Groups and Members Service (member deletion)", () => {
   });
 
   it("removes the groups membership and kills the member", (done) => {
-    sinon.stub(groupsService, "getSubscribedGroupsForMember").callsFake((member, callback) => {
-      callback(null, [GroupA, GroupB]);
-    });
+    sinon.stub(groupsService, "getSubscribedGroupsForMember").returns([GroupA, GroupB]);
 
     groupsAndMembersService.removeMember("nick", (err) => {
       expect(savedGroups.length).to.equal(2);
@@ -73,9 +71,7 @@ describe("Groups and Members Service (member deletion)", () => {
   });
 
   it("does not call the groups when no groups subscribed but kills the member", (done) => {
-    sinon.stub(groupsService, "getSubscribedGroupsForMember").callsFake((member, callback) => {
-      callback(null, []);
-    });
+    sinon.stub(groupsService, "getSubscribedGroupsForMember").returns([]);
 
     groupsAndMembersService.removeMember("nick", (err) => {
       expect(savedGroups.length).to.equal(0);

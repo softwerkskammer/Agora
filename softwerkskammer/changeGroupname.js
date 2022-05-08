@@ -43,9 +43,7 @@ groupsAndMembers.getGroupAndMembersForList(oldId, (err, group) => {
   handle(err);
   async.each(
     group.members,
-    (member, callback) => {
-      groupsService.addMemberToGroupNamed(member, newId, callback);
-    },
+    async.asyncify(async (member) => await groupsService.addMemberToGroupNamed(member, newId)),
     (err1) => {
       handle(err1);
 

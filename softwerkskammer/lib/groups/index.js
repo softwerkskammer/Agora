@@ -15,26 +15,21 @@ const statusmessage = beans.get("statusmessage");
 
 const app = misc.expressAppIn(__dirname);
 
-function groupSubmitted(req, res, next) {
+async function groupSubmitted(req, res) {
   const group = new Group(req.body);
-  groupsService.isGroupValid(group, async (errors) => {
-    if (errors.length !== 0) {
-      return res.render("../../../views/errorPages/validationError", { errors });
-    }
-    try {
-      const existingGroup = await groupstore.getGroup(group.id);
-      if (!existingGroup) {
-        group.subscribe(req.user.member);
-      } else {
-        group.subscribedMembers = existingGroup.subscribedMembers;
-      }
-      await groupstore.saveGroup(group);
-      statusmessage.successMessage("message.title.save_successful", "message.content.groups.saved").putIntoSession(req);
-      res.redirect("/groups/" + group.id);
-    } catch (e) {
-      return next(e);
-    }
-  });
+  const errors = await groupsService.isGroupValid(group);
+  if (errors.length !== 0) {
+    return res.render("../../../views/errorPages/validationError", { errors });
+  }
+  const existingGroup = await groupstore.getGroup(group.id);
+  if (!existingGroup) {
+    group.subscribe(req.user.member);
+  } else {
+    group.subscribedMembers = existingGroup.subscribedMembers;
+  }
+  await groupstore.saveGroup(group);
+  statusmessage.successMessage("message.title.save_successful", "message.content.groups.saved").putIntoSession(req);
+  res.redirect("/groups/" + group.id);
 }
 
 // display all groups
@@ -86,42 +81,40 @@ app.post("/clone-from-meetup-for-group", async (req, res, next) => {
   }
 });
 
-app.get("/checkgroupname", (req, res) => {
-  misc.validate(req.query.id, null, groupsService.isGroupNameAvailable, res.end);
+app.get("/checkgroupname", async (req, res) => {
+  return misc.validateAsync(req.query.id, null, groupsService.isGroupNameAvailable, res.end);
 });
 
-app.get("/checkemailprefix", (req, res) => {
-  misc.validate(req.query.emailPrefix, null, groupsService.isEmailPrefixAvailable, res.end);
+app.get("/checkemailprefix", async (req, res) => {
+  misc.validateAsync(req.query.emailPrefix, null, groupsService.isEmailPrefixAvailable, res.end);
 });
 
-app.post("/subscribe", (req, res) => {
-  groupsService.addMemberToGroupNamed(req.user.member, req.body.groupname, (err) => {
-    if (err) {
-      statusmessage
-        .errorMessage("message.title.problem", "message.content.save_error_reason", { err: err.toString() })
-        .putIntoSession(req);
-    } else {
-      statusmessage
-        .successMessage("message.title.save_successful", "message.content.groups.subscribed")
-        .putIntoSession(req);
-    }
-    res.redirect("/groups/" + req.body.groupname);
-  });
+app.post("/subscribe", async (req, res) => {
+  try {
+    await groupsService.addMemberToGroupNamed(req.user.member, req.body.groupname);
+    statusmessage
+      .successMessage("message.title.save_successful", "message.content.groups.subscribed")
+      .putIntoSession(req);
+  } catch (err) {
+    statusmessage
+      .errorMessage("message.title.problem", "message.content.save_error_reason", { err: err.toString() })
+      .putIntoSession(req);
+  }
+  res.redirect("/groups/" + req.body.groupname);
 });
 
-app.post("/unsubscribe", (req, res) => {
-  groupsService.removeMemberFromGroupNamed(req.user.member, req.body.groupname, (err) => {
-    if (err) {
-      statusmessage
-        .errorMessage("message.title.problem", "message.content.save_error_reason", { err: err.toString() })
-        .putIntoSession(req);
-    } else {
-      statusmessage
-        .successMessage("message.title.save_successful", "message.content.groups.unsubscribed")
-        .putIntoSession(req);
-    }
-    res.redirect("/groups/" + req.body.groupname);
-  });
+app.post("/unsubscribe", async (req, res) => {
+  try {
+    await groupsService.removeMemberFromGroupNamed(req.user.member, req.body.groupname);
+    statusmessage
+      .successMessage("message.title.save_successful", "message.content.groups.unsubscribed")
+      .putIntoSession(req);
+  } catch (err) {
+    statusmessage
+      .errorMessage("message.title.problem", "message.content.save_error_reason", { err: err.toString() })
+      .putIntoSession(req);
+  }
+  res.redirect("/groups/" + req.body.groupname);
 });
 
 app.get("/:groupname", (req, res, next) => {

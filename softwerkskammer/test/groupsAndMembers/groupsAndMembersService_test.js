@@ -52,9 +52,7 @@ describe("Groups and Members Service (getMemberWithHisGroups or getMemberWithHis
       sinon.stub(memberstore, "getMember").callsFake((nickname, callback) => {
         callback(null, dummymember);
       });
-      sinon.stub(groupsService, "getSubscribedGroupsForMember").callsFake((userMail, globalCallback) => {
-        globalCallback(null, [GroupA, GroupB]);
-      });
+      sinon.stub(groupsService, "getSubscribedGroupsForMember").returns([GroupA, GroupB]);
 
       groupsAndMembersService.getMemberWithHisGroups("nickname", (err, member) => {
         expect(member).to.equal(dummymember);
@@ -83,9 +81,7 @@ describe("Groups and Members Service (getMemberWithHisGroups or getMemberWithHis
       sinon.stub(memberstore, "getMemberForId").callsFake((memberID, callback) => {
         callback(null, dummymember);
       });
-      sinon.stub(groupsService, "getSubscribedGroupsForMember").callsFake((userMail, globalCallback) => {
-        globalCallback(null, [GroupA, GroupB]);
-      });
+      sinon.stub(groupsService, "getSubscribedGroupsForMember").returns([GroupA, GroupB]);
 
       groupsAndMembersService.getMemberWithHisGroupsByMemberId("id", (err, member) => {
         expect(member).to.equal(dummymember);

@@ -101,12 +101,10 @@ module.exports = {
     });
   },
 
-  sendMailToInvitedGroups: function sendMailToInvitedGroups(invitedGroups, activityURL, message, callback) {
+  sendMailToInvitedGroups: async function sendMailToInvitedGroups(invitedGroups, activityURL, message, callback) {
     const type = "$t(mailsender.invitation)";
-    return groupsService.getGroups(invitedGroups, (err, groups) => {
-      if (err) {
-        return callback(err, mailtransport.statusmessageForError(type, err));
-      }
+    try {
+      const groups = await groupsService.getGroups(invitedGroups);
       if (groups.length === 0) {
         return callback(
           null,
@@ -125,7 +123,9 @@ module.exports = {
           sendMail(message, type, callback);
         });
       });
-    });
+    } catch (err) {
+      callback(err, mailtransport.statusmessageForError(type, err));
+    }
   },
 
   sendMailToMember: function sendMailToMember(nickname, message, callback) {
@@ -223,12 +223,10 @@ module.exports = {
     });
   },
 
-  sendMailToContactPersonsOfGroup: function sendMailToContactPersonsOfGroup(groupId, message, callback) {
+  sendMailToContactPersonsOfGroup: async function sendMailToContactPersonsOfGroup(groupId, message, callback) {
     const type = "$t(mailsender.notification)";
-    groupsService.getGroups([groupId], (groupLoadErr, groups) => {
-      if (groupLoadErr) {
-        return callback(groupLoadErr, mailtransport.statusmessageForError(type, groupLoadErr));
-      }
+    try {
+      const groups = await groupsService.getGroups([groupId]);
       if (groups.length !== 1) {
         logger.error(`${groups.length} Gruppen für Id ${groupId} gefunden. Erwarte genau eine Gruppe.`);
         const error = new Error("Das senden der E-Mail ist fehlgeschlagen. Es liegt ein technisches Problem vor.");
@@ -251,6 +249,8 @@ module.exports = {
         message.setBccToMemberAddresses(organizers);
         sendMail(message, type, callback);
       });
-    });
+    } catch (groupLoadErr) {
+      return callback(groupLoadErr, mailtransport.statusmessageForError(type, groupLoadErr));
+    }
   },
 };

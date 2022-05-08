@@ -124,6 +124,28 @@ module.exports = {
     });
   },
 
+  validateAsync: async function validateAsync(currentValue, previousValue, validator, callback) {
+    if (!currentValue) {
+      return callback("false");
+    }
+
+    currentValue = currentValue.trim();
+    if (previousValue) {
+      previousValue = previousValue.trim();
+    }
+
+    if (previousValue === currentValue) {
+      return callback("true");
+    }
+
+    try {
+      const result = await validator(currentValue);
+      callback(result.toString());
+    } catch (e) {
+      return callback("false");
+    }
+  },
+
   representsImage: function representsImage(filenameOrExtension) {
     const extension = filenameOrExtension.indexOf(".") < 1 ? filenameOrExtension : path.extname(filenameOrExtension);
     return imageExtensions.includes(extension.replace(/\./, ""));

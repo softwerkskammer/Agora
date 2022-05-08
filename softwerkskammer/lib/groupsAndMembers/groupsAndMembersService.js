@@ -9,18 +9,18 @@ const groupstore = beans.get("groupstore");
 const misc = beans.get("misc");
 const Member = beans.get("member");
 
-function addGroupsToMember(member, callback) {
+async function addGroupsToMember(member, callback) {
   if (!member) {
     return callback(null);
   }
   // API geändert von email() auf member und Methode umbenannt
-  groupsService.getSubscribedGroupsForMember(member, (err, subscribedGroups) => {
-    if (err) {
-      return callback(err);
-    }
+  try {
+    const subscribedGroups = await groupsService.getSubscribedGroupsForMember(member);
     member.subscribedGroups = subscribedGroups;
-    callback(err, member);
-  });
+    callback(null, member);
+  } catch (e) {
+    return callback(e);
+  }
 }
 
 module.exports = {
@@ -120,7 +120,7 @@ module.exports = {
         member.addAuthentication(memberformData.additionalAuthentication);
       }
       member.fillFromUI(memberformData);
-      memberstore.saveMember(member, (err1) => {
+      memberstore.saveMember(member, async (err1) => {
         if (err1) {
           return callback(err1);
         }
@@ -135,7 +135,12 @@ module.exports = {
           notifyNewMemberRegistration(member, subscriptions);
         }
         // API change: email() -> member, oldEmail removed and also inlined
-        return groupsService.updateSubscriptions(member, subscriptions, (err2) => callback(err2, member.nickname()));
+        try {
+          await groupsService.updateSubscriptions(member, subscriptions);
+          callback(null, member.nickname());
+        } catch (e) {
+          callback(e);
+        }
       });
     });
   },

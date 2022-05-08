@@ -262,14 +262,14 @@ describe("MailsenderService", () => {
     const groupA = new Group({ id: "groupA" });
 
     beforeEach(() => {
-      sinon.stub(groupsService, "getGroups").callsFake((groupnames, callback) => {
+      sinon.stub(groupsService, "getGroups").callsFake((groupnames) => {
         if (groupnames === null) {
-          return callback(new Error());
+          throw new Error();
         }
         if (groupnames.length === 0) {
-          return callback(null, []);
+          return [];
         }
-        callback(null, [groupA]);
+        return [groupA];
       });
     });
 
@@ -300,14 +300,14 @@ describe("MailsenderService", () => {
     const groupB = new Group({ id: "groupB" });
 
     beforeEach(() => {
-      sinon.stub(groupsService, "getGroups").callsFake((groupnames, callback) => {
+      sinon.stub(groupsService, "getGroups").callsFake((groupnames) => {
         if (groupnames === null) {
-          return callback(new Error());
+          throw new Error();
         }
         if (groupnames.length === 0) {
-          return callback(null, []);
+          return [];
         }
-        callback(null, [groupA, groupB]);
+        return [groupA, groupB];
       });
     });
 
@@ -409,27 +409,22 @@ describe("MailsenderService", () => {
 
   describe("sending to contact persons of a group", () => {
     function getGroups(groupIdToLookUp, fakeImplementation) {
-      return sinon
-        .stub(groupsService, "getGroups")
-        .withArgs([groupIdToLookUp], sinon.match.any)
-        .callsFake(fakeImplementation);
+      return sinon.stub(groupsService, "getGroups").callsFake(fakeImplementation);
     }
 
     function thereIsAGroup(group) {
-      return getGroups(group.id, function (passedGroupName, callback) {
-        callback(null, [group]);
+      return getGroups(group.id, function () {
+        return [group];
       });
     }
 
     function thereIsNoGroup() {
-      return sinon.stub(groupsService, "getGroups").callsFake(function (passedGroupId, callback) {
-        callback(null, []);
-      });
+      return sinon.stub(groupsService, "getGroups").returns([]);
     }
 
     function getGroupFails(groupId) {
-      return getGroups(groupId, function (passedGroupNames, callback) {
-        callback(new Error("getGroups failed"));
+      return getGroups(groupId, function () {
+        throw new Error("getGroups failed");
       });
     }
 

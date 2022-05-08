@@ -18,7 +18,7 @@ module.exports = {
       {
         activities: activitiesFetcher,
         groups: async.asyncify(async () => await groupstore.allGroups()),
-        groupColors: groupsService.allGroupColors.bind(groupsService),
+        groupColors: async.asyncify(async () => await groupsService.allGroupColors()),
       },
 
       (err, results) => {

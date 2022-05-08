@@ -97,9 +97,7 @@ describe("Groups and Members Service (updateAndSaveSubmittedMember)", () => {
       sinon.stub(groupsAndMembersService, "getMemberWithHisGroups").callsFake((nickname, callback) => {
         callback(null, null);
       });
-      sinon.stub(groupsService, "updateSubscriptions").callsFake((anyMember, subscriptions, callback) => {
-        callback(null);
-      });
+      sinon.stub(groupsService, "updateSubscriptions").callsFake(() => {});
     });
 
     it("adds the new member to the sessionUser", (done) => {
@@ -130,9 +128,7 @@ describe("Groups and Members Service (updateAndSaveSubmittedMember)", () => {
       sinon.stub(groupsAndMembersService, "getMemberWithHisGroups").callsFake((nickname, callback) => {
         callback(null, member);
       });
-      sinon.stub(groupsService, "updateSubscriptions").callsFake((anyMember, subscriptions, callback) => {
-        callback(null);
-      });
+      sinon.stub(groupsService, "updateSubscriptions").callsFake(() => {});
     });
 
     it("returns null when we are not allowed to edit the member", (done) => {

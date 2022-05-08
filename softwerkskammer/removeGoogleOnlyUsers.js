@@ -33,10 +33,10 @@ gamService.getAllMembersWithTheirGroups((err, members) => {
     (member, cb1) =>
       async.each(
         member.subscribedGroups,
-        (group, cb2) => {
+        async.asyncify(async (group) => {
           console.log("Unsubscribing " + member.displayName() + " from " + group.longName);
-          groupsService.removeMemberFromGroupNamed(member, group.id, cb2);
-        },
+          return groupsService.removeMemberFromGroupNamed(member, group.id);
+        }),
         // callback when the one member has been unsubscribed from all groups:
         (err1) => {
           if (err1) {

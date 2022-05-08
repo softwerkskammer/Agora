@@ -156,28 +156,21 @@ app.get("/ical/:url", (req, res, next) => {
   });
 });
 
-app.get("/eventsForSidebar", (req, res, next) => {
+app.get("/eventsForSidebar", async (req, res, next) => {
   const start = new Date(req.query.start).getTime();
   const end = new Date(req.query.end).getTime();
 
-  async.parallel(
-    {
-      groupColors: function (callback) {
-        groupsService.allGroupColors(callback);
-      },
-    },
-    function (err, collectedColors) {
-      if (err) {
-        return next(err);
+  try {
+    const groupColors = await groupsService.allGroupColors();
+    calendarService.eventsBetween(start, end, groupColors, (err1, events) => {
+      if (err1) {
+        return next(err1);
       }
-      calendarService.eventsBetween(start, end, collectedColors.groupColors, (err1, events) => {
-        if (err1) {
-          return next(err1);
-        }
-        res.end(JSON.stringify(events));
-      });
-    }
-  );
+      res.end(JSON.stringify(events));
+    });
+  } catch (e) {
+    next(e);
+  }
 });
 
 async function renderActivityCombinedWithGroups(res, next, activity) {
@@ -210,12 +203,8 @@ async function renderActivityCombinedWithGroups(res, next, activity) {
   }
 
   // API geändert von email() auf member und Methode umbenannt
-  groupsService.getSubscribedGroupsForMember(res.locals.user.member, function (err, subscribedGroups) {
-    if (err) {
-      return next(err);
-    }
-    return render(Group.regionalsFrom(subscribedGroups).concat(Group.thematicsFrom(subscribedGroups)));
-  });
+  const subscribedGroups = await groupsService.getSubscribedGroupsForMember(res.locals.user.member);
+  return render(Group.regionalsFrom(subscribedGroups).concat(Group.thematicsFrom(subscribedGroups)));
 }
 
 app.get("/new", (req, res, next) => renderActivityCombinedWithGroups(res, next, new Activity()));

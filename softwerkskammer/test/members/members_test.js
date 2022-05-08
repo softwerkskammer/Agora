@@ -43,11 +43,7 @@ describe("Members application", () => {
     sinon.stub(membersService, "putAvatarIntoMemberAndSave").callsFake((member, callback) => {
       callback();
     });
-    getSubscribedGroupsForUser = sinon
-      .stub(groupsService, "getSubscribedGroupsForMember")
-      .callsFake((member, callback) => {
-        callback(null, []);
-      });
+    getSubscribedGroupsForUser = sinon.stub(groupsService, "getSubscribedGroupsForMember").returns([]);
     sinon.stub(activitiesService, "getPastActivitiesOfMember").callsFake((member, callback) => {
       callback(null, []);
     });
@@ -239,9 +235,7 @@ describe("Members application", () => {
     sinon.stub(membersService, "isValidEmail").callsFake((nickname, callback) => {
       callback(null, true);
     });
-    sinon.stub(groupsService, "updateSubscriptions").callsFake((member, subscriptions, callback) => {
-      callback();
-    });
+    sinon.stub(groupsService, "updateSubscriptions").callsFake(() => {});
     sinon.stub(memberstore, "saveMember").callsFake((member, callback) => {
       callback(null);
     });
@@ -270,9 +264,7 @@ describe("Members application", () => {
     sinon.stub(membersService, "isValidEmail").callsFake((nickname, callback) => {
       callback(null, true);
     });
-    sinon.stub(groupsService, "updateSubscriptions").callsFake((member, subscriptions, callback) => {
-      callback();
-    });
+    sinon.stub(groupsService, "updateSubscriptions").callsFake(() => {});
     sinon.stub(memberstore, "saveMember").callsFake((member, callback) => {
       callback(null);
     });

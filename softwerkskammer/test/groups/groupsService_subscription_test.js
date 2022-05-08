@@ -36,91 +36,75 @@ describe("Groups Service (updateSubscriptions)", () => {
     sinon.stub(groupstore, "allGroups").returns(testGroupsArray);
   }
 
-  it("subscribes and unsubscribes no lists if both old and new subscription lists are empty", (done) => {
+  it("subscribes and unsubscribes no lists if both old and new subscription lists are empty", async () => {
     setupSubscribedListsForUser([]);
 
-    systemUnderTest.updateSubscriptions(testMember, [], (err) => {
-      expect(saveGroupSpy.called, "group changed and saved").to.be(false);
-      done(err);
-    });
+    await systemUnderTest.updateSubscriptions(testMember, []);
+    expect(saveGroupSpy.called, "group changed and saved").to.be(false);
   });
 
-  it("subscribes and unsubscribes no lists if old list contains one element and new subscription is the same element (not array)", (done) => {
+  it("subscribes and unsubscribes no lists if old list contains one element and new subscription is the same element (not array)", async () => {
     setupSubscribedListsForUser(["groupa"]);
 
-    systemUnderTest.updateSubscriptions(testMember, "groupa", (err) => {
-      expect(saveGroupSpy.called, "group changed and saved").to.be(false);
-      done(err);
-    });
+    await systemUnderTest.updateSubscriptions(testMember, "groupa");
+    expect(saveGroupSpy.called, "group changed and saved").to.be(false);
   });
 
-  it("subscribes and unsubscribes no lists if old and new subscription lists contain the same lists", (done) => {
+  it("subscribes and unsubscribes no lists if old and new subscription lists contain the same lists", async () => {
     setupSubscribedListsForUser(["groupa", "groupb"]);
 
-    systemUnderTest.updateSubscriptions(testMember, ["groupa", "groupb"], (err) => {
-      expect(saveGroupSpy.called, "group changed and saved").to.be(false);
-      done(err);
-    });
+    await systemUnderTest.updateSubscriptions(testMember, ["groupa", "groupb"]);
+    expect(saveGroupSpy.called, "group changed and saved").to.be(false);
   });
 
-  it("subscribes one list if old subscriptions are empty and new ones contain one listname (not array)", (done) => {
+  it("subscribes one list if old subscriptions are empty and new ones contain one listname (not array)", async () => {
     setupSubscribedListsForUser([]);
 
-    systemUnderTest.updateSubscriptions(testMember, "groupa", (err) => {
-      expect(saveGroupSpy.calledOnce, "group changed and saved").to.be(true);
-      expect(saveGroupSpy.calledWith(testGroups.GroupA)).to.be(true);
-      done(err);
-    });
+    await systemUnderTest.updateSubscriptions(testMember, "groupa");
+    expect(saveGroupSpy.calledOnce, "group changed and saved").to.be(true);
+    expect(saveGroupSpy.calledWith(testGroups.GroupA)).to.be(true);
   });
 
-  it("subscribes one list if old subscriptions are empty and new ones contain one listname in an array", (done) => {
+  it("subscribes one list if old subscriptions are empty and new ones contain one listname in an array", async () => {
     setupSubscribedListsForUser([]);
 
-    systemUnderTest.updateSubscriptions(testMember, ["groupa"], (err) => {
-      expect(saveGroupSpy.calledOnce, "group changed and saved").to.be(true);
-      expect(saveGroupSpy.calledWith(testGroups.GroupA)).to.be(true);
-      expect(testGroups.GroupA.subscribedMembers).to.include(testMember.id());
-      done(err);
-    });
+    await systemUnderTest.updateSubscriptions(testMember, ["groupa"]);
+    expect(saveGroupSpy.calledOnce, "group changed and saved").to.be(true);
+    expect(saveGroupSpy.calledWith(testGroups.GroupA)).to.be(true);
+    expect(testGroups.GroupA.subscribedMembers).to.include(testMember.id());
   });
 
-  it("unsubscribes one list if old subscriptions contain a list and new ones are undefined", (done) => {
+  it("unsubscribes one list if old subscriptions contain a list and new ones are undefined", async () => {
     setupSubscribedListsForUser(["groupa"]);
     expect(testGroups.GroupA.subscribedMembers).to.include(testMember.id());
 
-    systemUnderTest.updateSubscriptions(testMember, undefined, (err) => {
-      expect(saveGroupSpy.calledOnce, "group changed and saved").to.be(true);
-      expect(saveGroupSpy.calledWith(testGroups.GroupA)).to.be(true);
-      expect(testGroups.GroupA.subscribedMembers).not.to.include(testMember.id());
-      done(err);
-    });
+    await systemUnderTest.updateSubscriptions(testMember, undefined);
+    expect(saveGroupSpy.calledOnce, "group changed and saved").to.be(true);
+    expect(saveGroupSpy.calledWith(testGroups.GroupA)).to.be(true);
+    expect(testGroups.GroupA.subscribedMembers).not.to.include(testMember.id());
   });
 
-  it("unsubscribes one list if old subscriptions contain a list and new ones are an empty array", (done) => {
+  it("unsubscribes one list if old subscriptions contain a list and new ones are an empty array", async () => {
     setupSubscribedListsForUser(["groupa"]);
     expect(testGroups.GroupA.subscribedMembers).to.include(testMember.id());
 
-    systemUnderTest.updateSubscriptions(testMember, [], (err) => {
-      expect(saveGroupSpy.calledOnce, "group changed and saved").to.be(true);
-      expect(saveGroupSpy.calledWith(testGroups.GroupA)).to.be(true);
-      expect(testGroups.GroupA.subscribedMembers).not.to.include(testMember.id());
-      done(err);
-    });
+    await systemUnderTest.updateSubscriptions(testMember, []);
+    expect(saveGroupSpy.calledOnce, "group changed and saved").to.be(true);
+    expect(saveGroupSpy.calledWith(testGroups.GroupA)).to.be(true);
+    expect(testGroups.GroupA.subscribedMembers).not.to.include(testMember.id());
   });
 
-  it("subscribes and unsubscribes appropriately if there are many changes", (done) => {
+  it("subscribes and unsubscribes appropriately if there are many changes", async () => {
     setupSubscribedListsForUser(["groupa", "groupb"]);
 
-    systemUnderTest.updateSubscriptions(testMember, ["groupb", "groupc"], (err) => {
-      expect(saveGroupSpy.calledTwice, "each group changed and saved").to.be(true);
-      expect(saveGroupSpy.calledWith(testGroups.GroupA)).to.be(true);
-      expect(saveGroupSpy.calledWith(testGroups.GroupB), "GroupB was not changed").to.be(false);
-      expect(saveGroupSpy.calledWith(testGroups.GroupC)).to.be(true);
-      expect(testGroups.GroupA.subscribedMembers).not.to.include(testMember.id());
-      expect(testGroups.GroupB.subscribedMembers).to.include(testMember.id());
-      expect(testGroups.GroupC.subscribedMembers).to.include(testMember.id());
-      done(err);
-    });
+    await systemUnderTest.updateSubscriptions(testMember, ["groupb", "groupc"]);
+    expect(saveGroupSpy.calledTwice, "each group changed and saved").to.be(true);
+    expect(saveGroupSpy.calledWith(testGroups.GroupA)).to.be(true);
+    expect(saveGroupSpy.calledWith(testGroups.GroupB), "GroupB was not changed").to.be(false);
+    expect(saveGroupSpy.calledWith(testGroups.GroupC)).to.be(true);
+    expect(testGroups.GroupA.subscribedMembers).not.to.include(testMember.id());
+    expect(testGroups.GroupB.subscribedMembers).to.include(testMember.id());
+    expect(testGroups.GroupC.subscribedMembers).to.include(testMember.id());
   });
 });
 

@@ -411,9 +411,7 @@ describe("Activity application", () => {
   });
 
   it("allows to create a new activity", (done) => {
-    sinon.stub(groupsService, "getSubscribedGroupsForMember").callsFake((email, callback) => {
-      callback(null, []);
-    });
+    sinon.stub(groupsService, "getSubscribedGroupsForMember").returns([]);
 
     // in the test setup anybody can create an activity because the middleware is not plugged in
     request(createApp({ member: member1 }))
@@ -423,9 +421,7 @@ describe("Activity application", () => {
   });
 
   it("allows the owner to edit an activity", (done) => {
-    sinon.stub(groupsService, "getSubscribedGroupsForMember").callsFake((email, callback) => {
-      callback(null, []);
-    });
+    sinon.stub(groupsService, "getSubscribedGroupsForMember").returns([]);
 
     request(createApp({ id: "ownerId" }))
       .get("/edit/urlOfTheActivity")
@@ -452,9 +448,7 @@ describe("Activity application", () => {
     const groupB = new Group({ id: "groupB", longName: "groupB", type: "Themengruppe" });
     const groupC = new Group({ id: "groupC", longName: "groupC", type: "Themengruppe" });
     sinon.stub(groupstore, "allGroups").returns([groupA, groupB, groupC]);
-    sinon.stub(groupsService, "getSubscribedGroupsForMember").callsFake((member, callback) => {
-      callback(null, [groupA, groupB]);
-    });
+    sinon.stub(groupsService, "getSubscribedGroupsForMember").returns([groupA, groupB]);
 
     request(createApp({ id: "owner" }))
       .get("/new")
@@ -503,9 +497,7 @@ describe("Activity application", () => {
     const groupA = new Group({ id: "groupA", longName: "groupA", type: "Themengruppe" });
     const groupB = new Group({ id: "groupB", longName: "groupB", type: "Themengruppe" });
     const groupC = new Group({ id: "groupC", longName: "groupC", type: "Regionalgruppe" });
-    sinon.stub(groupsService, "getSubscribedGroupsForMember").callsFake((member, callback) => {
-      callback(null, [groupA, groupB, groupC]);
-    });
+    sinon.stub(groupsService, "getSubscribedGroupsForMember").returns([groupA, groupB, groupC]);
 
     request(createApp({ id: "owner" }))
       .get("/new")
@@ -522,9 +514,7 @@ describe("Activity application", () => {
     const groupA = new Group({ id: "groupA", longName: "groupA", type: "Themengruppe" });
     const groupB = new Group({ id: "groupB", longName: "groupB", type: "Themengruppe" });
     const groupC = new Group({ id: "groupC", longName: "groupC", type: "Regionalgruppe" });
-    sinon.stub(groupsService, "getSubscribedGroupsForMember").callsFake((member, callback) => {
-      callback(null, [groupA, groupB, groupC]);
-    });
+    sinon.stub(groupsService, "getSubscribedGroupsForMember").returns([groupA, groupB, groupC]);
 
     request(createApp({ id: "ownerId" }))
       .get("/edit/urlOfTheActivity")
@@ -599,9 +589,7 @@ describe("Activity application", () => {
     });
 
     it("allows editing by the owner, displays the current editors and the possible editors (all participants but not the owner)", (done) => {
-      sinon.stub(groupsService, "getSubscribedGroupsForMember").callsFake((user, callback) => {
-        callback(null, []);
-      });
+      sinon.stub(groupsService, "getSubscribedGroupsForMember").returns([]);
 
       request(createApp({ member: member4 }))
         .get("/edit/urlForEditors")
@@ -613,9 +601,7 @@ describe("Activity application", () => {
     });
 
     it("allows editing by an editor, displays the current editors and the possible editors (all participants but not the owner)", (done) => {
-      sinon.stub(groupsService, "getSubscribedGroupsForMember").callsFake((user, callback) => {
-        callback(null, []);
-      });
+      sinon.stub(groupsService, "getSubscribedGroupsForMember").returns([]);
 
       request(createApp({ member: member1 }))
         .get("/edit/urlForEditors")
@@ -627,9 +613,7 @@ describe("Activity application", () => {
     });
 
     it("always shows the already assigned group for selection even if it is not returned for the current user", (done) => {
-      sinon.stub(groupsService, "getSubscribedGroupsForMember").callsFake((user, callback) => {
-        callback(null, []);
-      });
+      sinon.stub(groupsService, "getSubscribedGroupsForMember").returns([]);
 
       request(createApp({ member: member1 }))
         .get("/edit/urlForEditors")
