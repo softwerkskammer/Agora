@@ -1,6 +1,7 @@
 "use strict";
 
 const express = require("express");
+require("express-async-errors");
 const http = require("http");
 const fs = require("fs");
 const path = require("path");

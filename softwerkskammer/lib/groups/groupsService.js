@@ -13,28 +13,37 @@ function isReserved(groupname) {
 
 module.exports = {
   // API geändert von email() auf member und Methode umbenannt
-  getSubscribedGroupsForMember: function getSubscribedGroupsForMember(member, callback) {
-    groupstore.allGroups((err, groups) => {
-      if (err) {
-        return callback(err);
-      }
+  getSubscribedGroupsForMember: async function getSubscribedGroupsForMember(member, callback) {
+    try {
+      const groups = await groupstore.allGroups();
       callback(
         null,
         groups.filter((g) => g.subscribedMembers.includes(member.id()))
       );
-    });
+    } catch (err) {
+      callback(err);
+    }
   },
 
-  allGroupColors: function allGroupColors(callback) {
-    groupstore.allGroups((err, groups) => {
-      callback(
-        err,
-        (groups || []).reduce((result, group) => {
-          result[group.id] = group.color;
-          return result;
-        }, {})
-      );
-    });
+  allGroupColors: async function allGroupColors(callback) {
+    try {
+      const groups = await groupstore.allGroups();
+      const reduced = (groups || []).reduce((result, group) => {
+        result[group.id] = group.color;
+        return result;
+      }, {});
+      if (callback) {
+        callback(null, reduced);
+      } else {
+        return reduced;
+      }
+    } catch (err) {
+      if (callback) {
+        callback(err);
+      } else {
+        throw err;
+      }
+    }
   },
 
   isGroupValid: function isGroupValid(group, callback) {
@@ -91,10 +100,8 @@ module.exports = {
 
   // API change: email() -> member, oldUserMail removed
   updateSubscriptions: function updateSubscriptions(member, newSubscriptions, callback) {
-    groupstore.allGroups((err, groups) => {
-      if (err) {
-        return callback(err);
-      }
+    try {
+      const groups = groupstore.allGroups();
       const subscribedGroups = groups.filter((g) => g.subscribedMembers.includes(member.id()));
       const groupsForNewSubscriptions = groups.filter((g) => misc.toArray(newSubscriptions).includes(g.id));
 
@@ -105,7 +112,9 @@ module.exports = {
       groupsToUnsubscribe.forEach((g) => g.unsubscribe(member));
 
       async.each(groupsToSubscribe.concat(groupsToUnsubscribe), groupstore.saveGroup, callback);
-    });
+    } catch (err) {
+      callback(err);
+    }
   },
 
   markGroupsSelected: function markGroupsSelected(groupsToMark, availableGroups) {

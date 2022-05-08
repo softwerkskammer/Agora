@@ -9,7 +9,7 @@ module.exports = function subdirs(req, res, next) {
   async.parallel(
     {
       gitdirs: Git.lsdirs,
-      groups: groupstore.allGroups,
+      groups: async.asyncify(groupstore.allGroups),
     },
     (err, results) => {
       if (err) {

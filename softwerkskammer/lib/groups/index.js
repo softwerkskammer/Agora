@@ -44,15 +44,11 @@ function groupSubmitted(req, res, next) {
 }
 
 // display all groups
-app.get("/", (req, res, next) => {
-  groupstore.allGroups((err, groups) => {
-    if (err) {
-      return next(err);
-    }
-    res.render("index", {
-      regionalgroups: Group.regionalsFrom(groups),
-      themegroups: Group.thematicsFrom(groups),
-    });
+app.get("/", async (req, res) => {
+  const groups = await groupstore.allGroups();
+  res.render("index", {
+    regionalgroups: Group.regionalsFrom(groups),
+    themegroups: Group.thematicsFrom(groups),
   });
 });
 

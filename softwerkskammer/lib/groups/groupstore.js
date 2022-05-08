@@ -9,8 +9,9 @@ const toGroup = R.partial(misc.toObject, [Group]);
 const toGroupList = R.partial(misc.toObjectList, [Group]);
 
 module.exports = {
-  allGroups: function allGroups(callback) {
-    persistence.list({ longName: 1 }, R.partial(toGroupList, [callback]));
+  allGroups: async function allGroups() {
+    const result = await persistence.listAsync({ longName: 1 });
+    return result.map((each) => new Group(each));
   },
 
   groupsByLists: function groupsByLists(lists, callback) {

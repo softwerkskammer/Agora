@@ -45,7 +45,7 @@ module.exports = {
     async.parallel(
       {
         activity: (callback) => activitiesService.getActivityWithGroupAndParticipants(activityURL, callback),
-        groups: (callback) => groupstore.allGroups(callback),
+        groups: async.asyncify(groupstore.allGroups),
       },
       (err, results) => {
         if (err || !results.activity) {

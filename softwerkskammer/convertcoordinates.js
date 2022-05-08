@@ -21,40 +21,43 @@ if (!really || really !== "really") {
   process.exit();
 }
 
-groupstore.allGroups((err, groups) => {
-  if (err) {
+function updateGroup(g) {
+  if (g.mapX) {
+    const oldX = parseFloat(g.mapX);
+    const oldY = parseFloat(g.mapY);
+    g.mapX = MAP_COORDINATES_WEST + (oldX / 342) * MAP_COORDINATES_WIDTH;
+    g.mapY = MAP_COORDINATES_SOUTH + (1 - oldY / 441) * MAP_COORDINATES_HEIGHT;
+
+    console.log(g.id + " alt X: " + oldX + " Y: " + oldY + " -- neu X: " + g.mapX + " Y: " + g.mapY);
+  }
+}
+
+async function run() {
+  try {
+    const groups = await groupstore.allGroups();
+    async.each(
+      groups,
+      (group, callback) => {
+        updateGroup(group);
+        groupstore.saveGroup(group, (err2, res) => {
+          console.log(res);
+          callback(err2, res);
+        });
+      },
+      (err1) => {
+        if (err1) {
+          console.log("Error on save");
+          console.log(err1);
+          process.exit();
+        }
+        console.log("All groups processed");
+        process.exit();
+      }
+    );
+  } catch (err) {
     console.log(err);
     process.exit();
   }
+}
 
-  function updateGroup(g) {
-    if (g.mapX) {
-      const oldX = parseFloat(g.mapX);
-      const oldY = parseFloat(g.mapY);
-      g.mapX = MAP_COORDINATES_WEST + (oldX / 342) * MAP_COORDINATES_WIDTH;
-      g.mapY = MAP_COORDINATES_SOUTH + (1 - oldY / 441) * MAP_COORDINATES_HEIGHT;
-
-      console.log(g.id + " alt X: " + oldX + " Y: " + oldY + " -- neu X: " + g.mapX + " Y: " + g.mapY);
-    }
-  }
-
-  async.each(
-    groups,
-    (group, callback) => {
-      updateGroup(group);
-      groupstore.saveGroup(group, (err2, res) => {
-        console.log(res);
-        callback(err2, res);
-      });
-    },
-    (err1) => {
-      if (err1) {
-        console.log("Error on save");
-        console.log(err1);
-        process.exit();
-      }
-      console.log("All groups processed");
-      process.exit();
-    }
-  );
-});
+run();

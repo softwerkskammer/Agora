@@ -31,9 +31,7 @@ describe("Groups Service (getSubscribedGroupsForMember)", () => {
       }
       return g;
     });
-    sinon.stub(groupstore, "allGroups").callsFake((callback) => {
-      callback(null, testGroupsArray);
-    });
+    sinon.stub(groupstore, "allGroups").returns(testGroupsArray);
   }
 
   it("returns an empty array of groups for a user who is not subscribed anywhere", (done) => {
@@ -70,32 +68,11 @@ describe("Groups Service (getSubscribedGroupsForMember)", () => {
   });
 
   it("handles errors in retrieving lists", (done) => {
-    sinon.stub(groupstore, "allGroups").callsFake((callback) => {
-      callback(new Error());
-    });
+    sinon.stub(groupstore, "allGroups").throws(new Error());
 
     groupsService.getSubscribedGroupsForMember("admin@softwerkskammer.de", (err) => {
       expect(err).to.exist();
       done();
-    });
-  });
-});
-
-describe("Groups Service (getAllAvailableGroups)", () => {
-  afterEach(() => {
-    sinon.restore();
-  });
-
-  it("returns an empty array of groups if there are no lists defined in mailinglist", (done) => {
-    const spy = sinon.stub(groupstore, "allGroups").callsFake((callback) => {
-      callback(null, []);
-    });
-
-    groupstore.allGroups((err, lists) => {
-      expect(spy.called).to.be(true);
-      expect(lists).to.not.be(null);
-      expect(lists.length).to.equal(0);
-      done(err);
     });
   });
 });
@@ -158,9 +135,7 @@ describe("Groups Service (allGroupColors)", () => {
   it("returns an object with group id and color", (done) => {
     GroupA.color = "#FFFFFF";
     GroupB.color = "#AAAAAA";
-    sinon.stub(groupstore, "allGroups").callsFake((globalCallback) => {
-      globalCallback(null, [GroupA, GroupB]);
-    });
+    sinon.stub(groupstore, "allGroups").returns([GroupA, GroupB]);
 
     groupsService.allGroupColors((err, colorMap) => {
       expect(colorMap).to.have.ownProperty("groupa", "#FFFFFF");
@@ -170,9 +145,7 @@ describe("Groups Service (allGroupColors)", () => {
   });
 
   it("handles an error gracefully", (done) => {
-    sinon.stub(groupstore, "allGroups").callsFake((globalCallback) => {
-      globalCallback(new Error());
-    });
+    sinon.stub(groupstore, "allGroups").throws(new Error());
 
     groupsService.allGroupColors((err) => {
       expect(err).to.exist();

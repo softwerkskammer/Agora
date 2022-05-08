@@ -50,9 +50,7 @@ describe("MailsenderService", () => {
       startDate: fieldHelpers.parseToDateTimeUsingDefaultTimezone("01.01.2013").toJSDate(),
       url: "urlOfTheActivity",
     });
-    sinon.stub(groupstore, "allGroups").callsFake((callback) => {
-      callback(null, availableGroups);
-    });
+    sinon.stub(groupstore, "allGroups").returns(availableGroups);
     sinon.stub(activitiesService, "getActivityWithGroupAndParticipants").callsFake((actURL, callback) => {
       if (actURL === null) {
         return callback(new Error());

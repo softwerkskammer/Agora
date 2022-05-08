@@ -35,9 +35,7 @@ describe("Groups Service (updateSubscriptions)", () => {
       }
       return g;
     });
-    sinon.stub(groupstore, "allGroups").callsFake((callback) => {
-      callback(null, testGroupsArray);
-    });
+    sinon.stub(groupstore, "allGroups").returns(testGroupsArray);
   }
 
   it("subscribes and unsubscribes no lists if both old and new subscription lists are empty", (done) => {

@@ -62,9 +62,7 @@ describe("Activities Service", () => {
       callback(null, [dummyActivity]);
     });
 
-    sinon.stub(groupstore, "allGroups").callsFake((callback) => {
-      callback(null, [{ id: "assignedGroup", longName: "The name of the assigned Group" }]);
-    });
+    sinon.stub(groupstore, "allGroups").returns([{ id: "assignedGroup", longName: "The name of the assigned Group" }]);
     sinon.stub(groupsService, "allGroupColors").callsFake((callback) => {
       const result = {};
       result.assignedGroup = "#123456";

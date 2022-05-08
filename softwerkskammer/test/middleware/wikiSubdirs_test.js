@@ -20,9 +20,7 @@ describe("Wikisubdirs", () => {
     sinon.stub(Git, "lsdirs").callsFake((callback) => {
       callback(null, ["a", "c", "b", "andere"]);
     });
-    sinon.stub(groupstore, "allGroups").callsFake((callback) => {
-      callback(null, allGroups);
-    });
+    sinon.stub(groupstore, "allGroups").returns(allGroups);
   });
 
   afterEach(() => {

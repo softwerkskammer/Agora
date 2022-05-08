@@ -16,7 +16,7 @@ if (!really || really !== "really") {
   process.exit();
 }
 
-memberstore.allMembers((err, members) => {
+memberstore.allMembers(async (err, members) => {
   if (err) {
     console.log(err);
     process.exit();
@@ -31,11 +31,10 @@ memberstore.allMembers((err, members) => {
     cb();
   }
 
-  groupstore.allGroups((errGroups, groups) => {
-    if (errGroups || !groups) {
-      console.log(
-        "ERROR ON LOADING ALL GROUPS: " + errGroups + " no of groups: " + groups ? groups.length : "no groups"
-      );
+  try {
+    const groups = await groupstore.allGroups();
+    if (!groups) {
+      console.log("ERROR ON LOADING ALL GROUPS: no of groups: " + groups ? groups.length : "no groups");
       process.exit();
     }
     async.each(groups, addIdsToGroupAndSave, (fatal) => {
@@ -44,7 +43,10 @@ memberstore.allMembers((err, members) => {
       }
       process.exit();
     });
-  });
+  } catch (e) {
+    console.log("ERROR ON LOADING ALL GROUPS: " + e);
+    process.exit();
+  }
 
   memberstore.list({ id: 1 }, (err1, lists) => {
     if (err1) {

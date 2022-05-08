@@ -180,7 +180,7 @@ app.get("/eventsForSidebar", (req, res, next) => {
   );
 });
 
-function renderActivityCombinedWithGroups(res, next, activity) {
+async function renderActivityCombinedWithGroups(res, next, activity) {
   const render = function (groups) {
     memberstore.getMembersForIds(activity.editorIds(), (err, editors) => {
       if (err || !editors) {
@@ -205,12 +205,8 @@ function renderActivityCombinedWithGroups(res, next, activity) {
   };
 
   if (res.locals.accessrights.isSuperuser()) {
-    return groupstore.allGroups(function (err, allGroups) {
-      if (err) {
-        return next(err);
-      }
-      return render(allGroups);
-    });
+    const allGroups = await groupstore.allGroups();
+    return render(allGroups);
   }
 
   // API geändert von email() auf member und Methode umbenannt

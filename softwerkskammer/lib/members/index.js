@@ -107,7 +107,7 @@ app.get("/new", (req, res, next) => {
   }
   async.parallel(
     {
-      allGroups: (callback) => groupstore.allGroups(callback),
+      allGroups: async.asyncify(groupstore.allGroups),
       allTags: (callback) => tagsFor(callback),
     },
     (err, results) => {
@@ -129,7 +129,7 @@ app.get("/edit/:nickname", (req, res, next) => {
   async.parallel(
     {
       member: (callback) => groupsAndMembersService.getMemberWithHisGroups(req.params.nickname, callback),
-      allGroups: (callback) => groupstore.allGroups(callback),
+      allGroups: async.asyncify(groupstore.allGroups),
       allTags: (callback) => tagsFor(callback),
     },
     (err, results) => {

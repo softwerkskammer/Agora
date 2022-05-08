@@ -71,9 +71,7 @@ describe("Groups application", () => {
       return callback(null, null);
     });
 
-    sinon.stub(groupstore, "allGroups").callsFake((callback) => {
-      return callback(null, [GroupA]);
-    });
+    sinon.stub(groupstore, "allGroups").returns([GroupA]);
 
     sinon.stub(wikiService, "getBlogpostsForGroup").callsFake((groupname, callback) => {
       return callback(null, blogposts);

@@ -12,7 +12,7 @@ const app = require("../app.js");
 
 describe("SWK Plattform server", () => {
   beforeEach((done) => {
-    sinon.stub(groupstore, "allGroups").callsFake((callback) => callback(null, []));
+    sinon.stub(groupstore, "allGroups").returns([]);
     app.start(done);
   });
 
@@ -75,7 +75,7 @@ describe("SWK Plattform server", () => {
 
 describe("SWK Plattform server with Error", () => {
   beforeEach((done) => {
-    sinon.stub(groupstore, "allGroups").callsFake((callback) => callback(new Error(), []));
+    sinon.stub(groupstore, "allGroups").throws(new Error());
     app.start(done);
   });
 

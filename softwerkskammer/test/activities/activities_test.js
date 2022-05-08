@@ -451,9 +451,7 @@ describe("Activity application", () => {
     const groupA = new Group({ id: "groupA", longName: "groupA", type: "Themengruppe" });
     const groupB = new Group({ id: "groupB", longName: "groupB", type: "Themengruppe" });
     const groupC = new Group({ id: "groupC", longName: "groupC", type: "Themengruppe" });
-    sinon.stub(groupstore, "allGroups").callsFake((callback) => {
-      callback(null, [groupA, groupB, groupC]);
-    });
+    sinon.stub(groupstore, "allGroups").returns([groupA, groupB, groupC]);
     sinon.stub(groupsService, "getSubscribedGroupsForMember").callsFake((member, callback) => {
       callback(null, [groupA, groupB]);
     });
@@ -473,9 +471,7 @@ describe("Activity application", () => {
     const groupA = new Group({ id: "groupA", longName: "groupA" });
     const groupB = new Group({ id: "groupB", longName: "groupB" });
     const groupC = new Group({ id: "groupC", longName: "groupC" });
-    sinon.stub(groupstore, "allGroups").callsFake((callback) => {
-      callback(null, [groupA, groupB, groupC]);
-    });
+    sinon.stub(groupstore, "allGroups").returns([groupA, groupB, groupC]);
 
     request(createApp({ id: "superuserID" }))
       .get("/new")
@@ -490,9 +486,7 @@ describe("Activity application", () => {
     const groupA = new Group({ id: "groupA", longName: "groupA", type: "Themengruppe" });
     const groupB = new Group({ id: "groupB", longName: "groupB", type: "Themengruppe" });
     const groupC = new Group({ id: "groupC", longName: "groupC", type: "Regionalgruppe" });
-    sinon.stub(groupstore, "allGroups").callsFake((callback) => {
-      callback(null, [groupA, groupB, groupC]);
-    });
+    sinon.stub(groupstore, "allGroups").returns([groupA, groupB, groupC]);
 
     request(createApp({ id: "superuserID" }))
       .get("/new")

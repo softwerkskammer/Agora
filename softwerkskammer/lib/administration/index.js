@@ -23,7 +23,7 @@ app.get("/memberTable", (req, res, next) => {
 app.get("/memberAndGroupTable", (req, res, next) => {
   async.parallel(
     {
-      groups: groupstore.allGroups,
+      groups: async.asyncify(groupstore.allGroups),
       members: memberstore.allMembers,
     },
     (err, results) => {
@@ -35,13 +35,9 @@ app.get("/memberAndGroupTable", (req, res, next) => {
   );
 });
 
-app.get("/groupTable", (req, res, next) => {
-  groupstore.allGroups((err, groups) => {
-    if (err) {
-      return next(err);
-    }
-    res.render("groupTable", { groups, groupTypes: Group.allTypes() });
-  });
+app.get("/groupTable", async (req, res) => {
+  const groups = await groupstore.allGroups();
+  res.render("groupTable", { groups, groupTypes: Group.allTypes() });
 });
 
 app.get("/activityTable", (req, res, next) =>
