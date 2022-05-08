@@ -33,8 +33,8 @@ module.exports = {
     return groups.map((each) => new Group(each));
   },
 
-  saveGroup: function saveGroup(group, callback) {
+  saveGroup: async function saveGroup(group) {
     delete group.members; // we do not want to persist the group members
-    persistence.save(group, callback);
+    return persistence.saveAsync(group);
   },
 };

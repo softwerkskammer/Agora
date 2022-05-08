@@ -23,12 +23,11 @@ memberstore.allMembers(async (err, members) => {
   }
   const ids = members.map((m) => m.id());
 
-  function addIdsToGroupAndSave(group, cb) {
+  async function addIdsToGroupAndSave(group, cb) {
     // eslint-disable-next-line no-unused-vars
     group.subscribedMembers = ids.filter((e) => Math.random() < 0.5);
     console.log("saving " + group.subscribedMembers.length + " users in group " + group.id);
-    groupstore.saveGroup(group, cb);
-    cb();
+    return groupstore.saveGroup(group, cb);
   }
 
   try {
@@ -37,7 +36,7 @@ memberstore.allMembers(async (err, members) => {
       console.log("ERROR ON LOADING ALL GROUPS: no of groups: " + groups ? groups.length : "no groups");
       process.exit();
     }
-    async.each(groups, addIdsToGroupAndSave, (fatal) => {
+    async.each(groups, async.asyncify(addIdsToGroupAndSave), (fatal) => {
       if (fatal) {
         console.log("ERROR: " + fatal);
       }

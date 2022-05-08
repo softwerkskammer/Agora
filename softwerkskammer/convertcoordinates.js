@@ -37,12 +37,9 @@ async function run() {
     const groups = await groupstore.allGroups();
     async.each(
       groups,
-      (group, callback) => {
+      async (group) => {
         updateGroup(group);
-        groupstore.saveGroup(group, (err2, res) => {
-          console.log(res);
-          callback(err2, res);
-        });
+        return groupstore.saveGroup;
       },
       (err1) => {
         if (err1) {

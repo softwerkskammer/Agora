@@ -49,6 +49,10 @@ module.exports = {
     throw new Error("Testpersistence - function save not implemented");
   },
 
+  saveAsync: function () {
+    throw new Error("Testpersistence - function save not implemented");
+  },
+
   saveWithVersion: function () {
     throw new Error("Testpersistence - function saveWithVersion not implemented");
   },

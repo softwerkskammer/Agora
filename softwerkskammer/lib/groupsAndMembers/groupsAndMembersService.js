@@ -39,12 +39,12 @@ module.exports = {
         return callback(err);
       }
 
-      const unsubFunction = (group, cb) => {
+      const unsubFunction = async (group) => {
         group.unsubscribe(member);
-        groupstore.saveGroup(group, cb);
+        return groupstore.saveGroup(group);
       };
 
-      async.each(member.subscribedGroups, unsubFunction, (err1) => {
+      async.each(member.subscribedGroups, async.asyncify(unsubFunction), (err1) => {
         if (err1) {
           return callback(new Error("hasSubscriptions"));
         }

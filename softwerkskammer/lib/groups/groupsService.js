@@ -81,7 +81,8 @@ module.exports = {
     try {
       const group = await groupstore.getGroup(groupname);
       group.subscribe(member);
-      groupstore.saveGroup(group, callback);
+      await groupstore.saveGroup(group);
+      callback();
     } catch (e) {
       callback(e);
     }
@@ -92,7 +93,8 @@ module.exports = {
     try {
       const group = await groupstore.getGroup(groupname);
       group.unsubscribe(member);
-      groupstore.saveGroup(group, callback);
+      await groupstore.saveGroup(group);
+      callback();
     } catch (e) {
       return callback(e);
     }
@@ -111,7 +113,7 @@ module.exports = {
       groupsToSubscribe.forEach((g) => g.subscribe(member));
       groupsToUnsubscribe.forEach((g) => g.unsubscribe(member));
 
-      async.each(groupsToSubscribe.concat(groupsToUnsubscribe), groupstore.saveGroup, callback);
+      async.each(groupsToSubscribe.concat(groupsToUnsubscribe), async.asyncify(groupstore.saveGroup), callback);
     } catch (err) {
       callback(err);
     }

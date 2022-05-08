@@ -82,15 +82,11 @@ describe("Groups Service (createOrSaveGroup)", () => {
     sinon.restore();
   });
 
-  it("creates a new group and saves it if there is no group with the given name", (done) => {
-    const spy = sinon.stub(groupstore, "saveGroup").callsFake((group, callback) => {
-      callback(null);
-    });
+  it("creates a new group and saves it if there is no group with the given name", async () => {
+    const spy = sinon.stub(groupstore, "saveGroup").callsFake(() => {});
 
-    groupstore.saveGroup({}, (err) => {
-      expect(spy.calledOnce).to.be(true);
-      done(err);
-    });
+    await groupstore.saveGroup({});
+    expect(spy.calledOnce).to.be(true);
   });
 });
 

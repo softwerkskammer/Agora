@@ -273,9 +273,8 @@ describe("Groups application", () => {
       let savedGroup;
 
       before(() => {
-        sinon.stub(groupsPersistence, "save").callsFake((group, callback) => {
+        sinon.stub(groupsPersistence, "saveAsync").callsFake((group) => {
           savedGroup = group;
-          callback();
         });
       });
 

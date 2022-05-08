@@ -28,15 +28,9 @@ function groupSubmitted(req, res, next) {
       } else {
         group.subscribedMembers = existingGroup.subscribedMembers;
       }
-      groupstore.saveGroup(group, (err2) => {
-        if (err2) {
-          return next(err2);
-        }
-        statusmessage
-          .successMessage("message.title.save_successful", "message.content.groups.saved")
-          .putIntoSession(req);
-        res.redirect("/groups/" + group.id);
-      });
+      await groupstore.saveGroup(group);
+      statusmessage.successMessage("message.title.save_successful", "message.content.groups.saved").putIntoSession(req);
+      res.redirect("/groups/" + group.id);
     } catch (e) {
       return next(e);
     }

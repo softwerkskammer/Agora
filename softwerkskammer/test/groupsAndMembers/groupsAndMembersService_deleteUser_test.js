@@ -44,9 +44,8 @@ describe("Groups and Members Service (member deletion)", () => {
     sinon.stub(memberstore, "getMemberForId").callsFake((memberID, callback) => {
       callback(null, dummymember);
     });
-    sinon.stub(groupstore, "saveGroup").callsFake((group, callback) => {
+    sinon.stub(groupstore, "saveGroup").callsFake((group) => {
       savedGroups.push(group);
-      callback();
     });
     removeMemberSpy = sinon.stub(memberstore, "removeMember").callsFake((member, callback) => {
       callback();

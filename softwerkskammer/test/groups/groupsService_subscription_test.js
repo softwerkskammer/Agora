@@ -18,9 +18,7 @@ describe("Groups Service (updateSubscriptions)", () => {
   let saveGroupSpy;
 
   beforeEach(() => {
-    saveGroupSpy = sinon.stub(groupstore, "saveGroup").callsFake((group, callback) => {
-      callback();
-    });
+    saveGroupSpy = sinon.stub(groupstore, "saveGroup").callsFake(() => {});
   });
 
   afterEach(() => {
