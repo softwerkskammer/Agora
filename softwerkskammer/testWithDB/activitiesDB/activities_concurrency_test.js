@@ -22,7 +22,7 @@ describe("Activities Service with DB", () => {
   let activityAfterConcurrentAccess;
   let invocation;
 
-  beforeEach((done) => {
+  beforeEach(async () => {
     // if this fails, you need to start your mongo DB
     activityBeforeConcurrentAccess = new Activity({
       id: "activityId",
@@ -62,12 +62,9 @@ describe("Activities Service with DB", () => {
       return activityAfterConcurrentAccess;
     });
 
-    persistence.drop(() => {
-      // save our activity with one registrant
-      activitystore.saveActivityCB(activityAfterConcurrentAccess, (err) => {
-        done(err);
-      });
-    });
+    await persistence.dropAsync();
+    // save our activity with one registrant
+    await activitystore.saveActivity(activityAfterConcurrentAccess);
 
     sinon.stub(notifications, "visitorRegistration").callsFake((a, b, callback) => callback());
     sinon.stub(notifications, "visitorUnregistration").callsFake((a, b, callback) => callback());
