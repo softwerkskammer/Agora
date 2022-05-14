@@ -72,9 +72,7 @@ describe("Groups application", () => {
       return callback(null, blogposts);
     });
 
-    sinon.stub(activitystore, "pastActivitiesForGroupIds").callsFake((groupIds, callback) => {
-      return callback(null, []);
-    });
+    sinon.stub(activitystore, "pastActivitiesForGroupIds").returns([]);
 
     sinon.stub(activitystore, "upcomingActivitiesForGroupIds").callsFake(() => {
       return upcomingActivities;

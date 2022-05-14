@@ -135,22 +135,18 @@ app.get("/:groupname", async (req, res, next) => {
         return next(err1);
       }
       const activities = await activitystore.upcomingActivitiesForGroupIds([group.id]);
-      activitystore.pastActivitiesForGroupIds([group.id], (err3, pastActivities) => {
-        if (err3) {
-          return next(err3);
-        }
-        const registeredUserId = req && req.user ? req.user.member.id() : undefined;
-        res.render("get", {
-          group,
-          users: group.members,
-          userIsGroupMember: registeredUserId && group.isMemberSubscribed(req.user.member),
-          organizers: group.organizers,
-          blogposts,
-          blogpostsFeedUrl: req.originalUrl + "/feed",
-          webcalURL: conf.get("publicUrlPrefix").replace("http", "webcal") + "/activities/icalForGroup/" + group.id,
-          upcomingGroupActivities: addGroupDataToActivity(activities, group) || [],
-          recentGroupActivities: addGroupDataToActivity(pastActivities ? R.take(5, pastActivities) : [], group),
-        });
+      const pastActivities = await activitystore.pastActivitiesForGroupIds([group.id]);
+      const registeredUserId = req && req.user ? req.user.member.id() : undefined;
+      res.render("get", {
+        group,
+        users: group.members,
+        userIsGroupMember: registeredUserId && group.isMemberSubscribed(req.user.member),
+        organizers: group.organizers,
+        blogposts,
+        blogpostsFeedUrl: req.originalUrl + "/feed",
+        webcalURL: conf.get("publicUrlPrefix").replace("http", "webcal") + "/activities/icalForGroup/" + group.id,
+        upcomingGroupActivities: addGroupDataToActivity(activities, group) || [],
+        recentGroupActivities: addGroupDataToActivity(pastActivities ? R.take(5, pastActivities) : [], group),
       });
     });
   } catch (e) {

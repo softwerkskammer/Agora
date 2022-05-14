@@ -104,29 +104,29 @@ module.exports = {
     return toActivityListAsync(result);
   },
 
-  pastActivitiesForGroupIds: function pastActivitiesForGroupIds(groupIds, callback) {
+  pastActivitiesForGroupIds: async function pastActivitiesForGroupIds(groupIds) {
     const start = new Date();
 
-    persistence.listByField(
+    const result = persistence.listByFieldAsync(
       {
         $and: [{ endDate: { $lt: start } }, { assignedGroup: { $in: groupIds } }],
       },
-      { startDate: -1 },
-      R.partial(toActivityList, [callback])
+      { startDate: -1 }
     );
+    return toActivityListAsync(result);
   },
 
-  organizedOrEditedActivitiesForMemberId: function organizedOrEditedActivitiesForMemberId(memberId, callback) {
-    persistence.listByField(
+  organizedOrEditedActivitiesForMemberId: async function organizedOrEditedActivitiesForMemberId(memberId) {
+    const result = await persistence.listByFieldAsync(
       {
         $or: [
           { owner: memberId },
           { editorIds: memberId }, // matches when the field equals the value or when the field is an array that contains the value
         ],
       },
-      { startDate: -1 },
-      R.partial(toActivityList, [callback])
+      { startDate: -1 }
     );
+    return toActivityListAsync(result);
   },
 
   activitiesForGroupIdsAndRegisteredMemberId: function activitiesForGroupIdsAndRegisteredMemberId(

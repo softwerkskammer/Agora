@@ -110,28 +110,22 @@ describe("Activity application with DB - shows activities where a member is orga
     sinon.restore();
   });
 
-  it("no activities for members who are neither owners nor editors", (done) => {
-    activitystore.organizedOrEditedActivitiesForMemberId("no-owner-and-no-editor", (err, activities) => {
-      expect(activities.length).to.equal(0);
-      done(err);
-    });
+  it("no activities for members who are neither owners nor editors", async () => {
+    const activities = await activitystore.organizedOrEditedActivitiesForMemberId("no-owner-and-no-editor");
+    expect(activities.length).to.equal(0);
   });
 
-  it("shows activities where owner1 is owner or editor, oldest last", (done) => {
-    activitystore.organizedOrEditedActivitiesForMemberId("owner1", (err, activities) => {
-      expect(activities.length).to.equal(2);
-      expect(activities[0].title()).to.equal("Future Activity 1");
-      expect(activities[1].title()).to.equal("Current Activity 1");
-      done(err);
-    });
+  it("shows activities where owner1 is owner or editor, oldest last", async () => {
+    const activities = await activitystore.organizedOrEditedActivitiesForMemberId("owner1");
+    expect(activities.length).to.equal(2);
+    expect(activities[0].title()).to.equal("Future Activity 1");
+    expect(activities[1].title()).to.equal("Current Activity 1");
   });
 
-  it("if a person is owner and editor, the activity only appears once", (done) => {
-    activitystore.organizedOrEditedActivitiesForMemberId("owner3", (err, activities) => {
-      expect(activities.length).to.equal(1);
-      expect(activities[0].title()).to.equal("Past Activity 1");
-      done(err);
-    });
+  it("if a person is owner and editor, the activity only appears once", async () => {
+    const activities = await activitystore.organizedOrEditedActivitiesForMemberId("owner3");
+    expect(activities.length).to.equal(1);
+    expect(activities[0].title()).to.equal("Past Activity 1");
   });
 });
 
@@ -141,11 +135,8 @@ describe("Activity application with DB - organizedOrEditedActivitiesForMemberId 
     persistence.drop(done);
   });
 
-  it("returns an empty list if there is no collection at all", (done) => {
-    activitystore.organizedOrEditedActivitiesForMemberId("unknownMemberId", (err, activities) => {
-      expect(err).to.not.exist();
-      expect(activities.length).to.equal(0);
-      done(err);
-    });
+  it("returns an empty list if there is no collection at all", async () => {
+    const activities = await activitystore.organizedOrEditedActivitiesForMemberId("unknownMemberId");
+    expect(activities.length).to.equal(0);
   });
 });
