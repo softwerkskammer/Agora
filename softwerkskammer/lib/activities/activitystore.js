@@ -92,16 +92,16 @@ module.exports = {
     });
   },
 
-  upcomingActivitiesForGroupIds: function upcomingActivitiesForGroupIds(groupIds, callback) {
+  upcomingActivitiesForGroupIds: async function upcomingActivitiesForGroupIds(groupIds) {
     const start = new Date();
 
-    persistence.listByField(
+    const result = await persistence.listByFieldAsync(
       {
         $and: [{ endDate: { $gt: start } }, { assignedGroup: { $in: groupIds } }],
       },
-      { startDate: 1 },
-      R.partial(toActivityList, [callback])
+      { startDate: 1 }
     );
+    return toActivityListAsync(result);
   },
 
   pastActivitiesForGroupIds: function pastActivitiesForGroupIds(groupIds, callback) {

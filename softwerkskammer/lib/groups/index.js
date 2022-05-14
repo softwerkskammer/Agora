@@ -130,30 +130,26 @@ app.get("/:groupname", async (req, res, next) => {
     if (!group) {
       return next();
     }
-    wikiService.getBlogpostsForGroup(req.params.groupname, (err1, blogposts) => {
+    wikiService.getBlogpostsForGroup(req.params.groupname, async (err1, blogposts) => {
       if (err1) {
         return next(err1);
       }
-      activitystore.upcomingActivitiesForGroupIds([group.id], (err2, activities) => {
-        if (err2) {
-          return next(err2);
+      const activities = await activitystore.upcomingActivitiesForGroupIds([group.id]);
+      activitystore.pastActivitiesForGroupIds([group.id], (err3, pastActivities) => {
+        if (err3) {
+          return next(err3);
         }
-        activitystore.pastActivitiesForGroupIds([group.id], (err3, pastActivities) => {
-          if (err3) {
-            return next(err3);
-          }
-          const registeredUserId = req && req.user ? req.user.member.id() : undefined;
-          res.render("get", {
-            group,
-            users: group.members,
-            userIsGroupMember: registeredUserId && group.isMemberSubscribed(req.user.member),
-            organizers: group.organizers,
-            blogposts,
-            blogpostsFeedUrl: req.originalUrl + "/feed",
-            webcalURL: conf.get("publicUrlPrefix").replace("http", "webcal") + "/activities/icalForGroup/" + group.id,
-            upcomingGroupActivities: addGroupDataToActivity(activities, group) || [],
-            recentGroupActivities: addGroupDataToActivity(pastActivities ? R.take(5, pastActivities) : [], group),
-          });
+        const registeredUserId = req && req.user ? req.user.member.id() : undefined;
+        res.render("get", {
+          group,
+          users: group.members,
+          userIsGroupMember: registeredUserId && group.isMemberSubscribed(req.user.member),
+          organizers: group.organizers,
+          blogposts,
+          blogpostsFeedUrl: req.originalUrl + "/feed",
+          webcalURL: conf.get("publicUrlPrefix").replace("http", "webcal") + "/activities/icalForGroup/" + group.id,
+          upcomingGroupActivities: addGroupDataToActivity(activities, group) || [],
+          recentGroupActivities: addGroupDataToActivity(pastActivities ? R.take(5, pastActivities) : [], group),
         });
       });
     });

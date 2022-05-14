@@ -146,13 +146,11 @@ describe("Activity application with DB - shows activities for Group-Ids -", () =
     sinon.restore();
   });
 
-  it("shows only current and future activities of Group 1", (done) => {
-    activitystore.upcomingActivitiesForGroupIds(["groupname1"], (err, activities) => {
-      expect(activities.length).to.equal(2);
-      expect(activities[0].title()).to.equal("Current Activity 1");
-      expect(activities[1].title()).to.equal("Future Activity 1");
-      done(err);
-    });
+  it("shows only current and future activities of Group 1", async () => {
+    const activities = await activitystore.upcomingActivitiesForGroupIds(["groupname1"]);
+    expect(activities.length).to.equal(2);
+    expect(activities[0].title()).to.equal("Current Activity 1");
+    expect(activities[1].title()).to.equal("Future Activity 1");
   });
 
   it("shows current and future activities of Group 1 and activities with subscribed member", (done) => {
