@@ -43,9 +43,7 @@ describe("Groups application", () => {
       return members.filter((m) => memberIds.includes(m.id()));
     });
 
-    sinon.stub(membersService, "putAvatarIntoMemberAndSave").callsFake((member, callback) => {
-      callback();
-    });
+    sinon.stub(membersService, "putAvatarIntoMemberAndSave");
 
     sinon.stub(groupstore, "groupsByLists").callsFake((list) => {
       if (list[0] === "GroupA") {

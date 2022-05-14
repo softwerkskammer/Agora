@@ -46,9 +46,7 @@ describe("Administration application", () => {
   beforeEach(() => {
     sinon.stub(groupstore, "allGroups").returns([new Group({ id: "id", longName: "GRUPPO", description: "desc" })]);
     sinon.stub(memberstore, "allMembers").returns([dummymember]);
-    sinon.stub(membersService, "putAvatarIntoMemberAndSave").callsFake((member, callback) => {
-      callback();
-    });
+    sinon.stub(membersService, "putAvatarIntoMemberAndSave");
   });
 
   afterEach(() => {

@@ -126,9 +126,7 @@ describe("Activities Service", () => {
 
       return [memberA, memberB];
     });
-    sinon.stub(membersService, "putAvatarIntoMemberAndSave").callsFake((member, callback) => {
-      callback();
-    });
+    sinon.stub(membersService, "putAvatarIntoMemberAndSave");
     sinon.stub(memberstore, "getMemberForId").returns(owner);
     sinon.stub(groupstore, "getGroup").callsFake((groupname) => {
       if (groupname === "groupname") {

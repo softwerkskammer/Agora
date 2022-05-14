@@ -1,5 +1,6 @@
 const async = require("async");
 const R = require("ramda");
+const util = require("util");
 const Form = require("multiparty").Form;
 
 const beans = require("simple-configure").get("beans");
@@ -63,37 +64,29 @@ async function tagsFor(callback) {
 
 const app = misc.expressAppIn(__dirname);
 
-app.get("/", async (req, res, next) => {
+app.get("/", async (req, res) => {
   const members = await memberstore.allMembers();
-  async.each(members, membersService.putAvatarIntoMemberAndSave, (err1) => {
-    if (err1) {
-      return next(err1);
-    }
-    res.render("index", { members, wordList: membersService.toWordList(members) });
-  });
+  await Promise.all(members.map(membersService.putAvatarIntoMemberAndSave));
+  res.render("index", { members, wordList: membersService.toWordList(members) });
 });
 
-app.get("/interests", async (req, res, next) => {
+app.get("/interests", async (req, res) => {
   const casesensitive = req.query.casesensitive ? "" : "i";
   const members = await memberstore.getMembersWithInterest(req.query.interest, casesensitive);
-  async.each(members, membersService.putAvatarIntoMemberAndSave, (err1) => {
-    if (err1) {
-      return next(err1);
-    }
-    res.render("indexForTag", {
-      interest: req.query.interest,
-      members,
-      wordList: membersService.toWordList(members),
-    });
+  await Promise.all(members.map(membersService.putAvatarIntoMemberAndSave));
+  res.render("indexForTag", {
+    interest: req.query.interest,
+    members,
+    wordList: membersService.toWordList(members),
   });
 });
 
 app.get("/checknickname", (req, res) => {
-  misc.validate(req.query.nickname, req.query.previousNickname, membersService.isValidNickname, res.end);
+  misc.validateAsync(req.query.nickname, req.query.previousNickname, membersService.isValidNickname, res.end);
 });
 
 app.get("/checkemail", (req, res) => {
-  misc.validate(req.query.email, req.query.previousEmail, membersService.isValidEmail, res.end);
+  misc.validateAsync(req.query.email, req.query.previousEmail, membersService.isValidEmail, res.end);
 });
 
 app.get("/new", (req, res, next) => {
@@ -182,24 +175,34 @@ app.post("/updatePassword", async (req, res) => {
 app.post("/submit", (req, res, next) => {
   async.parallel(
     [
-      (callback) => {
-        validation.checkValidity(
-          req.body.previousNickname,
-          req.body.nickname,
-          membersService.isValidNickname,
-          req.i18n.t("validation.nickname_not_available"),
-          callback
-        );
-      },
-      (callback) => {
-        validation.checkValidity(
-          req.body.previousEmail,
-          req.body.email,
-          membersService.isValidEmail,
-          req.i18n.t("validation.duplicate_email"),
-          callback
-        );
-      },
+      async.asyncify(async () => {
+        try {
+          const result = await validation.checkValidityAsync(
+            req.body.previousNickname,
+            req.body.nickname,
+            membersService.isValidNickname
+          );
+          if (!result) {
+            return req.i18n.t("validation.nickname_not_available");
+          }
+        } catch (e) {
+          return req.i18n.t("validation.nickname_not_available");
+        }
+      }),
+      async.asyncify(async () => {
+        try {
+          const result = await validation.checkValidityAsync(
+            req.body.previousEmail,
+            req.body.email,
+            membersService.isValidEmail
+          );
+          if (!result) {
+            return req.i18n.t("validation.duplicate_email");
+          }
+        } catch (e) {
+          return req.i18n.t("validation.duplicate_email");
+        }
+      }),
       (callback) => {
         const errors = validation.isValidForMember(req.body);
         callback(null, errors);
@@ -218,10 +221,24 @@ app.post("/submit", (req, res, next) => {
   );
 });
 
-app.post("/submitavatar", (req, res, next) => {
-  new Form().parse(req, (err, fields, files) => {
+app.post("/submitavatar", async (req, res) => {
+  const promisifyUpload = (req1) =>
+    new Promise((resolve, reject) => {
+      const form = new Form();
+
+      form.parse(req1, function (err, fields, files) {
+        if (err) {
+          return reject(err);
+        }
+
+        return resolve([fields, files]);
+      });
+    });
+
+  try {
+    const [fields, files] = await promisifyUpload(req);
     const nickname = fields.nickname[0];
-    if (err || !files || files.length < 1) {
+    if (!files || files.length < 1) {
       return res.redirect("/members/" + nickname);
     }
     const params = {
@@ -234,13 +251,11 @@ app.post("/submitavatar", (req, res, next) => {
         top: parseInt(fields.y[0]),
       },
     };
-    membersService.saveCustomAvatarForNickname(nickname, files, params, (err1) => {
-      if (err1) {
-        return next(err1);
-      }
-      res.redirect("/members/" + encodeURIComponent(nickname)); // Es fehlen Prüfungen im Frontend
-    });
-  });
+    await membersService.saveCustomAvatarForNickname(nickname, files, params);
+    res.redirect("/members/" + encodeURIComponent(nickname)); // Es fehlen Prüfungen im Frontend
+  } catch (e) {
+    return res.redirect("/members/");
+  }
 });
 
 app.post("/deleteAvatarFor", async (req, res, next) => {

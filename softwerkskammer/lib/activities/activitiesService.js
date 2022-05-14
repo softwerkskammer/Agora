@@ -67,21 +67,16 @@ module.exports = {
         return callback(err);
       }
 
-      async function participantsLoader(cb) {
-        let err1;
-        let members;
-        try {
-          members = await memberstore.getMembersForIds(activity.allRegisteredMembers());
-        } catch (e) {
-          err1 = e;
-        }
-        async.each(members, membersService.putAvatarIntoMemberAndSave, () => cb(err1, members));
+      async function participantsLoader() {
+        const members = await memberstore.getMembersForIds(activity.allRegisteredMembers());
+        await Promise.all(members.map(membersService.putAvatarIntoMemberAndSave));
+        return members;
       }
 
       async.parallel(
         {
           group: async.asyncify(async () => await groupstore.getGroup(activity.assignedGroup())),
-          participants: (cb) => participantsLoader(cb),
+          participants: async.asyncify(async () => await participantsLoader()),
           owner: async.asyncify(async () => await memberstore.getMemberForId(activity.owner())),
         },
 

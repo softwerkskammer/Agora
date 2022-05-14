@@ -39,46 +39,34 @@ describe("MembersService", () => {
       expect(membersService.isReserved("..")).to.be(true);
     });
 
-    it("accepts untrimmed versions of reserved words", (done) => {
-      membersService.isValidNickname(" checknicKName ", (err, result) => {
-        expect(result).to.be(true);
-        done(err);
-      });
+    it("accepts untrimmed versions of reserved words", async () => {
+      const result = await membersService.isValidNickname(" checknicKName ");
+      expect(result).to.be(true);
     });
 
-    it("rejects nicknames that already exist, ignoring case", (done) => {
-      membersService.isValidNickname("haDa", (err, result) => {
-        expect(result).to.be(false);
-        done(err);
-      });
+    it("rejects nicknames that already exist, ignoring case", async () => {
+      const result = await membersService.isValidNickname("haDa");
+      expect(result).to.be(false);
     });
 
-    it('rejects nicknames that contain an "/"', (done) => {
-      membersService.isValidNickname("ha/ha", (err, result) => {
-        expect(result).to.be(false);
-        done(err);
-      });
+    it('rejects nicknames that contain an "/"', async () => {
+      const result = await membersService.isValidNickname("ha/ha");
+      expect(result).to.be(false);
     });
 
-    it("accepts nicknames that do not exist", (done) => {
-      membersService.isValidNickname("haha", (err, result) => {
-        expect(result).to.be(true);
-        done(err);
-      });
+    it("accepts nicknames that do not exist", async () => {
+      const result = await membersService.isValidNickname("haha");
+      expect(result).to.be(true);
     });
 
-    it("accepts nicknames that contain other nicknames", (done) => {
-      membersService.isValidNickname("Sc" + "hada" + "r", (err, result) => {
-        expect(result).to.be(true);
-        done(err);
-      });
+    it("accepts nicknames that contain other nicknames", async () => {
+      const result = await membersService.isValidNickname("Sc" + "hada" + "r");
+      expect(result).to.be(true);
     });
 
-    it("accepts untrimmed versions of nicknames that already exist", (done) => {
-      membersService.isValidNickname(" hada ", (err, result) => {
-        expect(result).to.be(true);
-        done(err);
-      });
+    it("accepts untrimmed versions of nicknames that already exist", async () => {
+      const result = await membersService.isValidNickname(" hada ");
+      expect(result).to.be(true);
     });
 
     it('accepts nicknames containing ".." and "."', () => {
@@ -221,111 +209,88 @@ describe("MembersService", () => {
     beforeEach(() => {
       saveMember = sinon.stub(memberstore, "saveMember");
       gravatarData = { image: "the image", hasNoImage: false };
-      getImageFromAvatarProvider = sinon.stub(avatarProvider, "getImage").callsFake((anyMember, callback) => {
-        callback(gravatarData);
-      });
+      getImageFromAvatarProvider = sinon.stub(avatarProvider, "getImage").returns(gravatarData);
     });
 
-    it("updates a member with information about a saved avatar", (done) => {
+    it("updates a member with information about a saved avatar", async () => {
       const files = { image: [{ path: imagePath }] };
       const params = {};
-      membersService.saveCustomAvatarForNickname("hada", files, params, (err) => {
-        expect(saveMember.called).to.be(true);
-        const mem = saveMember.args[0][0];
-        expect(mem.hasCustomAvatar()).to.be.true();
-        done(err);
-      });
+      await membersService.saveCustomAvatarForNickname("hada", files, params);
+      expect(saveMember.called).to.be(true);
+      const mem = saveMember.args[0][0];
+      expect(mem.hasCustomAvatar()).to.be.true();
     });
 
-    it("removes information from member about a deleted avatar", (done) => {
+    it("removes information from member about a deleted avatar", async () => {
       const files = { image: [{ path: imagePath }] };
       const params = {};
       member.state.customAvatar = "assa.jpg";
-      membersService.saveCustomAvatarForNickname("hada", files, params, () => {
-        membersService.deleteCustomAvatarForNickname("hada", (err) => {
-          expect(saveMember.called).to.be(true);
-          const mem = saveMember.args[0][0];
-          expect(mem.hasCustomAvatar()).to.be.false();
-          done(err);
-        });
-      });
+      await membersService.saveCustomAvatarForNickname("hada", files, params);
+      await membersService.deleteCustomAvatarForNickname("hada");
+      expect(saveMember.called).to.be(true);
+      const mem = saveMember.args[0][0];
+      expect(mem.hasCustomAvatar()).to.be.false();
     });
 
-    it("loads the custom avatar mini picture into the member", (done) => {
+    it("loads the custom avatar mini picture into the member", async () => {
       const files = { image: [{ path: imagePath }] };
       const params = {};
       member.state.nickname = "hada";
-      membersService.saveCustomAvatarForNickname("hada", files, params, () => {
-        membersService.putAvatarIntoMemberAndSave(member, (err) => {
-          expect(member.inlineAvatar()).to.match(/^data:image\/jpeg;base64,\/9j/);
-          done(err);
-        });
-      });
+      await membersService.saveCustomAvatarForNickname("hada", files, params);
+      await membersService.putAvatarIntoMemberAndSave(member);
+      expect(member.inlineAvatar()).to.match(/^data:image\/jpeg;base64,\/9j/);
     });
 
-    it("updating the avatar from gravatar does not happen when there is a custom avatar", (done) => {
+    it("updating the avatar from gravatar does not happen when there is a custom avatar", async () => {
       const files = { image: [{ path: imagePath }] };
       const params = {};
       member.state.nickname = "hada";
-      membersService.saveCustomAvatarForNickname("hada", files, params, () => {
-        membersService.updateImage(member, (err) => {
-          expect(member.inlineAvatar()).to.match(/^data:image\/jpeg;base64,\/9j/);
-          done(err);
-        });
-      });
+      await membersService.saveCustomAvatarForNickname("hada", files, params);
+      await membersService.updateImage(member);
+      expect(member.inlineAvatar()).to.match(/^data:image\/jpeg;base64,\/9j/);
     });
 
-    it("does not load any image into the member if the member's custom avatar cannot be found", (done) => {
+    it("does not load any image into the member if the member's custom avatar cannot be found", async () => {
       member.state.customAvatar = "myNonexistentPic.jpg";
       expect(member.inlineAvatar()).to.match("");
 
-      membersService.putAvatarIntoMemberAndSave(member, (err) => {
-        expect(member.inlineAvatar()).to.match("");
-        done(err);
-      });
+      await membersService.putAvatarIntoMemberAndSave(member);
+      expect(member.inlineAvatar()).to.match("");
     });
 
-    it("a member without a custom avatar loads it from gravatar and persists it", (done) => {
-      membersService.putAvatarIntoMemberAndSave(member, (err) => {
-        expect(member.state.avatardata).to.be(gravatarData);
-        expect(getImageFromAvatarProvider.called).to.be(true);
-        expect(saveMember.called).to.be(true);
-        done(err);
-      });
+    it("a member without a custom avatar loads it from gravatar and persists it", async () => {
+      await membersService.putAvatarIntoMemberAndSave(member);
+      expect(member.state.avatardata).to.be(gravatarData);
+      expect(getImageFromAvatarProvider.called).to.be(true);
+      expect(saveMember.called).to.be(true);
     });
 
-    it("a member takes the persisted one if it is actual enough", (done) => {
+    it("a member takes the persisted one if it is actual enough", async () => {
       member.state.avatardata = gravatarData;
-      membersService.putAvatarIntoMemberAndSave(member, (err) => {
-        expect(member.state.avatardata).to.be(gravatarData);
-        expect(getImageFromAvatarProvider.called).to.be(false);
-        expect(saveMember.called).to.be(false);
-        done(err);
-      });
+      membersService.putAvatarIntoMemberAndSave(member);
+      expect(member.state.avatardata).to.be(gravatarData);
+      expect(getImageFromAvatarProvider.called).to.be(false);
+      expect(saveMember.called).to.be(false);
     });
 
-    it("loads it again if it is potentially outdated and saves it even though it is equal", (done) => {
+    it("loads it again if it is potentially outdated and saves it even though it is equal", async () => {
       member.state.avatardata = { image: "the image", hasNoImage: false };
 
-      membersService.updateImage(member, (err) => {
-        expect(member.state.avatardata.image).to.eql(gravatarData.image);
-        expect(getImageFromAvatarProvider.called).to.be(true);
-        expect(saveMember.called).to.be(true);
-        done(err);
-      });
+      await membersService.updateImage(member);
+      expect(member.state.avatardata.image).to.eql(gravatarData.image);
+      expect(getImageFromAvatarProvider.called).to.be(true);
+      expect(saveMember.called).to.be(true);
     });
 
-    it("loads it again if it is potentially outdated but does not save it if it is equal", (done) => {
+    it("loads it again if it is potentially outdated but does not save it if it is equal", async () => {
       member.state.avatardata = {
         image: "another image",
         hasNoImage: false,
       };
-      membersService.updateImage(member, (err) => {
-        expect(member.state.avatardata).to.be(gravatarData);
-        expect(getImageFromAvatarProvider.called).to.be(true);
-        expect(saveMember.called).to.be(true);
-        done(err);
-      });
+      await membersService.updateImage(member);
+      expect(member.state.avatardata).to.be(gravatarData);
+      expect(getImageFromAvatarProvider.called).to.be(true);
+      expect(saveMember.called).to.be(true);
     });
   });
 

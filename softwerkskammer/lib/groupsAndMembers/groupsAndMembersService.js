@@ -92,10 +92,9 @@ module.exports = {
     }
     try {
       const members = await memberstore.getMembersForIds(group.subscribedMembers);
-      async.each(members, membersService.putAvatarIntoMemberAndSave, (err1) => {
-        group.members = members;
-        callback(err1, group);
-      });
+      await Promise.all(members.map(membersService.putAvatarIntoMemberAndSave));
+      group.members = members;
+      callback(null, group);
     } catch (e) {
       callback(e);
     }

@@ -31,6 +31,13 @@ module.exports = {
     return callback(null);
   },
 
+  checkValidityAsync: async function checkValidityAsync(oldValue, newValue, checkFunction) {
+    if (newValue !== oldValue) {
+      return await checkFunction(newValue);
+    }
+    return true;
+  },
+
   isValidForMember: function isValidForMember(memberInput) {
     const validator = new Validator();
     checkCommonMemberFields(validator, memberInput);

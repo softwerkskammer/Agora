@@ -1,4 +1,5 @@
 const crypto = require("crypto");
+const util = require("util");
 const request = require("request").defaults({ encoding: null });
 
 function md5(emailAddress) {
@@ -28,11 +29,11 @@ module.exports = {
     );
   },
 
-  getImage: function getImage(member, callback, optionalTunneledGravatarUrl) {
+  getImage: async function getImage(member, optionalTunneledGravatarUrl) {
     const url = this.avatarUrl(member.email(), 16, optionalTunneledGravatarUrl);
-    imageDataFromGravatar(url, (data) => {
-      member.setAvatarData(data);
-      callback(data);
-    });
+    const imageDataFromGravatarPromise = util.promisify(imageDataFromGravatar);
+    const data = await await imageDataFromGravatarPromise(url);
+    member.setAvatarData(data);
+    return data;
   },
 };

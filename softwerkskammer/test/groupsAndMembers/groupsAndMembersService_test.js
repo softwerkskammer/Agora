@@ -116,9 +116,7 @@ describe("Groups and Members Service", () => {
   describe("(getGroupAndMembersForList)", () => {
     beforeEach(() => {
       sinon.stub(memberstore, "allMembers").returns(null);
-      sinon.stub(membersService, "putAvatarIntoMemberAndSave").callsFake((member, callback) => {
-        callback();
-      });
+      sinon.stub(membersService, "putAvatarIntoMemberAndSave");
     });
 
     afterEach(() => {
@@ -189,9 +187,7 @@ describe("Groups and Members Service", () => {
 
   describe("(getOrganizersOfGroup)", () => {
     beforeEach(() => {
-      sinon.stub(membersService, "putAvatarIntoMemberAndSave").callsFake((member, callback) => {
-        callback();
-      });
+      sinon.stub(membersService, "putAvatarIntoMemberAndSave");
     });
 
     afterEach(() => {
@@ -286,9 +282,7 @@ describe("Groups and Members Service", () => {
 
     it("returns the group with a list of one subscribed user when there is one subscriber in mailinglist", (done) => {
       thereAreMailingListUsers([dummymember]);
-      sinon.stub(membersService, "putAvatarIntoMemberAndSave").callsFake((member, callback) => {
-        callback();
-      });
+      sinon.stub(membersService, "putAvatarIntoMemberAndSave");
 
       GroupA.subscribedMembers = ["id1"];
       groupsAndMembersService.addMembersToGroup(GroupA, (err, group) => {
