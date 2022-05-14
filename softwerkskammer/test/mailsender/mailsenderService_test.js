@@ -66,11 +66,11 @@ describe("MailsenderService", () => {
       }
       return new Member({ email: "email@mail.de" });
     });
-    sinon.stub(activitystore, "getActivity").callsFake((url, callback) => {
+    sinon.stub(activitystore, "getActivity").callsFake((url) => {
       if (url === "activityUrlForMock") {
-        return callback(null, emptyActivity);
+        return emptyActivity;
       }
-      callback(new Error());
+      throw new Error();
     });
     sendmail = sinon.stub(transport, "sendMail").callsFake((transportobject, callback) => {
       if (!transportobject.to && (!transportobject.bcc || transportobject.bcc.length === 0)) {

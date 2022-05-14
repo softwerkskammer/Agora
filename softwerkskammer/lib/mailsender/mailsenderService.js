@@ -114,12 +114,11 @@ module.exports = {
       try {
         const groups1 = await Promise.all(groups.map(groupsAndMembersService.addMembersToGroup));
         message.setBccToGroupMemberAddresses(groups1);
-        activitystore.getActivity(activityURL, (err2, activity) => {
-          if (activity) {
-            message.setIcal(icalService.activityAsICal(activity).toString());
-          }
-          sendMail(message, type, callback);
-        });
+        const activity = await activitystore.getActivity(activityURL);
+        if (activity) {
+          message.setIcal(icalService.activityAsICal(activity).toString());
+        }
+        sendMail(message, type, callback);
       } catch (err1) {
         return callback(err1, mailtransport.statusmessageForError(type, err1));
       }

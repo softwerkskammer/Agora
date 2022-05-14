@@ -21,7 +21,7 @@ module.exports = {
       }
       async.each(
         body,
-        (meetup, cb) => {
+        async (meetup, cb) => {
           const meetupDate = fieldHelpers.meetupDateToActivityTimes(
             meetup.local_date,
             meetup.local_time,
@@ -29,10 +29,8 @@ module.exports = {
           );
           const activityUrl = "meetup-" + meetup.id;
 
-          activitystore.getActivity(activityUrl, (err2, persistentActivity) => {
-            if (err2) {
-              return cb(err2);
-            }
+          try {
+            const persistentActivity = await activitystore.getActivity(activityUrl);
             const activity = persistentActivity || new Activity();
 
             activitystore.saveActivity(
@@ -54,7 +52,9 @@ module.exports = {
               }),
               cb
             ); // saveActivity
-          });
+          } catch (e) {
+            return cb(e);
+          }
         },
         callback
       ); // async.each (body)

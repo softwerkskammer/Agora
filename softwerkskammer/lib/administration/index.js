@@ -36,14 +36,10 @@ app.get("/groupTable", async (req, res) => {
   res.render("groupTable", { groups, groupTypes: Group.allTypes() });
 });
 
-app.get("/activityTable", (req, res, next) =>
-  activitiesService.getActivitiesForDisplay(activitystore.allActivities, (err, activities) => {
-    if (err) {
-      return next(err);
-    }
-    res.render("activityTable", { activities });
-  })
-);
+app.get("/activityTable", async (req, res) => {
+  const activities = await activitiesService.getActivitiesForDisplayAsync(activitystore.allActivitiesAsync);
+  res.render("activityTable", { activities });
+});
 
 app.get("/interests", async (req, res) => {
   const members = await memberstore.allMembers();

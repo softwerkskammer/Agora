@@ -105,12 +105,8 @@ describe("Activity application", () => {
       assignedGroup: "groupname",
       owner: "ownerId",
     });
-    sinon.stub(activitystore, "upcomingActivities").callsFake((callback) => {
-      callback(null, [emptyActivity]);
-    });
-    sinon.stub(activitiesService, "getActivitiesForDisplay").callsFake((fetcher, callback) => {
-      callback(null, [emptyActivity]);
-    });
+    sinon.stub(activitystore, "upcomingActivities").returns([emptyActivity]);
+    sinon.stub(activitiesService, "getActivitiesForDisplayAsync").returns([emptyActivity]);
     sinon.stub(memberstore, "getMembersForIds").callsFake((ids) => {
       const members = ids.map((id) =>
         id === "memberId1"
@@ -142,8 +138,8 @@ describe("Activity application", () => {
     sinon.stub(activitiesService, "getActivityWithGroupAndParticipants").callsFake((url, callback) => {
       callback(null, activityToReturnFor(url));
     });
-    sinon.stub(activitystore, "getActivity").callsFake((url, callback) => {
-      callback(null, activityToReturnFor(url));
+    sinon.stub(activitystore, "getActivity").callsFake((url) => {
+      return activityToReturnFor(url);
     });
   });
 

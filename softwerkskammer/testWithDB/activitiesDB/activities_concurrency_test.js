@@ -52,14 +52,14 @@ describe("Activities Service with DB", () => {
 
     invocation = 1;
 
-    sinon.stub(activitystore, "getActivity").callsFake((url, callback) => {
+    sinon.stub(activitystore, "getActivity").callsFake((url) => {
       // on the first invocation, getActivity returns an activity without registrant to mimick a racing condition.
       if (invocation === 1) {
         invocation = 2;
-        return callback(null, activityBeforeConcurrentAccess);
+        return activityBeforeConcurrentAccess;
       }
       // on subsequent invocations, getActivity returns an activity with registrant.
-      return callback(null, activityAfterConcurrentAccess);
+      return activityAfterConcurrentAccess;
     });
 
     persistence.drop(() => {

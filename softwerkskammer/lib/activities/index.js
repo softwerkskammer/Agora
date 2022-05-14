@@ -61,16 +61,12 @@ function activitySubmitted(req, res, next) {
   });
 }
 
-function activitiesForDisplay(activitiesFetcher, next, res, title) {
-  return activitiesService.getActivitiesForDisplay(activitiesFetcher, (err, activities) => {
-    if (err) {
-      next(err);
-    }
-    res.render("index", {
-      activities,
-      range: title,
-      webcalURL: conf.get("publicUrlPrefix").replace("http", "webcal") + "/activities/ical",
-    });
+async function activitiesForDisplayAsync(activitiesFetcher, res, title) {
+  const activities = await activitiesService.getActivitiesForDisplayAsync(activitiesFetcher);
+  res.render("index", {
+    activities,
+    range: title,
+    webcalURL: conf.get("publicUrlPrefix").replace("http", "webcal") + "/activities/ical",
   });
 }
 
@@ -80,29 +76,25 @@ function sendCalendarStringNamedToResult(ical, filename, res) {
   res.send(ical.toString());
 }
 
-app.get("/", (req, res, next) => {
-  activitiesForDisplay(activitystore.allActivities, next, res, req.i18n.t("general.all"));
+app.get("/", async (req, res) => {
+  activitiesForDisplayAsync(activitystore.allActivitiesAsync, res, req.i18n.t("general.all"));
 });
 
-function renderGdcrFor(gdcrDay, res, next) {
+async function renderGdcrFor(gdcrDay, res) {
   const gdcrDate = new Date(gdcrDay);
   const gdcrActivities = R.partial(activitiesService.activitiesBetween, [
     gdcrDate.getTime(),
     gdcrDate.getTime() + 86400000,
   ]); // 1 day
 
-  return activitiesService.getActivitiesForDisplay(gdcrActivities, (err, activities) => {
-    if (err) {
-      next(err);
-    }
-    const gdcrYear = gdcrDate.getFullYear();
-    res.render("gdcr", {
-      activities,
-      year: String(gdcrYear),
-      previousYears: R.range(2013, gdcrYear)
-        .map((year) => String(year))
-        .reverse(),
-    });
+  const activities = await activitiesService.getActivitiesForDisplayAsync(gdcrActivities);
+  const gdcrYear = gdcrDate.getFullYear();
+  res.render("gdcr", {
+    activities,
+    year: String(gdcrYear),
+    previousYears: R.range(2013, gdcrYear)
+      .map((year) => String(year))
+      .reverse(),
   });
 }
 
@@ -120,40 +112,28 @@ app.get("/gdcr2018", (req, res, next) => renderGdcrFor("2018-11-17", res, next))
 
 app.get("/gdcr", (req, res, next) => renderGdcrFor("2019-11-16", res, next));
 
-app.get("/upcoming", (req, res, next) =>
-  activitiesForDisplay(activitystore.upcomingActivities, next, res, req.i18n.t("activities.upcoming"))
+app.get("/upcoming", async (req, res) =>
+  activitiesForDisplayAsync(activitystore.upcomingActivities, res, req.i18n.t("activities.upcoming"))
 );
 
-app.get("/past", (req, res, next) =>
-  activitiesForDisplay(activitystore.pastActivities, next, res, req.i18n.t("activities.past"))
+app.get("/past", (req, res) =>
+  activitiesForDisplayAsync(activitystore.pastActivities, res, req.i18n.t("activities.past"))
 );
 
-app.get("/ical", (req, res, next) => {
-  activitystore.upcomingActivities((err, activities) => {
-    if (err || !activities) {
-      return next(err);
-    }
-    sendCalendarStringNamedToResult(icalService.icalForActivities(activities), "events", res);
-  });
+app.get("/ical", async (req, res) => {
+  const activities = activitystore.upcomingActivities();
+  sendCalendarStringNamedToResult(icalService.icalForActivities(activities), "events", res);
 });
 
-app.get("/icalForGroup/:group", (req, res, next) => {
-  activitystore.upcomingActivities((err, activities) => {
-    if (err || !activities) {
-      return next(err);
-    }
-    const groupsActivities = activities.filter((activity) => activity.assignedGroup() === req.params.group);
-    sendCalendarStringNamedToResult(icalService.icalForActivities(groupsActivities), "events", res);
-  });
+app.get("/icalForGroup/:group", async (req, res) => {
+  const activities = activitystore.upcomingActivities();
+  const groupsActivities = activities.filter((activity) => activity.assignedGroup() === req.params.group);
+  sendCalendarStringNamedToResult(icalService.icalForActivities(groupsActivities), "events", res);
 });
 
-app.get("/ical/:url", (req, res, next) => {
-  activitystore.getActivity(req.params.url, (err, activity) => {
-    if (err || !activity) {
-      return next(err);
-    }
-    sendCalendarStringNamedToResult(icalService.activityAsICal(activity), activity.url(), res);
-  });
+app.get("/ical/:url", async (req, res) => {
+  const activity = await activitystore.getActivity(req.params.url);
+  sendCalendarStringNamedToResult(icalService.activityAsICal(activity), activity.url(), res);
 });
 
 app.get("/eventsForSidebar", async (req, res, next) => {
@@ -208,13 +188,9 @@ async function renderActivityCombinedWithGroups(res, activity) {
 
 app.get("/new", async (req, res) => renderActivityCombinedWithGroups(res, new Activity()));
 
-app.get("/newLike/:url", async (req, res, next) => {
-  activitystore.getActivity(req.params.url, async (err, activity) => {
-    if (err || activity === null) {
-      return next(err);
-    }
-    renderActivityCombinedWithGroups(res, activity.resetForClone());
-  });
+app.get("/newLike/:url", async (req, res) => {
+  const activity = await activitystore.getActivity(req.params.url);
+  renderActivityCombinedWithGroups(res, activity.resetForClone());
 });
 
 app.get("/edit/:url", async (req, res, next) => {
@@ -395,24 +371,20 @@ app.post("/removeFromWaitinglist", (req, res, next) => {
   });
 });
 
-app.post("/delete", (req, res, next) => {
+app.post("/delete", async (req, res, next) => {
   const url = req.body.activityUrl;
-  activitystore.getActivity(url, (err, activity) => {
-    if (err || !activity) {
-      return next(err);
+  const activity = await activitystore.getActivity(url);
+  if (!res.locals.accessrights.canDeleteActivity(activity)) {
+    return res.redirect("/activities/" + encodeURIComponent(url));
+  }
+  activitystore.removeActivity(activity, (err1) => {
+    if (err1) {
+      return next(err1);
     }
-    if (!res.locals.accessrights.canDeleteActivity(activity)) {
-      return res.redirect("/activities/" + encodeURIComponent(url));
-    }
-    activitystore.removeActivity(activity, (err1) => {
-      if (err1) {
-        return next(err1);
-      }
-      statusmessage
-        .successMessage("message.title.save_successful", "message.content.activities.deleted")
-        .putIntoSession(req);
-      res.redirect("/activities/");
-    });
+    statusmessage
+      .successMessage("message.title.save_successful", "message.content.activities.deleted")
+      .putIntoSession(req);
+    res.redirect("/activities/");
   });
 });
 

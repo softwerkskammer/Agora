@@ -79,9 +79,7 @@ describe("Administration application", () => {
   });
 
   it("shows the table for activities", (done) => {
-    sinon
-      .stub(activitiesService, "getActivitiesForDisplay")
-      .callsFake((activitiesFetcher, callback) => callback(null, [emptyActivity]));
+    sinon.stub(activitiesService, "getActivitiesForDisplayAsync").returns([emptyActivity]);
     appWithSuperuser
       .get("/activityTable")
       .expect(200)

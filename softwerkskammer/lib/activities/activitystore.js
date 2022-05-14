@@ -31,22 +31,22 @@ function toActivityListAsync(jsobjects) {
   return jsobjects.map((record) => (record && record.isSoCraTes ? new SoCraTesActivity(record) : new Activity(record)));
 }
 
-function allActivitiesByDateRange(rangeFrom, rangeTo, sortOrder, callback) {
-  persistence.listByField(
+async function allActivitiesByDateRange(rangeFrom, rangeTo, sortOrder) {
+  const result = await persistence.listByFieldAsync(
     {
       $and: [{ endDate: { $gt: new Date(rangeFrom) } }, { startDate: { $lt: new Date(rangeTo) } }],
     },
-    sortOrder,
-    R.partial(toActivityList, [callback])
+    sortOrder
   );
+  return toActivityListAsync(result);
 }
 
-function allActivitiesByDateRangeInAscendingOrder(rangeFrom, rangeTo, callback) {
-  allActivitiesByDateRange(rangeFrom, rangeTo, { startDate: 1 }, callback);
+async function allActivitiesByDateRangeInAscendingOrder(rangeFrom, rangeTo) {
+  return allActivitiesByDateRange(rangeFrom, rangeTo, { startDate: 1 });
 }
 
-function allActivitiesByDateRangeInDescendingOrder(rangeFrom, rangeTo, callback) {
-  allActivitiesByDateRange(rangeFrom, rangeTo, { startDate: -1 }, callback);
+async function allActivitiesByDateRangeInDescendingOrder(rangeFrom, rangeTo) {
+  return allActivitiesByDateRange(rangeFrom, rangeTo, { startDate: -1 });
 }
 
 function flattenAndSortMongoResultCollection(collection) {
@@ -54,10 +54,6 @@ function flattenAndSortMongoResultCollection(collection) {
 }
 
 module.exports = {
-  allActivities: function allActivities(callback) {
-    persistence.list({ startDate: 1 }, R.partial(toActivityList, [callback]));
-  },
-
   allActivitiesAsync: async function allActivitiesAsync() {
     const result = await persistence.listAsync({ startDate: 1 });
     return toActivityListAsync(result);
@@ -65,20 +61,21 @@ module.exports = {
 
   allActivitiesByDateRangeInAscendingOrder,
 
-  upcomingActivities: function upcomingActivities(callback) {
+  upcomingActivities: async function upcomingActivities() {
     const start = Date.now();
     const end = start + 315569260000; // 10 years as millis;
-    allActivitiesByDateRangeInAscendingOrder(start, end, callback);
+    return allActivitiesByDateRangeInAscendingOrder(start, end);
   },
 
-  pastActivities: function pastActivities(callback) {
+  pastActivities: async function pastActivities() {
     const start = 0;
     const end = Date.now();
-    allActivitiesByDateRangeInDescendingOrder(start, end, callback);
+    return allActivitiesByDateRangeInDescendingOrder(start, end);
   },
 
-  getActivity: function getActivity(url, callback) {
-    persistence.getByField({ url }, R.partial(toActivity, [callback]));
+  getActivity: async function getActivity(url) {
+    const result = await persistence.getByFieldAsync({ url });
+    return result ? new Activity(result) : null;
   },
 
   getActivityForId: function getActivityForId(id, callback) {

@@ -1,5 +1,3 @@
-const async = require("async");
-
 const beans = require("simple-configure").get("beans");
 const memberstore = beans.get("memberstore");
 const activitystore = beans.get("activitystore");
@@ -7,73 +5,69 @@ const mailsenderService = beans.get("mailsenderService");
 const CONFLICTING_VERSIONS = beans.get("constants").CONFLICTING_VERSIONS;
 
 module.exports = {
-  waitinglistFor: function waitinglistFor(activityUrl, globalCallback) {
-    activitystore.getActivity(activityUrl, (err, activity) => {
-      if (err) {
-        return globalCallback(err);
-      }
-      async.map(
-        activity.allWaitinglistEntries(),
-        async.asyncify(async (waitinglistEntry) => {
-          const member = memberstore.getMemberForId(waitinglistEntry.registrantId());
+  waitinglistFor: async function waitinglistFor(activityUrl, globalCallback) {
+    try {
+      const activity = await activitystore.getActivity(activityUrl);
+      const entries = await Promise.all(
+        activity.allWaitinglistEntries().map(async (waitinglistEntry) => {
+          const member = await memberstore.getMemberForId(waitinglistEntry.registrantId());
           waitinglistEntry.registrantNickname = member.nickname();
           return waitinglistEntry;
-        }),
-        globalCallback
+        })
       );
-    });
+      globalCallback(null, entries);
+    } catch (e) {
+      globalCallback(e);
+    }
   },
 
-  saveWaitinglistEntry: function saveWaitinglistEntry(args, callback) {
-    const self = this;
-    async.parallel(
-      {
-        member: async.asyncify(async () => memberstore.getMember(args.nickname)),
-        activity: (cb) => activitystore.getActivity(args.activityUrl, cb),
-      },
-      (err, results) => {
-        if (err || !results.member || !results.activity) {
-          return callback(err);
+  saveWaitinglistEntry: async function saveWaitinglistEntry(args, callback) {
+    try {
+      const self = this;
+      const [member, activity] = await Promise.all([
+        memberstore.getMember(args.nickname),
+        activitystore.getActivity(args.activityUrl),
+      ]);
+      activity.addToWaitinglist(member.id(), Date.now());
+      activitystore.saveActivity(activity, function (err1) {
+        if (err1 && err1.message === CONFLICTING_VERSIONS) {
+          // we try again because of a racing condition during save:
+          return self.saveWaitinglistEntry(args, callback);
         }
-        results.activity.addToWaitinglist(results.member.id(), Date.now());
-        activitystore.saveActivity(results.activity, function (err1) {
-          if (err1 && err1.message === CONFLICTING_VERSIONS) {
-            // we try again because of a racing condition during save:
-            return self.saveWaitinglistEntry(args, callback);
-          }
-          return callback(err1);
-        });
-      }
-    );
+        return callback(err1);
+      });
+    } catch (e) {
+      callback(e);
+    }
   },
 
-  allowRegistrationForWaitinglistEntry: function allowRegistrationForWaitinglistEntry(args, outerCallback) {
-    const self = this;
-    async.parallel(
-      {
-        member: async.asyncify(async () => memberstore.getMember(args.nickname)),
-        activity: (callback) => activitystore.getActivity(args.activityUrl, callback),
-      },
-      (err, results) => {
-        if (err || !results.member || !results.activity) {
-          return outerCallback(err);
-        }
-        let entry = results.activity.waitinglistEntryFor(results.member.id());
-        if (!entry) {
-          return outerCallback(null);
-        }
-        entry.setRegistrationValidityFor(args.hoursstring);
-        activitystore.saveActivity(results.activity, (err1) => {
-          if (err1 && err1.message === CONFLICTING_VERSIONS) {
-            // we try again because of a racing condition during save:
-            return self.allowRegistrationForWaitinglistEntry(args, outerCallback);
-          }
-          if (err1) {
-            return outerCallback(err1);
-          }
-          mailsenderService.sendRegistrationAllowed(results.member, results.activity, entry, outerCallback);
-        });
+  allowRegistrationForWaitinglistEntry: async function allowRegistrationForWaitinglistEntry(args, outerCallback) {
+    try {
+      const self = this;
+      const [member, activity] = await Promise.all([
+        memberstore.getMember(args.nickname),
+        activitystore.getActivity(args.activityUrl),
+      ]);
+      if (!member || !activity) {
+        return outerCallback();
       }
-    );
+      let entry = activity.waitinglistEntryFor(member.id());
+      if (!entry) {
+        return outerCallback(null);
+      }
+      entry.setRegistrationValidityFor(args.hoursstring);
+      activitystore.saveActivity(activity, (err1) => {
+        if (err1 && err1.message === CONFLICTING_VERSIONS) {
+          // we try again because of a racing condition during save:
+          return self.allowRegistrationForWaitinglistEntry(args, outerCallback);
+        }
+        if (err1) {
+          return outerCallback(err1);
+        }
+        mailsenderService.sendRegistrationAllowed(member, activity, entry, outerCallback);
+      });
+    } catch (e) {
+      outerCallback(e);
+    }
   },
 };

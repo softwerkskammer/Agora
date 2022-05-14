@@ -34,6 +34,23 @@ module.exports = {
     );
   },
 
+  getActivitiesForDisplayAsync: async function getActivitiesForDisplay(asynActivitiesFetcher) {
+    const [activities, groups, groupColors] = await Promise.all([
+      asynActivitiesFetcher(),
+      groupstore.allGroups(),
+      groupsService.allGroupColors(),
+    ]);
+
+    if (!activities) {
+      return;
+    }
+    activities.forEach((activity) => {
+      activity.colorRGB = activity.colorFrom(groupColors);
+      activity.groupFrom(groups); // sets the group object in activity
+    });
+    return activities;
+  },
+
   getUpcomingActivitiesOfMemberAndHisGroups: function getUpcomingActivitiesOfMemberAndHisGroups(member, callback) {
     const groupIds = member.subscribedGroups.map((group) => group.id);
     const activitiesFetcher = R.partial(activitystore.activitiesForGroupIdsAndRegisteredMemberId, [
@@ -61,60 +78,60 @@ module.exports = {
     return this.getActivitiesForDisplay(activitiesFetcher, callback);
   },
 
-  getActivityWithGroupAndParticipants: function getActivityWithGroupAndParticipants(url, callback) {
-    activitystore.getActivity(url, (err, activity) => {
-      if (err || !activity) {
-        return callback(err);
+  getActivityWithGroupAndParticipants: async function getActivityWithGroupAndParticipants(url, callback) {
+    async function participantsLoader(activity) {
+      const members = await memberstore.getMembersForIds(activity.allRegisteredMembers());
+      await Promise.all(members.map(membersService.putAvatarIntoMemberAndSave));
+      return members;
+    }
+
+    try {
+      const activity = await activitystore.getActivity(url);
+      if (!activity) {
+        return callback();
       }
-
-      async function participantsLoader() {
-        const members = await memberstore.getMembersForIds(activity.allRegisteredMembers());
-        await Promise.all(members.map(membersService.putAvatarIntoMemberAndSave));
-        return members;
-      }
-
-      async.parallel(
-        {
-          group: async.asyncify(async () => await groupstore.getGroup(activity.assignedGroup())),
-          participants: async.asyncify(async () => await participantsLoader()),
-          owner: async.asyncify(async () => await memberstore.getMemberForId(activity.owner())),
-        },
-
-        (err1, results) => {
-          if (err1) {
-            return callback(err1);
-          }
-          activity.group = results.group;
-          activity.participants = results.participants;
-          activity.ownerNickname = results.owner ? results.owner.nickname() : undefined;
-          callback(null, activity);
-        }
-      );
-    });
+      const [group, participants, owner] = await Promise.all([
+        groupstore.getGroup(activity.assignedGroup()),
+        participantsLoader(activity),
+        memberstore.getMemberForId(activity.owner()),
+      ]);
+      activity.group = group;
+      activity.participants = participants;
+      activity.ownerNickname = owner ? owner.nickname() : undefined;
+      callback(null, activity);
+    } catch (e) {
+      callback(e);
+    }
   },
 
-  isValidUrl: function isValidUrl(reservedURLs, url, callback) {
+  isValidUrl: async function isValidUrl(reservedURLs, url, callback) {
     const isReserved = new RegExp(reservedURLs, "i").test(url);
     if (fieldHelpers.containsSlash(url) || isReserved) {
       return callback(null, false);
     }
-    activitystore.getActivity(url, (err, result) => {
-      if (err) {
-        return callback(err);
-      }
+    try {
+      const result = await activitystore.getActivity(url);
       callback(null, result === null);
-    });
+    } catch (e) {
+      callback(e);
+    }
   },
 
-  activitiesBetween: function activitiesBetween(startMillis, endMillis, callback) {
-    activitystore.allActivitiesByDateRangeInAscendingOrder(startMillis, endMillis, callback);
+  activitiesBetween: async function activitiesBetween(startMillis, endMillis, callback) {
+    try {
+      const result = await activitystore.allActivitiesByDateRangeInAscendingOrder(startMillis, endMillis);
+      callback(null, result);
+    } catch (e) {
+      callback(e);
+    }
   },
 
-  addVisitorTo: function addVisitorTo(memberId, activityUrl, millis, callback) {
+  addVisitorTo: async function addVisitorTo(memberId, activityUrl, millis, callback) {
     const self = this;
-    activitystore.getActivity(activityUrl, (err, activity) => {
-      if (err || !activity) {
-        return callback(err, "message.title.problem", "message.content.activities.does_not_exist");
+    try {
+      const activity = await activitystore.getActivity(activityUrl);
+      if (!activity) {
+        return callback("message.title.problem", "message.content.activities.does_not_exist");
       }
       if (activity.addMemberId(memberId, millis)) {
         return activitystore.saveActivity(activity, (err1) => {
@@ -128,15 +145,18 @@ module.exports = {
           return notifications.visitorRegistration(activity, memberId, callback);
         });
       }
-      return callback(null, "activities.registration_not_now", "activities.registration_not_possible");
-    });
+      callback(null, "activities.registration_not_now", "activities.registration_not_possible");
+    } catch (e) {
+      callback(e);
+    }
   },
 
-  removeVisitorFrom: function removeVisitorFrom(memberId, activityUrl, callback) {
-    const self = this;
-    activitystore.getActivity(activityUrl, (err, activity) => {
-      if (err || !activity) {
-        return callback(err, "message.title.problem", "message.content.activities.does_not_exist");
+  removeVisitorFrom: async function removeVisitorFrom(memberId, activityUrl, callback) {
+    try {
+      const self = this;
+      const activity = await activitystore.getActivity(activityUrl);
+      if (!activity) {
+        return callback(null, "message.title.problem", "message.content.activities.does_not_exist");
       }
       activity.removeMemberId(memberId);
       activitystore.saveActivity(activity, (err1) => {
@@ -147,13 +167,16 @@ module.exports = {
         notifications.visitorUnregistration(activity, memberId);
         return callback(err1);
       });
-    });
+    } catch (e) {
+      callback(e);
+    }
   },
 
-  addToWaitinglist: function addToWaitinglist(memberId, activityUrl, millis, callback) {
-    activitystore.getActivity(activityUrl, (err, activity) => {
-      if (err || !activity) {
-        return callback(err, "message.title.problem", "message.content.activities.does_not_exist");
+  addToWaitinglist: async function addToWaitinglist(memberId, activityUrl, millis, callback) {
+    try {
+      const activity = await activitystore.getActivity(activityUrl);
+      if (!activity) {
+        return callback(null, "message.title.problem", "message.content.activities.does_not_exist");
       }
       if (activity.hasWaitinglist()) {
         activity.addToWaitinglist(memberId, millis);
@@ -167,14 +190,17 @@ module.exports = {
         });
       }
       return callback(null, "activities.waitinglist_not_possible", "activities.no_waitinglist");
-    });
+    } catch (e) {
+      callback(e);
+    }
   },
 
-  removeFromWaitinglist: function removeFromWaitinglist(memberId, activityUrl, callback) {
-    const self = this;
-    activitystore.getActivity(activityUrl, (err, activity) => {
-      if (err || !activity) {
-        return callback(err, "message.title.problem", "message.content.activities.does_not_exist");
+  removeFromWaitinglist: async function removeFromWaitinglist(memberId, activityUrl, callback) {
+    try {
+      const self = this;
+      const activity = await activitystore.getActivity(activityUrl);
+      if (!activity) {
+        return callback(null, "message.title.problem", "message.content.activities.does_not_exist");
       }
       activity.removeFromWaitinglist(memberId);
       return activitystore.saveActivity(activity, (err1) => {
@@ -185,6 +211,8 @@ module.exports = {
         notifications.waitinglistRemoval(activity, memberId);
         return callback(err1);
       });
-    });
+    } catch (e) {
+      callback(e);
+    }
   },
 };

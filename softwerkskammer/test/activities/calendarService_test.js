@@ -21,9 +21,7 @@ describe("Calendar Service", () => {
   });
 
   before(() => {
-    sinon.stub(activitystore, "allActivitiesByDateRangeInAscendingOrder").callsFake((rangeFrom, rangeTo, callback) => {
-      callback(null, [activity]);
-    });
+    sinon.stub(activitystore, "allActivitiesByDateRangeInAscendingOrder").returns([activity]);
   });
 
   it("loads and converts a wellformed Activity to a calendar display event without colors given", (done) => {
