@@ -129,11 +129,10 @@ module.exports = {
     return toActivityListAsync(result);
   },
 
-  activitiesForGroupIdsAndRegisteredMemberId: function activitiesForGroupIdsAndRegisteredMemberId(
+  activitiesForGroupIdsAndRegisteredMemberId: async function activitiesForGroupIdsAndRegisteredMemberId(
     groupIds,
     memberId,
-    upcoming,
-    callback
+    upcoming
   ) {
     function map() {
       /* eslint no-underscore-dangle: 0 */
@@ -168,17 +167,13 @@ module.exports = {
     const query = upcoming ? { endDate: { $gt: now } } : { endDate: { $lt: now } };
     const parameters = { out: { inline: 1 }, scope: { memberId, groupIds }, query, jsMode: true };
 
-    persistence.mapReduce(map, reduce, parameters, (err, collection) => {
-      if (err) {
-        return callback(err);
-      }
-      if (!collection || collection.length === 0) {
-        return callback(null, []);
-      }
-      // when there are many results, the value will be a nested array, so we need to flatten it:
-      const results = flattenAndSortMongoResultCollection(collection);
-      return toActivityList(callback, null, !upcoming ? results.reverse() : results);
-    });
+    const collection = await persistence.mapReduceAsync(map, reduce, parameters);
+    if (!collection || collection.length === 0) {
+      return [];
+    }
+    // when there are many results, the value will be a nested array, so we need to flatten it:
+    const results = flattenAndSortMongoResultCollection(collection);
+    return toActivityListAsync(!upcoming ? results.reverse() : results);
   },
 
   flattenAndSortMongoResultCollection,

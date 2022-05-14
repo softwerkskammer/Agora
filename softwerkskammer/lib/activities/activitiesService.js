@@ -51,25 +51,29 @@ module.exports = {
     return activities;
   },
 
-  getUpcomingActivitiesOfMemberAndHisGroups: function getUpcomingActivitiesOfMemberAndHisGroups(member, callback) {
-    const groupIds = member.subscribedGroups.map((group) => group.id);
-    const activitiesFetcher = R.partial(activitystore.activitiesForGroupIdsAndRegisteredMemberId, [
-      groupIds,
-      member.id(),
-      true,
-    ]);
+  getUpcomingActivitiesOfMemberAndHisGroups: async function getUpcomingActivitiesOfMemberAndHisGroups(
+    member,
+    callback
+  ) {
+    try {
+      const groupIds = member.subscribedGroups.map((group) => group.id);
+      const activitiesFetcher = activitystore.activitiesForGroupIdsAndRegisteredMemberId(groupIds, member.id(), true);
 
-    return this.getActivitiesForDisplay(activitiesFetcher, callback);
+      const result = await this.getActivitiesForDisplayAsync(activitiesFetcher);
+      callback(null, result);
+    } catch (e) {
+      callback(e);
+    }
   },
 
-  getPastActivitiesOfMember: function getPastActivitiesOfMember(member, callback) {
-    const activitiesFetcher = R.partial(activitystore.activitiesForGroupIdsAndRegisteredMemberId, [
-      [],
-      member.id(),
-      false,
-    ]);
-
-    return this.getActivitiesForDisplay(activitiesFetcher, callback);
+  getPastActivitiesOfMember: async function getPastActivitiesOfMember(member, callback) {
+    try {
+      const activitiesFetcher = activitystore.activitiesForGroupIdsAndRegisteredMemberId([], member.id(), false);
+      const result = await this.getActivitiesForDisplayAsync(activitiesFetcher);
+      callback(null, result);
+    } catch (e) {
+      callback(e);
+    }
   },
 
   getOrganizedOrEditedActivitiesOfMember: function getOrganizedOrEditedActivitiesOfMember(member, callback) {
