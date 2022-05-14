@@ -38,11 +38,11 @@ describe("Activity store", () => {
     sinon.stub(persistence, "listByField").callsFake((searchObject, sortOrder, callback) => callback(null, sampleList));
     sinon.stub(persistence, "listByFieldAsync").returns(sampleList);
     getByField = sinon.stub(persistence, "getByFieldAsync").returns(activity1);
-    getById = sinon.stub(persistence, "getById").callsFake((id, callback) => {
+    getById = sinon.stub(persistence, "getByIdAsync").callsFake((id) => {
       if (id === "socrates") {
-        return callback(null, socrates);
+        return socrates;
       }
-      return callback(null, activity1);
+      return activity1;
     });
   });
 
@@ -74,14 +74,12 @@ describe("Activity store", () => {
     expect(activity.descriptionHTML()).to.contain("bli");
   });
 
-  it("calls persistence.getById for store.getActivityForId and transforms the result to an Activity", (done) => {
+  it("calls persistence.getById for store.getActivityForId and transforms the result to an Activity", async () => {
     const id = "id";
-    store.getActivityForId(id, (err, activity) => {
-      expect(activity.title()).to.equal(activity1.title);
-      expect(getById.calledWith(id)).to.be(true);
-      expect(activity.descriptionHTML()).to.contain("bli");
-      done(err);
-    });
+    const activity = await store.getActivityForId(id);
+    expect(activity.title()).to.equal(activity1.title);
+    expect(getById.calledWith(id)).to.be(true);
+    expect(activity.descriptionHTML()).to.contain("bli");
   });
 
   it("returns an activity object for the given id although the persistence only returns a JS object", async () => {
@@ -145,11 +143,9 @@ describe("Activity store", () => {
 
   describe("builds a SoCraTesActivity", () => {
     const id = "socrates";
-    it("on fetching a single activity - when the isSoCraTes flag is set", (done) => {
-      store.getActivityForId(id, (err, activity) => {
-        expect(activity).to.be.a(SoCraTesActivity);
-        done(err);
-      });
+    it("on fetching a single activity - when the isSoCraTes flag is set", async () => {
+      const activity = await store.getActivityForId(id);
+      expect(activity).to.be.a(SoCraTesActivity);
     });
 
     it("on fetching all activities - when the isSoCraTes flag is set", async () => {
@@ -160,34 +156,32 @@ describe("Activity store", () => {
       expect(activities[0]).to.be.a(SoCraTesActivity);
     });
 
-    it("that shows all required data for the overview and the calendar in SWK and for display and edit in SoCraTes", (done) => {
-      store.getActivityForId(id, (err, activity) => {
-        expect(activity.id()).to.equal("socratesId");
-        expect(activity.title()).to.equal("SoCraTes");
-        expect(activity.startDateTime().toString()).to.equal("2014-02-01T00:00:00.000+01:00");
-        expect(activity.endDateTime().toString()).to.equal("2014-02-15T00:00:00.000+01:00");
-        expect(activity.fullyQualifiedUrl()).to.equal("https://socrates.com:12345");
-        expect(activity.url()).to.equal("socrates-url");
-        expect(activity.allRegisteredMembers()).to.eql([]);
-        expect(activity.resourceNames()).to.eql(["Veranstaltung"]);
-        expect(activity.resourceNamed("Veranstaltung")).to.eql(
-          new Resource(
-            {
-              _registeredMembers: [],
-              _registrationOpen: true,
-            },
-            "Veranstaltung"
-          )
-        );
-        expect(activity.isMultiDay()).to.be(true);
-        expect(activity.location()).to.be("Right next door");
-        expect(activity.assignedGroup()).to.be("G");
-        expect(activity.owner()).to.eql({ nickname: "ownerNick" });
-        expect(activity.groupName()).to.be(undefined);
-        expect(activity.colorFrom()).to.equal("#3771C8"); // fixed SoCraTes color
-        expect(activity.groupFrom()).to.equal(undefined);
-        done(err);
-      });
+    it("that shows all required data for the overview and the calendar in SWK and for display and edit in SoCraTes", async () => {
+      const activity = await store.getActivityForId(id);
+      expect(activity.id()).to.equal("socratesId");
+      expect(activity.title()).to.equal("SoCraTes");
+      expect(activity.startDateTime().toString()).to.equal("2014-02-01T00:00:00.000+01:00");
+      expect(activity.endDateTime().toString()).to.equal("2014-02-15T00:00:00.000+01:00");
+      expect(activity.fullyQualifiedUrl()).to.equal("https://socrates.com:12345");
+      expect(activity.url()).to.equal("socrates-url");
+      expect(activity.allRegisteredMembers()).to.eql([]);
+      expect(activity.resourceNames()).to.eql(["Veranstaltung"]);
+      expect(activity.resourceNamed("Veranstaltung")).to.eql(
+        new Resource(
+          {
+            _registeredMembers: [],
+            _registrationOpen: true,
+          },
+          "Veranstaltung"
+        )
+      );
+      expect(activity.isMultiDay()).to.be(true);
+      expect(activity.location()).to.be("Right next door");
+      expect(activity.assignedGroup()).to.be("G");
+      expect(activity.owner()).to.eql({ nickname: "ownerNick" });
+      expect(activity.groupName()).to.be(undefined);
+      expect(activity.colorFrom()).to.equal("#3771C8"); // fixed SoCraTes color
+      expect(activity.groupFrom()).to.equal(undefined);
     });
 
     it("flattensAndSorts a mongo result completely", () => {

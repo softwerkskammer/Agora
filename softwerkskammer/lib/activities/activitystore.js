@@ -3,18 +3,16 @@
 const beans = require("simple-configure").get("beans");
 const R = require("ramda");
 
-const misc = beans.get("misc");
-
 const logger = require("winston").loggers.get("transactions");
 const persistence = beans.get("activitiesPersistence");
 const Activity = beans.get("activity");
 const SoCraTesActivity = beans.get("socratesActivity");
 
-function toActivity(callback, err, jsobject) {
+function toActivity(jsobject) {
   if (jsobject && jsobject.isSoCraTes) {
-    return misc.toObject(SoCraTesActivity, callback, err, jsobject);
+    return new SoCraTesActivity(jsobject);
   }
-  return misc.toObject(Activity, callback, err, jsobject);
+  return jsobject ? new Activity(jsobject) : null;
 }
 
 function toActivityList(callback, err, jsobjects) {
@@ -75,11 +73,12 @@ module.exports = {
 
   getActivity: async function getActivity(url) {
     const result = await persistence.getByFieldAsync({ url });
-    return result ? new Activity(result) : null;
+    return toActivity(result);
   },
 
-  getActivityForId: function getActivityForId(id, callback) {
-    persistence.getById(id, R.partial(toActivity, [callback]));
+  getActivityForId: async function getActivityForId(id) {
+    const result = await persistence.getByIdAsync(id);
+    return toActivity(result);
   },
 
   saveActivity: function saveActivity(activity, callback) {

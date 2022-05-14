@@ -46,9 +46,7 @@ function activityWithEinzelzimmer(ressource) {
     callback(null);
   });
   sinon.stub(activitystore, "getActivity").returns(activity);
-  sinon.stub(activitystore, "getActivityForId").callsFake((id, callback) => {
-    callback(null, activity);
-  });
+  sinon.stub(activitystore, "getActivityForId").returns(activity);
   return activity;
 }
 

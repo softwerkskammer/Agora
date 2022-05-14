@@ -26,9 +26,7 @@ function waitinglistMembersOf(activity, resourceName) {
 function activityWithEinzelzimmer(resource) {
   const state = { url: "activity-url", resources: { Veranstaltung: resource } };
   const activity = new Activity(state);
-  sinon.stub(activitystore, "getActivity").callsFake((id, callback) => {
-    callback(null, activity);
-  });
+  sinon.stub(activitystore, "getActivity").returns(activity);
   return activity;
 }
 
@@ -55,7 +53,7 @@ describe("Waitinglist Service", () => {
           return member2;
         }
       });
-      sinon.stub(activitystore, "getActivity").callsFake((activity, callback) => callback(null, activity1));
+      sinon.stub(activitystore, "getActivity").returns(activity1);
     });
 
     it("returns an empty list when the waitinglist is empty", (done) => {
