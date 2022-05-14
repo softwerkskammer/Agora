@@ -29,13 +29,16 @@ module.exports = {
         activitystore.getActivity(args.activityUrl),
       ]);
       activity.addToWaitinglist(member.id(), Date.now());
-      activitystore.saveActivity(activity, function (err1) {
+      try {
+        await activitystore.saveActivity(activity);
+        callback();
+      } catch (err1) {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
           // we try again because of a racing condition during save:
           return self.saveWaitinglistEntry(args, callback);
         }
         return callback(err1);
-      });
+      }
     } catch (e) {
       callback(e);
     }
@@ -56,7 +59,10 @@ module.exports = {
         return outerCallback(null);
       }
       entry.setRegistrationValidityFor(args.hoursstring);
-      activitystore.saveActivity(activity, (err1) => {
+      try {
+        await activitystore.saveActivity(activity);
+        mailsenderService.sendRegistrationAllowed(member, activity, entry, outerCallback);
+      } catch (err1) {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
           // we try again because of a racing condition during save:
           return self.allowRegistrationForWaitinglistEntry(args, outerCallback);
@@ -64,8 +70,7 @@ module.exports = {
         if (err1) {
           return outerCallback(err1);
         }
-        mailsenderService.sendRegistrationAllowed(member, activity, entry, outerCallback);
-      });
+      }
     } catch (e) {
       outerCallback(e);
     }

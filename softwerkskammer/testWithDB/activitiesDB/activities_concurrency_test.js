@@ -64,15 +64,15 @@ describe("Activities Service with DB", () => {
 
     persistence.drop(() => {
       // save our activity with one registrant
-      activitystore.saveActivity(activityAfterConcurrentAccess, (err) => {
+      activitystore.saveActivityCB(activityAfterConcurrentAccess, (err) => {
         done(err);
       });
     });
 
     sinon.stub(notifications, "visitorRegistration").callsFake((a, b, callback) => callback());
-    sinon.stub(notifications, "visitorUnregistration");
-    sinon.stub(notifications, "waitinglistAddition");
-    sinon.stub(notifications, "waitinglistRemoval");
+    sinon.stub(notifications, "visitorUnregistration").callsFake((a, b, callback) => callback());
+    sinon.stub(notifications, "waitinglistAddition").callsFake((a, b, callback) => callback());
+    sinon.stub(notifications, "waitinglistRemoval").callsFake((a, b, callback) => callback());
   });
 
   afterEach(() => {

@@ -33,7 +33,7 @@ module.exports = {
             const persistentActivity = await activitystore.getActivity(activityUrl);
             const activity = persistentActivity || new Activity();
 
-            activitystore.saveActivity(
+            await activitystore.saveActivity(
               activity.fillFromUI({
                 url: activityUrl,
                 title: meetup.name,
@@ -49,9 +49,9 @@ module.exports = {
                 endTime: meetupDate.endTime,
                 clonedFromMeetup: true,
                 meetupRSVPCount: meetup.yes_rsvp_count,
-              }),
-              cb
+              })
             ); // saveActivity
+            cb();
           } catch (e) {
             return cb(e);
           }

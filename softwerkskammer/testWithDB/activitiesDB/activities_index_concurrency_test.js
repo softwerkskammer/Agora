@@ -62,7 +62,7 @@ describe("Activity application with DB - on submit -", () => {
 
     persistence.drop(() => {
       // save our activity with one registrant
-      activitystore.saveActivity(activityAfterConcurrentAccess, (err) => {
+      activitystore.saveActivityCB(activityAfterConcurrentAccess, (err) => {
         done(err);
       });
     });

@@ -64,15 +64,15 @@ describe("Activity application with DB - shows activities -", () => {
     // if this fails, you need to start your mongo DB
 
     persistence.drop(() => {
-      activitystore.saveActivity(futureActivity, (err) => {
+      activitystore.saveActivityCB(futureActivity, (err) => {
         if (err) {
           done(err);
         }
-        activitystore.saveActivity(currentActivity, (err1) => {
+        activitystore.saveActivityCB(currentActivity, (err1) => {
           if (err1) {
             done(err1);
           }
-          activitystore.saveActivity(pastActivity, (err2) => {
+          activitystore.saveActivityCB(pastActivity, (err2) => {
             done(err2);
           });
         });

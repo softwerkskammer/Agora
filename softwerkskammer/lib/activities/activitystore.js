@@ -81,8 +81,12 @@ module.exports = {
     return toActivity(result);
   },
 
-  saveActivity: function saveActivity(activity, callback) {
+  saveActivityCB: function saveActivity(activity, callback) {
     persistence.saveWithVersion(activity.state, callback);
+  },
+
+  saveActivity: async function saveActivity(activity) {
+    return persistence.saveWithVersionAsync(activity.state);
   },
 
   removeActivity: function removeActivity(activity, callback) {

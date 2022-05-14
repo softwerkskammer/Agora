@@ -29,7 +29,7 @@ function editorNameOf(member) {
 }
 
 function activitySubmitted(req, res, next) {
-  activitiesService.getActivityWithGroupAndParticipants(req.body.previousUrl, (err, activity) => {
+  activitiesService.getActivityWithGroupAndParticipants(req.body.previousUrl, async (err, activity) => {
     if (err) {
       return next(err);
     }
@@ -39,25 +39,24 @@ function activitySubmitted(req, res, next) {
     const editorNames = misc.toArray(req.body.editorIds);
     // editor can be either a name in the format editorNameOf() - for participants - or just a nickname - for manually entered
     const nicknames = editorNames.map(misc.betweenBraces);
-    async.map(nicknames, memberstore.getMember, (err1, members) => {
-      const membersForEditors = members.filter((m) => m); // only truthy members
-      const editorIds = membersForEditors.map((editor) => editor.id());
-      activity.fillFromUI(req.body, editorIds);
-      activitystore.saveActivity(activity, (err2) => {
-        if (err2 && err2.message === CONFLICTING_VERSIONS) {
-          // we try again because of a racing condition during save:
-          statusmessage.errorMessage("message.title.conflict", "message.content.save_error_retry").putIntoSession(req);
-          return res.redirect("/activities/edit/" + encodeURIComponent(activity.url()));
-        }
-        if (err2) {
-          return next(err2);
-        }
-        statusmessage
-          .successMessage("message.title.save_successful", "message.content.activities.saved")
-          .putIntoSession(req);
-        res.redirect("/activities/" + encodeURIComponent(activity.url()));
-      });
-    });
+    const members = await Promise.all(nicknames.map(memberstore.getMember));
+    const membersForEditors = members.filter((m) => m); // only truthy members
+    const editorIds = membersForEditors.map((editor) => editor.id());
+    activity.fillFromUI(req.body, editorIds);
+    try {
+      await activitystore.saveActivity(activity);
+      statusmessage
+        .successMessage("message.title.save_successful", "message.content.activities.saved")
+        .putIntoSession(req);
+      res.redirect("/activities/" + encodeURIComponent(activity.url()));
+    } catch (err2) {
+      if (err2 && err2.message === CONFLICTING_VERSIONS) {
+        // we try again because of a racing condition during save:
+        statusmessage.errorMessage("message.title.conflict", "message.content.save_error_retry").putIntoSession(req);
+        return res.redirect("/activities/edit/" + encodeURIComponent(activity.url()));
+      }
+      next(err2);
+    }
   });
 }
 

@@ -97,9 +97,8 @@ describe("Waitinglist Service", () => {
         _waitinglist: [{ _memberId: "otherId" }],
       });
       let savedActivity;
-      sinon.stub(activitystore, "saveActivity").callsFake((activityToSave, callback) => {
+      sinon.stub(activitystore, "saveActivity").callsFake((activityToSave) => {
         savedActivity = activityToSave;
-        callback(null);
       });
       sinon.stub(memberstore, "getMember").returns(new Member({ id: "memberId", nickname: "hansdampf" }));
 
@@ -155,9 +154,8 @@ describe("Waitinglist Service", () => {
         _waitinglist: [{ _memberId: "memberId" }, { _memberId: "otherId" }],
       });
       let savedActivity;
-      sinon.stub(activitystore, "saveActivity").callsFake((activityToSave, callback) => {
+      sinon.stub(activitystore, "saveActivity").callsFake((activityToSave) => {
         savedActivity = activityToSave;
-        callback(null);
       });
       sinon.stub(memberstore, "getMember").returns(new Member({ id: "memberId", nickname: "hansdampf" }));
 
@@ -178,8 +176,8 @@ describe("Waitinglist Service", () => {
       activityWithEinzelzimmer({
         _waitinglist: [{ _memberId: "memberId" }, { _memberId: "otherId" }],
       });
-      sinon.stub(activitystore, "saveActivity").callsFake((activityToSave, callback) => {
-        callback(new Error("Some problem during save"));
+      sinon.stub(activitystore, "saveActivity").callsFake(() => {
+        throw new Error("Some problem during save");
       });
       sinon.stub(memberstore, "getMember").returns(new Member({ id: "memberId", nickname: "hansdampf" }));
 
@@ -196,9 +194,8 @@ describe("Waitinglist Service", () => {
         _waitinglist: [{ _memberId: "otherId" }],
       });
       let savedActivity;
-      sinon.stub(activitystore, "saveActivity").callsFake((activityToSave, callback) => {
+      sinon.stub(activitystore, "saveActivity").callsFake((activityToSave) => {
         savedActivity = activityToSave;
-        callback(null);
       });
       sinon.stub(memberstore, "getMember").returns(new Member({ id: "memberId", nickname: "hansdampf" }));
 

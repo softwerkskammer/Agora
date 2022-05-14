@@ -42,9 +42,7 @@ function waitinglistMembersOf(activity) {
 function activityWithEinzelzimmer(ressource) {
   const state = { resources: { Veranstaltung: ressource } };
   const activity = new Activity(state);
-  sinon.stub(activitystore, "saveActivity").callsFake((id, callback) => {
-    callback(null);
-  });
+  sinon.stub(activitystore, "saveActivity");
   sinon.stub(activitystore, "getActivity").returns(activity);
   sinon.stub(activitystore, "getActivityForId").returns(activity);
   return activity;
@@ -175,9 +173,7 @@ describe("Activities Service", () => {
 
   describe("- when adding a visitor -", () => {
     beforeEach(() => {
-      sinon.stub(activitystore, "saveActivity").callsFake((id, callback) => {
-        callback(null);
-      });
+      sinon.stub(activitystore, "saveActivity");
       sinon.stub(notifications, "visitorRegistration").callsFake((a, b, callback) => callback());
     });
 
@@ -242,7 +238,7 @@ describe("Activities Service", () => {
         _registrationOpen: true,
         _registeredMembers: [{ memberId: "memberId" }, { memberId: "otherId" }],
       });
-      sinon.stub(notifications, "visitorUnregistration");
+      sinon.stub(notifications, "visitorUnregistration").callsFake((a, b, callback) => callback());
 
       activitiesService.removeVisitorFrom("memberId", "activity-url", (err) => {
         expect(activity.allRegisteredMembers()).to.not.contain("memberId");
@@ -256,7 +252,7 @@ describe("Activities Service", () => {
         _registrationOpen: false,
         _registeredMembers: [{ memberId: "memberId" }, { memberId: "otherId" }],
       });
-      sinon.stub(notifications, "visitorUnregistration");
+      sinon.stub(notifications, "visitorUnregistration").callsFake((a, b, callback) => callback());
 
       activitiesService.removeVisitorFrom("memberId", "activity-url", (err) => {
         expect(activity.allRegisteredMembers()).to.not.contain("memberId");
@@ -270,7 +266,7 @@ describe("Activities Service", () => {
         _registrationOpen: true,
         _registeredMembers: [{ memberId: "memberId" }, { memberId: "otherId" }],
       });
-      sinon.stub(notifications, "visitorUnregistration");
+      sinon.stub(notifications, "visitorUnregistration").callsFake((a, b, callback) => callback());
 
       activitiesService.removeVisitorFrom("memberId", "activity-url", (err) => {
         expect(notifications.visitorUnregistration.calledOnce).to.be(true);
@@ -293,7 +289,7 @@ describe("Activities Service", () => {
   describe("- when adding somebody to the waitinglist -", () => {
     it("succeeds when resource has a waitinglist", (done) => {
       const activity = activityWithEinzelzimmer({ _waitinglist: [] });
-      sinon.stub(notifications, "waitinglistAddition");
+      sinon.stub(notifications, "waitinglistAddition").callsFake((a, b, callback) => callback());
 
       activitiesService.addToWaitinglist("memberId", "activity-url", Date.now(), (err, statusTitle, statusText) => {
         expect(statusTitle, "Status Title").to.not.exist();
@@ -306,7 +302,7 @@ describe("Activities Service", () => {
 
     it("notifies of the waitinglist addition", (done) => {
       const activity = activityWithEinzelzimmer({ _waitinglist: [] });
-      sinon.stub(notifications, "waitinglistAddition");
+      sinon.stub(notifications, "waitinglistAddition").callsFake((a, b, callback) => callback());
 
       activitiesService.addToWaitinglist("memberId", "activity-url", Date.now(), (err) => {
         expect(notifications.waitinglistAddition.calledOnce).to.be(true);
@@ -343,7 +339,7 @@ describe("Activities Service", () => {
       const activity = activityWithEinzelzimmer({
         _waitinglist: [{ _memberId: "memberId" }, { _memberId: "otherId" }],
       });
-      sinon.stub(notifications, "waitinglistRemoval");
+      sinon.stub(notifications, "waitinglistRemoval").callsFake((a, b, callback) => callback());
 
       activitiesService.removeFromWaitinglist("memberId", "activity-url", (err) => {
         const waitinglistMembers = waitinglistMembersOf(activity);
@@ -358,7 +354,7 @@ describe("Activities Service", () => {
         _registrationOpen: true,
         _registeredMembers: [{ memberId: "memberId" }, { memberId: "otherId" }],
       });
-      sinon.stub(notifications, "waitinglistRemoval");
+      sinon.stub(notifications, "waitinglistRemoval").callsFake((a, b, callback) => callback());
 
       activitiesService.removeFromWaitinglist("memberId", "activity-url", (err) => {
         expect(notifications.waitinglistRemoval.calledOnce).to.be(true);

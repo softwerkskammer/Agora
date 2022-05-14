@@ -111,27 +111,27 @@ describe("Activity application with DB - shows activities for Group-Ids -", () =
     // if this fails, you need to start your mongo DB
 
     persistence.drop(() => {
-      activitystore.saveActivity(pastActivity1, (err) => {
+      activitystore.saveActivityCB(pastActivity1, (err) => {
         if (err) {
           done(err);
         }
-        activitystore.saveActivity(pastActivity2, (err1) => {
+        activitystore.saveActivityCB(pastActivity2, (err1) => {
           if (err1) {
             done(err1);
           }
-          activitystore.saveActivity(futureActivity1, (err2) => {
+          activitystore.saveActivityCB(futureActivity1, (err2) => {
             if (err2) {
               done(err2);
             }
-            activitystore.saveActivity(futureActivity2, (err3) => {
+            activitystore.saveActivityCB(futureActivity2, (err3) => {
               if (err3) {
                 done(err3);
               }
-              activitystore.saveActivity(currentActivity1, (err4) => {
+              activitystore.saveActivityCB(currentActivity1, (err4) => {
                 if (err4) {
                   done(err4);
                 }
-                activitystore.saveActivity(currentActivity2, (err5) => {
+                activitystore.saveActivityCB(currentActivity2, (err5) => {
                   done(err5);
                 });
               });
