@@ -13,7 +13,7 @@ function imageDataFromGravatar(url, callback) {
     }
     const image = "data:" + response.headers["content-type"] + ";base64," + Buffer.from(body).toString("base64");
     const data = { image, hasNoImage: body.length < 150 };
-    callback(data);
+    callback(null, data);
   });
 }
 
@@ -32,8 +32,12 @@ module.exports = {
   getImage: async function getImage(member, optionalTunneledGravatarUrl) {
     const url = this.avatarUrl(member.email(), 16, optionalTunneledGravatarUrl);
     const imageDataFromGravatarPromise = util.promisify(imageDataFromGravatar);
-    const data = await await imageDataFromGravatarPromise(url);
-    member.setAvatarData(data);
-    return data;
+    try {
+      const data = await imageDataFromGravatarPromise(url);
+      member.setAvatarData(data);
+      return data;
+    } catch (e) {
+      console.log(e);
+    }
   },
 };

@@ -7,17 +7,16 @@ const membersService = beans.get("membersService");
 const memberstore = beans.get("memberstore");
 
 function createUserObject(req, authenticationId, profile, done) {
-  process.nextTick(
-    membersService.findMemberFor(req.user, authenticationId, (err, member) => {
-      if (err) {
-        return done(err);
-      }
-      if (!member) {
-        return done(null, { authenticationId, profile });
-      }
-      return done(null, { authenticationId, member });
-    })
-  );
+  const callback = membersService.findMemberFor(req.user, authenticationId, (err, member) => {
+    if (err) {
+      return done(err);
+    }
+    if (!member) {
+      return done(null, { authenticationId, profile });
+    }
+    return done(null, { authenticationId, member });
+  });
+  process.nextTick(callback);
 }
 
 const pwdAuthenticationPrefix = "password:";

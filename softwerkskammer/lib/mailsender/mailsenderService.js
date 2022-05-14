@@ -200,7 +200,7 @@ module.exports = {
     sendMail(message, "Nachricht", callback);
   },
 
-  sendResignment: function sendResignment(markdown, member, callback) {
+  sendResignment: async function sendResignment(markdown, member, callback) {
     const memberUrl = conf.get("publicUrlPrefix") + "/members/" + encodeURIComponent(member.nickname());
     const messageData = {
       markdown:
@@ -214,14 +214,14 @@ module.exports = {
       subject: "Austrittswunsch",
       sendCopyToSelf: true,
     };
-    const message = new Message(messageData, member);
-    membersService.superuserEmails((err, superusers) => {
-      if (err) {
-        return callback(err);
-      }
+    try {
+      const message = new Message(messageData, member);
+      const superusers = await membersService.superuserEmails();
       message.setTo(superusers);
       sendMail(message, "E-Mail", callback);
-    });
+    } catch (e) {
+      return callback(e);
+    }
   },
 
   sendMailToContactPersonsOfGroup: async function sendMailToContactPersonsOfGroup(groupId, message, callback) {

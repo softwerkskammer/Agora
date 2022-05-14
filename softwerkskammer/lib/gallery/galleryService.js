@@ -4,6 +4,7 @@ const exifr = require("exifr");
 const uuid = require("uuid");
 const path = require("path");
 const fs = require("fs");
+const fsProm = require("fs/promises");
 const glob = require("glob");
 const async = require("async");
 const misc = conf.get("beans").get("misc");
@@ -15,6 +16,11 @@ function autoOrient(sourceImagePath, targetPath, callback) {
     .rotate()
     .withMetadata()
     .toFile(targetPath, (err) => callback(err, targetPath));
+}
+
+async function autoOrientAsync(sourceImagePath, targetPath) {
+  await sharp(sourceImagePath).rotate().withMetadata().toFile(targetPath);
+  return targetPath;
 }
 
 function convert(sourceImagePath, targetPath, params, callback) {
@@ -62,12 +68,16 @@ function deleteAllImagesMatching(pattern, callback) {
 
 async function deleteAllImagesMatchingAsync(pattern) {
   const files = glob.sync(fullPathFor(pattern));
-  return Promise.all(files.filter(misc.representsImage).map(fs.unlink));
+  return Promise.all(files.filter(misc.representsImage).map(fsProm.unlink));
 }
 
 module.exports = {
-  deleteImage: function deleteImage(id, callback) {
+  deleteImageOld: function deleteImage(id, callback) {
     deleteAllImagesMatching(path.basename(id, path.extname(id)) + "*", callback);
+  },
+
+  deleteImage: async function deleteImage(id) {
+    return deleteAllImagesMatchingAsync(path.basename(id, path.extname(id)) + "*");
   },
 
   storeAvatarOld: function (tmpImageFilePath, params, callback) {
@@ -77,7 +87,8 @@ module.exports = {
 
   storeAvatar: async function storeAvatar(tmpImageFilePath, params) {
     const id = uuid.v4() + path.extname(tmpImageFilePath);
-    return convertAsync(tmpImageFilePath, fullPathFor(id), params);
+    await convertAsync(tmpImageFilePath, fullPathFor(id), params);
+    return id;
   },
 
   deleteAvatarOld: function deleteAvatar(nickname, callback) {
@@ -88,12 +99,18 @@ module.exports = {
     deleteAllImagesMatchingAsync(nickname + "*");
   },
 
-  storeImage: function storeImage(tmpImageFilePath, callback) {
+  storeImageOld: function storeImage(tmpImageFilePath, callback) {
     const id = uuid.v4() + path.extname(tmpImageFilePath);
     autoOrient(tmpImageFilePath, fullPathFor(id), (err) => callback(err, id));
   },
 
-  getMetadataForImage: function getMetadataForImage(id, callback) {
+  storeImage: async function storeImage(tmpImageFilePath) {
+    const id = uuid.v4() + path.extname(tmpImageFilePath);
+    await autoOrientAsync(tmpImageFilePath, fullPathFor(id));
+    return id;
+  },
+
+  getMetadataForImageOld: function getMetadataForImage(id, callback) {
     async function callExifr(imagepath, cb) {
       try {
         const exif = await exifr.parse(imagepath);
@@ -104,6 +121,11 @@ module.exports = {
     }
 
     callExifr(fullPathFor(id), callback);
+  },
+
+  getMetadataForImage: async function getMetadataForImage(id) {
+    const exif = await exifr.parse(fullPathFor(id));
+    return { exif };
   },
 
   retrieveScaledImage: function retrieveScaledImage(id, miniOrThumb, callback) {
@@ -131,9 +153,10 @@ module.exports = {
 
   retrieveScaledImageAsync: async function retrieveScaledImageAsync(id, miniOrThumb) {
     const image = fullPathFor(id);
-    let width = widths[miniOrThumb];
+    const width = widths[miniOrThumb];
 
-    const exists = await fs.exists(image);
+    // eslint-disable-next-line no-sync
+    const exists = fs.existsSync(image);
     if (!exists) {
       throw new Error("Image " + image + " does not exist");
     }
@@ -141,10 +164,12 @@ module.exports = {
       return fullPathFor(id);
     }
     const scaledImage = fullPathFor(scaledImageId(id, width));
-    const existsScaledImage = await fs.exists(scaledImage);
+    // eslint-disable-next-line no-sync
+    const existsScaledImage = fs.existsSync(scaledImage);
     if (existsScaledImage) {
       return scaledImage;
     }
-    return sharp(image).resize({ width }).toFile(scaledImage);
+    await sharp(image).resize({ width }).toFile(scaledImage);
+    return scaledImage;
   },
 };

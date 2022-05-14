@@ -1,6 +1,5 @@
 const async = require("async");
 const R = require("ramda");
-const util = require("util");
 const Form = require("multiparty").Form;
 
 const beans = require("simple-configure").get("beans");

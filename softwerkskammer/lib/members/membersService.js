@@ -1,5 +1,5 @@
 const R = require("ramda");
-const fs = require("fs");
+const fsProm = require("fs/promises");
 const mimetypes = require("mime-types");
 
 const beans = require("simple-configure").get("beans");
@@ -30,7 +30,7 @@ async function setCustomAvatarImageInMember(member) {
     if (!result) {
       delete member.state.customAvatar;
     }
-    const data = await fs.readFile(result);
+    const data = await fsProm.readFile(result);
     member.setAvatarData({
       image: "data:" + mimetypes.lookup(result) + ";base64," + Buffer.from(data).toString("base64"),
       hasNoImage: false,
@@ -136,16 +136,9 @@ module.exports = {
     };
   },
 
-  superuserEmails: async function superuserEmails(callback) {
-    try {
-      const members = await store.superUsers();
-      callback(
-        null,
-        members.map((member) => member.email())
-      );
-    } catch (e) {
-      callback(e);
-    }
+  superuserEmails: async function superuserEmails() {
+    const members = await store.superUsers();
+    return members.map((member) => member.email());
   },
 
   isReserved,
