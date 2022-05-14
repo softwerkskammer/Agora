@@ -16,14 +16,8 @@ if (!really || really !== "really") {
   process.exit();
 }
 
-memberstore.allMembers(async (err, members) => {
-  if (err) {
-    console.log(err);
-    process.exit();
-  }
-  const ids = members.map((m) => m.id());
-
-  async function addIdsToGroupAndSave(group, cb) {
+async function run() {
+  async function addIdsToGroupAndSave(group, ids, cb) {
     // eslint-disable-next-line no-unused-vars
     group.subscribedMembers = ids.filter((e) => Math.random() < 0.5);
     console.log("saving " + group.subscribedMembers.length + " users in group " + group.id);
@@ -31,17 +25,24 @@ memberstore.allMembers(async (err, members) => {
   }
 
   try {
+    const members = await memberstore.allMembers();
+    const ids = members.map((m) => m.id());
+
     const groups = await groupstore.allGroups();
     if (!groups) {
       console.log("ERROR ON LOADING ALL GROUPS: no of groups: " + groups ? groups.length : "no groups");
       process.exit();
     }
-    async.each(groups, async.asyncify(addIdsToGroupAndSave), (fatal) => {
-      if (fatal) {
-        console.log("ERROR: " + fatal);
+    async.each(
+      groups,
+      async.asyncify(async (group) => addIdsToGroupAndSave(group, ids)),
+      (fatal) => {
+        if (fatal) {
+          console.log("ERROR: " + fatal);
+        }
+        process.exit();
       }
-      process.exit();
-    });
+    );
   } catch (e) {
     console.log("ERROR ON LOADING ALL GROUPS: " + e);
     process.exit();
@@ -59,4 +60,6 @@ memberstore.allMembers(async (err, members) => {
       }
     });
   });
-});
+}
+
+run();

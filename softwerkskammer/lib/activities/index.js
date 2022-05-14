@@ -173,29 +173,28 @@ app.get("/eventsForSidebar", async (req, res, next) => {
   }
 });
 
-async function renderActivityCombinedWithGroups(res, next, activity) {
-  const render = function (groups) {
-    memberstore.getMembersForIds(activity.editorIds(), (err, editors) => {
-      if (err || !editors) {
-        return next(err);
-      }
-      const editorNames = editors.map(editorNameOf);
-      activity.participants = (activity.participants || []).filter(
-        (participant) => participant.id() !== activity.owner()
-      );
-      const participantNames = (activity.participants || []).map(editorNameOf);
+async function renderActivityCombinedWithGroups(res, activity) {
+  async function render(groups) {
+    const editors = await memberstore.getMembersForIds(activity.editorIds());
+    if (!editors) {
+      throw new Error();
+    }
+    const editorNames = editors.map(editorNameOf);
+    activity.participants = (activity.participants || []).filter(
+      (participant) => participant.id() !== activity.owner()
+    );
+    const participantNames = (activity.participants || []).map(editorNameOf);
 
-      if (activity.group && !groups.find((group) => group.id === activity.assignedGroup())) {
-        groups.push(activity.group);
-      }
-      res.render("edit", {
-        activity,
-        groups,
-        editorNames,
-        participantNames: R.union(editorNames, participantNames),
-      });
+    if (activity.group && !groups.find((group) => group.id === activity.assignedGroup())) {
+      groups.push(activity.group);
+    }
+    res.render("edit", {
+      activity,
+      groups,
+      editorNames,
+      participantNames: R.union(editorNames, participantNames),
     });
-  };
+  }
 
   if (res.locals.accessrights.isSuperuser()) {
     const allGroups = await groupstore.allGroups();
@@ -207,19 +206,19 @@ async function renderActivityCombinedWithGroups(res, next, activity) {
   return render(Group.regionalsFrom(subscribedGroups).concat(Group.thematicsFrom(subscribedGroups)));
 }
 
-app.get("/new", (req, res, next) => renderActivityCombinedWithGroups(res, next, new Activity()));
+app.get("/new", async (req, res) => renderActivityCombinedWithGroups(res, new Activity()));
 
-app.get("/newLike/:url", (req, res, next) => {
-  activitystore.getActivity(req.params.url, (err, activity) => {
+app.get("/newLike/:url", async (req, res, next) => {
+  activitystore.getActivity(req.params.url, async (err, activity) => {
     if (err || activity === null) {
       return next(err);
     }
-    renderActivityCombinedWithGroups(res, next, activity.resetForClone());
+    renderActivityCombinedWithGroups(res, activity.resetForClone());
   });
 });
 
-app.get("/edit/:url", (req, res, next) => {
-  activitiesService.getActivityWithGroupAndParticipants(req.params.url, (err, activity) => {
+app.get("/edit/:url", async (req, res, next) => {
+  activitiesService.getActivityWithGroupAndParticipants(req.params.url, async (err, activity) => {
     if (err || activity === null) {
       return next(err);
     }
@@ -229,7 +228,7 @@ app.get("/edit/:url", (req, res, next) => {
     if (!res.locals.accessrights.canEditActivity(activity)) {
       return res.redirect("/activities/" + encodeURIComponent(req.params.url));
     }
-    renderActivityCombinedWithGroups(res, next, activity);
+    renderActivityCombinedWithGroups(res, activity);
   });
 });
 
@@ -277,27 +276,26 @@ app.get("/checkurl", (req, res) =>
 );
 
 app.get("/:url", (req, res, next) => {
-  activitiesService.getActivityWithGroupAndParticipants(req.params.url, (err, activity) => {
+  activitiesService.getActivityWithGroupAndParticipants(req.params.url, async (err, activity) => {
     if (err || !activity) {
       return next(err);
     }
     if (activity.isSoCraTes()) {
       return res.redirect(activity.fullyQualifiedUrl());
     }
-    memberstore.getMembersForIds(activity.editorIds(), (err1, editors) => {
-      if (err1 || !editors) {
-        return next(err1);
-      }
-      const editorNicknames = editors.map((editor) => editor.nickname());
-      const allowsRegistration = activity
-        .resourceNames()
-        .every((resourceName) => activity.resourceNamed(resourceName).limit() !== 0);
-      res.render("get", {
-        activity,
-        allowsRegistration,
-        editorNicknames,
-        resourceRegistrationRenderer,
-      });
+    const editors = await memberstore.getMembersForIds(activity.editorIds());
+    if (!editors) {
+      throw new Error();
+    }
+    const editorNicknames = editors.map((editor) => editor.nickname());
+    const allowsRegistration = activity
+      .resourceNames()
+      .every((resourceName) => activity.resourceNamed(resourceName).limit() !== 0);
+    res.render("get", {
+      activity,
+      allowsRegistration,
+      editorNicknames,
+      resourceRegistrationRenderer,
     });
   });
 });

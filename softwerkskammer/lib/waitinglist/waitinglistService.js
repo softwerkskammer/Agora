@@ -14,15 +14,11 @@ module.exports = {
       }
       async.map(
         activity.allWaitinglistEntries(),
-        (waitinglistEntry, callback) => {
-          memberstore.getMemberForId(waitinglistEntry.registrantId(), (err1, member) => {
-            if (err1 || !member) {
-              return callback(err1);
-            }
-            waitinglistEntry.registrantNickname = member.nickname();
-            callback(null, waitinglistEntry);
-          });
-        },
+        async.asyncify(async (waitinglistEntry) => {
+          const member = memberstore.getMemberForId(waitinglistEntry.registrantId());
+          waitinglistEntry.registrantNickname = member.nickname();
+          return waitinglistEntry;
+        }),
         globalCallback
       );
     });
@@ -32,7 +28,7 @@ module.exports = {
     const self = this;
     async.parallel(
       {
-        member: (cb) => memberstore.getMember(args.nickname, cb),
+        member: async.asyncify(async () => memberstore.getMember(args.nickname)),
         activity: (cb) => activitystore.getActivity(args.activityUrl, cb),
       },
       (err, results) => {
@@ -55,7 +51,7 @@ module.exports = {
     const self = this;
     async.parallel(
       {
-        member: (callback) => memberstore.getMember(args.nickname, callback),
+        member: async.asyncify(async () => memberstore.getMember(args.nickname)),
         activity: (callback) => activitystore.getActivity(args.activityUrl, callback),
       },
       (err, results) => {

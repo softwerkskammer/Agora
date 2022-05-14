@@ -111,7 +111,7 @@ describe("Activity application", () => {
     sinon.stub(activitiesService, "getActivitiesForDisplay").callsFake((fetcher, callback) => {
       callback(null, [emptyActivity]);
     });
-    sinon.stub(memberstore, "getMembersForIds").callsFake((ids, callback) => {
+    sinon.stub(memberstore, "getMembersForIds").callsFake((ids) => {
       const members = ids.map((id) =>
         id === "memberId1"
           ? member1
@@ -123,7 +123,7 @@ describe("Activity application", () => {
           ? member4
           : undefined
       );
-      callback(null, members);
+      return members;
     });
 
     function activityToReturnFor(url) {

@@ -18,9 +18,7 @@ const serverpathRemover = beans.get("serverpathRemover");
 describe("Security regarding", () => {
   describe("Clickjacking:", () => {
     beforeEach(() => {
-      sinon.stub(memberstore, "allMembers").callsFake((callback) => {
-        callback(null, []);
-      });
+      sinon.stub(memberstore, "allMembers").returns([]);
     });
 
     afterEach(() => {
@@ -50,9 +48,7 @@ describe("Security regarding", () => {
       sinon.stub(groupsAndMembersService, "getMemberWithHisGroups").callsFake((nickname, callback) => {
         callback(null, dummymember);
       });
-      sinon.stub(memberstore, "allMembers").callsFake((callback) => {
-        callback(null, [dummymember]);
-      });
+      sinon.stub(memberstore, "allMembers").returns([dummymember]);
     });
 
     afterEach(() => {
@@ -98,9 +94,7 @@ describe("Security regarding", () => {
 
   describe("Information disclosure", () => {
     beforeEach(() => {
-      sinon.stub(memberstore, "getMember").callsFake((nickname, callback) => {
-        callback(null, null);
-      });
+      sinon.stub(memberstore, "getMember").returns(null);
     });
 
     afterEach(() => {
@@ -114,7 +108,6 @@ describe("Security regarding", () => {
         .get("/contactMember/xyz")
         .expect(500)
         // node_modules and lib are preceded by an opening paren, thus the path preceding them is cut off:
-        .expect(/\(node_modules/)
         .expect(/\(softwerkskammer\/lib/)
         // we are on the right page, btw:
         .expect(/Du hast einen Fehler gefunden\./, done);

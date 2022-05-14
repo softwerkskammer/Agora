@@ -67,17 +67,22 @@ module.exports = {
         return callback(err);
       }
 
-      function participantsLoader(cb) {
-        memberstore.getMembersForIds(activity.allRegisteredMembers(), (err1, members) => {
-          async.each(members, membersService.putAvatarIntoMemberAndSave, () => cb(err1, members));
-        });
+      async function participantsLoader(cb) {
+        let err1;
+        let members;
+        try {
+          members = await memberstore.getMembersForIds(activity.allRegisteredMembers());
+        } catch (e) {
+          err1 = e;
+        }
+        async.each(members, membersService.putAvatarIntoMemberAndSave, () => cb(err1, members));
       }
 
       async.parallel(
         {
           group: async.asyncify(async () => await groupstore.getGroup(activity.assignedGroup())),
-          participants: participantsLoader,
-          owner: (cb) => memberstore.getMemberForId(activity.owner(), cb),
+          participants: (cb) => participantsLoader(cb),
+          owner: async.asyncify(async () => await memberstore.getMemberForId(activity.owner())),
         },
 
         (err1, results) => {
@@ -125,8 +130,7 @@ module.exports = {
           if (err1) {
             return callback(err1);
           }
-          notifications.visitorRegistration(activity, memberId);
-          return callback(err1);
+          return notifications.visitorRegistration(activity, memberId, callback);
         });
       }
       return callback(null, "activities.registration_not_now", "activities.registration_not_possible");

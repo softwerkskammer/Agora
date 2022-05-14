@@ -38,18 +38,12 @@ describe("Groups and Members Service (member deletion)", () => {
   beforeEach(() => {
     savedGroups = [];
     removeMemberSpy = null;
-    sinon.stub(memberstore, "getMember").callsFake((nick, callback) => {
-      callback(null, dummymember);
-    });
-    sinon.stub(memberstore, "getMemberForId").callsFake((memberID, callback) => {
-      callback(null, dummymember);
-    });
+    sinon.stub(memberstore, "getMember").returns(dummymember);
+    sinon.stub(memberstore, "getMemberForId").returns(dummymember);
     sinon.stub(groupstore, "saveGroup").callsFake((group) => {
       savedGroups.push(group);
     });
-    removeMemberSpy = sinon.stub(memberstore, "removeMember").callsFake((member, callback) => {
-      callback();
-    });
+    removeMemberSpy = sinon.stub(memberstore, "removeMember");
   });
 
   afterEach(() => {

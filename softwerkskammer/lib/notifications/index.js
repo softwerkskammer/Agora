@@ -27,8 +27,8 @@ function activityParticipation(activity, visitorID, ressourceName, content, type
   async.parallel(
     {
       group: (cb) => groupsAndMembers.getGroupAndMembersForList(activity.assignedGroup(), cb),
-      owner: (cb) => memberstore.getMemberForId(activity.owner(), cb),
-      visitor: (cb) => memberstore.getMemberForId(visitorID, cb),
+      owner: async () => memberstore.getMemberForId(activity.owner()),
+      visitor: async () => memberstore.getMemberForId(visitorID),
     },
 
     (err, results) => {
@@ -105,11 +105,9 @@ module.exports = {
     );
   },
 
-  wikiChanges: function wikiChanges(changes, callback) {
-    memberstore.allMembers((err, members) => {
-      if (err) {
-        return callback(err);
-      }
+  wikiChanges: async function wikiChanges(changes, callback) {
+    try {
+      const members = await memberstore.allMembers();
       const renderingOptions = {
         directories: R.sortBy(R.prop("dir"), changes),
       };
@@ -117,23 +115,21 @@ module.exports = {
       const filename = path.join(__dirname, "pug/wikichangetemplate.pug");
       const receivers = R.union(Member.superuserEmails(members), Member.wikiNotificationMembers(members));
       sendMail(receivers, "Wiki Änderungen", pug.renderFile(filename, renderingOptions), callback);
-    });
+    } catch (e) {
+      return callback(e);
+    }
   },
 
-  newMemberRegistered: function newMemberRegistered(member, subscriptions) {
-    memberstore.allMembers((err, members) => {
-      if (err) {
-        return;
-      }
-      const renderingOptions = {
-        member,
-        groups: subscriptions,
-        count: members.length,
-      };
-      addPrettyAndUrlTo(renderingOptions);
-      const filename = path.join(__dirname, "pug/newmembertemplate.pug");
-      const receivers = Member.superuserEmails(members);
-      sendMail(receivers, "Neues Mitglied", pug.renderFile(filename, renderingOptions));
-    });
+  newMemberRegistered: async function newMemberRegistered(member, subscriptions) {
+    const members = await memberstore.allMembers();
+    const renderingOptions = {
+      member,
+      groups: subscriptions,
+      count: members.length,
+    };
+    addPrettyAndUrlTo(renderingOptions);
+    const filename = path.join(__dirname, "pug/newmembertemplate.pug");
+    const receivers = Member.superuserEmails(members);
+    sendMail(receivers, "Neues Mitglied", pug.renderFile(filename, renderingOptions));
   },
 };

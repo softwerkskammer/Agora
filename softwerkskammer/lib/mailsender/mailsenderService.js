@@ -75,18 +75,18 @@ module.exports = {
     );
   },
 
-  dataForShowingMessageToMember: function dataForShowingMessageToMember(nickname, callback) {
-    memberstore.getMember(nickname, (err, member) => {
-      if (err) {
-        return callback(err);
-      }
+  dataForShowingMessageToMember: async function dataForShowingMessageToMember(nickname, callback) {
+    try {
+      const member = await memberstore.getMember(nickname);
       if (!member) {
         return callback(new Error("Empfänger wurde nicht gefunden."));
       }
       const message = new Message();
       message.setReceiver(member);
       callback(null, { message, successURL: "/members/" + encodeURIComponent(nickname) });
-    });
+    } catch (e) {
+      callback(e);
+    }
   },
 
   sendMailToParticipantsOf: function sendMailToParticipantsOf(activityURL, message, callback) {
@@ -128,29 +128,30 @@ module.exports = {
     }
   },
 
-  sendMailToMember: function sendMailToMember(nickname, message, callback) {
+  sendMailToMember: async function sendMailToMember(nickname, message, callback) {
     const type = "$t(mailsender.notification)";
-    return memberstore.getMember(nickname, (err, member) => {
-      if (err) {
-        return callback(err, mailtransport.statusmessageForError(type, err));
-      }
+
+    try {
+      const member = await memberstore.getMember(nickname);
       if (!member) {
         return callback(null, mailtransport.statusmessageForError(type, new Error("Empfänger wurde nicht gefunden.")));
       }
       message.setReceiver(member);
       sendMail(message, type, callback);
-    });
+    } catch (e) {
+      callback(e, mailtransport.statusmessageForError(type, e));
+    }
   },
 
-  sendMailToAllMembers: function sendMailToAllMembers(message, callback) {
-    const type = "$t(mailsender.notification)";
-    memberstore.allMembers((err, members) => {
-      if (err) {
-        return callback(err, mailtransport.statusmessageForError(type, err));
-      }
+  sendMailToAllMembers: async function sendMailToAllMembers(message, callback) {
+    try {
+      const type = "$t(mailsender.notification)";
+      const members = await memberstore.allMembers();
       message.setBccToMemberAddresses(members);
       sendMail(message, type, callback);
-    });
+    } catch (e) {
+      return callback(e);
+    }
   },
 
   sendMagicLinkToMember: function sendMagicLinkToMember(member, token, callback) {

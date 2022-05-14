@@ -10,16 +10,16 @@ function serializeUser(user, done) {
   return done(null, user);
 }
 
-function deserializeUser(user, done) {
+async function deserializeUser(user, done) {
   if (user.profile) {
     return done(null, user);
   } // new user
-  memberstore.getMemberForAuthentication(user.authenticationId, (err, member) => {
-    if (err) {
-      return done(err);
-    }
+  try {
+    const member = await memberstore.getMemberForAuthentication(user.authenticationId);
     done(null, { authenticationId: user.authenticationId, member });
-  });
+  } catch (e) {
+    done(e);
+  }
 }
 
 passport.serializeUser(serializeUser);

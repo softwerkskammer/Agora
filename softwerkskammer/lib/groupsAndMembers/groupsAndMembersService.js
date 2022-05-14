@@ -24,17 +24,17 @@ async function addGroupsToMember(member, callback) {
 }
 
 module.exports = {
-  getMemberWithHisGroups: function getMemberWithHisGroups(nickname, callback) {
-    memberstore.getMember(nickname, (err, member) => {
-      if (err) {
-        return callback(err);
-      }
+  getMemberWithHisGroups: async function getMemberWithHisGroups(nickname, callback) {
+    try {
+      const member = await memberstore.getMember(nickname);
       addGroupsToMember(member, callback);
-    });
+    } catch (e) {
+      callback(e);
+    }
   },
 
   removeMember: function removeMember(nickname, callback) {
-    this.getMemberWithHisGroups(nickname, (err, member) => {
+    this.getMemberWithHisGroups(nickname, async (err, member) => {
       if (err || !member) {
         return callback(err);
       }
@@ -44,22 +44,23 @@ module.exports = {
         return groupstore.saveGroup(group);
       };
 
-      async.each(member.subscribedGroups, async.asyncify(unsubFunction), (err1) => {
-        if (err1) {
-          return callback(new Error("hasSubscriptions"));
-        }
-        return memberstore.removeMember(member, callback);
-      });
+      try {
+        await Promise.all(member.subscribedGroups.map(unsubFunction));
+        memberstore.removeMember(member);
+        callback();
+      } catch (e) {
+        callback(new Error("hasSubscriptions"));
+      }
     });
   },
 
-  getMemberWithHisGroupsByMemberId: function getMemberWithHisGroupsByMemberId(memberID, callback) {
-    memberstore.getMemberForId(memberID, (err, member) => {
-      if (err) {
-        return callback(err);
-      }
+  getMemberWithHisGroupsByMemberId: async function getMemberWithHisGroupsByMemberId(memberID, callback) {
+    try {
+      const member = await memberstore.getMemberForId(memberID);
       addGroupsToMember(member, callback);
-    });
+    } catch (e) {
+      callback(e);
+    }
   },
 
   getOrganizersOfGroup: function getOrganizersOfGroup(groupId, callback) {
@@ -85,19 +86,19 @@ module.exports = {
     );
   },
 
-  addMembersToGroup: function addMembersToGroup(group, callback) {
+  addMembersToGroup: async function addMembersToGroup(group, callback) {
     if (!group) {
       return callback(null);
     }
-    memberstore.getMembersForIds(group.subscribedMembers, (err, members) => {
-      if (err) {
-        return callback(err);
-      }
+    try {
+      const members = await memberstore.getMembersForIds(group.subscribedMembers);
       async.each(members, membersService.putAvatarIntoMemberAndSave, (err1) => {
         group.members = members;
         callback(err1, group);
       });
-    });
+    } catch (e) {
+      callback(e);
+    }
   },
 
   updateAndSaveSubmittedMember: function updateAndSaveSubmittedMember(
@@ -107,7 +108,7 @@ module.exports = {
     notifyNewMemberRegistration,
     callback
   ) {
-    this.getMemberWithHisGroups(memberformData.previousNickname, (err, persistentMember) => {
+    this.getMemberWithHisGroups(memberformData.previousNickname, async (err, persistentMember) => {
       if (err) {
         return callback(err);
       }
@@ -120,28 +121,29 @@ module.exports = {
         member.addAuthentication(memberformData.additionalAuthentication);
       }
       member.fillFromUI(memberformData);
-      memberstore.saveMember(member, async (err1) => {
-        if (err1) {
-          return callback(err1);
-        }
-        if (!sessionUser.member || sessionUser.member.id() === member.id()) {
-          sessionUser.member = member;
-          delete sessionUser.profile;
-        }
 
-        const subscriptions = misc.toArray(memberformData.newSubscriptions);
-        if (!persistentMember) {
-          // new member
-          notifyNewMemberRegistration(member, subscriptions);
-        }
-        // API change: email() -> member, oldEmail removed and also inlined
-        try {
-          await groupsService.updateSubscriptions(member, subscriptions);
-          callback(null, member.nickname());
-        } catch (e) {
-          callback(e);
-        }
-      });
+      try {
+        await memberstore.saveMember(member);
+      } catch (e) {
+        return callback(e);
+      }
+      if (!sessionUser.member || sessionUser.member.id() === member.id()) {
+        sessionUser.member = member;
+        delete sessionUser.profile;
+      }
+
+      const subscriptions = misc.toArray(memberformData.newSubscriptions);
+      if (!persistentMember) {
+        // new member
+        notifyNewMemberRegistration(member, subscriptions);
+      }
+      // API change: email() -> member, oldEmail removed and also inlined
+      try {
+        await groupsService.updateSubscriptions(member, subscriptions);
+        callback(null, member.nickname());
+      } catch (e) {
+        callback(e);
+      }
     });
   },
 };

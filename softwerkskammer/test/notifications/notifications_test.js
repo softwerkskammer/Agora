@@ -53,21 +53,19 @@ describe("Notifications", () => {
     sinon.stub(groupsAndMembersService, "getGroupAndMembersForList").callsFake((groupID, callback) => {
       callback(null, group);
     });
-    sinon.stub(memberstore, "getMemberForId").callsFake((memberID, callback) => {
+    sinon.stub(memberstore, "getMemberForId").callsFake((memberID) => {
       if (memberID === "hans") {
-        return callback(null, hans);
+        return hans;
       }
       if (memberID === "alice") {
-        return callback(null, alice);
+        return alice;
       }
       if (memberID === "bob") {
-        return callback(null, bob);
+        return bob;
       }
-      callback(null);
+      return null;
     });
-    sinon.stub(memberstore, "allMembers").callsFake((callback) => {
-      callback(null, [hans, alice, bob, superuser]);
-    });
+    sinon.stub(memberstore, "allMembers").returns([hans, alice, bob, superuser]);
     sinon.stub(transport, "sendMail").callsFake((opts, callback) => callback());
   });
 
@@ -141,12 +139,13 @@ describe("Notifications", () => {
     group.organizers = ["alice"];
     group.members = [hans, alice, bob];
 
-    notifications.visitorRegistration(activity, "bob");
-    expect(transport.sendMail.calledOnce).to.be(true);
-    const options = transport.sendMail.firstCall.args[0];
-    expect(options.bcc).to.equal("alice@email.de");
-    expect(options.bcc).to.not.contain("bob");
-    expect(options.bcc).to.not.contain("hans");
+    notifications.visitorRegistration(activity, "bob", () => {
+      expect(transport.sendMail.calledOnce).to.be(true);
+      const options = transport.sendMail.firstCall.args[0];
+      expect(options.bcc).to.equal("alice@email.de");
+      expect(options.bcc).to.not.contain("bob");
+      expect(options.bcc).to.not.contain("hans");
+    });
   });
 
   it("does not trigger mail sending if activity has no owner and no group organizers", () => {

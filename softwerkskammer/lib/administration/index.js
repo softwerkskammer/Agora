@@ -11,20 +11,16 @@ const Group = beans.get("group");
 
 const app = misc.expressAppIn(__dirname);
 
-app.get("/memberTable", (req, res, next) => {
-  memberstore.allMembers((err, members) => {
-    if (err) {
-      return next(err);
-    }
-    res.render("memberTable", { members });
-  });
+app.get("/memberTable", async (req, res) => {
+  const members = await memberstore.allMembers();
+  res.render("memberTable", { members });
 });
 
 app.get("/memberAndGroupTable", (req, res, next) => {
   async.parallel(
     {
       groups: async.asyncify(groupstore.allGroups),
-      members: memberstore.allMembers,
+      members: async.asyncify(memberstore.allMembers),
     },
     (err, results) => {
       if (err) {
@@ -49,13 +45,9 @@ app.get("/activityTable", (req, res, next) =>
   })
 );
 
-app.get("/interests", (req, res, next) => {
-  memberstore.allMembers((err, members) => {
-    if (err || !members) {
-      return next(err);
-    }
-    res.render("interests", { interests: membersService.toUngroupedWordList(members) });
-  });
+app.get("/interests", async (req, res) => {
+  const members = await memberstore.allMembers();
+  res.render("interests", { interests: membersService.toUngroupedWordList(members) });
 });
 
 module.exports = app;

@@ -49,9 +49,7 @@ describe("Groups and Members Service (updateAndSaveSubmittedMember)", () => {
       sinon.stub(groupsAndMembersService, "getMemberWithHisGroups").callsFake((nickname, callback) => {
         callback(null, null);
       });
-      sinon.stub(memberstore, "saveMember").callsFake((anyMember, callback) => {
-        callback(new Error("some error"));
-      });
+      sinon.stub(memberstore, "saveMember").throws(new Error("some error"));
 
       groupsAndMembersService.updateAndSaveSubmittedMember(
         undefined,
@@ -71,9 +69,7 @@ describe("Groups and Members Service (updateAndSaveSubmittedMember)", () => {
         callback(null, member);
       });
       accessrights.canEditMember = () => true;
-      sinon.stub(memberstore, "saveMember").callsFake((anyMember, callback) => {
-        callback(new Error("some error"));
-      });
+      sinon.stub(memberstore, "saveMember").throws(new Error("some error"));
 
       groupsAndMembersService.updateAndSaveSubmittedMember(
         undefined,
@@ -91,9 +87,7 @@ describe("Groups and Members Service (updateAndSaveSubmittedMember)", () => {
 
   describe("when the submitted member is a new member", () => {
     beforeEach(() => {
-      sinon.stub(memberstore, "saveMember").callsFake((anyMember, callback) => {
-        callback(null);
-      });
+      sinon.stub(memberstore, "saveMember");
       sinon.stub(groupsAndMembersService, "getMemberWithHisGroups").callsFake((nickname, callback) => {
         callback(null, null);
       });
@@ -122,9 +116,7 @@ describe("Groups and Members Service (updateAndSaveSubmittedMember)", () => {
 
   describe("when the submitted member is an existing member", () => {
     beforeEach(() => {
-      sinon.stub(memberstore, "saveMember").callsFake((anyMember, callback) => {
-        callback(null);
-      });
+      sinon.stub(memberstore, "saveMember");
       sinon.stub(groupsAndMembersService, "getMemberWithHisGroups").callsFake((nickname, callback) => {
         callback(null, member);
       });

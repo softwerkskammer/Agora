@@ -108,7 +108,7 @@ describe("Activities Service", () => {
     sinon.stub(activitystore, "getActivity").callsFake((activityId, callback) => {
       callback(null, emptyActivity);
     });
-    sinon.stub(memberstore, "getMembersForIds").callsFake((ids, callback) => {
+    sinon.stub(memberstore, "getMembersForIds").callsFake(() => {
       const memberA = new Member({
         id: "memberId1",
         nickname: "participant1",
@@ -124,14 +124,12 @@ describe("Activities Service", () => {
         lastname: "Lastname2",
       });
 
-      callback(null, [memberA, memberB]);
+      return [memberA, memberB];
     });
     sinon.stub(membersService, "putAvatarIntoMemberAndSave").callsFake((member, callback) => {
       callback();
     });
-    sinon.stub(memberstore, "getMemberForId").callsFake((id, callback) => {
-      callback(null, owner);
-    });
+    sinon.stub(memberstore, "getMemberForId").returns(owner);
     sinon.stub(groupstore, "getGroup").callsFake((groupname) => {
       if (groupname === "groupname") {
         return group;
@@ -194,7 +192,7 @@ describe("Activities Service", () => {
       sinon.stub(activitystore, "saveActivity").callsFake((id, callback) => {
         callback(null);
       });
-      sinon.stub(notifications, "visitorRegistration");
+      sinon.stub(notifications, "visitorRegistration").callsFake((a, b, callback) => callback());
     });
 
     function activityWithAddMemberIdReturning(truthValue) {

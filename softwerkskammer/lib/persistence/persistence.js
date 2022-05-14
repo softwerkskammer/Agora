@@ -38,7 +38,7 @@ module.exports = function persistenceFunc(collectionName) {
     logInfo("connection is " + ourDBConnectionState + ", opening it and retrying");
     await persistence.openDBAsync();
     await new Promise((resolve) => setTimeout(resolve, 100));
-    await getOpenDb();
+    return getOpenDb();
   }
 
   persistence = {

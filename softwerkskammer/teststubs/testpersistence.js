@@ -45,6 +45,10 @@ module.exports = {
     throw new Error("Testpersistence - function getByField not implemented");
   },
 
+  getByFieldAsync: function () {
+    throw new Error("Testpersistence - function getByField not implemented");
+  },
+
   save: function () {
     throw new Error("Testpersistence - function save not implemented");
   },
@@ -66,6 +70,10 @@ module.exports = {
   },
 
   remove: function () {
+    throw new Error("Testpersistence - function remove not implemented");
+  },
+
+  removeAsync: function () {
     throw new Error("Testpersistence - function remove not implemented");
   },
 

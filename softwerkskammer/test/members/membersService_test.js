@@ -15,11 +15,11 @@ describe("MembersService", () => {
 
   beforeEach(() => {
     member = new Member();
-    sinon.stub(memberstore, "getMember").callsFake((nickname, callback) => {
+    sinon.stub(memberstore, "getMember").callsFake((nickname) => {
       if (new RegExp(nickname, "i").test("hada")) {
-        return callback(null, member);
+        return member;
       }
-      callback(null, null);
+      return null;
     });
   });
 
@@ -219,9 +219,7 @@ describe("MembersService", () => {
     let gravatarData;
 
     beforeEach(() => {
-      saveMember = sinon.stub(memberstore, "saveMember").callsFake((anyMember, callback) => {
-        callback();
-      });
+      saveMember = sinon.stub(memberstore, "saveMember");
       gravatarData = { image: "the image", hasNoImage: false };
       getImageFromAvatarProvider = sinon.stub(avatarProvider, "getImage").callsFake((anyMember, callback) => {
         callback(gravatarData);
@@ -335,18 +333,16 @@ describe("MembersService", () => {
     let saveMember;
 
     beforeEach(() => {
-      saveMember = sinon.stub(memberstore, "saveMember").callsFake((anyMember, callback) => {
-        callback();
-      });
+      saveMember = sinon.stub(memberstore, "saveMember");
 
-      sinon.stub(memberstore, "getMemberForAuthentication").callsFake((auth, callback) => {
+      sinon.stub(memberstore, "getMemberForAuthentication").callsFake((auth) => {
         if (!auth || auth === "newAuth") {
-          return callback();
+          return;
         }
         if (auth === "errorAuth") {
-          return callback(new Error("error in getMemberForAuthentication"));
+          throw new Error("error in getMemberForAuthentication");
         }
-        callback(null, member);
+        return member;
       });
     });
 

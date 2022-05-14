@@ -66,14 +66,14 @@ describe("Waitinglist Service with DB", () => {
       return callback(null, activityAfterConcurrentAccess);
     });
 
-    sinon.stub(memberstore, "getMember").callsFake((nickname, callback) => {
+    sinon.stub(memberstore, "getMember").callsFake((nickname) => {
       if (nickname === "nick") {
-        return callback(null, new Member({ id: "memberIdNew" }));
+        return new Member({ id: "memberIdNew" });
       }
       if (nickname === "waiting") {
-        return callback(null, new Member({ id: "memberIdWaiting" }));
+        return new Member({ id: "memberIdWaiting" });
       }
-      return callback(new Error("Member " + nickname + " not found."));
+      throw new Error("Member " + nickname + " not found.");
     });
 
     sinon.stub(mailsenderService, "sendRegistrationAllowed").callsFake((member, activity, entry, callback) => {

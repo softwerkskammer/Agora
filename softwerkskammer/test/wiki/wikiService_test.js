@@ -365,11 +365,11 @@ describe("Wiki Service (replaceNonExistentNicknames)", () => {
       },
     ];
 
-    sinon.stub(memberstore, "getMember").callsFake((nick, callback) => {
+    sinon.stub(memberstore, "getMember").callsFake((nick) => {
       if (nick === "known") {
-        return callback(null, {}); // we just need existence here
+        return {}; // we just need existence here
       }
-      callback();
+      return null;
     });
   });
 

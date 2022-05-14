@@ -46,49 +46,44 @@ function memberSubmitted(req, res, next) {
   );
 }
 
-function tagsFor(callback) {
-  memberstore.allMembers((err, members) => {
+async function tagsFor(callback) {
+  try {
+    const members = await memberstore.allMembers();
     callback(
-      err,
+      null,
       membersService
         .toWordList(members)
         .map((wordlist) => wordlist.text)
         .sort()
     );
-  });
+  } catch (e) {
+    callback(e);
+  }
 }
 
 const app = misc.expressAppIn(__dirname);
 
-app.get("/", (req, res, next) => {
-  memberstore.allMembers((err, members) => {
-    if (err) {
-      return next(err);
+app.get("/", async (req, res, next) => {
+  const members = await memberstore.allMembers();
+  async.each(members, membersService.putAvatarIntoMemberAndSave, (err1) => {
+    if (err1) {
+      return next(err1);
     }
-    async.each(members, membersService.putAvatarIntoMemberAndSave, (err1) => {
-      if (err1) {
-        return next(err1);
-      }
-      res.render("index", { members, wordList: membersService.toWordList(members) });
-    });
+    res.render("index", { members, wordList: membersService.toWordList(members) });
   });
 });
 
-app.get("/interests", (req, res, next) => {
+app.get("/interests", async (req, res, next) => {
   const casesensitive = req.query.casesensitive ? "" : "i";
-  memberstore.getMembersWithInterest(req.query.interest, casesensitive, (err, members) => {
-    if (err) {
-      return next(err);
+  const members = await memberstore.getMembersWithInterest(req.query.interest, casesensitive);
+  async.each(members, membersService.putAvatarIntoMemberAndSave, (err1) => {
+    if (err1) {
+      return next(err1);
     }
-    async.each(members, membersService.putAvatarIntoMemberAndSave, (err1) => {
-      if (err1) {
-        return next(err1);
-      }
-      res.render("indexForTag", {
-        interest: req.query.interest,
-        members,
-        wordList: membersService.toWordList(members),
-      });
+    res.render("indexForTag", {
+      interest: req.query.interest,
+      members,
+      wordList: membersService.toWordList(members),
     });
   });
 });
@@ -176,20 +171,12 @@ app.post("/delete", (req, res, next) => {
   });
 });
 
-app.post("/updatePassword", (req, res, next) => {
-  memberstore.getMemberForId(req.body.id, (err, member) => {
-    if (err) {
-      return next(err);
-    }
-    member.updatePassword(req.body.password);
-    member.addAuthentication(authenticationService.pwdAuthenticationPrefix + member.email());
-    memberstore.saveMember(member, (err1) => {
-      if (err1) {
-        return next(err1);
-      }
-      res.redirect("/members/" + encodeURIComponent(member.nickname()));
-    });
-  });
+app.post("/updatePassword", async (req, res) => {
+  const member = await memberstore.getMemberForId(req.body.id);
+  member.updatePassword(req.body.password);
+  member.addAuthentication(authenticationService.pwdAuthenticationPrefix + member.email());
+  await memberstore.saveMember(member);
+  res.redirect("/members/" + encodeURIComponent(member.nickname()));
 });
 
 app.post("/submit", (req, res, next) => {
@@ -256,22 +243,18 @@ app.post("/submitavatar", (req, res, next) => {
   });
 });
 
-app.post("/deleteAvatarFor", (req, res, next) => {
+app.post("/deleteAvatarFor", async (req, res, next) => {
   const nicknameOfEditMember = req.body.nickname;
-  memberstore.getMember(nicknameOfEditMember, (err, member) => {
-    if (err) {
-      return next(err);
-    }
-    if (res.locals.accessrights.canEditMember(member)) {
-      return membersService.deleteCustomAvatarForNickname(nicknameOfEditMember, (err1) => {
-        if (err1) {
-          return next(err1);
-        }
-        res.redirect("/members/" + encodeURIComponent(nicknameOfEditMember));
-      });
-    }
-    res.redirect("/members/" + encodeURIComponent(nicknameOfEditMember));
-  });
+  const member = await memberstore.getMember(nicknameOfEditMember);
+  if (res.locals.accessrights.canEditMember(member)) {
+    return membersService.deleteCustomAvatarForNickname(nicknameOfEditMember, (err1) => {
+      if (err1) {
+        return next(err1);
+      }
+      res.redirect("/members/" + encodeURIComponent(nicknameOfEditMember));
+    });
+  }
+  res.redirect("/members/" + encodeURIComponent(nicknameOfEditMember));
 });
 
 app.get("/:nickname", (req, res, next) => {

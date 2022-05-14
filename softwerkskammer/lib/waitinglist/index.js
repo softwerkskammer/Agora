@@ -83,24 +83,24 @@ app.post("/allowRegistration", (req, res, next) => {
 
 app.post("/remove", (req, res, next) => {
   const activityUrl = req.body.activityUrl;
-  accessAllowedTo(activityUrl, res, (err, activity) => {
+  accessAllowedTo(activityUrl, res, async (err, activity) => {
     if (err) {
       return next(err);
     }
     if (!res.locals.accessrights.canEditActivity(activity)) {
       res.redirect("/activites/" + encodeURIComponent(req.body.activityUrl));
     }
-    memberstore.getMember(req.body.nickname, (err1, member) => {
-      if (err1) {
-        return res.send(400);
-      }
+    try {
+      const member = await memberstore.getMember(req.body.nickname);
       activitiesService.removeFromWaitinglist(member.id(), activityUrl, (err2) => {
         if (err2) {
           return next(err2);
         }
         res.send("ok");
       });
-    });
+    } catch (e) {
+      return res.send(400);
+    }
   });
 });
 

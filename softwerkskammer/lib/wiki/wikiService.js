@@ -14,13 +14,16 @@ const Diff = beans.get("gitDiff");
 const logger = require("winston").loggers.get("application");
 
 function replaceNonExistentNicknames(metadataList, callback) {
-  function replaceNickPotentially(metadata, cb) {
-    memberstore.getMember(metadata.author, (err, member) => {
-      if (err || !member) {
+  async function replaceNickPotentially(metadata) {
+    try {
+      const member = await memberstore.getMember(metadata.author);
+      if (!member) {
         metadata.author = null;
       }
-      cb(null, metadata);
-    });
+    } catch (e) {
+      metadata.author = null;
+    }
+    return metadata;
   }
 
   async.map(metadataList, replaceNickPotentially, (err, changedMetadataList) => {

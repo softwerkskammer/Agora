@@ -35,15 +35,12 @@ let blogposts = [];
 
 describe("Groups application", () => {
   before(() => {
-    sinon.stub(memberstore, "getMembersForIds").callsFake((memberIds, callback) => {
+    sinon.stub(memberstore, "getMembersForIds").callsFake((memberIds) => {
       const members = [
         new Member({ id: "id1", nickname: "hada", firstname: "Hans", lastname: "Dampf", email: "hans@aol.com" }),
         new Member({ id: "id2", nickname: "pepe", firstname: "Peter", lastname: "Meyer", email: "peter@google.de" }),
       ];
-      callback(
-        null,
-        members.filter((m) => memberIds.includes(m.id()))
-      );
+      return members.filter((m) => memberIds.includes(m.id()));
     });
 
     sinon.stub(membersService, "putAvatarIntoMemberAndSave").callsFake((member, callback) => {

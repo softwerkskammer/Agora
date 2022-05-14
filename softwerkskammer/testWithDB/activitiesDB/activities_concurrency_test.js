@@ -69,7 +69,7 @@ describe("Activities Service with DB", () => {
       });
     });
 
-    sinon.stub(notifications, "visitorRegistration");
+    sinon.stub(notifications, "visitorRegistration").callsFake((a, b, callback) => callback());
     sinon.stub(notifications, "visitorUnregistration");
     sinon.stub(notifications, "waitinglistAddition");
     sinon.stub(notifications, "waitinglistRemoval");

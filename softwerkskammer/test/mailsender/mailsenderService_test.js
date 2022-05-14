@@ -57,14 +57,14 @@ describe("MailsenderService", () => {
       }
       callback(null, emptyActivity);
     });
-    sinon.stub(memberstore, "getMember").callsFake((nick, callback) => {
+    sinon.stub(memberstore, "getMember").callsFake((nick) => {
       if (nick === null) {
-        return callback(null);
+        return null;
       }
       if (nick === "broken") {
-        return callback(new Error());
+        return new Error();
       }
-      callback(null, new Member({ email: "email@mail.de" }));
+      return new Member({ email: "email@mail.de" });
     });
     sinon.stub(activitystore, "getActivity").callsFake((url, callback) => {
       if (url === "activityUrlForMock") {
@@ -223,9 +223,7 @@ describe("MailsenderService", () => {
     const superuser = new Member({ id: "superuserID", email: "email@super.user" });
 
     beforeEach(() => {
-      sinon.stub(memberstore, "superUsers").callsFake((callback) => {
-        callback(null, [superuser]);
-      });
+      sinon.stub(memberstore, "superUsers").returns([superuser]);
     });
 
     it("sends the email", (done) => {

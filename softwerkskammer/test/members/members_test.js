@@ -34,12 +34,8 @@ describe("Members application", () => {
       lastname: "Dampf",
       authentications: [],
     });
-    allMembers = sinon.stub(memberstore, "allMembers").callsFake((callback) => {
-      callback(null, [dummymember]);
-    });
-    getMember = sinon.stub(memberstore, "getMember").callsFake((nickname, callback) => {
-      callback(null, dummymember);
-    });
+    allMembers = sinon.stub(memberstore, "allMembers").returns([dummymember]);
+    getMember = sinon.stub(memberstore, "getMember").callsFake(() => dummymember);
     sinon.stub(membersService, "putAvatarIntoMemberAndSave").callsFake((member, callback) => {
       callback();
     });
@@ -236,9 +232,7 @@ describe("Members application", () => {
       callback(null, true);
     });
     sinon.stub(groupsService, "updateSubscriptions").callsFake(() => {});
-    sinon.stub(memberstore, "saveMember").callsFake((member, callback) => {
-      callback(null);
-    });
+    sinon.stub(memberstore, "saveMember");
     const notificationCall = sinon.stub(notifications, "newMemberRegistered").callsFake(() => undefined);
 
     // the following stub indicates that the member already exists
@@ -265,9 +259,7 @@ describe("Members application", () => {
       callback(null, true);
     });
     sinon.stub(groupsService, "updateSubscriptions").callsFake(() => {});
-    sinon.stub(memberstore, "saveMember").callsFake((member, callback) => {
-      callback(null);
-    });
+    sinon.stub(memberstore, "saveMember");
     const notificationCall = sinon.stub(notifications, "newMemberRegistered").callsFake(() => undefined);
 
     // the following stub indicates that the member does not exist yet
