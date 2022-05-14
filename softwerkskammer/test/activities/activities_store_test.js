@@ -129,16 +129,12 @@ describe("Activity store", () => {
     expect(result).to.have.length(2);
   });
 
-  it("calls persistence.remove for store.removeActivity and passes on the given callback", (done) => {
-    const remove = sinon.stub(persistence, "remove").callsFake((memberId, callback) => {
-      callback();
-    });
+  it("calls persistence.remove for store.removeActivity and passes on the given callback", async () => {
+    const remove = sinon.stub(persistence, "removeAsync");
     const activity = new Activity(activity1);
     activity.state.id = "I D";
-    store.removeActivity(activity, (err) => {
-      expect(remove.calledWith("I D")).to.be(true);
-      done(err);
-    });
+    await store.removeActivity(activity);
+    expect(remove.calledWith("I D")).to.be(true);
   });
 
   describe("builds a SoCraTesActivity", () => {

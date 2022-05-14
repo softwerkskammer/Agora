@@ -81,19 +81,12 @@ module.exports = {
     return toActivity(result);
   },
 
-  saveActivityCB: function saveActivity(activity, callback) {
-    persistence.saveWithVersion(activity.state, callback);
-  },
-
   saveActivity: async function saveActivity(activity) {
     return persistence.saveWithVersionAsync(activity.state);
   },
 
-  removeActivity: function removeActivity(activity, callback) {
-    persistence.remove(activity.id(), (err) => {
-      logger.info("Activity removed:" + JSON.stringify(activity));
-      callback(err);
-    });
+  removeActivity: async function removeActivity(activity) {
+    return persistence.removeAsync(activity.id());
   },
 
   upcomingActivitiesForGroupIds: async function upcomingActivitiesForGroupIds(groupIds) {

@@ -370,21 +370,17 @@ app.post("/removeFromWaitinglist", (req, res, next) => {
   });
 });
 
-app.post("/delete", async (req, res, next) => {
+app.post("/delete", async (req, res) => {
   const url = req.body.activityUrl;
   const activity = await activitystore.getActivity(url);
   if (!res.locals.accessrights.canDeleteActivity(activity)) {
     return res.redirect("/activities/" + encodeURIComponent(url));
   }
-  activitystore.removeActivity(activity, (err1) => {
-    if (err1) {
-      return next(err1);
-    }
-    statusmessage
-      .successMessage("message.title.save_successful", "message.content.activities.deleted")
-      .putIntoSession(req);
-    res.redirect("/activities/");
-  });
+  await activitystore.removeActivity(activity);
+  statusmessage
+    .successMessage("message.title.save_successful", "message.content.activities.deleted")
+    .putIntoSession(req);
+  res.redirect("/activities/");
 });
 
 module.exports = app;
