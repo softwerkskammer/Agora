@@ -84,25 +84,12 @@ describe("Activity application with DB - shows activities where a member is orga
   beforeEach((done) => {
     // if this fails, you need to start your mongo DB
 
-    persistence.drop(() => {
-      activitystore.saveActivityCB(futureActivityOwner1NoEditorIds, (err) => {
-        if (err) {
-          done(err);
-        }
-        activitystore.saveActivityCB(futureActivityOwner2EmptyEditorIds, (err1) => {
-          if (err1) {
-            done(err1);
-          }
-          activitystore.saveActivityCB(currentActivityOwner2EditorOwner1, (err2) => {
-            if (err2) {
-              done(err2);
-            }
-            activitystore.saveActivityCB(pastActivityOwner3EditorOwner3, (err3) => {
-              done(err3);
-            });
-          });
-        });
-      });
+    persistence.drop(async () => {
+      await activitystore.saveActivity(futureActivityOwner1NoEditorIds);
+      await activitystore.saveActivity(futureActivityOwner2EmptyEditorIds);
+      await activitystore.saveActivity(currentActivityOwner2EditorOwner1);
+      await activitystore.saveActivity(pastActivityOwner3EditorOwner3);
+      done();
     });
   });
 

@@ -81,9 +81,10 @@ describe("Waitinglist Service with DB", () => {
       return callback(null);
     });
 
-    persistence.drop(() => {
+    persistence.drop(async () => {
       // save our activity with one registrant
-      activitystore.saveActivityCB(activityAfterConcurrentAccess, (err) => done(err));
+      await activitystore.saveActivity(activityAfterConcurrentAccess);
+      done();
     });
   });
 
