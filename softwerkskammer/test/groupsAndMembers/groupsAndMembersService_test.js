@@ -38,52 +38,44 @@ describe("Groups and Members Service", () => {
     });
 
     describe("- getMemberWithHisGroups -", () => {
-      it("returns no member when there is no member for the given nickname", (done) => {
+      it("returns no member when there is no member for the given nickname", async () => {
         sinon.stub(memberstore, "getMember").returns(null);
 
-        groupsAndMembersService.getMemberWithHisGroups("nickname", (err, member) => {
-          expect(member).to.not.exist();
-          done(err);
-        });
+        const member = await groupsAndMembersService.getMemberWithHisGroups("nickname");
+        expect(member).to.not.exist();
       });
 
-      it("returns the member and his groups when there is a member for the given nickname", (done) => {
+      it("returns the member and his groups when there is a member for the given nickname", async () => {
         sinon.stub(memberstore, "getMember").returns(dummymember);
         sinon.stub(groupsService, "getSubscribedGroupsForMember").returns([GroupA, GroupB]);
 
-        groupsAndMembersService.getMemberWithHisGroups("nickname", (err, member) => {
-          expect(member).to.equal(dummymember);
-          expect(member.subscribedGroups).to.not.be(null);
-          expect(member.subscribedGroups.length).to.equal(2);
-          expect(member.subscribedGroups[0]).to.equal(GroupA);
-          expect(member.subscribedGroups[1]).to.equal(GroupB);
-          done(err);
-        });
+        const member = await groupsAndMembersService.getMemberWithHisGroups("nickname");
+        expect(member).to.equal(dummymember);
+        expect(member.subscribedGroups).to.not.be(null);
+        expect(member.subscribedGroups.length).to.equal(2);
+        expect(member.subscribedGroups[0]).to.equal(GroupA);
+        expect(member.subscribedGroups[1]).to.equal(GroupB);
       });
     });
 
     describe("- getMemberWithHisGroupsByMemberId -", () => {
-      it("returns no member when there is no member for the given memberID", (done) => {
+      it("returns no member when there is no member for the given memberID", async () => {
         sinon.stub(memberstore, "getMemberForId").returns(null);
 
-        groupsAndMembersService.getMemberWithHisGroupsByMemberId("id", (err, member) => {
-          expect(member).to.not.exist();
-          done(err);
-        });
+        const member = await groupsAndMembersService.getMemberWithHisGroupsByMemberId("id");
+        expect(member).to.not.exist();
       });
 
-      it("returns the member and his groups when there is a member for the given memberID", (done) => {
+      it("returns the member and his groups when there is a member for the given memberID", async () => {
         sinon.stub(memberstore, "getMemberForId").returns(dummymember);
         sinon.stub(groupsService, "getSubscribedGroupsForMember").returns([GroupA, GroupB]);
 
-        groupsAndMembersService.getMemberWithHisGroupsByMemberId("id", (err, member) => {
-          expect(member).to.equal(dummymember);
-          expect(member.subscribedGroups).to.not.be(null);
-          expect(member.subscribedGroups.length).to.equal(2);
-          expect(member.subscribedGroups[0]).to.equal(GroupA);
-          expect(member.subscribedGroups[1]).to.equal(GroupB);
-          done(err);
-        });
+        const member = await groupsAndMembersService.getMemberWithHisGroupsByMemberId("id");
+        expect(member).to.equal(dummymember);
+        expect(member.subscribedGroups).to.not.be(null);
+        expect(member.subscribedGroups.length).to.equal(2);
+        expect(member.subscribedGroups[0]).to.equal(GroupA);
+        expect(member.subscribedGroups[1]).to.equal(GroupB);
       });
     });
   });
@@ -123,29 +115,23 @@ describe("Groups and Members Service", () => {
       sinon.restore();
     });
 
-    it("returns no group when there is no group and no mailing-list", (done) => {
-      sinon.stub(memberstore, "getMembersForEMails").callsFake((member, callback) => {
-        callback();
-      });
+    it("returns no group when there is no group and no mailing-list", async () => {
+      sinon.stub(memberstore, "getMembersForEMails");
       thereIsNoGroupFor("unbekannteListe");
 
-      groupsAndMembersService.getGroupAndMembersForList("unbekannteListe", (err, group) => {
-        expect(group).to.not.exist();
-        done(err);
-      });
+      const group = await groupsAndMembersService.getGroupAndMembersForList("unbekannteListe");
+      expect(group).to.not.exist();
     });
 
-    it("returns no group when there is no group but a mailing-list", (done) => {
+    it("returns no group when there is no group but a mailing-list", async () => {
       thereAreMailingListUsers(["user1@mail1.com", "user2@mail2.com"]);
       thereIsNoGroupFor("mailingListWithoutGroup");
 
-      groupsAndMembersService.getGroupAndMembersForList("mailingListWithoutGroup", (err, group) => {
-        expect(group).to.not.exist();
-        done(err);
-      });
+      const group = await groupsAndMembersService.getGroupAndMembersForList("mailingListWithoutGroup");
+      expect(group).to.not.exist();
     });
 
-    it("returns the group with the given name and an empty list of subscribed users when there is no mailing-list or when there are no subscribers", (done) => {
+    it("returns the group with the given name and an empty list of subscribed users when there is no mailing-list or when there are no subscribers", async () => {
       const groupId = GroupA.id;
       thereAreNoMailingListUsers();
       sinon.stub(groupstore, "getGroup").returns(GroupA);
@@ -153,35 +139,32 @@ describe("Groups and Members Service", () => {
         callback(null, []);
       });
 
-      groupsAndMembersService.getGroupAndMembersForList(groupId, (err, group) => {
-        expect(group).to.equal(GroupA);
-        expect(group.members).to.not.be(null);
-        expect(group.members.length).to.equal(0);
-        done(err);
-      });
+      const group = await groupsAndMembersService.getGroupAndMembersForList(groupId);
+      expect(group).to.equal(GroupA);
+      expect(group.members).to.not.be(null);
+      expect(group.members.length).to.equal(0);
     });
 
-    it("returns the group with the given name and a list of one subscribed user when there is one subscriber in mailinglist", (done) => {
+    it("returns the group with the given name and a list of one subscribed user when there is one subscriber in mailinglist", async () => {
       thereIsGroup(GroupA);
       thereAreMailingListUsers([dummymember]);
 
-      groupsAndMembersService.getGroupAndMembersForList(GroupA.id, (err, group) => {
-        expect(group).to.equal(GroupA);
-        expect(group.members).to.not.be(null);
-        expect(group.members.length).to.equal(1);
-        expect(group.members[0]).to.equal(dummymember);
-        done(err);
-      });
+      const group = await groupsAndMembersService.getGroupAndMembersForList(GroupA.id);
+      expect(group).to.equal(GroupA);
+      expect(group.members).to.not.be(null);
+      expect(group.members.length).to.equal(1);
+      expect(group.members[0]).to.equal(dummymember);
     });
 
-    it("fails gracefully if mamberstore has an error", (done) => {
+    it("fails gracefully if mamberstore has an error", async () => {
       sinon.stub(memberstore, "getMembersForIds").throws(new Error());
       sinon.stub(groupstore, "getGroup").returns(GroupA);
 
-      groupsAndMembersService.getGroupAndMembersForList("GroupA", (err) => {
+      try {
+        await groupsAndMembersService.getGroupAndMembersForList("GroupA");
+      } catch (err) {
         expect(err).to.exist();
-        done();
-      });
+      }
     });
   });
 
@@ -194,40 +177,34 @@ describe("Groups and Members Service", () => {
       sinon.restore();
     });
 
-    it("returns no organizer when there is no group", (done) => {
+    it("returns no organizer when there is no group", async () => {
       const groupId = "not-existing-group";
       thereIsNoGroupFor(groupId);
-      groupsAndMembersService.getOrganizersOfGroup(groupId, (error, organizers) => {
-        expect(organizers).to.be.empty();
-        done(error);
-      });
+      const organizers = await groupsAndMembersService.getOrganizersOfGroup(groupId);
+      expect(organizers).to.be.empty();
     });
 
-    it("returns no organizer when there is a group without an organizer", (done) => {
+    it("returns no organizer when there is a group without an organizer", async () => {
       const groupId = "existing-group-without-organizer";
       thereIsGroup(new Group({ id: groupId, organizers: [], subscribedMembers: ["id1"] }));
       thereAreMailingListUsers([]);
-      groupsAndMembersService.getOrganizersOfGroup(groupId, (error, organizers) => {
-        expect(organizers).to.be.empty();
-        done(error);
-      });
+      const organizers = await groupsAndMembersService.getOrganizersOfGroup(groupId);
+      expect(organizers).to.be.empty();
     });
 
-    it("returns the organizer when there is one and the group exists", (done) => {
+    it("returns the organizer when there is one and the group exists", async () => {
       const groupId = "group-with-one-organizer";
       const organizerId = "organizerId";
       const organizer = new Member({ id: organizerId });
       const member = anyGroupMember();
       thereIsGroup(new Group({ id: groupId, organizers: [organizerId] }));
       thereAreMailingListUsers([organizer, member]);
-      groupsAndMembersService.getOrganizersOfGroup(groupId, (error, organizers) => {
-        expect(organizers).to.have.length(1);
-        expect(organizers[0].id()).to.equal(organizerId);
-        done(error);
-      });
+      const organizers = await groupsAndMembersService.getOrganizersOfGroup(groupId);
+      expect(organizers).to.have.length(1);
+      expect(organizers[0].id()).to.equal(organizerId);
     });
 
-    it("returns the organizers when there are any and the group exists", (done) => {
+    it("returns the organizers when there are any and the group exists", async () => {
       const groupId = "group-with-organizers";
       const organizerId1 = "organizerId1";
       const organizerId2 = "organizerId2";
@@ -236,12 +213,10 @@ describe("Groups and Members Service", () => {
       const member = anyGroupMember();
       thereIsGroup(new Group({ id: groupId, organizers: [organizerId1, organizerId2] }));
       thereAreMailingListUsers([organizer1, organizer2, member]);
-      groupsAndMembersService.getOrganizersOfGroup(groupId, (error, organizers) => {
-        expect(organizers).to.have.length(2);
-        expect(organizers[0].id()).to.equal(organizerId1);
-        expect(organizers[1].id()).to.equal(organizerId2);
-        done(error);
-      });
+      const organizers = await groupsAndMembersService.getOrganizersOfGroup(groupId);
+      expect(organizers).to.have.length(2);
+      expect(organizers[0].id()).to.equal(organizerId1);
+      expect(organizers[1].id()).to.equal(organizerId2);
     });
   });
 
@@ -254,47 +229,39 @@ describe("Groups and Members Service", () => {
       sinon.restore();
     });
 
-    it("returns no group when the group is null", (done) => {
-      groupsAndMembersService.addMembersToGroup(null, (err, group) => {
-        expect(group).to.not.exist();
-        done(err);
-      });
+    it("returns no group when the group is null", async () => {
+      const group = await groupsAndMembersService.addMembersToGroup(null);
+      expect(group).to.not.exist();
     });
 
-    it("returns no group when the group is undefined", (done) => {
-      groupsAndMembersService.addMembersToGroup(undefined, (err, group) => {
-        expect(group).to.not.exist();
-        done(err);
-      });
+    it("returns no group when the group is undefined", async () => {
+      const group = await groupsAndMembersService.addMembersToGroup(undefined);
+      expect(group).to.not.exist();
     });
 
-    it("returns the group with an empty list of subscribed users when there are no subscribers", (done) => {
+    it("returns the group with an empty list of subscribed users when there are no subscribers", async () => {
       thereAreNoMailingListUsers();
-      groupsAndMembersService.addMembersToGroup(GroupA, (err, group) => {
-        expect(group).to.equal(GroupA);
-        expect(group.members).to.not.be(null);
-        expect(group.members.length).to.equal(0);
-        expect(group.membercount()).to.equal(0);
-        delete group.members;
-        done(err);
-      });
+      const group = await groupsAndMembersService.addMembersToGroup(GroupA);
+      expect(group).to.equal(GroupA);
+      expect(group.members).to.not.be(null);
+      expect(group.members.length).to.equal(0);
+      expect(group.membercount()).to.equal(0);
+      delete group.members;
     });
 
-    it("returns the group with a list of one subscribed user when there is one subscriber in mailinglist", (done) => {
+    it("returns the group with a list of one subscribed user when there is one subscriber in mailinglist", async () => {
       thereAreMailingListUsers([dummymember]);
       sinon.stub(membersService, "putAvatarIntoMemberAndSave");
 
       GroupA.subscribedMembers = ["id1"];
-      groupsAndMembersService.addMembersToGroup(GroupA, (err, group) => {
-        expect(group).to.equal(GroupA);
-        expect(group.members).to.not.be(null);
-        expect(group.members.length).to.equal(1);
-        expect(group.membercount()).to.equal(1);
-        expect(group.members[0]).to.equal(dummymember);
-        delete group.members;
-        GroupA.subscribedMembers = [];
-        done(err);
-      });
+      const group = await groupsAndMembersService.addMembersToGroup(GroupA);
+      expect(group).to.equal(GroupA);
+      expect(group.members).to.not.be(null);
+      expect(group.members.length).to.equal(1);
+      expect(group.membercount()).to.equal(1);
+      expect(group.members[0]).to.equal(dummymember);
+      delete group.members;
+      GroupA.subscribedMembers = [];
     });
   });
 });

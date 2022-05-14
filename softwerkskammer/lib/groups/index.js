@@ -53,18 +53,17 @@ app.post("/submit", (req, res, next) => groupSubmitted(req, res, next));
 
 // the parameterized routes must come after the fixed ones!
 
-app.get("/edit/:groupname", (req, res, next) => {
-  groupsAndMembers.getGroupAndMembersForList(req.params.groupname, (err, group) => {
-    if (err || !group) {
-      return next(err);
-    }
-    if (!res.locals.accessrights.canEditGroup(group)) {
-      return res.redirect("/groups/" + encodeURIComponent(req.params.groupname));
-    }
-    const realGroup = group || new Group();
-    const organizersChecked = realGroup.checkedOrganizers(realGroup.members);
-    res.render("edit", { group: realGroup, allTypes: Group.allTypes(), organizersChecked });
-  });
+app.get("/edit/:groupname", async (req, res) => {
+  const group = await groupsAndMembers.getGroupAndMembersForList(req.params.groupname);
+  if (!group) {
+    throw new Error();
+  }
+  if (!res.locals.accessrights.canEditGroup(group)) {
+    return res.redirect("/groups/" + encodeURIComponent(req.params.groupname));
+  }
+  const realGroup = group || new Group();
+  const organizersChecked = realGroup.checkedOrganizers(realGroup.members);
+  res.render("edit", { group: realGroup, allTypes: Group.allTypes(), organizersChecked });
 });
 
 app.post("/clone-from-meetup-for-group", async (req, res, next) => {
@@ -117,7 +116,7 @@ app.post("/unsubscribe", async (req, res) => {
   res.redirect("/groups/" + req.body.groupname);
 });
 
-app.get("/:groupname", (req, res, next) => {
+app.get("/:groupname", async (req, res, next) => {
   function addGroupDataToActivity(activities, group) {
     activities.forEach((activity) => {
       activity.colorRGB = group.color;
@@ -126,9 +125,10 @@ app.get("/:groupname", (req, res, next) => {
     return activities;
   }
 
-  groupsAndMembers.getGroupAndMembersForList(req.params.groupname, (err, group) => {
-    if (err || !group) {
-      return next(err);
+  try {
+    const group = await groupsAndMembers.getGroupAndMembersForList(req.params.groupname);
+    if (!group) {
+      return next();
     }
     wikiService.getBlogpostsForGroup(req.params.groupname, (err1, blogposts) => {
       if (err1) {
@@ -157,13 +157,16 @@ app.get("/:groupname", (req, res, next) => {
         });
       });
     });
-  });
+  } catch (e) {
+    return next(e);
+  }
 });
 
-app.get("/:groupname/feed", (req, res, next) => {
-  groupsAndMembers.getGroupAndMembersForList(req.params.groupname, (err, group) => {
-    if (err || !group) {
-      return next(err);
+app.get("/:groupname/feed", async (req, res, next) => {
+  try {
+    const group = await groupsAndMembers.getGroupAndMembersForList(req.params.groupname);
+    if (!group) {
+      return next();
     }
     wikiService.getBlogpostsForGroup(req.params.groupname, (err1, blogposts) => {
       if (err1) {
@@ -195,7 +198,9 @@ app.get("/:groupname/feed", (req, res, next) => {
       res.type("application/atom+xml");
       res.send(feed.atom1());
     });
-  });
+  } catch (e) {
+    return next(e);
+  }
 });
 
 module.exports = app;

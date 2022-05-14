@@ -50,9 +50,7 @@ describe("Notifications", () => {
     group = new Group({ id: "groupname", longName: "Buxtehude" });
     activity = new Activity({ title: "Title of the Activity", assignedGroup: "groupname", url: "urlurl" });
     activity2 = new Activity({ title: "Another Nice Activity", assignedGroup: "groupname", url: "niceurl" });
-    sinon.stub(groupsAndMembersService, "getGroupAndMembersForList").callsFake((groupID, callback) => {
-      callback(null, group);
-    });
+    sinon.stub(groupsAndMembersService, "getGroupAndMembersForList").returns(group);
     sinon.stub(memberstore, "getMemberForId").callsFake((memberID) => {
       if (memberID === "hans") {
         return hans;

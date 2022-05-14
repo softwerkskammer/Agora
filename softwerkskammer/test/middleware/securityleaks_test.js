@@ -45,9 +45,7 @@ describe("Security regarding", () => {
         subscribedGroups: [],
       });
       sinon.stub(groupstore, "allGroups").returns([]);
-      sinon.stub(groupsAndMembersService, "getMemberWithHisGroups").callsFake((nickname, callback) => {
-        callback(null, dummymember);
-      });
+      sinon.stub(groupsAndMembersService, "getMemberWithHisGroups").returns(dummymember);
       sinon.stub(memberstore, "allMembers").returns([dummymember]);
     });
 

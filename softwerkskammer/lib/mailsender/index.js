@@ -118,21 +118,13 @@ app.get("/resign/:nickname", (req, res) => {
   res.render("compose-resign", { nickname: req.params.nickname });
 });
 
-app.post("/resign", (req, res, next) => {
+app.post("/resign", async (req, res, next) => {
   const nickname = req.body.nickname;
   if (req.user.member.nickname() !== nickname) {
     return res.redirect("/members/" + encodeURIComponent(nickname));
   }
-  groupsAndMembersService.removeMember(nickname, (err) => {
-    if (err) {
-      if (err.message !== "hasSubscriptions") {
-        return next(err);
-      }
-      statusmessage
-        .errorMessage("message.title.problem", "message.content.members.hasSubscriptions")
-        .putIntoSession(req);
-      return res.redirect("/members/edit/" + encodeURIComponent(nickname));
-    }
+  try {
+    await groupsAndMembersService.removeMember();
     const markdown =
       "**" +
       req.i18n.t("mailsender.why-resign") +
@@ -152,7 +144,13 @@ app.post("/resign", (req, res, next) => {
       req.logout();
       res.redirect("/goodbye.html");
     });
-  });
+  } catch (e) {
+    if (e.message !== "hasSubscriptions") {
+      throw e;
+    }
+    statusmessage.errorMessage("message.title.problem", "message.content.members.hasSubscriptions").putIntoSession(req);
+    return res.redirect("/members/edit/" + encodeURIComponent(nickname));
+  }
 });
 
 // API only for superusers, not visible in user interface

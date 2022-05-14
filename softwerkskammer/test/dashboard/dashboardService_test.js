@@ -22,14 +22,14 @@ describe("Dashboard Service", () => {
     member = { membername: "membername" };
     activity1 = { activity: 1 };
     activity2 = { activity: 2 };
-    sinon.stub(groupsAndMembersService, "getMemberWithHisGroups").callsFake((nickname, callback) => {
+    sinon.stub(groupsAndMembersService, "getMemberWithHisGroups").callsFake((nickname) => {
       if (nickname === NOT_FOUND) {
-        return callback(null, null);
+        return null;
       }
       if (nickname === CRASH_ACTIVITY) {
-        return callback(null, CRASH_ACTIVITY);
+        return CRASH_ACTIVITY;
       }
-      callback(null, member);
+      return member;
     });
     sinon.stub(activitiesService, "getUpcomingActivitiesOfMemberAndHisGroups").callsFake((mem, callback) => {
       if (mem === CRASH_ACTIVITY) {

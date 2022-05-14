@@ -218,9 +218,7 @@ describe("Members application", () => {
     const notificationCall = sinon.stub(notifications, "newMemberRegistered").callsFake(() => undefined);
 
     // the following stub indicates that the member already exists
-    sinon.stub(groupsAndMembersService, "getMemberWithHisGroups").callsFake((nickname, callback) => {
-      callback(null, dummymember);
-    });
+    sinon.stub(groupsAndMembersService, "getMemberWithHisGroups").returns(dummymember);
     request(createApp({ id: "memberID" }))
       .post("/submit")
       .send("id=0815&firstname=A&lastname=B&location=x&profession=y&reference=z&country=x")
@@ -241,9 +239,7 @@ describe("Members application", () => {
     const notificationCall = sinon.stub(notifications, "newMemberRegistered").callsFake(() => undefined);
 
     // the following stub indicates that the member does not exist yet
-    sinon.stub(groupsAndMembersService, "getMemberWithHisGroups").callsFake((nickname, callback) => {
-      callback(null);
-    });
+    sinon.stub(groupsAndMembersService, "getMemberWithHisGroups").returns(null);
     request(createApp({ id: "memberID" }))
       .post("/submit")
       .send("id=0815&firstname=A&lastname=B&location=x&profession=y&reference=z")

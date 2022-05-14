@@ -50,26 +50,21 @@ describe("Groups and Members Service (member deletion)", () => {
     sinon.restore();
   });
 
-  it("removes the groups membership and kills the member", (done) => {
+  it("removes the groups membership and kills the member", async () => {
     sinon.stub(groupsService, "getSubscribedGroupsForMember").returns([GroupA, GroupB]);
 
-    groupsAndMembersService.removeMember("nick", (err) => {
-      expect(savedGroups.length).to.equal(2);
-      savedGroups.forEach((g) => {
-        expect(g.subscribedMembers).not.to.include("nick");
-      });
-      sinon.assert.calledWith(removeMemberSpy, dummymember);
-
-      done(err);
+    await groupsAndMembersService.removeMember("nick");
+    expect(savedGroups.length).to.equal(2);
+    savedGroups.forEach((g) => {
+      expect(g.subscribedMembers).not.to.include("nick");
     });
+    sinon.assert.calledWith(removeMemberSpy, dummymember);
   });
 
-  it("does not call the groups when no groups subscribed but kills the member", (done) => {
+  it("does not call the groups when no groups subscribed but kills the member", async () => {
     sinon.stub(groupsService, "getSubscribedGroupsForMember").returns([]);
 
-    groupsAndMembersService.removeMember("nick", (err) => {
-      expect(savedGroups.length).to.equal(0);
-      done(err);
-    });
+    await groupsAndMembersService.removeMember("nick");
+    expect(savedGroups.length).to.equal(0);
   });
 });

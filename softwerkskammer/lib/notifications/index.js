@@ -1,7 +1,6 @@
 /* eslint no-underscore-dangle: 0 */
 
 const R = require("ramda");
-const async = require("async");
 const conf = require("simple-configure");
 
 const beans = conf.get("beans");
@@ -23,41 +22,36 @@ function sendMail(emailAddresses, subject, html, callback) {
   sendBulkMail(emailAddresses, subject, html, fromName, conf.get("sender-address"), callback);
 }
 
-function activityParticipation(activity, visitorID, ressourceName, content, type, callback) {
-  async.parallel(
-    {
-      group: (cb) => groupsAndMembers.getGroupAndMembersForList(activity.assignedGroup(), cb),
-      owner: async () => memberstore.getMemberForId(activity.owner()),
-      visitor: async () => memberstore.getMemberForId(visitorID),
-    },
-
-    (err, results) => {
-      if (err) {
-        return logger.error(err);
-      }
-      const organizers = (results.group.members || []).filter((member) =>
-        results.group.organizers.includes(member.id())
-      );
-      const organizersEmails = organizers.map((member) => member.email());
-      if (results.owner) {
-        organizersEmails.push(results.owner.email());
-      }
-      if (R.isEmpty(organizersEmails)) {
-        return;
-      }
-      const renderingOptions = {
-        activity,
-        ressourceName,
-        content,
-        count: activity.allRegisteredMembers().length,
-        totalcount: activity.allRegisteredMembers().length,
-        visitor: results.visitor,
-      };
-      addPrettyAndUrlTo(renderingOptions);
-      const filename = path.join(__dirname, "pug/activitytemplate.pug");
-      sendMail(organizersEmails, type, pug.renderFile(filename, renderingOptions), callback);
+async function activityParticipation(activity, visitorID, ressourceName, content, type, callback) {
+  try {
+    const [group, owner, visitor] = await Promise.all([
+      groupsAndMembers.getGroupAndMembersForList(activity.assignedGroup()),
+      memberstore.getMemberForId(activity.owner()),
+      memberstore.getMemberForId(visitorID),
+    ]);
+    const organizers = (group.members || []).filter((member) => group.organizers.includes(member.id()));
+    const organizersEmails = organizers.map((member) => member.email());
+    if (owner) {
+      organizersEmails.push(owner.email());
     }
-  );
+    if (R.isEmpty(organizersEmails)) {
+      return;
+    }
+    const renderingOptions = {
+      activity,
+      ressourceName,
+      content,
+      count: activity.allRegisteredMembers().length,
+      totalcount: activity.allRegisteredMembers().length,
+      visitor: visitor,
+    };
+    addPrettyAndUrlTo(renderingOptions);
+    const filename = path.join(__dirname, "pug/activitytemplate.pug");
+    sendMail(organizersEmails, type, pug.renderFile(filename, renderingOptions), callback);
+  } catch (e) {
+    logger.error(e);
+    callback(e);
+  }
 }
 
 module.exports = {

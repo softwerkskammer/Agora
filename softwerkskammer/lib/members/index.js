@@ -18,32 +18,25 @@ const statusmessage = beans.get("statusmessage");
 const notifications = beans.get("notifications");
 const authenticationService = beans.get("authenticationService");
 
-function memberSubmitted(req, res, next) {
+async function memberSubmitted(req, res) {
   function notifyNewMemberRegistration(member, subscriptions) {
     // must be done here, not in Service to avoid circular deps
     notifications.newMemberRegistered(member, subscriptions);
   }
 
-  groupsAndMembersService.updateAndSaveSubmittedMember(
+  const nickname = await groupsAndMembersService.updateAndSaveSubmittedMember(
     req.user,
     req.body,
     res.locals.accessrights,
-    notifyNewMemberRegistration,
-    (err, nickname) => {
-      if (err) {
-        return next(err);
-      }
-
-      if (nickname) {
-        statusmessage
-          .successMessage("message.title.save_successful", "message.content.members.saved")
-          .putIntoSession(req);
-        return res.redirect("/members/" + encodeURIComponent(nickname));
-      }
-
-      return res.redirect("/members");
-    }
+    notifyNewMemberRegistration
   );
+
+  if (nickname) {
+    statusmessage.successMessage("message.title.save_successful", "message.content.members.saved").putIntoSession(req);
+    return res.redirect("/members/" + encodeURIComponent(nickname));
+  }
+
+  return res.redirect("/members");
 }
 
 async function tagsFor(callback) {
@@ -115,7 +108,7 @@ app.get("/new", (req, res, next) => {
 app.get("/edit/:nickname", (req, res, next) => {
   async.parallel(
     {
-      member: (callback) => groupsAndMembersService.getMemberWithHisGroups(req.params.nickname, callback),
+      member: async.asyncify(() => groupsAndMembersService.getMemberWithHisGroups(req.params.nickname)),
       allGroups: async.asyncify(groupstore.allGroups),
       allTags: (callback) => tagsFor(callback),
     },
@@ -141,26 +134,24 @@ app.get("/edit/:nickname", (req, res, next) => {
   );
 });
 
-app.post("/delete", (req, res, next) => {
+app.post("/delete", async (req, res, next) => {
   const nickname = req.body.nickname;
   if (!res.locals.accessrights.canDeleteMemberByNickname(nickname)) {
     return res.redirect("/members/" + encodeURIComponent(nickname));
   }
-  groupsAndMembersService.removeMember(nickname, (err) => {
-    if (err) {
-      if (err.message !== "hasSubscriptions") {
-        return next(err);
-      }
-      statusmessage
-        .errorMessage("message.title.problem", "message.content.members.hasSubscriptions")
-        .putIntoSession(req);
-      return res.redirect("/members/edit/" + encodeURIComponent(nickname));
-    }
+  try {
+    await groupsAndMembersService.removeMember(nickname);
     statusmessage
       .successMessage("message.title.save_successful", "message.content.members.deleted")
       .putIntoSession(req);
     res.redirect("/members/");
-  });
+  } catch (e) {
+    if (e.message !== "hasSubscriptions") {
+      return next(e);
+    }
+    statusmessage.errorMessage("message.title.problem", "message.content.members.hasSubscriptions").putIntoSession(req);
+    return res.redirect("/members/edit/" + encodeURIComponent(nickname));
+  }
 });
 
 app.post("/updatePassword", async (req, res) => {
@@ -271,10 +262,12 @@ app.post("/deleteAvatarFor", async (req, res, next) => {
   res.redirect("/members/" + encodeURIComponent(nicknameOfEditMember));
 });
 
-app.get("/:nickname", (req, res, next) => {
-  groupsAndMembersService.getMemberWithHisGroups(req.params.nickname, (err, member, subscribedGroups) => {
-    if (err || !member) {
-      return next(err);
+app.get("/:nickname", async (req, res, next) => {
+  try {
+    const member = await groupsAndMembersService.getMemberWithHisGroups(req.params.nickname);
+    const subscribedGroups = member.subscribedGroups;
+    if (!member) {
+      return next();
     }
     activitiesService.getPastActivitiesOfMember(member, (err1, pastActivities) => {
       if (err1) {
@@ -298,7 +291,9 @@ app.get("/:nickname", (req, res, next) => {
         });
       });
     });
-  });
+  } catch (e) {
+    return next(e);
+  }
 });
 
 module.exports = app;

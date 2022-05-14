@@ -28,11 +28,9 @@ function groupsByColumns(groups = [], linesPerGroup) {
 module.exports = {
   groupsByColumns,
 
-  dataForDashboard: function dataForDashboard(nickname, callback) {
-    groupsAndMembersService.getMemberWithHisGroups(nickname, (err, member) => {
-      if (err) {
-        return callback(err);
-      }
+  dataForDashboard: async function dataForDashboard(nickname, callback) {
+    try {
+      const member = await groupsAndMembersService.getMemberWithHisGroups(nickname);
       if (!member) {
         return callback(new Error("no member found"));
       }
@@ -76,6 +74,8 @@ module.exports = {
           }
         );
       });
-    });
+    } catch (e) {
+      return callback(e);
+    }
   },
 };

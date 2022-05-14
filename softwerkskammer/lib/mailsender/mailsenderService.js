@@ -111,10 +111,8 @@ module.exports = {
           mailtransport.statusmessageForError(type, new Error("Keine der Gruppen wurde gefunden."))
         );
       }
-      async.map(groups, groupsAndMembersService.addMembersToGroup, (err1, groups1) => {
-        if (err1) {
-          return callback(err1, mailtransport.statusmessageForError(type, err1));
-        }
+      try {
+        const groups1 = await Promise.all(groups.map(groupsAndMembersService.addMembersToGroup));
         message.setBccToGroupMemberAddresses(groups1);
         activitystore.getActivity(activityURL, (err2, activity) => {
           if (activity) {
@@ -122,7 +120,9 @@ module.exports = {
           }
           sendMail(message, type, callback);
         });
-      });
+      } catch (err1) {
+        return callback(err1, mailtransport.statusmessageForError(type, err1));
+      }
     } catch (err) {
       callback(err, mailtransport.statusmessageForError(type, err));
     }
@@ -239,17 +239,13 @@ module.exports = {
           mailtransport.statusmessageForError(type, "$t(mailsender.contact_the_organizers_disabled)")
         );
       }
-      groupsAndMembersService.getOrganizersOfGroup(groupId, (err, organizers) => {
-        if (err) {
-          return callback(err, mailtransport.statusmessageForError(type, err));
-        }
-        if (!organizers.length) {
-          return callback(null, mailtransport.statusmessageForError(type, "$t(mailsender.group_has_no_organizers)"));
-        }
-        message.setSubject(`[Anfrage an Ansprechpartner/Mail to organizers] ${message.subject}`);
-        message.setBccToMemberAddresses(organizers);
-        sendMail(message, type, callback);
-      });
+      const organizers = await groupsAndMembersService.getOrganizersOfGroup(groupId);
+      if (!organizers.length) {
+        return callback(null, mailtransport.statusmessageForError(type, "$t(mailsender.group_has_no_organizers)"));
+      }
+      message.setSubject(`[Anfrage an Ansprechpartner/Mail to organizers] ${message.subject}`);
+      message.setBccToMemberAddresses(organizers);
+      sendMail(message, type, callback);
     } catch (groupLoadErr) {
       return callback(groupLoadErr, mailtransport.statusmessageForError(type, groupLoadErr));
     }

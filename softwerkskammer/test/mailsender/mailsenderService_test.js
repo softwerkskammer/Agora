@@ -272,14 +272,14 @@ describe("MailsenderService", () => {
     });
 
     it("sends to members of selected groups", (done) => {
-      sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group, callback) => {
+      sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
         if (group === null) {
-          return callback(null);
+          return null;
         }
         if (group === groupA) {
           group.members = [new Member({ email: "memberA" })];
         }
-        callback(null, group);
+        return group;
       });
       mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message, (err, statusmessage) => {
         const sentMail = singleSentEmail();
@@ -310,9 +310,9 @@ describe("MailsenderService", () => {
     });
 
     it("sends to members of selected groups", (done) => {
-      sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group, callback) => {
+      sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
         if (group === null) {
-          return callback(null);
+          return null;
         }
         if (group === groupA) {
           group.members = [new Member({ email: "memberA" })];
@@ -320,7 +320,7 @@ describe("MailsenderService", () => {
         if (group === groupB) {
           group.members = [new Member({ email: "memberB" })];
         }
-        callback(null, group);
+        return group;
       });
       mailsenderService.sendMailToInvitedGroups(
         ["GroupA", "GroupB"],
@@ -340,9 +340,9 @@ describe("MailsenderService", () => {
     });
 
     it("ignores errors finding the activity when sending to members of selected groups", (done) => {
-      sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group, callback) => {
+      sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
         if (group === null) {
-          return callback(null);
+          return null;
         }
         if (group === groupA) {
           group.members = [new Member({ email: "memberA" })];
@@ -350,7 +350,7 @@ describe("MailsenderService", () => {
         if (group === groupB) {
           group.members = [new Member({ email: "memberB" })];
         }
-        callback(null, group);
+        return group;
       });
       mailsenderService.sendMailToInvitedGroups(
         ["GroupA", "GroupB"],
@@ -387,9 +387,7 @@ describe("MailsenderService", () => {
     });
 
     it("does not send to members if filling groups with members causes error", (done) => {
-      sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group, callback) => {
-        callback(new Error());
-      });
+      sinon.stub(groupsAndMembersService, "addMembersToGroup").throws(new Error());
 
       mailsenderService.sendMailToInvitedGroups(
         ["GroupA", "GroupB"],
@@ -426,17 +424,8 @@ describe("MailsenderService", () => {
       });
     }
 
-    function getGroupOrganizers(groupId, fakeImplementation) {
-      return sinon
-        .stub(groupsAndMembersService, "getOrganizersOfGroup")
-        .withArgs(groupId, sinon.match.any)
-        .callsFake(fakeImplementation);
-    }
-
-    function loadingGroupOrganizersFailsFor(groupId) {
-      return getGroupOrganizers(groupId, (passedGroupName, callback) => {
-        callback(new Error("no soup for you"));
-      });
+    function loadingGroupOrganizersFailsFor() {
+      return sinon.stub(groupsAndMembersService, "getOrganizersOfGroup").throws(new Error("no soup for you"));
     }
 
     const anyMemberWithEmail = new Member({
@@ -444,9 +433,7 @@ describe("MailsenderService", () => {
     });
 
     function groupIsOrganizedBy(groupName, organizers) {
-      getGroupOrganizers(groupName, (passedGroupId, callback) => {
-        callback(null, organizers);
-      });
+      return sinon.stub(groupsAndMembersService, "getOrganizersOfGroup").returns(organizers);
     }
 
     function provideValidOrganizersForGroup(groupName) {
