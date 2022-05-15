@@ -168,9 +168,9 @@ describe("Activity application with DB - shows activities for Group-Ids -", () =
 });
 
 describe("Activity application with DB - activitiesForGroupIdsAndRegisteredMemberId without activities -", () => {
-  beforeEach((done) => {
+  beforeEach(async () => {
     // if this fails, you need to start your mongo DB
-    persistence.drop(done);
+    await persistence.dropAsync();
   });
 
   it("returns an empty list if there is no collection at all", async () => {

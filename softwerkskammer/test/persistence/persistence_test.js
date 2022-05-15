@@ -8,7 +8,7 @@ const CONFLICTING_VERSIONS = beans.get("constants").CONFLICTING_VERSIONS;
 const persistence = require("../../lib/persistence/persistence")("teststore");
 
 async function clearStore() {
-  persistence.dropAsync();
+  await persistence.dropAsync();
 }
 
 describe("The persistence store", () => {

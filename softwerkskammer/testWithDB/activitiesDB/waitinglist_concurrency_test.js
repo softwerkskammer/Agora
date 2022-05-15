@@ -26,7 +26,7 @@ describe("Waitinglist Service with DB", () => {
   let activityAfterConcurrentAccess;
   let invocation;
 
-  beforeEach((done) => {
+  beforeEach(async () => {
     // if this fails, you need to start your mongo DB
     activityBeforeConcurrentAccess = new Activity({
       id: "activityId",
@@ -81,11 +81,9 @@ describe("Waitinglist Service with DB", () => {
       return callback(null);
     });
 
-    persistence.drop(async () => {
-      // save our activity with one registrant
-      await activitystore.saveActivity(activityAfterConcurrentAccess);
-      done();
-    });
+    await persistence.dropAsync();
+    // save our activity with one registrant
+    await activitystore.saveActivity(activityAfterConcurrentAccess);
   });
 
   afterEach(() => {

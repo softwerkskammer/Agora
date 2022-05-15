@@ -81,16 +81,14 @@ describe("Activity application with DB - shows activities where a member is orga
     version: 1,
   });
 
-  beforeEach((done) => {
+  beforeEach(async () => {
     // if this fails, you need to start your mongo DB
 
-    persistence.drop(async () => {
-      await activitystore.saveActivity(futureActivityOwner1NoEditorIds);
-      await activitystore.saveActivity(futureActivityOwner2EmptyEditorIds);
-      await activitystore.saveActivity(currentActivityOwner2EditorOwner1);
-      await activitystore.saveActivity(pastActivityOwner3EditorOwner3);
-      done();
-    });
+    await persistence.dropAsync();
+    await activitystore.saveActivity(futureActivityOwner1NoEditorIds);
+    await activitystore.saveActivity(futureActivityOwner2EmptyEditorIds);
+    await activitystore.saveActivity(currentActivityOwner2EditorOwner1);
+    await activitystore.saveActivity(pastActivityOwner3EditorOwner3);
   });
 
   afterEach(() => {
@@ -117,9 +115,9 @@ describe("Activity application with DB - shows activities where a member is orga
 });
 
 describe("Activity application with DB - organizedOrEditedActivitiesForMemberId without activities -", () => {
-  beforeEach((done) => {
+  beforeEach(async () => {
     // if this fails, you need to start your mongo DB
-    persistence.drop(done);
+    await persistence.dropAsync();
   });
 
   it("returns an empty list if there is no collection at all", async () => {

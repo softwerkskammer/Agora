@@ -60,15 +60,12 @@ describe("Activity application with DB - shows activities -", () => {
     version: 1,
   });
 
-  beforeEach((done) => {
+  beforeEach(async () => {
     // if this fails, you need to start your mongo DB
-
-    persistence.drop(async () => {
-      await activitystore.saveActivity(futureActivity);
-      await activitystore.saveActivity(currentActivity);
-      await activitystore.saveActivity(pastActivity);
-      done();
-    });
+    await persistence.dropAsync();
+    await activitystore.saveActivity(futureActivity);
+    await activitystore.saveActivity(currentActivity);
+    await activitystore.saveActivity(pastActivity);
   });
 
   afterEach(() => {

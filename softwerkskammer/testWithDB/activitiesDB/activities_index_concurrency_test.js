@@ -22,7 +22,7 @@ describe("Activity application with DB - on submit -", () => {
   let activityBeforeConcurrentAccess;
   let activityAfterConcurrentAccess;
 
-  beforeEach((done) => {
+  beforeEach(async () => {
     // if this fails, you need to start your mongo DB
 
     activityBeforeConcurrentAccess = new Activity({
@@ -60,11 +60,9 @@ describe("Activity application with DB - on submit -", () => {
 
     sinon.stub(activitystore, "getActivity").returns(activityBeforeConcurrentAccess);
 
-    persistence.drop(async () => {
-      // save our activity with one registrant
-      await activitystore.saveActivity(activityAfterConcurrentAccess);
-      done();
-    });
+    await persistence.dropAsync();
+    // save our activity with one registrant
+    await activitystore.saveActivity(activityAfterConcurrentAccess);
   });
 
   afterEach(() => {

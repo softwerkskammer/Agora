@@ -314,6 +314,11 @@ module.exports = function persistenceFunc(collectionName) {
 
     dropAsync: async function dropAsync() {
       const db = await getOpenDb();
+      const colls = await db.collections();
+      const allNames = colls.map((each) => each.namespace).filter((each) => each.endsWith(collectionName));
+      if (allNames.length === 0) {
+        return;
+      }
       logger.info("Drop " + collectionName + " called!");
       return db.dropCollection(collectionName);
     },
