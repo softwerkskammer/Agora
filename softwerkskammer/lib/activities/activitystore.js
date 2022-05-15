@@ -1,9 +1,6 @@
-/*global emit */
-
 const beans = require("simple-configure").get("beans");
 const R = require("ramda");
 
-const logger = require("winston").loggers.get("transactions");
 const persistence = beans.get("activitiesPersistence");
 const Activity = beans.get("activity");
 const SoCraTesActivity = beans.get("socratesActivity");
@@ -13,16 +10,6 @@ function toActivity(jsobject) {
     return new SoCraTesActivity(jsobject);
   }
   return jsobject ? new Activity(jsobject) : null;
-}
-
-function toActivityList(callback, err, jsobjects) {
-  if (err) {
-    return callback(err);
-  }
-  callback(
-    null,
-    jsobjects.map((record) => (record && record.isSoCraTes ? new SoCraTesActivity(record) : new Activity(record)))
-  );
 }
 
 function toActivityListAsync(jsobjects) {
@@ -52,7 +39,7 @@ function flattenAndSortMongoResultCollection(collection) {
 }
 
 module.exports = {
-  allActivitiesAsync: async function allActivitiesAsync() {
+  allActivitiesAsync: async function allActivities() {
     const result = await persistence.listAsync({ startDate: 1 });
     return toActivityListAsync(result);
   },
@@ -131,46 +118,11 @@ module.exports = {
     memberId,
     upcoming
   ) {
-    function map() {
-      /* eslint no-underscore-dangle: 0 */
-      const activity = this; // "this" holds the activity that is currently being examined
-
-      // is the assigned group in the list of groups?
-      if (groupIds.indexOf(activity.assignedGroup) > -1) {
-        emit(memberId, activity);
-      } else {
-        // only try this if the first one failed -> otherwise we get duplicate entries!
-
-        // is the member registered in one of the resources?
-        for (var resource in activity.resources) {
-          if (activity.resources[resource] && activity.resources[resource]._registeredMembers) {
-            const memberIsRegistered = activity.resources[resource]._registeredMembers.some(function (mem) {
-              return mem.memberId === memberId;
-            });
-            if (memberIsRegistered) {
-              emit(memberId, activity);
-              return;
-            } // we only want to add the activity once
-          }
-        }
-      }
-    }
-
-    function reduce(key, values) {
-      return values;
-    }
-
-    const now = new Date();
-    const query = upcoming ? { endDate: { $gt: now } } : { endDate: { $lt: now } };
-    const parameters = { out: { inline: 1 }, scope: { memberId, groupIds }, query, jsMode: true };
-
-    const collection = await persistence.mapReduceAsync(map, reduce, parameters);
-    if (!collection || collection.length === 0) {
-      return [];
-    }
-    // when there are many results, the value will be a nested array, so we need to flatten it:
-    const results = flattenAndSortMongoResultCollection(collection);
-    return toActivityListAsync(!upcoming ? results.reverse() : results);
+    const activities = upcoming ? await this.upcomingActivities() : await this.pastActivities();
+    return activities.filter(
+      (activity) =>
+        groupIds.includes(activity.assignedGroup()) || activity.veranstaltung().registeredMembers().includes(memberId)
+    );
   },
 
   flattenAndSortMongoResultCollection,

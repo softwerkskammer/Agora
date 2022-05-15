@@ -143,15 +143,16 @@ describe("Activity application with DB - shows activities for Group-Ids -", () =
     expect(activities[0].title()).to.equal("Future Activity 1");
   });
 
-  it("shows past activities of Group 1 and activities with subscribed member", async () => {
+  it("shows past activities of Group 1 and activities with subscribed member (current is included)", async () => {
     const activities = await activitystore.activitiesForGroupIdsAndRegisteredMemberId(
       ["groupname1"],
       "memberId",
       false
     );
-    expect(activities.length).to.equal(2);
-    expect(activities[0].title()).to.equal("Past Activity 1");
-    expect(activities[1].title()).to.equal("Past Activity 2");
+    expect(activities.length).to.equal(3);
+    expect(activities[0].title()).to.equal("Current Activity 1");
+    expect(activities[1].title()).to.equal("Past Activity 1");
+    expect(activities[2].title()).to.equal("Past Activity 2");
   });
 
   it("shows current and future activities of activities with subscribed member", async () => {

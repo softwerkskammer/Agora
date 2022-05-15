@@ -35,6 +35,11 @@ module.exports = {
   },
 
   getActivitiesForDisplayAsync: async function getActivitiesForDisplay(asynActivitiesFetcher) {
+    /*
+    const activities = await asynActivitiesFetcher();
+    const groups = await groupstore.allGroups();
+    const groupColors = await groupsService.allGroupColors();
+    */
     const [activities, groups, groupColors] = await Promise.all([
       asynActivitiesFetcher(),
       groupstore.allGroups(),
@@ -57,7 +62,10 @@ module.exports = {
   ) {
     try {
       const groupIds = member.subscribedGroups.map((group) => group.id);
-      const activitiesFetcher = activitystore.activitiesForGroupIdsAndRegisteredMemberId(groupIds, member.id(), true);
+      const activitiesFetcher = R.partial(
+        activitystore.activitiesForGroupIdsAndRegisteredMemberId.bind(activitystore),
+        [groupIds, member.id(), true]
+      );
 
       const result = await this.getActivitiesForDisplayAsync(activitiesFetcher);
       callback(null, result);
@@ -68,7 +76,10 @@ module.exports = {
 
   getPastActivitiesOfMember: async function getPastActivitiesOfMember(member, callback) {
     try {
-      const activitiesFetcher = activitystore.activitiesForGroupIdsAndRegisteredMemberId([], member.id(), false);
+      const activitiesFetcher = R.partial(
+        activitystore.activitiesForGroupIdsAndRegisteredMemberId.bind(activitystore),
+        [[], member.id(), false]
+      );
       const result = await this.getActivitiesForDisplayAsync(activitiesFetcher);
       callback(null, result);
     } catch (e) {
@@ -76,10 +87,14 @@ module.exports = {
     }
   },
 
-  getOrganizedOrEditedActivitiesOfMember: function getOrganizedOrEditedActivitiesOfMember(member, callback) {
-    const activitiesFetcher = R.partial(activitystore.organizedOrEditedActivitiesForMemberId, [member.id()]);
-
-    return this.getActivitiesForDisplay(activitiesFetcher, callback);
+  getOrganizedOrEditedActivitiesOfMember: async function getOrganizedOrEditedActivitiesOfMember(member, callback) {
+    try {
+      const activitiesFetcher = R.partial(activitystore.organizedOrEditedActivitiesForMemberId, [member.id()]);
+      const result = await this.getActivitiesForDisplayAsync(activitiesFetcher);
+      callback(null, result);
+    } catch (e) {
+      callback(e);
+    }
   },
 
   getActivityWithGroupAndParticipants: async function getActivityWithGroupAndParticipants(url, callback) {

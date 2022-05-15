@@ -52,7 +52,7 @@ module.exports = {
   },
 
   getMember: async function getMember(nickname) {
-    const member = persistence.getByFieldAsync({ nickname: misc.toLowerCaseRegExp(nickname.trim()) });
+    const member = await persistence.getByFieldAsync({ nickname: misc.toLowerCaseRegExp(nickname.trim()) });
     return member ? new Member(member) : null;
   },
 

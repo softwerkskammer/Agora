@@ -239,19 +239,4 @@ describe("The persistence store", () => {
       expect(result.created).to.equal(today);
     });
   });
-
-  describe("when collection does not exist", () => {
-    beforeEach(clearStore);
-
-    describe("mapReduce", () => {
-      it("returns empty array", async () => {
-        const result = await persistence.mapReduceAsync(
-          () => "nothing",
-          (obj) => obj,
-          { out: { inline: 1 } }
-        );
-        expect(result).to.be.empty();
-      });
-    });
-  });
 });

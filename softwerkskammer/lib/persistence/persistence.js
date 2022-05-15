@@ -114,34 +114,6 @@ module.exports = function persistenceFunc(collectionName) {
       return result[0];
     },
 
-    mapReduce: function mapReduce(map, reduce, options, callback) {
-      performInDB((err, db) => {
-        if (err) {
-          return callback(err);
-        }
-        db.listCollections({ name: collectionName }).toArray((err1, names) => {
-          if (err1) {
-            callback(err1);
-          }
-          if (names.length === 0) {
-            callback(null, []);
-          } else {
-            db.collection(collectionName).mapReduce(map, reduce, options, callback);
-          }
-        });
-      });
-    },
-
-    mapReduceAsync: async function mapReduceAsync(map, reduce, options) {
-      const db = await getOpenDb();
-      const names = await db.listCollections({ name: collectionName }).toArray();
-      if (names.length === 0) {
-        return [];
-      } else {
-        return db.collection(collectionName).mapReduce(map, reduce, options);
-      }
-    },
-
     save: function save(object, callback) {
       this.update(object, object.id, callback);
     },
