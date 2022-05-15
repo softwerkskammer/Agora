@@ -173,196 +173,188 @@ describe("Activities Service", () => {
       return { addMemberId: () => truthValue };
     }
 
-    it("does not show a status message when member addition succeeds", (done) => {
+    it("does not show a status message when member addition succeeds", async () => {
       sinon.stub(activitystore, "getActivity").returns(activityWithAddMemberIdReturning(true));
 
-      activitiesService.addVisitorTo("memberId", "activity-url", Date.now(), (err, statusTitle, statusText) => {
-        expect(statusTitle).to.not.exist();
-        expect(statusText).to.not.exist();
-        done(err);
-      });
+      const [statusTitle, statusText] = await activitiesService.addVisitorTo("memberId", "activity-url", Date.now());
+      expect(statusTitle).to.not.exist();
+      expect(statusText).to.not.exist();
     });
 
-    it("shows a status message when member addition fails", (done) => {
+    it("shows a status message when member addition fails", async () => {
       sinon.stub(activitystore, "getActivity").returns(activityWithAddMemberIdReturning(false));
 
-      activitiesService.addVisitorTo("memberId", "activity-url", Date.now(), (err, statusTitle, statusText) => {
-        expect(statusTitle).to.be("activities.registration_not_now");
-        expect(statusText).to.be("activities.registration_not_possible");
-        done(err);
-      });
+      const [statusTitle, statusText] = await activitiesService.addVisitorTo("memberId", "activity-url", Date.now());
+      expect(statusTitle).to.be("activities.registration_not_now");
+      expect(statusText).to.be("activities.registration_not_possible");
     });
 
-    it("notifies of the registration when member addition succeeds", (done) => {
+    it("notifies of the registration when member addition succeeds", async () => {
       const activity = activityWithAddMemberIdReturning(true);
       sinon.stub(activitystore, "getActivity").returns(activity);
 
-      activitiesService.addVisitorTo("memberId", "activity-url", Date.now(), (err) => {
-        expect(notifications.visitorRegistration.calledOnce).to.be(true);
-        expect(notifications.visitorRegistration.firstCall.args[0]).to.eql(activity);
-        expect(notifications.visitorRegistration.firstCall.args[1]).to.equal("memberId");
-        done(err);
-      });
+      await activitiesService.addVisitorTo("memberId", "activity-url", Date.now());
+      expect(notifications.visitorRegistration.calledOnce).to.be(true);
+      expect(notifications.visitorRegistration.firstCall.args[0]).to.eql(activity);
+      expect(notifications.visitorRegistration.firstCall.args[1]).to.equal("memberId");
     });
 
-    it("does not notify of the registration when member addition fails", (done) => {
+    it("does not notify of the registration when member addition fails", async () => {
       sinon.stub(activitystore, "getActivity").returns(activityWithAddMemberIdReturning(false));
 
-      activitiesService.addVisitorTo("memberId", "activity-url", Date.now(), (err) => {
-        expect(notifications.visitorRegistration.called).to.be(false);
-        done(err);
-      });
+      await activitiesService.addVisitorTo("memberId", "activity-url", Date.now());
+      expect(notifications.visitorRegistration.called).to.be(false);
     });
 
-    it("gives an error when activity could not be loaded", (done) => {
+    it("gives an error when activity could not be loaded", async () => {
       sinon.stub(activitystore, "getActivity").throws(new Error("error"));
 
-      activitiesService.addVisitorTo("memberId", "activity-url", Date.now(), (err) => {
-        expect(err).to.exist();
-        done(); // error condition - do not pass err
-      });
+      try {
+        await activitiesService.addVisitorTo("memberId", "activity-url", Date.now());
+        expect(true).to.be(false);
+      } catch (e) {
+        expect(e).to.exist();
+      }
     });
   });
 
   describe("- when removing a visitor -", () => {
-    it("succeeds when registration is open", (done) => {
+    it("succeeds when registration is open", async () => {
       const activity = activityWithEinzelzimmer({
         _registrationOpen: true,
         _registeredMembers: [{ memberId: "memberId" }, { memberId: "otherId" }],
       });
       sinon.stub(notifications, "visitorUnregistration").callsFake((a, b, callback) => callback());
 
-      activitiesService.removeVisitorFrom("memberId", "activity-url", (err) => {
-        expect(activity.allRegisteredMembers()).to.not.contain("memberId");
-        expect(activity.allRegisteredMembers()).to.contain("otherId");
-        done(err);
-      });
+      await activitiesService.removeVisitorFrom("memberId", "activity-url");
+      expect(activity.allRegisteredMembers()).to.not.contain("memberId");
+      expect(activity.allRegisteredMembers()).to.contain("otherId");
     });
 
-    it("succeeds when registration is not open", (done) => {
+    it("succeeds when registration is not open", async () => {
       const activity = activityWithEinzelzimmer({
         _registrationOpen: false,
         _registeredMembers: [{ memberId: "memberId" }, { memberId: "otherId" }],
       });
       sinon.stub(notifications, "visitorUnregistration").callsFake((a, b, callback) => callback());
 
-      activitiesService.removeVisitorFrom("memberId", "activity-url", (err) => {
-        expect(activity.allRegisteredMembers()).to.not.contain("memberId");
-        expect(activity.allRegisteredMembers()).to.contain("otherId");
-        done(err);
-      });
+      await activitiesService.removeVisitorFrom("memberId", "activity-url");
+      expect(activity.allRegisteredMembers()).to.not.contain("memberId");
+      expect(activity.allRegisteredMembers()).to.contain("otherId");
     });
 
-    it("notifies of the unregistration", (done) => {
+    it("notifies of the unregistration", async () => {
       const activity = activityWithEinzelzimmer({
         _registrationOpen: true,
         _registeredMembers: [{ memberId: "memberId" }, { memberId: "otherId" }],
       });
       sinon.stub(notifications, "visitorUnregistration").callsFake((a, b, callback) => callback());
 
-      activitiesService.removeVisitorFrom("memberId", "activity-url", (err) => {
-        expect(notifications.visitorUnregistration.calledOnce).to.be(true);
-        expect(notifications.visitorUnregistration.firstCall.args[0]).to.eql(activity);
-        expect(notifications.visitorUnregistration.firstCall.args[1]).to.equal("memberId");
-        done(err);
-      });
+      await activitiesService.removeVisitorFrom("memberId", "activity-url");
+      expect(notifications.visitorUnregistration.calledOnce).to.be(true);
+      expect(notifications.visitorUnregistration.firstCall.args[0]).to.eql(activity);
+      expect(notifications.visitorUnregistration.firstCall.args[1]).to.equal("memberId");
     });
 
-    it("gives an error when activity could not be loaded", (done) => {
+    it("gives an error when activity could not be loaded", async () => {
       sinon.stub(activitystore, "getActivity").throws(new Error("error"));
 
-      activitiesService.removeVisitorFrom("memberId", "activity-url", (err) => {
-        expect(err, "Error").to.exist();
-        done(); // error condition - do not pass err
-      });
+      try {
+        await activitiesService.removeVisitorFrom("memberId", "activity-url");
+        expect(true).to.be(false);
+      } catch (e) {
+        expect(e, "Error").to.exist();
+      }
     });
   });
 
   describe("- when adding somebody to the waitinglist -", () => {
-    it("succeeds when resource has a waitinglist", (done) => {
+    it("succeeds when resource has a waitinglist", async () => {
       const activity = activityWithEinzelzimmer({ _waitinglist: [] });
       sinon.stub(notifications, "waitinglistAddition").callsFake((a, b, callback) => callback());
 
-      activitiesService.addToWaitinglist("memberId", "activity-url", Date.now(), (err, statusTitle, statusText) => {
-        expect(statusTitle, "Status Title").to.not.exist();
-        expect(statusText, "Status Text").to.not.exist();
-        const waitinglistMembers = waitinglistMembersOf(activity);
-        expect(waitinglistMembers).to.contain("memberId");
-        done(err);
-      });
+      const [statusTitle, statusText] = await activitiesService.addToWaitinglist(
+        "memberId",
+        "activity-url",
+        Date.now()
+      );
+      expect(statusTitle, "Status Title").to.not.exist();
+      expect(statusText, "Status Text").to.not.exist();
+      const waitinglistMembers = waitinglistMembersOf(activity);
+      expect(waitinglistMembers).to.contain("memberId");
     });
 
-    it("notifies of the waitinglist addition", (done) => {
+    it("notifies of the waitinglist addition", async () => {
       const activity = activityWithEinzelzimmer({ _waitinglist: [] });
       sinon.stub(notifications, "waitinglistAddition").callsFake((a, b, callback) => callback());
 
-      activitiesService.addToWaitinglist("memberId", "activity-url", Date.now(), (err) => {
-        expect(notifications.waitinglistAddition.calledOnce).to.be(true);
-        expect(notifications.waitinglistAddition.firstCall.args[0]).to.eql(activity);
-        expect(notifications.waitinglistAddition.firstCall.args[1]).to.equal("memberId");
-        done(err);
-      });
+      await activitiesService.addToWaitinglist("memberId", "activity-url", Date.now());
+      expect(notifications.waitinglistAddition.calledOnce).to.be(true);
+      expect(notifications.waitinglistAddition.firstCall.args[0]).to.eql(activity);
+      expect(notifications.waitinglistAddition.firstCall.args[1]).to.equal("memberId");
     });
 
-    it("gives a status message when there is no waitinglist", (done) => {
+    it("gives a status message when there is no waitinglist", async () => {
       const activity = activityWithEinzelzimmer({});
 
-      activitiesService.addToWaitinglist("memberId", "activity-url", Date.now(), (err, statusTitle, statusText) => {
-        expect(statusTitle, "Status Title").to.equal("activities.waitinglist_not_possible");
-        expect(statusText, "Status Text").to.equal("activities.no_waitinglist");
-        const waitinglistMembers = waitinglistMembersOf(activity);
-        expect(waitinglistMembers).to.not.contain("memberId");
-        done(err);
-      });
+      const [statusTitle, statusText] = await activitiesService.addToWaitinglist(
+        "memberId",
+        "activity-url",
+        Date.now()
+      );
+      expect(statusTitle, "Status Title").to.equal("activities.waitinglist_not_possible");
+      expect(statusText, "Status Text").to.equal("activities.no_waitinglist");
+      const waitinglistMembers = waitinglistMembersOf(activity);
+      expect(waitinglistMembers).to.not.contain("memberId");
     });
 
-    it("gives an error when activity could not be loaded", (done) => {
+    it("gives an error when activity could not be loaded", async () => {
       sinon.stub(activitystore, "getActivity").throws(new Error("error"));
 
-      activitiesService.addToWaitinglist("memberId", "activity-url", Date.now(), (err) => {
-        expect(err, "Error").to.exist();
-        done(); // error condition - do not pass err
-      });
+      try {
+        await activitiesService.addToWaitinglist("memberId", "activity-url", Date.now());
+        expect(false).to.be(true);
+      } catch (e) {
+        expect(e, "Error").to.exist();
+      }
     });
   });
 
   describe("- when removing a waitinglist member -", () => {
-    it("succeeds no matter whether registration is open or not", (done) => {
+    it("succeeds no matter whether registration is open or not", async () => {
       const activity = activityWithEinzelzimmer({
         _waitinglist: [{ _memberId: "memberId" }, { _memberId: "otherId" }],
       });
       sinon.stub(notifications, "waitinglistRemoval").callsFake((a, b, callback) => callback());
 
-      activitiesService.removeFromWaitinglist("memberId", "activity-url", (err) => {
-        const waitinglistMembers = waitinglistMembersOf(activity);
-        expect(waitinglistMembers).to.not.contain("memberId");
-        expect(waitinglistMembers).to.contain("otherId");
-        done(err);
-      });
+      await activitiesService.removeFromWaitinglist("memberId", "activity-url");
+      const waitinglistMembers = waitinglistMembersOf(activity);
+      expect(waitinglistMembers).to.not.contain("memberId");
+      expect(waitinglistMembers).to.contain("otherId");
     });
 
-    it("notifies of the waitinglist removal", (done) => {
+    it("notifies of the waitinglist removal", async () => {
       const activity = activityWithEinzelzimmer({
         _registrationOpen: true,
         _registeredMembers: [{ memberId: "memberId" }, { memberId: "otherId" }],
       });
       sinon.stub(notifications, "waitinglistRemoval").callsFake((a, b, callback) => callback());
 
-      activitiesService.removeFromWaitinglist("memberId", "activity-url", (err) => {
-        expect(notifications.waitinglistRemoval.calledOnce).to.be(true);
-        expect(notifications.waitinglistRemoval.firstCall.args[0]).to.eql(activity);
-        expect(notifications.waitinglistRemoval.firstCall.args[1]).to.equal("memberId");
-        done(err);
-      });
+      await activitiesService.removeFromWaitinglist("memberId", "activity-url");
+      expect(notifications.waitinglistRemoval.calledOnce).to.be(true);
+      expect(notifications.waitinglistRemoval.firstCall.args[0]).to.eql(activity);
+      expect(notifications.waitinglistRemoval.firstCall.args[1]).to.equal("memberId");
     });
 
-    it("gives an error when activity could not be loaded", (done) => {
+    it("gives an error when activity could not be loaded", async () => {
       sinon.stub(activitystore, "getActivity").throws(new Error("error"));
 
-      activitiesService.removeFromWaitinglist("memberId", "activity-url", (err) => {
-        expect(err, "Error").to.exist();
-        done(); // error condition - do not pass err
-      });
+      try {
+        await activitiesService.removeFromWaitinglist("memberId", "activity-url");
+        expect(true).to.be(false);
+      } catch (e) {
+        expect(e, "Error").to.exist();
+      }
     });
   });
 });

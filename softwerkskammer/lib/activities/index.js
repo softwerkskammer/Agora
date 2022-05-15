@@ -279,72 +279,68 @@ app.get("/:url", async (req, res, next) => {
   });
 });
 
-function subscribe(body, req, res, next) {
+async function subscribe(body, req, res) {
   const activityUrl = body.url;
 
-  activitiesService.addVisitorTo(req.user.member.id(), activityUrl, Date.now(), (err, statusTitle, statusText) => {
-    if (err) {
-      return next(err);
-    }
-    if (statusTitle && statusText) {
-      statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
-    } else {
-      statusmessage
-        .successMessage("message.title.save_successful", "message.content.activities.participation_added")
-        .putIntoSession(req);
-    }
-    res.redirect("/activities/" + encodeURIComponent(activityUrl));
-  });
+  const [statusTitle, statusText] = await activitiesService.addVisitorTo(req.user.member.id(), activityUrl, Date.now());
+  if (statusTitle && statusText) {
+    statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
+  } else {
+    statusmessage
+      .successMessage("message.title.save_successful", "message.content.activities.participation_added")
+      .putIntoSession(req);
+  }
+  res.redirect("/activities/" + encodeURIComponent(activityUrl));
 }
 
-app.post("/subscribe", (req, res, next) => subscribe(req.body, req, res, next));
+app.post("/subscribe", (req, res) => subscribe(req.body, req, res));
 
-app.get("/subscribe", (req, res, next) => {
+app.get("/subscribe", async (req, res, next) => {
   // in case the call was redirected via login, we get called with "get"
   const body = req.session.previousBody;
   if (!body) {
     return next();
   }
   delete req.session.previousBody;
-  subscribe(body, req, res, next);
+  try {
+    subscribe(body, req, res);
+  } catch (e) {
+    next(e);
+  }
 });
 
-app.post("/unsubscribe", (req, res, next) => {
+app.post("/unsubscribe", async (req, res) => {
   // unsubscribe can only be called when user is already logged in
   const activityUrl = req.body.url;
-  activitiesService.removeVisitorFrom(req.user.member.id(), activityUrl, (err, statusTitle, statusText) => {
-    if (err) {
-      return next(err);
-    }
-    if (statusTitle && statusText) {
-      statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
-    } else {
-      statusmessage
-        .successMessage("message.title.save_successful", "message.content.activities.participation_removed")
-        .putIntoSession(req);
-    }
-    res.redirect("/activities/" + encodeURIComponent(activityUrl));
-  });
+  const [statusTitle, statusText] = await activitiesService.removeVisitorFrom(req.user.member.id(), activityUrl);
+  if (statusTitle && statusText) {
+    statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
+  } else {
+    statusmessage
+      .successMessage("message.title.save_successful", "message.content.activities.participation_removed")
+      .putIntoSession(req);
+  }
+  res.redirect("/activities/" + encodeURIComponent(activityUrl));
 });
 
-function addToWaitinglist(body, req, res, next) {
-  activitiesService.addToWaitinglist(req.user.member.id(), body.url, Date.now(), (err, statusTitle, statusText) => {
-    if (err) {
-      return next(err);
-    }
-    if (statusTitle && statusText) {
-      statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
-    } else {
-      statusmessage
-        .successMessage("message.title.save_successful", "message.content.activities.waitinglist_added")
-        .putIntoSession(req);
-    }
-    res.redirect("/activities/" + encodeURIComponent(body.url));
-  });
+async function addToWaitinglist(body, req, res) {
+  const [statusTitle, statusText] = await activitiesService.addToWaitinglist(
+    req.user.member.id(),
+    body.url,
+    Date.now()
+  );
+  if (statusTitle && statusText) {
+    statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
+  } else {
+    statusmessage
+      .successMessage("message.title.save_successful", "message.content.activities.waitinglist_added")
+      .putIntoSession(req);
+  }
+  res.redirect("/activities/" + encodeURIComponent(body.url));
 }
 
-app.post("/addToWaitinglist", (req, res, next) => {
-  addToWaitinglist(req.body, req, res, next);
+app.post("/addToWaitinglist", async (req, res) => {
+  addToWaitinglist(req.body, req, res);
 });
 
 app.get("/addToWaitinglist", (req, res, next) => {
@@ -357,21 +353,17 @@ app.get("/addToWaitinglist", (req, res, next) => {
   addToWaitinglist(body, req, res, next);
 });
 
-app.post("/removeFromWaitinglist", (req, res, next) => {
+app.post("/removeFromWaitinglist", async (req, res) => {
   // removeFromWaitinglist can only be called when user is already logged in
-  activitiesService.removeFromWaitinglist(req.user.member.id(), req.body.url, (err, statusTitle, statusText) => {
-    if (err) {
-      return next(err);
-    }
-    if (statusTitle && statusText) {
-      statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
-    } else {
-      statusmessage
-        .successMessage("message.title.save_successful", "message.content.activities.waitinglist_removed")
-        .putIntoSession(req);
-    }
-    res.redirect("/activities/" + encodeURIComponent(req.body.url));
-  });
+  const [statusTitle, statusText] = await activitiesService.removeFromWaitinglist(req.user.member.id(), req.body.url);
+  if (statusTitle && statusText) {
+    statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
+  } else {
+    statusmessage
+      .successMessage("message.title.save_successful", "message.content.activities.waitinglist_removed")
+      .putIntoSession(req);
+  }
+  res.redirect("/activities/" + encodeURIComponent(req.body.url));
 });
 
 app.post("/delete", async (req, res) => {

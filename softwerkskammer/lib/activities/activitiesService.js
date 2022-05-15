@@ -90,108 +90,115 @@ module.exports = {
     return result === null;
   },
 
-  activitiesBetween: async function activitiesBetween(startMillis, endMillis, callback) {
-    try {
-      const result = await activitystore.allActivitiesByDateRangeInAscendingOrder(startMillis, endMillis);
-      callback(null, result);
-    } catch (e) {
-      callback(e);
-    }
+  activitiesBetween: async function activitiesBetween(startMillis, endMillis) {
+    return activitystore.allActivitiesByDateRangeInAscendingOrder(startMillis, endMillis);
   },
 
-  addVisitorTo: async function addVisitorTo(memberId, activityUrl, millis, callback) {
+  addVisitorTo: async function addVisitorTo(memberId, activityUrl, millis) {
     const self = this;
-    try {
-      const activity = await activitystore.getActivity(activityUrl);
-      if (!activity) {
-        return callback("message.title.problem", "message.content.activities.does_not_exist");
-      }
-      if (activity.addMemberId(memberId, millis)) {
-        try {
-          await activitystore.saveActivity(activity);
-          return notifications.visitorRegistration(activity, memberId, callback);
-        } catch (err1) {
-          if (err1 && err1.message === CONFLICTING_VERSIONS) {
-            // we try again because of a racing condition during save:
-            return self.addVisitorTo(memberId, activityUrl, millis, callback);
-          }
-          return callback(err1);
-        }
-      }
-      callback(null, "activities.registration_not_now", "activities.registration_not_possible");
-    } catch (e) {
-      callback(e);
+    const activity = await activitystore.getActivity(activityUrl);
+    if (!activity) {
+      return ["message.title.problem", "message.content.activities.does_not_exist"];
     }
-  },
-
-  removeVisitorFrom: async function removeVisitorFrom(memberId, activityUrl, callback) {
-    try {
-      const self = this;
-      const activity = await activitystore.getActivity(activityUrl);
-      if (!activity) {
-        return callback(null, "message.title.problem", "message.content.activities.does_not_exist");
-      }
-      activity.removeMemberId(memberId);
+    if (activity.addMemberId(memberId, millis)) {
       try {
         await activitystore.saveActivity(activity);
-        return notifications.visitorUnregistration(activity, memberId, callback);
+        return new Promise((resolve, reject) => {
+          notifications.visitorRegistration(activity, memberId, (err, result) => {
+            if (err) {
+              reject(err);
+            }
+            resolve(result || []);
+          });
+        });
       } catch (err1) {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
           // we try again because of a racing condition during save:
-          return self.removeVisitorFrom(memberId, activityUrl, callback);
+          return self.addVisitorTo(memberId, activityUrl, millis);
         }
-        return callback(err1);
+        throw err1;
       }
-    } catch (e) {
-      callback(e);
     }
+    return ["activities.registration_not_now", "activities.registration_not_possible"];
   },
 
-  addToWaitinglist: async function addToWaitinglist(memberId, activityUrl, millis, callback) {
+  removeVisitorFrom: async function removeVisitorFrom(memberId, activityUrl) {
+    const self = this;
+    const activity = await activitystore.getActivity(activityUrl);
+    if (!activity) {
+      return ["message.title.problem", "message.content.activities.does_not_exist"];
+    }
+    activity.removeMemberId(memberId);
     try {
-      const activity = await activitystore.getActivity(activityUrl);
-      if (!activity) {
-        return callback(null, "message.title.problem", "message.content.activities.does_not_exist");
-      }
-      if (activity.hasWaitinglist()) {
-        activity.addToWaitinglist(memberId, millis);
-        try {
-          await activitystore.saveActivity(activity);
-          return notifications.waitinglistAddition(activity, memberId, callback);
-        } catch (err1) {
-          if (err1 && err1.message === CONFLICTING_VERSIONS) {
-            // we try again because of a racing condition during save:
-            return this.addToWaitinglist(memberId, activityUrl, millis, callback);
+      await activitystore.saveActivity(activity);
+      return new Promise((resolve, reject) => {
+        notifications.visitorUnregistration(activity, memberId, (err, result) => {
+          if (err) {
+            reject(err);
           }
-          callback(err1);
-        }
+          resolve(result || []);
+        });
+      });
+    } catch (err1) {
+      if (err1 && err1.message === CONFLICTING_VERSIONS) {
+        // we try again because of a racing condition during save:
+        return self.removeVisitorFrom(memberId, activityUrl);
       }
-      return callback(null, "activities.waitinglist_not_possible", "activities.no_waitinglist");
-    } catch (e) {
-      callback(e);
+      throw err1;
     }
   },
 
-  removeFromWaitinglist: async function removeFromWaitinglist(memberId, activityUrl, callback) {
-    try {
-      const self = this;
-      const activity = await activitystore.getActivity(activityUrl);
-      if (!activity) {
-        return callback(null, "message.title.problem", "message.content.activities.does_not_exist");
-      }
-      activity.removeFromWaitinglist(memberId);
+  addToWaitinglist: async function addToWaitinglist(memberId, activityUrl, millis) {
+    const activity = await activitystore.getActivity(activityUrl);
+    if (!activity) {
+      return ["message.title.problem", "message.content.activities.does_not_exist"];
+    }
+    if (activity.hasWaitinglist()) {
+      activity.addToWaitinglist(memberId, millis);
       try {
         await activitystore.saveActivity(activity);
-        notifications.waitinglistRemoval(activity, memberId, callback);
+        return new Promise((resolve, reject) => {
+          notifications.waitinglistAddition(activity, memberId, (err, result) => {
+            if (err) {
+              reject(err);
+            }
+            resolve(result || []);
+          });
+        });
       } catch (err1) {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
           // we try again because of a racing condition during save:
-          return self.removeFromWaitinglist(memberId, activityUrl, callback);
+          return this.addToWaitinglist(memberId, activityUrl, millis);
         }
-        callback(err1);
+        throw err1;
       }
-    } catch (e) {
-      callback(e);
+    }
+    return ["activities.waitinglist_not_possible", "activities.no_waitinglist"];
+  },
+
+  removeFromWaitinglist: async function removeFromWaitinglist(memberId, activityUrl) {
+    const self = this;
+    const activity = await activitystore.getActivity(activityUrl);
+    if (!activity) {
+      return ["message.title.problem", "message.content.activities.does_not_exist"];
+    }
+    activity.removeFromWaitinglist(memberId);
+    try {
+      await activitystore.saveActivity(activity);
+      return new Promise((resolve, reject) => {
+        notifications.waitinglistRemoval(activity, memberId, (err, result) => {
+          if (err) {
+            reject(err);
+          }
+          resolve(result || []);
+        });
+      });
+    } catch (err1) {
+      if (err1 && err1.message === CONFLICTING_VERSIONS) {
+        // we try again because of a racing condition during save:
+        return self.removeFromWaitinglist(memberId, activityUrl);
+      }
+      throw err1;
     }
   },
 };

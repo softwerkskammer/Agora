@@ -621,9 +621,7 @@ describe("Activity application", () => {
 
   describe("User subscription", () => {
     it("adds the current user to the list of participants, captures a success message in the session and redirects to the activity on subscribe", (done) => {
-      sinon.stub(activitiesService, "addVisitorTo").callsFake((userId, activityUrl, timestamp, callback) => {
-        callback(null);
-      });
+      sinon.stub(activitiesService, "addVisitorTo").returns([]);
 
       let session;
       const sessionCaptureCallback = (s) => {
@@ -645,9 +643,7 @@ describe("Activity application", () => {
     });
 
     it("captures the service status title and status message in the session and redirects to the activity", (done) => {
-      sinon.stub(activitiesService, "addVisitorTo").callsFake((userId, activityUrl, timestamp, callback) => {
-        callback(null, "Status Title", "Status Text");
-      });
+      sinon.stub(activitiesService, "addVisitorTo").returns(["Status Title", "Status Text"]);
 
       let session;
       const sessionCaptureCallback = (s) => {
@@ -669,9 +665,7 @@ describe("Activity application", () => {
     });
 
     it("displays a 500 with the error message if there is an error from the service", (done) => {
-      sinon.stub(activitiesService, "addVisitorTo").callsFake((userId, activityUrl, timestamp, callback) => {
-        callback(new Error("Oops..."));
-      });
+      sinon.stub(activitiesService, "addVisitorTo").throws(new Error("Oops..."));
 
       request(createApp({ member: member1 }))
         .post("/subscribe")
@@ -692,9 +686,7 @@ describe("Activity application", () => {
 
   describe("User unsubscription", () => {
     it("removes the current user from the list of participants, captures a success message in the session and redirects to the activity on subscribe", (done) => {
-      sinon.stub(activitiesService, "removeVisitorFrom").callsFake((userId, activityUrl, callback) => {
-        callback(null);
-      });
+      sinon.stub(activitiesService, "removeVisitorFrom").returns([]);
 
       let session;
       const sessionCaptureCallback = (s) => {
@@ -716,9 +708,7 @@ describe("Activity application", () => {
     });
 
     it("captures the unsubscribe service status title and status message in the session and redirects to the activity", (done) => {
-      sinon.stub(activitiesService, "removeVisitorFrom").callsFake((userId, activityUrl, callback) => {
-        callback(null, "Status Title", "Status Text");
-      });
+      sinon.stub(activitiesService, "removeVisitorFrom").returns(["Status Title", "Status Text"]);
 
       let session;
       const sessionCaptureCallback = (s) => {
@@ -740,9 +730,7 @@ describe("Activity application", () => {
     });
 
     it("displays a 500 with the error message if there is an error from the service", (done) => {
-      sinon.stub(activitiesService, "removeVisitorFrom").callsFake((userId, activityUrl, callback) => {
-        callback(new Error("Oops..."));
-      });
+      sinon.stub(activitiesService, "removeVisitorFrom").throws(new Error("Oops..."));
 
       request(createApp({ member: member1 }))
         .post("/unsubscribe")

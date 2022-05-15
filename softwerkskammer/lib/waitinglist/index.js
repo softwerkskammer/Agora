@@ -84,7 +84,7 @@ app.post("/allowRegistration", (req, res, next) => {
   });
 });
 
-app.post("/remove", (req, res, next) => {
+app.post("/remove", async (req, res, next) => {
   const activityUrl = req.body.activityUrl;
   accessAllowedTo(activityUrl, res, async (err, activity) => {
     if (err) {
@@ -95,14 +95,14 @@ app.post("/remove", (req, res, next) => {
     }
     try {
       const member = await memberstore.getMember(req.body.nickname);
-      activitiesService.removeFromWaitinglist(member.id(), activityUrl, (err2) => {
-        if (err2) {
-          return next(err2);
-        }
-        res.send("ok");
-      });
+      try {
+        await activitiesService.removeFromWaitinglist(member.id(), activityUrl);
+      } catch (e) {
+        return next(e);
+      }
+      res.send("ok");
     } catch (e) {
-      return res.send(400);
+      res.send(400);
     }
   });
 });

@@ -17,6 +17,11 @@ const getActivity = (url, callback) => {
   persistence.getByField({ url }, (err, activityState) => callback(err, new Activity(activityState)));
 };
 
+const getActivityAsync = async (url) => {
+  const activityState = await persistence.getByFieldAsync({ url });
+  return new Activity(activityState);
+};
+
 describe("Activities Service with DB", () => {
   let activityBeforeConcurrentAccess;
   let activityAfterConcurrentAccess;
@@ -76,103 +81,67 @@ describe("Activities Service with DB", () => {
     sinon.restore();
   });
 
-  it("addVisitor keeps the registrant that is in the database although it only reads an activity without registrant", (done) => {
+  it("addVisitor keeps the registrant that is in the database although it only reads an activity without registrant", async () => {
     // here, we save an activity with a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    activitiesService.addVisitorTo("memberId2", activityUrl, Date.now(), (err) => {
-      if (err) {
-        return done(err);
-      }
-      getActivity(activityUrl, (err1, activity) => {
-        if (err1) {
-          return done(err1);
-        }
-        expect(
-          activity.resourceNamed("Veranstaltung").registeredMembers(),
-          "Second registered member is stored in the database"
-        ).to.contain("memberId2");
-        expect(
-          activity.resourceNamed("Veranstaltung").registeredMembers(),
-          "First registered member is still there"
-        ).to.contain("memberId1");
-        done(err1);
-      });
-    });
+    await activitiesService.addVisitorTo("memberId2", "activity-url", Date.now());
+    const activity = await getActivityAsync(activityUrl);
+    expect(
+      activity.resourceNamed("Veranstaltung").registeredMembers(),
+      "Second registered member is stored in the database"
+    ).to.contain("memberId2");
+    expect(
+      activity.resourceNamed("Veranstaltung").registeredMembers(),
+      "First registered member is still there"
+    ).to.contain("memberId1");
   });
 
-  it("removeVisitor keeps the registrant that is in the database although it only reads an activity without registrant", (done) => {
+  it("removeVisitor keeps the registrant that is in the database although it only reads an activity without registrant", async () => {
     // here, we save an activity after removing a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first 'getActivity'.
-    activitiesService.removeVisitorFrom("memberIdX", activityUrl, (err) => {
-      if (err) {
-        return done(err);
-      }
-      getActivity(activityUrl, (err1, activity) => {
-        if (err1) {
-          return done(err1);
-        }
-        expect(
-          activity.resourceNamed("Veranstaltung").registeredMembers(),
-          "Second removed member is no longer in the database"
-        ).to.not.contain("memberIdX");
-        expect(
-          activity.resourceNamed("Veranstaltung").registeredMembers(),
-          "First registered member is still there"
-        ).to.contain("memberId1");
-        done(err1);
-      });
-    });
+    await activitiesService.removeVisitorFrom("memberIdX", activityUrl);
+    const activity = await getActivityAsync(activityUrl);
+    expect(
+      activity.resourceNamed("Veranstaltung").registeredMembers(),
+      "Second removed member is no longer in the database"
+    ).to.not.contain("memberIdX");
+    expect(
+      activity.resourceNamed("Veranstaltung").registeredMembers(),
+      "First registered member is still there"
+    ).to.contain("memberId1");
   });
 
-  it("addToWaitinglist keeps the registrant that is in the database although it only reads an activity without registrant", (done) => {
+  it("addToWaitinglist keeps the registrant that is in the database although it only reads an activity without registrant", async () => {
     // here, we save an activity with a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    activitiesService.addToWaitinglist("memberId2", activityUrl, Date.now(), (err) => {
-      if (err) {
-        return done(err);
-      }
-      getActivity(activityUrl, (err1, activity) => {
-        if (err1) {
-          return done(err1);
-        }
-        expect(
-          activity.resourceNamed("Veranstaltung").waitinglistEntries()[0].registrantId(),
-          "Previous member is still in the waitinglist"
-        ).to.equal("memberIdY");
-        expect(
-          activity.resourceNamed("Veranstaltung").waitinglistEntries()[1].registrantId(),
-          "Second member is stored in the waitinglist"
-        ).to.equal("memberId2");
-        expect(
-          activity.resourceNamed("Veranstaltung").registeredMembers(),
-          "First registered member is still there"
-        ).to.contain("memberId1");
-        done(err1);
-      });
-    });
+    await activitiesService.addToWaitinglist("memberId2", activityUrl, Date.now());
+    const activity = await getActivityAsync(activityUrl);
+    expect(
+      activity.resourceNamed("Veranstaltung").waitinglistEntries()[0].registrantId(),
+      "Previous member is still in the waitinglist"
+    ).to.equal("memberIdY");
+    expect(
+      activity.resourceNamed("Veranstaltung").waitinglistEntries()[1].registrantId(),
+      "Second member is stored in the waitinglist"
+    ).to.equal("memberId2");
+    expect(
+      activity.resourceNamed("Veranstaltung").registeredMembers(),
+      "First registered member is still there"
+    ).to.contain("memberId1");
   });
 
-  it("removeFromWaitinglist keeps the registrant that is in the database although it only reads an activity without registrant", (done) => {
+  it("removeFromWaitinglist keeps the registrant that is in the database although it only reads an activity without registrant", async () => {
     // here, we save an activity after removing a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    activitiesService.removeFromWaitinglist("memberIdY", activityUrl, (err) => {
-      if (err) {
-        return done(err);
-      }
-      getActivity(activityUrl, (err1, activity) => {
-        if (err1) {
-          return done(err1);
-        }
-        expect(
-          activity.resourceNamed("Veranstaltung").waitinglistEntries().length,
-          "Waitinglist member is no longer in the database"
-        ).to.equal(0);
-        expect(
-          activity.resourceNamed("Veranstaltung").registeredMembers(),
-          "First registered member is still there"
-        ).to.contain("memberId1");
-        done(err1);
-      });
-    });
+    await activitiesService.removeFromWaitinglist("memberIdY", activityUrl);
+    const activity = await getActivityAsync(activityUrl);
+    expect(
+      activity.resourceNamed("Veranstaltung").waitinglistEntries().length,
+      "Waitinglist member is no longer in the database"
+    ).to.equal(0);
+    expect(
+      activity.resourceNamed("Veranstaltung").registeredMembers(),
+      "First registered member is still there"
+    ).to.contain("memberId1");
   });
 });
