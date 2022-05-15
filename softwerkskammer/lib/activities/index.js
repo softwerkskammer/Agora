@@ -131,21 +131,13 @@ app.get("/ical/:url", async (req, res) => {
   sendCalendarStringNamedToResult(icalService.activityAsICal(activity), activity.url(), res);
 });
 
-app.get("/eventsForSidebar", async (req, res, next) => {
+app.get("/eventsForSidebar", async (req, res) => {
   const start = new Date(req.query.start).getTime();
   const end = new Date(req.query.end).getTime();
 
-  try {
-    const groupColors = await groupsService.allGroupColors();
-    calendarService.eventsBetween(start, end, groupColors, (err1, events) => {
-      if (err1) {
-        return next(err1);
-      }
-      res.end(JSON.stringify(events));
-    });
-  } catch (e) {
-    next(e);
-  }
+  const groupColors = await groupsService.allGroupColors();
+  const events = await calendarService.eventsBetween(start, end, groupColors);
+  res.end(JSON.stringify(events));
 });
 
 async function renderActivityCombinedWithGroups(res, activity) {
