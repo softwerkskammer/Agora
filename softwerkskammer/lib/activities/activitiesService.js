@@ -1,4 +1,3 @@
-const async = require("async");
 const R = require("ramda");
 
 const beans = require("simple-configure").get("beans");
@@ -13,27 +12,6 @@ const fieldHelpers = beans.get("fieldHelpers");
 const CONFLICTING_VERSIONS = beans.get("constants").CONFLICTING_VERSIONS;
 
 module.exports = {
-  getActivitiesForDisplay: function getActivitiesForDisplay(activitiesFetcher, callback) {
-    async.parallel(
-      {
-        activities: activitiesFetcher,
-        groups: async.asyncify(async () => await groupstore.allGroups()),
-        groupColors: async.asyncify(async () => await groupsService.allGroupColors()),
-      },
-
-      (err, results) => {
-        if (err || !results.activities) {
-          callback(err);
-        }
-        results.activities.forEach((activity) => {
-          activity.colorRGB = activity.colorFrom(results.groupColors);
-          activity.groupFrom(results.groups); // sets the group object in activity
-        });
-        callback(null, results.activities);
-      }
-    );
-  },
-
   getActivitiesForDisplayAsync: async function getActivitiesForDisplay(asynActivitiesFetcher) {
     /*
     const activities = await asynActivitiesFetcher();
@@ -56,84 +34,60 @@ module.exports = {
     return activities;
   },
 
-  getUpcomingActivitiesOfMemberAndHisGroups: async function getUpcomingActivitiesOfMemberAndHisGroups(
-    member,
-    callback
-  ) {
-    try {
-      const groupIds = member.subscribedGroups.map((group) => group.id);
-      const activitiesFetcher = R.partial(
-        activitystore.activitiesForGroupIdsAndRegisteredMemberId.bind(activitystore),
-        [groupIds, member.id(), true]
-      );
+  getUpcomingActivitiesOfMemberAndHisGroups: async function getUpcomingActivitiesOfMemberAndHisGroups(member) {
+    const groupIds = member.subscribedGroups.map((group) => group.id);
+    const activitiesFetcher = R.partial(activitystore.activitiesForGroupIdsAndRegisteredMemberId.bind(activitystore), [
+      groupIds,
+      member.id(),
+      true,
+    ]);
 
-      const result = await this.getActivitiesForDisplayAsync(activitiesFetcher);
-      callback(null, result);
-    } catch (e) {
-      callback(e);
-    }
+    return this.getActivitiesForDisplayAsync(activitiesFetcher);
   },
 
-  getPastActivitiesOfMember: async function getPastActivitiesOfMember(member, callback) {
-    try {
-      const activitiesFetcher = R.partial(
-        activitystore.activitiesForGroupIdsAndRegisteredMemberId.bind(activitystore),
-        [[], member.id(), false]
-      );
-      const result = await this.getActivitiesForDisplayAsync(activitiesFetcher);
-      callback(null, result);
-    } catch (e) {
-      callback(e);
-    }
+  getPastActivitiesOfMember: async function getPastActivitiesOfMember(member) {
+    const activitiesFetcher = R.partial(activitystore.activitiesForGroupIdsAndRegisteredMemberId.bind(activitystore), [
+      [],
+      member.id(),
+      false,
+    ]);
+    return this.getActivitiesForDisplayAsync(activitiesFetcher);
   },
 
-  getOrganizedOrEditedActivitiesOfMember: async function getOrganizedOrEditedActivitiesOfMember(member, callback) {
-    try {
-      const activitiesFetcher = R.partial(activitystore.organizedOrEditedActivitiesForMemberId, [member.id()]);
-      const result = await this.getActivitiesForDisplayAsync(activitiesFetcher);
-      callback(null, result);
-    } catch (e) {
-      callback(e);
-    }
+  getOrganizedOrEditedActivitiesOfMember: async function getOrganizedOrEditedActivitiesOfMember(member) {
+    const activitiesFetcher = R.partial(activitystore.organizedOrEditedActivitiesForMemberId, [member.id()]);
+    return this.getActivitiesForDisplayAsync(activitiesFetcher);
   },
 
-  getActivityWithGroupAndParticipants: async function getActivityWithGroupAndParticipants(url, callback) {
+  getActivityWithGroupAndParticipants: async function getActivityWithGroupAndParticipants(url) {
     async function participantsLoader(activity) {
       const members = await memberstore.getMembersForIds(activity.allRegisteredMembers());
       await Promise.all(members.map(membersService.putAvatarIntoMemberAndSave));
       return members;
     }
 
-    try {
-      const activity = await activitystore.getActivity(url);
-      if (!activity) {
-        return callback();
-      }
-      const [group, participants, owner] = await Promise.all([
-        groupstore.getGroup(activity.assignedGroup()),
-        participantsLoader(activity),
-        memberstore.getMemberForId(activity.owner()),
-      ]);
-      activity.group = group;
-      activity.participants = participants;
-      activity.ownerNickname = owner ? owner.nickname() : undefined;
-      callback(null, activity);
-    } catch (e) {
-      callback(e);
+    const activity = await activitystore.getActivity(url);
+    if (!activity) {
+      return;
     }
+    const [group, participants, owner] = await Promise.all([
+      groupstore.getGroup(activity.assignedGroup()),
+      participantsLoader(activity),
+      memberstore.getMemberForId(activity.owner()),
+    ]);
+    activity.group = group;
+    activity.participants = participants;
+    activity.ownerNickname = owner ? owner.nickname() : undefined;
+    return activity;
   },
 
-  isValidUrl: async function isValidUrl(reservedURLs, url, callback) {
+  isValidUrl: async function isValidUrl(reservedURLs, url) {
     const isReserved = new RegExp(reservedURLs, "i").test(url);
     if (fieldHelpers.containsSlash(url) || isReserved) {
-      return callback(null, false);
+      return false;
     }
-    try {
-      const result = await activitystore.getActivity(url);
-      callback(null, result === null);
-    } catch (e) {
-      callback(e);
-    }
+    const result = await activitystore.getActivity(url);
+    return result === null;
   },
 
   activitiesBetween: async function activitiesBetween(startMillis, endMillis, callback) {

@@ -17,9 +17,7 @@ describe("Activity application - on submit -", () => {
     sinon.restore();
   });
   it("rejects an activity with invalid and different url", (done) => {
-    sinon.stub(activitiesService, "isValidUrl").callsFake((resURLs, url, callback) => {
-      callback(null, false);
-    });
+    sinon.stub(activitiesService, "isValidUrl").returns(false);
 
     request(createApp())
       .post("/submit")
@@ -31,9 +29,7 @@ describe("Activity application - on submit -", () => {
   });
 
   it('rejects an activity with a url containing "/"', (done) => {
-    sinon.stub(activitiesService, "isValidUrl").callsFake((resURLs, url, callback) => {
-      callback(null, false);
-    });
+    sinon.stub(activitiesService, "isValidUrl").returns(false);
 
     request(createApp())
       .post("/submit")
@@ -65,9 +61,7 @@ describe("Activity application - on submit -", () => {
   });
 
   it("accepts an activity with valid and different url", (done) => {
-    sinon.stub(activitiesService, "isValidUrl").callsFake((resURLs, url, callback) => {
-      callback(null, false);
-    });
+    sinon.stub(activitiesService, "isValidUrl").returns(false);
 
     request(createApp()).post("/submit").send("url=uhu").send("previousUrl=aha").expect(200, done);
   });
@@ -85,9 +79,7 @@ describe("Activity application - on submit -", () => {
   });
 
   it("rejects an activity with different but valid url and with empty title", (done) => {
-    sinon.stub(activitiesService, "isValidUrl").callsFake((resURLs, url, callback) => {
-      callback(null, true);
-    });
+    sinon.stub(activitiesService, "isValidUrl").returns(true);
 
     request(createApp())
       .post("/submit")

@@ -71,7 +71,7 @@ describe("Activities Service", () => {
     expect(activity.groupName()).to.equal("The name of the assigned Group");
   });
 
-  it("returns an activity and enhances it with its group and visitors", (done) => {
+  it("returns an activity and enhances it with its group and visitors", async () => {
     const member1 = new Member({
       id: "memberId1",
       nickname: "participant1",
@@ -135,39 +135,31 @@ describe("Activities Service", () => {
     expectedActivity.participants = [member1, member2];
     expectedActivity.ownerNickname = "owner";
 
-    activitiesService.getActivityWithGroupAndParticipants("urlOfTheActivity", function (err, activity) {
-      expect(activity, "Activity").to.exist();
-      expect(activity.group, "Group").to.equal(group);
-      expect(activity.participants.length).to.equal(2);
-      expect(activity.ownerNickname, "Owner").to.equal("owner");
-      const partsIDs = activity.participants.map((p) => p.id());
-      expect(partsIDs, "Participants").to.contain(member1.id());
-      expect(partsIDs, "Participants").to.contain(member2.id());
-      done(err);
-    });
+    const activity = await activitiesService.getActivityWithGroupAndParticipants("urlOfTheActivity");
+    expect(activity, "Activity").to.exist();
+    expect(activity.group, "Group").to.equal(group);
+    expect(activity.participants.length).to.equal(2);
+    expect(activity.ownerNickname, "Owner").to.equal("owner");
+    const partsIDs = activity.participants.map((p) => p.id());
+    expect(partsIDs, "Participants").to.contain(member1.id());
+    expect(partsIDs, "Participants").to.contain(member2.id());
   });
 
   describe("checks the validity of URLs and", () => {
-    it("does not allow the URL 'edit'", (done) => {
-      activitiesService.isValidUrl("edit", "^edit$", function (err, result) {
-        expect(result).to.be(false);
-        done(err);
-      });
+    it("does not allow the URL 'edit'", async () => {
+      const result = await activitiesService.isValidUrl("edit", "^edit$");
+      expect(result).to.be(false);
     });
 
-    it("allows the untrimmed URL 'uhu'", (done) => {
+    it("allows the untrimmed URL 'uhu'", async () => {
       sinon.stub(activitystore, "getActivity").returns(null);
-      activitiesService.isValidUrl(" edit ", "^edit$", function (err, result) {
-        expect(result).to.be(true);
-        done(err);
-      });
+      const result = await activitiesService.isValidUrl(" edit ", "^edit$");
+      expect(result).to.be(true);
     });
 
-    it('does not allow a URL containing a "/"', (done) => {
-      activitiesService.isValidUrl("", "legal/egal", function (err, result) {
-        expect(result).to.be(false);
-        done(err);
-      });
+    it('does not allow a URL containing a "/"', async () => {
+      const result = await activitiesService.isValidUrl("", "^legal/egal");
+      expect(result).to.be(false);
     });
   });
 

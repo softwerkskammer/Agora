@@ -7,16 +7,19 @@ const activitiesService = beans.get("activitiesService");
 const memberstore = beans.get("memberstore");
 const misc = beans.get("misc");
 
-function accessAllowedTo(activityUrl, res, callback) {
+async function accessAllowedTo(activityUrl, res, callback) {
   const accessrights = res.locals.accessrights;
 
-  activitiesService.getActivityWithGroupAndParticipants(activityUrl, (err, activity) => {
+  try {
+    const activity = await activitiesService.getActivityWithGroupAndParticipants(activityUrl);
     const canEditActivity = !!activity && accessrights.canEditActivity(activity);
-    if (err || !canEditActivity) {
-      return callback(err);
+    if (!canEditActivity) {
+      return callback();
     }
     return callback(null, activity);
-  });
+  } catch (e) {
+    callback(e);
+  }
 }
 
 const app = misc.expressAppIn(__dirname);

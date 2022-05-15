@@ -28,36 +28,32 @@ function editorNameOf(member) {
   return member.displayName() + " (" + member.nickname() + ")".replace(",", "");
 }
 
-function activitySubmitted(req, res, next) {
-  activitiesService.getActivityWithGroupAndParticipants(req.body.previousUrl, async (err, activity) => {
-    if (err) {
-      return next(err);
+async function activitySubmitted(req, res) {
+  let activity = await activitiesService.getActivityWithGroupAndParticipants(req.body.previousUrl);
+  if (!activity) {
+    activity = new Activity({ owner: req.user.member.id() });
+  }
+  const editorNames = misc.toArray(req.body.editorIds);
+  // editor can be either a name in the format editorNameOf() - for participants - or just a nickname - for manually entered
+  const nicknames = editorNames.map(misc.betweenBraces);
+  const members = await Promise.all(nicknames.map(memberstore.getMember));
+  const membersForEditors = members.filter((m) => m); // only truthy members
+  const editorIds = membersForEditors.map((editor) => editor.id());
+  activity.fillFromUI(req.body, editorIds);
+  try {
+    await activitystore.saveActivity(activity);
+    statusmessage
+      .successMessage("message.title.save_successful", "message.content.activities.saved")
+      .putIntoSession(req);
+    res.redirect("/activities/" + encodeURIComponent(activity.url()));
+  } catch (err2) {
+    if (err2 && err2.message === CONFLICTING_VERSIONS) {
+      // we try again because of a racing condition during save:
+      statusmessage.errorMessage("message.title.conflict", "message.content.save_error_retry").putIntoSession(req);
+      return res.redirect("/activities/edit/" + encodeURIComponent(activity.url()));
     }
-    if (!activity) {
-      activity = new Activity({ owner: req.user.member.id() });
-    }
-    const editorNames = misc.toArray(req.body.editorIds);
-    // editor can be either a name in the format editorNameOf() - for participants - or just a nickname - for manually entered
-    const nicknames = editorNames.map(misc.betweenBraces);
-    const members = await Promise.all(nicknames.map(memberstore.getMember));
-    const membersForEditors = members.filter((m) => m); // only truthy members
-    const editorIds = membersForEditors.map((editor) => editor.id());
-    activity.fillFromUI(req.body, editorIds);
-    try {
-      await activitystore.saveActivity(activity);
-      statusmessage
-        .successMessage("message.title.save_successful", "message.content.activities.saved")
-        .putIntoSession(req);
-      res.redirect("/activities/" + encodeURIComponent(activity.url()));
-    } catch (err2) {
-      if (err2 && err2.message === CONFLICTING_VERSIONS) {
-        // we try again because of a racing condition during save:
-        statusmessage.errorMessage("message.title.conflict", "message.content.save_error_retry").putIntoSession(req);
-        return res.redirect("/activities/edit/" + encodeURIComponent(activity.url()));
-      }
-      next(err2);
-    }
-  });
+    throw err2;
+  }
 }
 
 async function activitiesForDisplayAsync(activitiesFetcher, res, title) {
@@ -193,32 +189,36 @@ app.get("/newLike/:url", async (req, res) => {
 });
 
 app.get("/edit/:url", async (req, res, next) => {
-  activitiesService.getActivityWithGroupAndParticipants(req.params.url, async (err, activity) => {
-    if (err || activity === null) {
-      return next(err);
-    }
-    if (activity.isSoCraTes()) {
-      return res.redirect(activity.fullyQualifiedUrl());
-    }
-    if (!res.locals.accessrights.canEditActivity(activity)) {
-      return res.redirect("/activities/" + encodeURIComponent(req.params.url));
-    }
-    renderActivityCombinedWithGroups(res, activity);
-  });
+  const activity = await activitiesService.getActivityWithGroupAndParticipants(req.params.url);
+  if (activity === null) {
+    return next();
+  }
+  if (activity.isSoCraTes()) {
+    return res.redirect(activity.fullyQualifiedUrl());
+  }
+  if (!res.locals.accessrights.canEditActivity(activity)) {
+    return res.redirect("/activities/" + encodeURIComponent(req.params.url));
+  }
+  renderActivityCombinedWithGroups(res, activity);
 });
 
-app.post("/submit", (req, res, next) => {
+app.post("/submit", async (req, res, next) => {
   async.parallel(
     [
-      (callback) => {
-        validation.checkValidity(
-          req.body.previousUrl.trim(),
-          req.body.url.trim(),
-          R.partial(activitiesService.isValidUrl, [reservedURLs]),
-          req.i18n.t("validation.url_not_available"),
-          callback
-        );
-      },
+      async.asyncify(async () => {
+        try {
+          const result = await validation.checkValidityAsync(
+            req.body.previousUrl.trim(),
+            req.body.url.trim(),
+            R.partial(activitiesService.isValidUrl, [reservedURLs])
+          );
+          if (!result) {
+            return req.i18n.t("validation.url_not_available");
+          }
+        } catch (e) {
+          return req.i18n.t("validation.url_not_available");
+        }
+      }),
       (callback) => {
         const errors = validation.isValidForActivity(req.body);
         return callback(null, errors);
@@ -230,7 +230,7 @@ app.post("/submit", (req, res, next) => {
       }
       const realErrors = R.flatten(errorMessages).filter((message) => message);
       if (realErrors.length === 0) {
-        return activitySubmitted(req, res, next);
+        return activitySubmitted(req, res);
       }
       return res.render("../../../views/errorPages/validationError", { errors: realErrors });
     }
@@ -247,31 +247,35 @@ app.post("/clone-from-meetup", (req, res, next) => {
 });
 
 app.get("/checkurl", (req, res) =>
-  misc.validate(req.query.url, req.query.previousUrl, R.partial(activitiesService.isValidUrl, [reservedURLs]), res.end)
+  misc.validateAsync(
+    req.query.url,
+    req.query.previousUrl,
+    R.partial(activitiesService.isValidUrl, [reservedURLs]),
+    res.end
+  )
 );
 
-app.get("/:url", (req, res, next) => {
-  activitiesService.getActivityWithGroupAndParticipants(req.params.url, async (err, activity) => {
-    if (err || !activity) {
-      return next(err);
-    }
-    if (activity.isSoCraTes()) {
-      return res.redirect(activity.fullyQualifiedUrl());
-    }
-    const editors = await memberstore.getMembersForIds(activity.editorIds());
-    if (!editors) {
-      throw new Error();
-    }
-    const editorNicknames = editors.map((editor) => editor.nickname());
-    const allowsRegistration = activity
-      .resourceNames()
-      .every((resourceName) => activity.resourceNamed(resourceName).limit() !== 0);
-    res.render("get", {
-      activity,
-      allowsRegistration,
-      editorNicknames,
-      resourceRegistrationRenderer,
-    });
+app.get("/:url", async (req, res, next) => {
+  const activity = await activitiesService.getActivityWithGroupAndParticipants(req.params.url);
+  if (!activity) {
+    return next();
+  }
+  if (activity.isSoCraTes()) {
+    return res.redirect(activity.fullyQualifiedUrl());
+  }
+  const editors = await memberstore.getMembersForIds(activity.editorIds());
+  if (!editors) {
+    return next();
+  }
+  const editorNicknames = editors.map((editor) => editor.nickname());
+  const allowsRegistration = activity
+    .resourceNames()
+    .every((resourceName) => activity.resourceNamed(resourceName).limit() !== 0);
+  res.render("get", {
+    activity,
+    allowsRegistration,
+    editorNicknames,
+    resourceRegistrationRenderer,
   });
 });
 

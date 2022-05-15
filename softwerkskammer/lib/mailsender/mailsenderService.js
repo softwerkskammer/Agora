@@ -1,4 +1,3 @@
-const async = require("async");
 const { DateTime } = require("luxon");
 const conf = require("simple-configure");
 const logger = require("winston").loggers.get("application");
@@ -41,38 +40,37 @@ function activityMarkdown(activity, language) {
 module.exports = {
   activityMarkdown,
 
-  dataForShowingMessageForActivity: function (activityURL, language, globalCallback) {
-    async.parallel(
-      {
-        activity: (callback) => activitiesService.getActivityWithGroupAndParticipants(activityURL, callback),
-        groups: async.asyncify(groupstore.allGroups),
-      },
-      (err, results) => {
-        if (err || !results.activity) {
-          return globalCallback(err);
-        }
-        const activity = results.activity;
-        const invitationGroup = results.groups.find((group) => group.id === activity.assignedGroup());
-        const regionalgroups = groupsService.markGroupsSelected([invitationGroup], Group.regionalsFrom(results.groups));
-        const themegroups = groupsService.markGroupsSelected([invitationGroup], Group.thematicsFrom(results.groups));
-
-        const message = new Message();
-        message.setSubject("Einladung: " + activity.title());
-        message.setMarkdown(activityMarkdown(activity, language));
-        message.addToButtons({
-          text: "Zur Aktivität",
-          url: misc.toFullQualifiedUrl("activities", encodeURIComponent(activity.url())),
-        });
-        const result = {
-          message,
-          regionalgroups,
-          themegroups,
-          successURL: "/activities/" + encodeURIComponent(activityURL),
-          activity,
-        };
-        globalCallback(null, result);
+  dataForShowingMessageForActivity: async function (activityURL, language, globalCallback) {
+    try {
+      const [activity, groups] = await Promise.all([
+        activitiesService.getActivityWithGroupAndParticipants(activityURL),
+        groupstore.allGroups(),
+      ]);
+      if (!activity) {
+        return globalCallback();
       }
-    );
+      const invitationGroup = groups.find((group) => group.id === activity.assignedGroup());
+      const regionalgroups = groupsService.markGroupsSelected([invitationGroup], Group.regionalsFrom(groups));
+      const themegroups = groupsService.markGroupsSelected([invitationGroup], Group.thematicsFrom(groups));
+
+      const message = new Message();
+      message.setSubject("Einladung: " + activity.title());
+      message.setMarkdown(activityMarkdown(activity, language));
+      message.addToButtons({
+        text: "Zur Aktivität",
+        url: misc.toFullQualifiedUrl("activities", encodeURIComponent(activity.url())),
+      });
+      const result = {
+        message,
+        regionalgroups,
+        themegroups,
+        successURL: "/activities/" + encodeURIComponent(activityURL),
+        activity,
+      };
+      globalCallback(null, result);
+    } catch (e) {
+      globalCallback(e);
+    }
   },
 
   dataForShowingMessageToMember: async function dataForShowingMessageToMember(nickname, callback) {
@@ -89,16 +87,16 @@ module.exports = {
     }
   },
 
-  sendMailToParticipantsOf: function sendMailToParticipantsOf(activityURL, message, callback) {
+  sendMailToParticipantsOf: async function sendMailToParticipantsOf(activityURL, message, callback) {
     const type = "$t(mailsender.reminder)";
-    return activitiesService.getActivityWithGroupAndParticipants(activityURL, (err, activity) => {
-      if (err) {
-        return callback(err, mailtransport.statusmessageForError(type, err));
-      }
+    try {
+      const activity = await activitiesService.getActivityWithGroupAndParticipants(activityURL);
       message.setBccToMemberAddresses(activity.participants);
       message.setIcal(icalService.activityAsICal(activity).toString());
       sendMail(message, type, callback);
-    });
+    } catch (err) {
+      return callback(err, mailtransport.statusmessageForError(type, err));
+    }
   },
 
   sendMailToInvitedGroups: async function sendMailToInvitedGroups(invitedGroups, activityURL, message, callback) {

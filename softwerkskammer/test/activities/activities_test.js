@@ -135,8 +135,8 @@ describe("Activity application", () => {
       return null;
     }
 
-    sinon.stub(activitiesService, "getActivityWithGroupAndParticipants").callsFake((url, callback) => {
-      callback(null, activityToReturnFor(url));
+    sinon.stub(activitiesService, "getActivityWithGroupAndParticipants").callsFake((url) => {
+      return activityToReturnFor(url);
     });
     sinon.stub(activitystore, "getActivity").callsFake((url) => {
       return activityToReturnFor(url);

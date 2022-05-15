@@ -265,30 +265,22 @@ app.post("/deleteAvatarFor", async (req, res, next) => {
 app.get("/:nickname", async (req, res, next) => {
   try {
     const member = await groupsAndMembersService.getMemberWithHisGroups(req.params.nickname);
-    const subscribedGroups = member.subscribedGroups;
     if (!member) {
       return next();
     }
-    activitiesService.getPastActivitiesOfMember(member, (err1, pastActivities) => {
-      if (err1) {
-        return next(err1);
+    const subscribedGroups = member.subscribedGroups;
+    const pastActivities = await activitiesService.getPastActivitiesOfMember(member);
+    const organizedOrEditedActivities = await activitiesService.getOrganizedOrEditedActivitiesOfMember(member);
+    wikiService.listFilesModifiedByMember(member.nickname(), (err3, modifiedWikiFiles) => {
+      if (err3) {
+        return next(err3);
       }
-      activitiesService.getOrganizedOrEditedActivitiesOfMember(member, (err2, organizedOrEditedActivities) => {
-        if (err2) {
-          return next(err2);
-        }
-        wikiService.listFilesModifiedByMember(member.nickname(), (err3, modifiedWikiFiles) => {
-          if (err3) {
-            return next(err3);
-          }
-          res.render("get", {
-            member,
-            pastActivities,
-            organizedOrEditedActivities,
-            subscribedGroups,
-            modifiedWikiFiles,
-          });
-        });
+      res.render("get", {
+        member,
+        pastActivities,
+        organizedOrEditedActivities,
+        subscribedGroups,
+        modifiedWikiFiles,
       });
     });
   } catch (e) {

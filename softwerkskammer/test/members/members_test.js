@@ -38,12 +38,8 @@ describe("Members application", () => {
     getMember = sinon.stub(memberstore, "getMember").callsFake(() => dummymember);
     sinon.stub(membersService, "putAvatarIntoMemberAndSave");
     getSubscribedGroupsForUser = sinon.stub(groupsService, "getSubscribedGroupsForMember").returns([]);
-    sinon.stub(activitiesService, "getPastActivitiesOfMember").callsFake((member, callback) => {
-      callback(null, []);
-    });
-    sinon.stub(activitiesService, "getOrganizedOrEditedActivitiesOfMember").callsFake((member, callback) => {
-      callback(null, []);
-    });
+    sinon.stub(activitiesService, "getPastActivitiesOfMember").returns([]);
+    sinon.stub(activitiesService, "getOrganizedOrEditedActivitiesOfMember").returns([]);
     sinon.stub(groupstore, "allGroups").returns([]);
     sinon.stub(wikiService, "listFilesModifiedByMember").callsFake((nickname, callback) => {
       callback(null, []);

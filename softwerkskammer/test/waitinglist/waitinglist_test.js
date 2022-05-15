@@ -13,8 +13,8 @@ const app = require("../../testutil/testHelper")("waitinglistApp").createApp({ i
 
 describe("Waitinglist application", () => {
   beforeEach(() => {
-    sinon.stub(activitiesService, "getActivityWithGroupAndParticipants").callsFake((url, callback) => {
-      callback(null, new Activity({ url, title: "Activity's Title" }));
+    sinon.stub(activitiesService, "getActivityWithGroupAndParticipants").callsFake((url) => {
+      return new Activity({ url, title: "Activity's Title" });
     });
     sinon.stub(waitinglistService, "waitinglistFor").callsFake((url, callback) => {
       callback(null, []);

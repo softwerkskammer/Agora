@@ -31,11 +31,11 @@ describe("Dashboard Service", () => {
       }
       return member;
     });
-    sinon.stub(activitiesService, "getUpcomingActivitiesOfMemberAndHisGroups").callsFake((mem, callback) => {
+    sinon.stub(activitiesService, "getUpcomingActivitiesOfMemberAndHisGroups").callsFake((mem) => {
       if (mem === CRASH_ACTIVITY) {
-        return callback(new Error());
+        throw new Error();
       }
-      callback(null, [activity1, activity2]);
+      return [activity1, activity2];
     });
   });
 

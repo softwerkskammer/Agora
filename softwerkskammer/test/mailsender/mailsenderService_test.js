@@ -51,11 +51,11 @@ describe("MailsenderService", () => {
       url: "urlOfTheActivity",
     });
     sinon.stub(groupstore, "allGroups").returns(availableGroups);
-    sinon.stub(activitiesService, "getActivityWithGroupAndParticipants").callsFake((actURL, callback) => {
+    sinon.stub(activitiesService, "getActivityWithGroupAndParticipants").callsFake((actURL) => {
       if (actURL === null) {
-        return callback(new Error());
+        throw new Error();
       }
-      callback(null, emptyActivity);
+      return emptyActivity;
     });
     sinon.stub(memberstore, "getMember").callsFake((nick) => {
       if (nick === null) {
