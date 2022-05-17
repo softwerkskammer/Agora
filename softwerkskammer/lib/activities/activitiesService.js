@@ -108,7 +108,7 @@ module.exports = {
             if (err) {
               reject(err);
             }
-            resolve(result || []);
+            resolve(Array.isArray(result) ? result : []);
           });
         });
       } catch (err1) {
@@ -136,7 +136,7 @@ module.exports = {
           if (err) {
             reject(err);
           }
-          resolve(result || []);
+          resolve(Array.isArray(result) ? result : []);
         });
       });
     } catch (err1) {
@@ -162,7 +162,7 @@ module.exports = {
             if (err) {
               reject(err);
             }
-            resolve(result || []);
+            resolve(Array.isArray(result) ? result : []);
           });
         });
       } catch (err1) {
@@ -190,7 +190,7 @@ module.exports = {
           if (err) {
             reject(err);
           }
-          resolve(result || []);
+          resolve(Array.isArray(result) ? result : []);
         });
       });
     } catch (err1) {

@@ -13,7 +13,9 @@ function toActivity(jsobject) {
 }
 
 function toActivityListAsync(jsobjects) {
-  return jsobjects.map((record) => (record && record.isSoCraTes ? new SoCraTesActivity(record) : new Activity(record)));
+  return jsobjects.map((record) => {
+    return record && record.isSoCraTes ? new SoCraTesActivity(record) : new Activity(record);
+  });
 }
 
 async function allActivitiesByDateRange(rangeFrom, rangeTo, sortOrder) {

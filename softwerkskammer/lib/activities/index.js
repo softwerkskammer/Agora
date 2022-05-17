@@ -93,25 +93,25 @@ async function renderGdcrFor(gdcrDay, res) {
   });
 }
 
-app.get("/gdcr2013", (req, res, next) => renderGdcrFor("2013-12-14", res, next));
+app.get("/gdcr2013", async (req, res, next) => renderGdcrFor("2013-12-14", res, next));
 
-app.get("/gdcr2014", (req, res, next) => renderGdcrFor("2014-11-15", res, next));
+app.get("/gdcr2014", async (req, res, next) => renderGdcrFor("2014-11-15", res, next));
 
-app.get("/gdcr2015", (req, res, next) => renderGdcrFor("2015-11-14", res, next));
+app.get("/gdcr2015", async (req, res, next) => renderGdcrFor("2015-11-14", res, next));
 
-app.get("/gdcr2016", (req, res, next) => renderGdcrFor("2016-10-22", res, next));
+app.get("/gdcr2016", async (req, res, next) => renderGdcrFor("2016-10-22", res, next));
 
-app.get("/gdcr2017", (req, res, next) => renderGdcrFor("2017-11-18", res, next));
+app.get("/gdcr2017", async (req, res, next) => renderGdcrFor("2017-11-18", res, next));
 
-app.get("/gdcr2018", (req, res, next) => renderGdcrFor("2018-11-17", res, next));
+app.get("/gdcr2018", async (req, res, next) => renderGdcrFor("2018-11-17", res, next));
 
-app.get("/gdcr", (req, res, next) => renderGdcrFor("2019-11-16", res, next));
+app.get("/gdcr", async (req, res, next) => renderGdcrFor("2019-11-16", res, next));
 
 app.get("/upcoming", async (req, res) =>
   activitiesForDisplayAsync(activitystore.upcomingActivities, res, req.i18n.t("activities.upcoming"))
 );
 
-app.get("/past", (req, res) =>
+app.get("/past", async (req, res) =>
   activitiesForDisplayAsync(activitystore.pastActivities, res, req.i18n.t("activities.past"))
 );
 
@@ -194,39 +194,27 @@ app.get("/edit/:url", async (req, res, next) => {
   renderActivityCombinedWithGroups(res, activity);
 });
 
-app.post("/submit", async (req, res, next) => {
-  async.parallel(
-    [
-      async.asyncify(async () => {
-        try {
-          const result = await validation.checkValidityAsync(
-            req.body.previousUrl.trim(),
-            req.body.url.trim(),
-            R.partial(activitiesService.isValidUrl, [reservedURLs])
-          );
-          if (!result) {
-            return req.i18n.t("validation.url_not_available");
-          }
-        } catch (e) {
-          return req.i18n.t("validation.url_not_available");
-        }
-      }),
-      (callback) => {
-        const errors = validation.isValidForActivity(req.body);
-        return callback(null, errors);
-      },
-    ],
-    (err, errorMessages) => {
-      if (err) {
-        return next(err);
+app.post("/submit", async (req, res) => {
+  async function validate() {
+    try {
+      const result = await validation.checkValidityAsync(
+        req.body.previousUrl.trim(),
+        req.body.url.trim(),
+        R.partial(activitiesService.isValidUrl, [reservedURLs])
+      );
+      if (!result) {
+        return req.i18n.t("validation.url_not_available");
       }
-      const realErrors = R.flatten(errorMessages).filter((message) => message);
-      if (realErrors.length === 0) {
-        return activitySubmitted(req, res);
-      }
-      return res.render("../../../views/errorPages/validationError", { errors: realErrors });
+    } catch (e) {
+      return req.i18n.t("validation.url_not_available");
     }
-  );
+  }
+  const errorMessages = await Promise.all([validate(), validation.isValidForActivity(req.body)]);
+  const realErrors = R.flatten(errorMessages).filter((message) => message);
+  if (realErrors.length === 0) {
+    return activitySubmitted(req, res);
+  }
+  return res.render("../../../views/errorPages/validationError", { errors: realErrors });
 });
 
 app.post("/clone-from-meetup", (req, res, next) => {
@@ -285,7 +273,7 @@ async function subscribe(body, req, res) {
   res.redirect("/activities/" + encodeURIComponent(activityUrl));
 }
 
-app.post("/subscribe", (req, res) => subscribe(req.body, req, res));
+app.post("/subscribe", async (req, res) => subscribe(req.body, req, res));
 
 app.get("/subscribe", async (req, res, next) => {
   // in case the call was redirected via login, we get called with "get"
@@ -294,11 +282,7 @@ app.get("/subscribe", async (req, res, next) => {
     return next();
   }
   delete req.session.previousBody;
-  try {
-    subscribe(body, req, res);
-  } catch (e) {
-    next(e);
-  }
+  subscribe(body, req, res);
 });
 
 app.post("/unsubscribe", async (req, res) => {
@@ -335,7 +319,7 @@ app.post("/addToWaitinglist", async (req, res) => {
   addToWaitinglist(req.body, req, res);
 });
 
-app.get("/addToWaitinglist", (req, res, next) => {
+app.get("/addToWaitinglist", async (req, res, next) => {
   // in case the call was redirected via login, we get called with "get"
   const body = req.session.previousBody;
   if (!body) {
