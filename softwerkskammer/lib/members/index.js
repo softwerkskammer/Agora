@@ -58,7 +58,7 @@ const app = misc.expressAppIn(__dirname);
 
 app.get("/", async (req, res) => {
   const members = await memberstore.allMembers();
-  await Promise.all(members.map(membersService.putAvatarIntoMemberAndSave));
+  await Promise.all(members.map((m) => membersService.putAvatarIntoMemberAndSave(m)));
   res.render("index", { members, wordList: membersService.toWordList(members) });
 });
 
@@ -73,12 +73,18 @@ app.get("/interests", async (req, res) => {
   });
 });
 
-app.get("/checknickname", (req, res) => {
-  misc.validateAsync(req.query.nickname, req.query.previousNickname, membersService.isValidNickname, res.end);
+app.get("/checknickname", async (req, res) => {
+  const result = await misc.validateAsync(
+    req.query.nickname,
+    req.query.previousNickname,
+    membersService.isValidNickname
+  );
+  res.end(result);
 });
 
-app.get("/checkemail", (req, res) => {
-  misc.validateAsync(req.query.email, req.query.previousEmail, membersService.isValidEmail, res.end);
+app.get("/checkemail", async (req, res) => {
+  const result = await misc.validateAsync(req.query.email, req.query.previousEmail, membersService.isValidEmail);
+  res.end(result);
 });
 
 app.get("/new", (req, res, next) => {

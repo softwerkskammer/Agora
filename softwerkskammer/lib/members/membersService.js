@@ -57,11 +57,13 @@ module.exports = {
     if (fieldHelpers.containsSlash(nickname) || isReserved(nickname)) {
       return false;
     }
-    return !store.getMember(nickname);
+    const b = await store.getMember(nickname);
+    return !b;
   },
 
   isValidEmail: async function isValidEmail(email) {
-    return !store.getMemberForEMail(email);
+    const b = await store.getMemberForEMail(email);
+    return !b;
   },
 
   saveCustomAvatarForNickname: async function saveCustomAvatarForNickname(nickname, files, params) {

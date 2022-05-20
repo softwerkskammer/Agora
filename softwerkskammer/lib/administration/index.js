@@ -1,5 +1,3 @@
-const async = require("async");
-
 const beans = require("simple-configure").get("beans");
 const membersService = beans.get("membersService");
 const memberstore = beans.get("memberstore");
@@ -16,19 +14,9 @@ app.get("/memberTable", async (req, res) => {
   res.render("memberTable", { members });
 });
 
-app.get("/memberAndGroupTable", (req, res, next) => {
-  async.parallel(
-    {
-      groups: async.asyncify(groupstore.allGroups),
-      members: async.asyncify(memberstore.allMembers),
-    },
-    (err, results) => {
-      if (err) {
-        return next(err);
-      }
-      res.render("memberAndGroupTable", { members: results.members, groups: results.groups });
-    }
-  );
+app.get("/memberAndGroupTable", async (req, res) => {
+  const [groups, members] = await Promise.all([groupstore.allGroups(), memberstore.allMembers()]);
+  res.render("memberAndGroupTable", { members: members, groups: groups });
 });
 
 app.get("/groupTable", async (req, res) => {

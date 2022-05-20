@@ -17,12 +17,12 @@ module.exports = {
 
   getGroup: async function getGroup(groupname) {
     const group = await persistence.getByIdAsync(misc.toLowerCaseRegExp(groupname));
-    return new Group(group);
+    return group ? new Group(group) : null;
   },
 
   getGroupForPrefix: async function getGroupForPrefix(prefix) {
-    const group = await persistence.getByField({ emailPrefix: misc.toLowerCaseRegExp(prefix) });
-    return new Group(group);
+    const group = await persistence.getByFieldAsync({ emailPrefix: misc.toLowerCaseRegExp(prefix) });
+    return group ? new Group(group) : null;
   },
 
   getGroupsWithMeetupURL: async function getGroupsWithMeetupURL() {

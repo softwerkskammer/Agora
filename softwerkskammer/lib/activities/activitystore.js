@@ -93,7 +93,7 @@ module.exports = {
   pastActivitiesForGroupIds: async function pastActivitiesForGroupIds(groupIds) {
     const start = new Date();
 
-    const result = persistence.listByFieldAsync(
+    const result = await persistence.listByFieldAsync(
       {
         $and: [{ endDate: { $lt: start } }, { assignedGroup: { $in: groupIds } }],
       },

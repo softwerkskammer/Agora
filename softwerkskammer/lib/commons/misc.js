@@ -124,9 +124,9 @@ module.exports = {
     });
   },
 
-  validateAsync: async function validateAsync(currentValue, previousValue, validator, callback) {
+  validateAsync: async function validateAsync(currentValue, previousValue, validator) {
     if (!currentValue) {
-      return callback("false");
+      return "false";
     }
 
     currentValue = currentValue.trim();
@@ -135,14 +135,14 @@ module.exports = {
     }
 
     if (previousValue === currentValue) {
-      return callback("true");
+      return "true";
     }
 
     try {
       const result = await validator(currentValue);
-      callback(result.toString());
+      return result.toString();
     } catch (e) {
-      return callback("false");
+      return "false";
     }
   },
 

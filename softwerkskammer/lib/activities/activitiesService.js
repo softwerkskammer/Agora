@@ -87,7 +87,7 @@ module.exports = {
       return false;
     }
     const result = await activitystore.getActivity(url);
-    return result === null;
+    return !result;
   },
 
   activitiesBetween: async function activitiesBetween(startMillis, endMillis) {

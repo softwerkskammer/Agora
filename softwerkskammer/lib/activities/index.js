@@ -226,14 +226,14 @@ app.post("/clone-from-meetup", (req, res, next) => {
   });
 });
 
-app.get("/checkurl", (req, res) =>
-  misc.validateAsync(
+app.get("/checkurl", async (req, res) => {
+  const result = await misc.validateAsync(
     req.query.url,
     req.query.previousUrl,
-    R.partial(activitiesService.isValidUrl, [reservedURLs]),
-    res.end
-  )
-);
+    R.partial(activitiesService.isValidUrl, [reservedURLs])
+  );
+  res.end(result);
+});
 
 app.get("/:url", async (req, res, next) => {
   const activity = await activitiesService.getActivityWithGroupAndParticipants(req.params.url);
