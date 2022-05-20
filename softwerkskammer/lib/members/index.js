@@ -254,16 +254,12 @@ app.post("/submitavatar", async (req, res) => {
   }
 });
 
-app.post("/deleteAvatarFor", async (req, res, next) => {
+app.post("/deleteAvatarFor", async (req, res) => {
   const nicknameOfEditMember = req.body.nickname;
   const member = await memberstore.getMember(nicknameOfEditMember);
   if (res.locals.accessrights.canEditMember(member)) {
-    return membersService.deleteCustomAvatarForNickname(nicknameOfEditMember, (err1) => {
-      if (err1) {
-        return next(err1);
-      }
-      res.redirect("/members/" + encodeURIComponent(nicknameOfEditMember));
-    });
+    await membersService.deleteCustomAvatarForNickname(nicknameOfEditMember);
+    return res.redirect("/members/" + encodeURIComponent(nicknameOfEditMember));
   }
   res.redirect("/members/" + encodeURIComponent(nicknameOfEditMember));
 });
