@@ -18,16 +18,17 @@ describe("/gallery", () => {
     sinon.restore();
   });
 
-  it("GET /{imageId} responds with the image", (done) => {
-    sinon.stub(galleryService, "retrieveScaledImage").callsFake((imageId, width, callback) => {
+  it("GET /{imageId} responds with the image", async () => {
+    sinon.stub(galleryService, "retrieveScaledImageAsync").callsFake((imageId) => {
       if (storedImageId === imageId) {
-        callback(null, imagePath);
+        return imagePath;
       }
+      return null;
     });
 
-    request(app)
+    await request(app)
       .get("/" + storedImageId)
       .expect(OK)
-      .expect("Content-Type", "image/jpeg", done);
+      .expect("Content-Type", "image/jpeg");
   });
 });

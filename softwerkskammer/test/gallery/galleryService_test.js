@@ -58,18 +58,22 @@ describe("the gallery repository on real files", () => {
       expect(retrievedImagePath2).to.be(retrievedImagePath);
     });
 
-    it("returns error for invalid imageId when width is not provided", (done) => {
-      service.retrieveScaledImage("invalidId", null, (err) => {
-        expect(err).to.exist();
-        done();
-      });
+    it("returns error for invalid imageId when width is not provided", async () => {
+      try {
+        await service.retrieveScaledImageAsync("invalidId");
+        expect(false).to.be(true);
+      } catch (e) {
+        expect(e).to.exist();
+      }
     });
 
-    it("returns error for invalid imageId when width is provided", (done) => {
-      service.retrieveScaledImage("invalidId", "thumb", (err) => {
-        expect(err).to.exist();
-        done();
-      });
+    it("returns error for invalid imageId when width is provided", async () => {
+      try {
+        await service.retrieveScaledImageAsync("invalidId", "thumb");
+        expect(false).to.be(true);
+      } catch (e) {
+        expect(e).to.exist();
+      }
     });
   });
 
