@@ -43,29 +43,31 @@ describe("Dashboard Service", () => {
     sinon.restore();
   });
 
-  it("collects information from other Services when no subscribed groups exist", (done) => {
-    dashboardService.dataForDashboard("nick", (err, result) => {
-      expect(result.member).to.equal(member);
-      expect(result.activities).to.contain(activity1);
-      expect(result.activities).to.contain(activity2);
-      expect(result.postsByGroup).to.be.empty();
-      expect(result.changesByGroup).to.be.empty();
-      done(err);
-    });
+  it("collects information from other Services when no subscribed groups exist", async () => {
+    const result = await dashboardService.dataForDashboard("nick");
+    expect(result.member).to.equal(member);
+    expect(result.activities).to.contain(activity1);
+    expect(result.activities).to.contain(activity2);
+    expect(result.postsByGroup).to.be.empty();
+    expect(result.changesByGroup).to.be.empty();
   });
 
-  it("handles the error when no member for nickname found", (done) => {
-    dashboardService.dataForDashboard(NOT_FOUND, (err) => {
-      expect(err).to.exist();
-      done();
-    });
+  it("handles the error when no member for nickname found", async () => {
+    try {
+      await dashboardService.dataForDashboard(NOT_FOUND);
+      expect(true).to.be(false);
+    } catch (e) {
+      expect(e).to.exist();
+    }
   });
 
-  it("handles the error when searching activities fails", (done) => {
-    dashboardService.dataForDashboard(CRASH_ACTIVITY, (err) => {
-      expect(err).to.exist();
-      done();
-    });
+  it("handles the error when searching activities fails", async () => {
+    try {
+      await dashboardService.dataForDashboard(CRASH_ACTIVITY);
+      expect(true).to.be(false);
+    } catch (e) {
+      expect(e).to.exist();
+    }
   });
 
   describe("wiki", () => {
@@ -89,33 +91,35 @@ describe("Dashboard Service", () => {
       });
     });
 
-    it("collects wiki information", (done) => {
+    it("collects wiki information", async () => {
       member.subscribedGroups = [{ id: "group" }];
-      dashboardService.dataForDashboard("nick", (err, result) => {
-        expect(result.postsByGroup).to.have.keys(["group"]);
-        expect(result.postsByGroup.group).to.contain("blog1");
-        expect(result.postsByGroup.group).to.contain("blog2");
-        expect(result.changesByGroup).to.have.keys(["group"]);
-        expect(result.changesByGroup.group).to.contain("change1");
-        expect(result.changesByGroup.group).to.contain("change2");
-        done(err);
-      });
+      const result = await dashboardService.dataForDashboard("nick");
+      expect(result.postsByGroup).to.have.keys(["group"]);
+      expect(result.postsByGroup.group).to.contain("blog1");
+      expect(result.postsByGroup.group).to.contain("blog2");
+      expect(result.changesByGroup).to.have.keys(["group"]);
+      expect(result.changesByGroup.group).to.contain("change1");
+      expect(result.changesByGroup.group).to.contain("change2");
     });
 
-    it("handles the error when searching blogposts crashes", (done) => {
+    it("handles the error when searching blogposts crashes", async () => {
       member.subscribedGroups = [{ id: CRASH_BLOG }];
-      dashboardService.dataForDashboard("nick", (err) => {
-        expect(err).to.exist();
-        done();
-      });
+      try {
+        await dashboardService.dataForDashboard("nick");
+        expect(true).to.be(false);
+      } catch (e) {
+        expect(e).to.exist();
+      }
     });
 
-    it("handles the error when searching wiki changes crashes", (done) => {
+    it("handles the error when searching wiki changes crashes", async () => {
       member.subscribedGroups = [{ id: CRASH_CHANGE }];
-      dashboardService.dataForDashboard("nick", (err) => {
-        expect(err).to.exist();
-        done();
-      });
+      try {
+        await dashboardService.dataForDashboard("nick");
+        expect(true).to.be(false);
+      } catch (e) {
+        expect(e).to.exist();
+      }
     });
   });
 

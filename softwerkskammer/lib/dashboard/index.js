@@ -4,13 +4,9 @@ const dashboardService = beans.get("dashboardService");
 
 const app = misc.expressAppIn(__dirname);
 
-app.get("/", (req, res, next) => {
-  dashboardService.dataForDashboard(req.user.member.nickname(), (err, result) => {
-    if (err) {
-      return next(err);
-    }
-    res.render("index", result);
-  });
+app.get("/", async (req, res) => {
+  const result = await dashboardService.dataForDashboard(req.user.member.nickname());
+  res.render("index", result);
 });
 
 module.exports = app;
