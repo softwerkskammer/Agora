@@ -1,4 +1,3 @@
-const async = require("async");
 const { DateTime } = require("luxon");
 
 const beans = require("simple-configure").get("beans");
@@ -6,87 +5,55 @@ const persistence = beans.get("activityresultsPersistence");
 const galleryService = beans.get("galleryService");
 const ActivityResult = beans.get("activityresult");
 
-function load(activityResultName, callback) {
-  persistence.getById(activityResultName, (err, data) => {
-    if (err || !data) {
-      return callback(err);
-    }
-    callback(null, new ActivityResult(data));
-  });
+async function load(activityResultName) {
+  const data = await persistence.getByIdAsync(activityResultName);
+  return data ? new ActivityResult(data) : undefined;
 }
 
 module.exports = {
   getActivityResultByName: load,
 
-  addPhotoToActivityResult: function addPhotoToActivityResult(activityResultName, image, memberId, callback) {
-    async.waterfall(
-      [
-        (cb) => galleryService.storeImage(image.path, cb),
-        (imageUri, cb) => galleryService.getMetadataForImage(imageUri, (err, metadata) => cb(err, metadata, imageUri)),
-        (metadata, imageUri, cb) => {
-          load(activityResultName, (err, activityResult) => {
-            /* eslint camelcase: 0 */
-            if (err) {
-              return cb(err);
-            }
-            let date = new Date();
-            if (metadata && metadata.exif) {
-              date =
-                metadata.exif.DateTime ||
-                metadata.exif.DateTimeOriginal ||
-                metadata.exif.DateTimeDigitized ||
-                new Date();
-            }
-            const picturesDate = DateTime.fromJSDate(date);
-            const now = DateTime.local();
-            activityResult.addPhoto({
-              id: imageUri,
-              timestamp: (picturesDate < now ? picturesDate : now).toJSDate(),
-              uploaded_by: memberId,
-            });
-            persistence.save(activityResult.state, (err1) => cb(err1, imageUri));
-          });
-        },
-      ],
-      callback
-    );
+  addPhotoToActivityResult: async function addPhotoToActivityResult(activityResultName, image, memberId) {
+    const imageUri = await galleryService.storeImage(image.path);
+    const metadata = await galleryService.getMetadataForImage(imageUri);
+    const activityResult = await load(activityResultName);
+    let date = new Date();
+    if (metadata && metadata.exif) {
+      date = metadata.exif.DateTime || metadata.exif.DateTimeOriginal || metadata.exif.DateTimeDigitized || new Date();
+    }
+    const picturesDate = DateTime.fromJSDate(date);
+    const now = DateTime.local();
+    activityResult.addPhoto({
+      id: imageUri,
+      timestamp: (picturesDate < now ? picturesDate : now).toJSDate(),
+      // eslint-disable-next-line camelcase
+      uploaded_by: memberId,
+    });
+    await persistence.saveAsync(activityResult.state);
+    return imageUri;
   },
 
-  updatePhotoOfActivityResult: function updatePhotoOfActivityResult(
+  updatePhotoOfActivityResult: async function updatePhotoOfActivityResult(
     activityResultName,
     photoId,
     data,
-    accessrights,
-    callback
+    accessrights
   ) {
-    load(activityResultName, (err, activityResult) => {
-      if (err || !activityResult) {
-        return callback(err);
-      }
-      let photo = activityResult.getPhotoById(photoId);
-      if (!photo) {
-        return callback(err);
-      }
-      if (accessrights.canEditPhoto(photo)) {
-        activityResult.updatePhotoById(photoId, data);
-        return persistence.save(activityResult.state, (err1) => callback(err1));
-      }
-      callback();
-    });
+    const activityResult = await load(activityResultName);
+    let photo = activityResult.getPhotoById(photoId);
+    if (!photo) {
+      return null;
+    }
+    if (accessrights.canEditPhoto(photo)) {
+      activityResult.updatePhotoById(photoId, data);
+      return persistence.saveAsync(activityResult.state);
+    }
   },
 
-  deletePhotoOfActivityResult: function deletePhotoOfActivityResult(activityResultName, photoId, callback) {
-    load(activityResultName, (err, activityResult) => {
-      if (err) {
-        callback(err);
-      }
-      activityResult.deletePhotoById(photoId);
-      persistence.save(activityResult.state, (err1) => {
-        if (err1) {
-          callback(err1);
-        }
-        galleryService.deleteImage(photoId, callback);
-      });
-    });
+  deletePhotoOfActivityResult: async function deletePhotoOfActivityResult(activityResultName, photoId) {
+    const activityResult = await load(activityResultName);
+    activityResult.deletePhotoById(photoId);
+    await persistence.saveAsync(activityResult.state);
+    return galleryService.deleteImage(photoId);
   },
 };

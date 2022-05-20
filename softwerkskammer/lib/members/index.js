@@ -220,9 +220,7 @@ app.post("/submit", (req, res, next) => {
 app.post("/submitavatar", async (req, res) => {
   const promisifyUpload = (req1) =>
     new Promise((resolve, reject) => {
-      const form = new Form();
-
-      form.parse(req1, function (err, fields, files) {
+      new Form().parse(req1, function (err, fields, files) {
         if (err) {
           return reject(err);
         }

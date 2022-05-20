@@ -24,9 +24,7 @@ describe("Activityresults application", () => {
     });
 
     it("should allow to create a new one with the name if not existing yet", (done) => {
-      sinon.stub(activityresultsService, "getActivityResultByName").callsFake((activityResultName, callback) => {
-        callback();
-      });
+      sinon.stub(activityresultsService, "getActivityResultByName");
 
       request(createApp())
         .get("/unknown-activity-result")
@@ -34,9 +32,8 @@ describe("Activityresults application", () => {
     });
 
     it("should render the results if the activity result is known", (done) => {
-      sinon.stub(activityresultsService, "getActivityResultByName").callsFake((activityResultName, callback) => {
-        callback(
-          null,
+      sinon.stub(activityresultsService, "getActivityResultByName").callsFake(
+        (activityResultName) =>
           new ActivityResult({
             id: activityResultName,
             title: "TITLE for " + activityResultName,
@@ -48,8 +45,7 @@ describe("Activityresults application", () => {
               { id: "9afcfea0-1aa4-41c1-9f8c-6dba1e16d6c4.JPG", timestamp: new Date(), tags: ["elsewhere"] },
             ],
           })
-        );
-      });
+      );
 
       request(createApp())
         .get("/known-activity-results")
@@ -60,9 +56,9 @@ describe("Activityresults application", () => {
   describe("for creation and uploading", () => {
     it("should create a new activity result with tags", (done) => {
       let theResult;
-      sinon.stub(activityresultsPersistence, "save").callsFake((activityResult, callback) => {
+      sinon.stub(activityresultsPersistence, "saveAsync").callsFake((activityResult) => {
         theResult = activityResult;
-        callback(null, activityResult);
+        return activityResult;
       });
 
       request(createApp({ id: MEMBER_ID }))
@@ -85,9 +81,7 @@ describe("Activityresults application", () => {
     });
 
     it("should store an image and redirect to edit", (done) => {
-      sinon.stub(activityresultsService, "addPhotoToActivityResult").callsFake((activity, photo, user, callback) => {
-        callback(null, "my-custom-image-id");
-      });
+      sinon.stub(activityresultsService, "addPhotoToActivityResult").returns("my-custom-image-id");
 
       request(createApp({ id: "memberId" }))
         .post("/foo/upload")
@@ -101,18 +95,13 @@ describe("Activityresults application", () => {
   describe("editing photos", () => {
     const photoId = "photo_id";
     beforeEach(() => {
-      sinon.stub(activityresultsService, "getActivityResultByName").callsFake((activityResultName, callback) => {
-        /* eslint camelcase: 0 */
-
-        callback(
-          null,
-          new ActivityResult({
-            id: "foo",
-            name: "foobar",
-            photos: [{ id: photoId, title: "mishka", uploaded_by: MEMBER_ID }],
-          })
-        );
-      });
+      sinon.stub(activityresultsService, "getActivityResultByName").returns(
+        new ActivityResult({
+          id: "foo",
+          name: "foobar",
+          photos: [{ id: photoId, title: "mishka", uploaded_by: MEMBER_ID }],
+        })
+      );
     });
 
     it("should have old values set", (done) => {
@@ -135,10 +124,9 @@ describe("Activityresults application", () => {
     it("should save a photos time, tags and title", (done) => {
       sinon
         .stub(activityresultsService, "updatePhotoOfActivityResult")
-        .callsFake((activityResultName, photoID, data, accessrights, callback) => {
+        .callsFake((activityResultName, photoID, data) => {
           expect(data.title).to.eql("My adventures with the softwerkskammer");
           expect(data.tags).to.eql(["a", "b"]);
-          callback();
         });
 
       request(createApp())
@@ -158,10 +146,9 @@ describe("Activityresults application", () => {
     it("should not let me save changes to a photo if I didn't upload it", (done) => {
       sinon
         .stub(activityresultsService, "updatePhotoOfActivityResult")
-        .callsFake((activityResultName, photoID, data, accessrights, callback) => {
+        .callsFake((activityResultName, photoID, data) => {
           expect(data.title).to.eql("My adventures with the softwerkskammer");
           expect(data.tags).to.eql(["a", "b"]);
-          callback();
         });
 
       request(createApp())

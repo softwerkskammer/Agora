@@ -9,7 +9,7 @@ const fieldHelpers = beans.get("fieldHelpers");
 
 const app = misc.expressAppIn(__dirname);
 
-app.post("/", (req, res, next) => {
+app.post("/", async (req, res, next) => {
   /* eslint camelcase: 0 */
   let activityResultName = req.body.activityResultName;
   if (!activityResultName) {
@@ -17,73 +17,67 @@ app.post("/", (req, res, next) => {
   }
   const tags = misc.toArray(req.body.tags);
 
-  activityresultsPersistence.save(
+  await activityresultsPersistence.saveAsync(
     new ActivityResult({
       id: activityResultName,
       tags,
       uploaded_by: req.user.member.id,
-    }).state,
-    (err) => {
-      if (err) {
-        return next(err);
-      }
-      res.redirect(app.path() + activityResultName);
-    }
+    }).state
   );
+  res.redirect(app.path() + activityResultName);
 });
 
-app.post("/:activityResultName/upload", (req, res, next) => {
-  const activityResultName = req.params.activityResultName;
-  new Form().parse(req, (err, fields, files) => {
-    if (err || !files || files.length < 1) {
-      return res.redirect(app.path() + activityResultName); // Es fehlen Prüfungen im Frontend
-    }
-    activityresultsService.addPhotoToActivityResult(
-      activityResultName,
-      files.image[0],
-      req.user.member.id(),
-      (err1, imageUri) => {
-        if (err1) {
-          return next(err1);
+app.post("/:activityResultName/upload", async (req, res) => {
+  const promisifyUpload = (req1) =>
+    new Promise((resolve, reject) => {
+      new Form().parse(req1, function (err, fields, files) {
+        if (!files || files.length < 1) {
+          return null; // indicate no result
         }
-        res.redirect(app.path() + activityResultName + "/photo/" + imageUri + "/edit");
-      }
-    );
-  });
+        if (err) {
+          return reject(err);
+        }
+
+        return resolve(files);
+      });
+    });
+
+  const activityResultName = req.params.activityResultName;
+  const files = await promisifyUpload(req);
+  const imageUri = await activityresultsService.addPhotoToActivityResult(
+    activityResultName,
+    files.image[0],
+    req.user.member.id()
+  );
+  res.redirect(app.path() + activityResultName + "/photo/" + imageUri + "/edit");
 });
 
-app.post("/delete", (req, res, next) => {
+app.post("/delete", async (req, res) => {
   const activityResultName = req.body.activityresults;
   const photoId = req.body.photo;
   if (res.locals.accessrights.canDeletePhoto()) {
-    return activityresultsService.deletePhotoOfActivityResult(activityResultName, photoId, (err) => {
-      if (err) {
-        return next(err);
-      }
-      res.redirect(app.path() + activityResultName);
-    });
+    await activityresultsService.deletePhotoOfActivityResult(activityResultName, photoId);
   }
   res.redirect(app.path() + activityResultName);
 });
 
-app.get("/:activityResultName/photo/:photoId/edit", (req, res, next) => {
+app.get("/:activityResultName/photo/:photoId/edit", async (req, res, next) => {
   const activityResultName = req.params.activityResultName;
-  activityresultsService.getActivityResultByName(activityResultName, (err, activityResult) => {
-    if (err || !activityResult) {
-      return next(err);
-    }
-    const model = {
-      activityResult,
-      photo: activityResult.getPhotoById(req.params.photoId),
-    };
-    if (model.photo && res.locals.accessrights.canEditPhoto(model.photo)) {
-      return res.render("edit_photo", model);
-    }
-    res.redirect(app.path() + activityResultName);
-  });
+  const activityResult = await activityresultsService.getActivityResultByName(activityResultName);
+  if (!activityResult) {
+    return next();
+  }
+  const model = {
+    activityResult,
+    photo: activityResult.getPhotoById(req.params.photoId),
+  };
+  if (model.photo && res.locals.accessrights.canEditPhoto(model.photo)) {
+    return res.render("edit_photo", model);
+  }
+  res.redirect(app.path() + activityResultName);
 });
 
-app.post("/:activityResultName/photo/:photoId/edit", (req, res, next) => {
+app.post("/:activityResultName/photo/:photoId/edit", async (req, res) => {
   const photoId = req.params.photoId;
   const activityResultName = req.params.activityResultName;
   const photoData = {
@@ -92,31 +86,22 @@ app.post("/:activityResultName/photo/:photoId/edit", (req, res, next) => {
     timestamp: fieldHelpers.parseToDateTimeUsingDefaultTimezone(req.body.date, req.body.time).toJSDate(),
   };
 
-  activityresultsService.updatePhotoOfActivityResult(
+  await activityresultsService.updatePhotoOfActivityResult(
     activityResultName,
     photoId,
     photoData,
-    res.locals.accessrights,
-    (err) => {
-      if (err) {
-        return next(err);
-      }
-      res.redirect(app.path() + activityResultName);
-    }
+    res.locals.accessrights
   );
+  res.redirect(app.path() + activityResultName);
 });
 
-app.get("/:activityResultName", (req, res, next) => {
+app.get("/:activityResultName", async (req, res) => {
   const activityResultName = req.params.activityResultName;
-  activityresultsService.getActivityResultByName(activityResultName, (err, activityResult) => {
-    if (err) {
-      return next(err);
-    }
-    if (activityResult) {
-      return res.render("get", { activityResult });
-    }
-    return res.render("create", { activityResultName });
-  });
+  const activityResult = await activityresultsService.getActivityResultByName(activityResultName);
+  if (activityResult) {
+    return res.render("get", { activityResult });
+  }
+  return res.render("create", { activityResultName });
 });
 
 module.exports = app;
