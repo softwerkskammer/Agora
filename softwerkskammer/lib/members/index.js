@@ -1,4 +1,3 @@
-const async = require("async");
 const R = require("ramda");
 const Form = require("multiparty").Form;
 
@@ -39,19 +38,12 @@ async function memberSubmitted(req, res) {
   return res.redirect("/members");
 }
 
-async function tagsFor(callback) {
-  try {
-    const members = await memberstore.allMembers();
-    callback(
-      null,
-      membersService
-        .toWordList(members)
-        .map((wordlist) => wordlist.text)
-        .sort()
-    );
-  } catch (e) {
-    callback(e);
-  }
+async function tagsFor() {
+  const members = await memberstore.allMembers();
+  return membersService
+    .toWordList(members)
+    .map((wordlist) => wordlist.text)
+    .sort();
 }
 
 const app = misc.expressAppIn(__dirname);
@@ -87,60 +79,41 @@ app.get("/checkemail", async (req, res) => {
   res.end(result);
 });
 
-app.get("/new", (req, res, next) => {
+app.get("/new", async (req, res) => {
   if (req.user.member) {
     return res.redirect("/members/");
   }
-  async.parallel(
-    {
-      allGroups: async.asyncify(groupstore.allGroups),
-      allTags: (callback) => tagsFor(callback),
-    },
-    (err, results) => {
-      if (err) {
-        return next(err);
-      }
-      const allGroups = results.allGroups;
-      res.render("edit", {
-        member: new Member().initFromSessionUser(req.user),
-        regionalgroups: groupsService.markGroupsSelected([], Group.regionalsFrom(allGroups)),
-        themegroups: groupsService.markGroupsSelected([], Group.thematicsFrom(allGroups)),
-        tags: results.allTags,
-      });
-    }
-  );
+  const [allGroups, allTags] = await Promise.all([groupstore.allGroups(), tagsFor()]);
+  res.render("edit", {
+    member: new Member().initFromSessionUser(req.user),
+    regionalgroups: groupsService.markGroupsSelected([], Group.regionalsFrom(allGroups)),
+    themegroups: groupsService.markGroupsSelected([], Group.thematicsFrom(allGroups)),
+    tags: allTags,
+  });
 });
 
-app.get("/edit/:nickname", (req, res, next) => {
-  async.parallel(
-    {
-      member: async.asyncify(() => groupsAndMembersService.getMemberWithHisGroups(req.params.nickname)),
-      allGroups: async.asyncify(groupstore.allGroups),
-      allTags: (callback) => tagsFor(callback),
-    },
-    (err, results) => {
-      if (err) {
-        return next(err);
-      }
-      const member = results.member;
-      if (err || !member) {
-        return next(err);
-      }
-      if (!res.locals.accessrights.canEditMember(member)) {
-        return res.redirect("/members/" + encodeURIComponent(member.nickname()));
-      }
-      const allGroups = results.allGroups;
-      res.render("edit", {
-        member,
-        regionalgroups: groupsService.markGroupsSelected(member.subscribedGroups, Group.regionalsFrom(allGroups)),
-        themegroups: groupsService.markGroupsSelected(member.subscribedGroups, Group.thematicsFrom(allGroups)),
-        tags: results.allTags,
-      });
-    }
-  );
+app.get("/edit/:nickname", async (req, res, next) => {
+  const [allGroups, allTags, member] = await Promise.all([
+    groupstore.allGroups(),
+    tagsFor(),
+    groupsAndMembersService.getMemberWithHisGroups(req.params.nickname),
+  ]);
+
+  if (!member) {
+    return next();
+  }
+  if (!res.locals.accessrights.canEditMember(member)) {
+    return res.redirect("/members/" + encodeURIComponent(member.nickname()));
+  }
+  res.render("edit", {
+    member,
+    regionalgroups: groupsService.markGroupsSelected(member.subscribedGroups, Group.regionalsFrom(allGroups)),
+    themegroups: groupsService.markGroupsSelected(member.subscribedGroups, Group.thematicsFrom(allGroups)),
+    tags: allTags,
+  });
 });
 
-app.post("/delete", async (req, res, next) => {
+app.post("/delete", async (req, res) => {
   const nickname = req.body.nickname;
   if (!res.locals.accessrights.canDeleteMemberByNickname(nickname)) {
     return res.redirect("/members/" + encodeURIComponent(nickname));
@@ -153,7 +126,7 @@ app.post("/delete", async (req, res, next) => {
     res.redirect("/members/");
   } catch (e) {
     if (e.message !== "hasSubscriptions") {
-      return next(e);
+      throw e;
     }
     statusmessage.errorMessage("message.title.problem", "message.content.members.hasSubscriptions").putIntoSession(req);
     return res.redirect("/members/edit/" + encodeURIComponent(nickname));
@@ -168,53 +141,44 @@ app.post("/updatePassword", async (req, res) => {
   res.redirect("/members/" + encodeURIComponent(member.nickname()));
 });
 
-app.post("/submit", (req, res, next) => {
-  async.parallel(
-    [
-      async.asyncify(async () => {
-        try {
-          const result = await validation.checkValidityAsync(
-            req.body.previousNickname,
-            req.body.nickname,
-            membersService.isValidNickname
-          );
-          if (!result) {
-            return req.i18n.t("validation.nickname_not_available");
-          }
-        } catch (e) {
-          return req.i18n.t("validation.nickname_not_available");
-        }
-      }),
-      async.asyncify(async () => {
-        try {
-          const result = await validation.checkValidityAsync(
-            req.body.previousEmail,
-            req.body.email,
-            membersService.isValidEmail
-          );
-          if (!result) {
-            return req.i18n.t("validation.duplicate_email");
-          }
-        } catch (e) {
-          return req.i18n.t("validation.duplicate_email");
-        }
-      }),
-      (callback) => {
-        const errors = validation.isValidForMember(req.body);
-        callback(null, errors);
-      },
-    ],
-    (err, errorMessages) => {
-      if (err) {
-        return next(err);
+app.post("/submit", async (req, res, next) => {
+  async function checkNick() {
+    try {
+      const result = await validation.checkValidityAsync(
+        req.body.previousNickname,
+        req.body.nickname,
+        membersService.isValidNickname
+      );
+      if (!result) {
+        return [req.i18n.t("validation.nickname_not_available")];
       }
-      const realErrors = R.flatten(errorMessages).filter((message) => !!message);
-      if (realErrors.length === 0) {
-        return memberSubmitted(req, res, next);
-      }
-      return res.render("../../../views/errorPages/validationError", { errors: realErrors });
+      return [];
+    } catch (e) {
+      return [req.i18n.t("validation.nickname_not_available")];
     }
-  );
+  }
+
+  async function checkMail() {
+    try {
+      const result = await validation.checkValidityAsync(
+        req.body.previousEmail,
+        req.body.email,
+        membersService.isValidEmail
+      );
+      if (!result) {
+        return [req.i18n.t("validation.duplicate_email")];
+      }
+      return [];
+    } catch (e) {
+      return [req.i18n.t("validation.duplicate_email")];
+    }
+  }
+  const errorMessages = await Promise.all([checkNick(), checkMail(), validation.isValidForMember(req.body)]);
+  const realErrors = R.flatten(errorMessages).filter((message) => !!message);
+  if (realErrors.length === 0) {
+    return memberSubmitted(req, res, next);
+  }
+  return res.render("../../../views/errorPages/validationError", { errors: realErrors });
 });
 
 app.post("/submitavatar", async (req, res) => {

@@ -67,7 +67,7 @@ module.exports = {
 
   // API change: email() -> member, oldUserMail removed
   updateSubscriptions: async function updateSubscriptions(member, newSubscriptions) {
-    const groups = groupstore.allGroups();
+    const groups = await groupstore.allGroups();
     const subscribedGroups = groups.filter((g) => g.subscribedMembers.includes(member.id()));
     const groupsForNewSubscriptions = groups.filter((g) => misc.toArray(newSubscriptions).includes(g.id));
 
