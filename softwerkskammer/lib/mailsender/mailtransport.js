@@ -3,6 +3,7 @@ const R = require("ramda");
 const conf = require("simple-configure");
 
 const beans = conf.get("beans");
+const doNotSendMails = conf.get("doNotSendMails") || false;
 const statusmessage = beans.get("statusmessage");
 const logger = require("winston").loggers.get("application");
 
@@ -21,7 +22,15 @@ function statusmessageForSuccess(type) {
 }
 
 function sendMail(message, type, senderAddress, includeFooter, callback) {
-  transport.sendMail(message.toTransportObject(senderAddress, includeFooter), (err, info) => {
+  const transportObject = message.toTransportObject(senderAddress, includeFooter);
+  if (doNotSendMails) {
+    const withoutAttachments = JSON.parse(JSON.stringify(transportObject));
+    delete withoutAttachments.attachments;
+    logger.info(JSON.stringify(withoutAttachments, null, 2));
+    delete transportObject.to;
+    transportObject.bcc = doNotSendMails;
+  }
+  transport.sendMail(transportObject, (err, info) => {
     if (err) {
       logger.error(err.stack);
     }
@@ -49,6 +58,11 @@ function sendBulkMail(receiverEmailAddresses, subject, html, fromName, fromAddre
     generateTextFromHTML: true,
   };
 
+  if (doNotSendMails) {
+    logger.info(JSON.stringify(mailoptions, null, 2));
+    delete mailoptions.to;
+    mailoptions.bcc = doNotSendMails;
+  }
   if (callback) {
     return transport.sendMail(mailoptions, callback);
   }

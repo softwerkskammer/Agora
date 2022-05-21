@@ -11,7 +11,7 @@ module.exports = {
   },
 
   groupsByLists: async function groupsByLists(lists) {
-    const groups = await persistence.listByIds(lists, { longName: 1 });
+    const groups = await persistence.listByIdsAsync(lists, { longName: 1 });
     return groups.map((each) => new Group(each));
   },
 
