@@ -2,7 +2,6 @@
 
 const expect = require("must-dist");
 const R = require("ramda");
-const async = require("async");
 
 describe("Ramda", () => {
   describe("curry function", () => {
@@ -10,13 +9,10 @@ describe("Ramda", () => {
       const testfunc = (arg1, arg2) => arg1 + " " + arg2;
       const testfuncCurried = R.curry(testfunc)("Argument1");
       const testfuncPartial = R.partial(testfunc, ["Argument1"]);
-      const testfuncApplied = async.apply(testfunc, "Argument1");
 
       expect(testfuncCurried("Argument2")).to.equal("Argument1 Argument2");
       expect(testfuncPartial("Argument2")).to.equal("Argument1 Argument2");
-      expect(testfuncApplied("Argument2")).to.equal("Argument1 Argument2");
 
-      expect(testfuncApplied()).to.equal("Argument1 undefined");
       expect(testfuncPartial()).to.equal("Argument1 undefined");
 
       expect(testfuncCurried()).to.not.equal("Argument1 undefined"); // Trouble!

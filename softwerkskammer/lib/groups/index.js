@@ -66,18 +66,10 @@ app.get("/edit/:groupname", async (req, res) => {
   res.render("edit", { group: realGroup, allTypes: Group.allTypes(), organizersChecked });
 });
 
-app.post("/clone-from-meetup-for-group", async (req, res, next) => {
-  try {
-    const group = await groupstore.getGroup(req.body.groupname);
-    meetupActivitiesService.cloneActivitiesFromMeetupForGroup(group, (err2) => {
-      if (err2) {
-        return next(err2);
-      }
-      res.redirect("/groups/" + req.body.groupname);
-    });
-  } catch (e) {
-    return next(e);
-  }
+app.post("/clone-from-meetup-for-group", async (req, res) => {
+  const group = await groupstore.getGroup(req.body.groupname);
+  await meetupActivitiesService.cloneActivitiesFromMeetupForGroup(group);
+  res.redirect("/groups/" + req.body.groupname);
 });
 
 app.get("/checkgroupname", async (req, res) => {
