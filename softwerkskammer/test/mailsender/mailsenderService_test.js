@@ -2,7 +2,8 @@
 
 const expect = require("must-dist");
 const sinon = require("sinon").createSandbox();
-const beans = require("../../testutil/configureForTest").get("beans");
+const conf = require("../../testutil/configureForTest");
+const beans = conf.get("beans");
 
 const memberstore = beans.get("memberstore");
 const groupstore = beans.get("groupstore");
@@ -72,12 +73,11 @@ describe("MailsenderService", () => {
       }
       throw new Error();
     });
-    sendmail = sinon.stub(transport, "sendMail").callsFake((transportobject, callback) => {
+    sendmail = sinon.stub(transport, "sendMail").callsFake((transportobject) => {
       if (!transportobject.to && (!transportobject.bcc || transportobject.bcc.length === 0)) {
         // simulating the behaviour of nodemailer
-        return callback(new Error());
+        throw new Error();
       }
-      callback(null);
     });
   });
 
@@ -158,64 +158,49 @@ describe("MailsenderService", () => {
   });
 
   describe("sending mail as reminder for activity", () => {
-    it("sends to participants", (done) => {
+    it("sends to participants", async () => {
       const email = "emailAddress@e.mail";
       emptyActivity.participants = [new Member({ email })];
 
-      mailsenderService.sendMailToParticipantsOf(activityURL, message, (err, statusmessage) => {
-        const sentEmail = singleSentEmail();
-        expect(sentEmail.bcc).to.contain(email);
-        expect(sentEmail.html).to.contain("mark down");
-        expect(sentEmail.icalEvent).to.contain("BEGIN:VCALENDAR");
-        expect(sentEmail.icalEvent).to.contain("URL:http://localhost:17125/activities/urlOfTheActivity");
-        expect(statusmessage.contents().type).to.equal("alert-success");
-        done(err);
-      });
+      const statusmessage = await mailsenderService.sendMailToParticipantsOf(activityURL, message);
+      const sentEmail = singleSentEmail();
+      expect(sentEmail.bcc).to.contain(email);
+      expect(sentEmail.html).to.contain("mark down");
+      expect(sentEmail.icalEvent).to.contain("BEGIN:VCALENDAR");
+      expect(sentEmail.icalEvent).to.contain("URL:http://localhost:17125/activities/urlOfTheActivity");
+      expect(statusmessage.contents().type).to.equal("alert-success");
     });
 
-    it("does not send mail if no participants", (done) => {
-      mailsenderService.sendMailToParticipantsOf(activityURL, message, (err, statusmessage) => {
-        expect(sendmail.calledOnce).to.be(true);
-        expect(statusmessage.contents().type).to.equal("alert-danger");
-        done(err);
-      });
+    it("does not send mail if no participants", async () => {
+      const statusmessage = await mailsenderService.sendMailToParticipantsOf(activityURL, message);
+      expect(sendmail.calledOnce).to.be(true);
+      expect(statusmessage.contents().type).to.equal("alert-danger");
     });
 
-    it("does not send mail if activity canot be found", (done) => {
-      mailsenderService.sendMailToParticipantsOf(null, message, (err, statusmessage) => {
-        expect(sendmail.calledOnce).to.not.be(true);
-        expect(err).to.exist();
-        expect(statusmessage.contents().type).to.equal("alert-danger");
-        done();
-      });
+    it("does not send mail if activity canot be found", async () => {
+      const statusmessage = await mailsenderService.sendMailToParticipantsOf(null, message);
+      expect(sendmail.calledOnce).to.not.be(true);
+      expect(statusmessage.contents().type).to.equal("alert-danger");
     });
   });
 
   describe("sending mail to distinct member", () => {
-    it("sends the email", (done) => {
-      mailsenderService.sendMailToMember("nickname", message, (err, statusmessage) => {
-        const sentMail = singleSentEmail();
-        expect(sentMail.bcc).to.contain("email@mail.de");
-        expect(sentMail.html).to.contain("mark down");
-        expect(statusmessage.contents().type).to.equal("alert-success");
-        done(err);
-      });
+    it("sends the email", async () => {
+      const statusmessage = await mailsenderService.sendMailToMember("nickname", message);
+      const sentMail = singleSentEmail();
+      expect(sentMail.bcc).to.contain("email@mail.de");
+      expect(sentMail.html).to.contain("mark down");
+      expect(statusmessage.contents().type).to.equal("alert-success");
     });
 
-    it("does not send the email if member cannot be found", (done) => {
-      mailsenderService.sendMailToMember(null, message, (err, statusmessage) => {
-        expect(err).not.to.exist();
-        expect(statusmessage.contents().type).to.equal("alert-danger");
-        done();
-      });
+    it("does not send the email if member cannot be found", async () => {
+      const statusmessage = await mailsenderService.sendMailToMember(null, message);
+      expect(statusmessage.contents().type).to.equal("alert-danger");
     });
 
-    it("does not send the email if finding member causes error", (done) => {
-      mailsenderService.sendMailToMember("broken", message, (err, statusmessage) => {
-        expect(err).to.exist();
-        expect(statusmessage.contents().type).to.equal("alert-danger");
-        done();
-      });
+    it("does not send the email if finding member causes error", async () => {
+      const statusmessage = await mailsenderService.sendMailToMember("broken", message);
+      expect(statusmessage.contents().type).to.equal("alert-danger");
     });
   });
 
@@ -226,33 +211,25 @@ describe("MailsenderService", () => {
       sinon.stub(memberstore, "superUsers").returns([superuser]);
     });
 
-    it("sends the email", (done) => {
+    it("sends the email", async () => {
       const markdown = "";
       const member = new Member({ nickname: "nick", firstname: "first", lastname: "last" });
-      mailsenderService.sendResignment(markdown, member, (err, statusmessage) => {
-        const sentMail = singleSentEmail();
-        expect(sentMail.from).to.contain("first last");
-        expect(sentMail.subject).to.contain("Austrittswunsch");
-        expect(sentMail.to).to.contain("email@super.user");
-        expect(statusmessage.contents().type).to.equal("alert-success");
-        done(err);
-      });
+      const statusmessage = await mailsenderService.sendResignment(markdown, member);
+      const sentMail = singleSentEmail();
+      expect(sentMail.from).to.contain("first last");
+      expect(sentMail.subject).to.contain("Austrittswunsch");
+      expect(sentMail.to).to.contain("email@super.user");
+      expect(statusmessage.contents().type).to.equal("alert-success");
     });
 
-    it("does not send the email if member cannot be found", (done) => {
-      mailsenderService.sendMailToMember(null, message, (err, statusmessage) => {
-        expect(err).not.to.exist();
-        expect(statusmessage.contents().type).to.equal("alert-danger");
-        done();
-      });
+    it("does not send the email if member cannot be found", async () => {
+      const statusmessage = await mailsenderService.sendMailToMember(null, message);
+      expect(statusmessage.contents().type).to.equal("alert-danger");
     });
 
-    it("does not send the email if finding member causes error", (done) => {
-      mailsenderService.sendMailToMember("broken", message, (err, statusmessage) => {
-        expect(err).to.exist();
-        expect(statusmessage.contents().type).to.equal("alert-danger");
-        done();
-      });
+    it("does not send the email if finding member causes error", async () => {
+      const statusmessage = await mailsenderService.sendMailToMember("broken", message);
+      expect(statusmessage.contents().type).to.equal("alert-danger");
     });
   });
 
@@ -271,7 +248,7 @@ describe("MailsenderService", () => {
       });
     });
 
-    it("sends to members of selected groups", (done) => {
+    it("sends to members of selected groups", async () => {
       sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
         if (group === null) {
           return null;
@@ -281,15 +258,13 @@ describe("MailsenderService", () => {
         }
         return group;
       });
-      mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message, (err, statusmessage) => {
-        const sentMail = singleSentEmail();
-        expect(sentMail.bcc).to.contain("memberA");
-        expect(sentMail.html).to.contain("mark down");
-        expect(sentMail.icalEvent).to.not.contain("BEGIN:VCALENDAR");
-        expect(sentMail.icalEvent).to.not.contain("URL:http://localhost:17125/activities/urlOfTheActivity");
-        expect(statusmessage.contents().type).to.equal("alert-success");
-        done(err);
-      });
+      const statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message);
+      const sentMail = singleSentEmail();
+      expect(sentMail.bcc).to.contain("memberA");
+      expect(sentMail.html).to.contain("mark down");
+      expect(sentMail.icalEvent).to.not.contain("BEGIN:VCALENDAR");
+      expect(sentMail.icalEvent).to.not.contain("URL:http://localhost:17125/activities/urlOfTheActivity");
+      expect(statusmessage.contents().type).to.equal("alert-success");
     });
   });
 
@@ -309,7 +284,7 @@ describe("MailsenderService", () => {
       });
     });
 
-    it("sends to members of selected groups", (done) => {
+    it("sends to members of selected groups", async () => {
       sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
         if (group === null) {
           return null;
@@ -322,24 +297,21 @@ describe("MailsenderService", () => {
         }
         return group;
       });
-      mailsenderService.sendMailToInvitedGroups(
+      const statusmessage = await mailsenderService.sendMailToInvitedGroups(
         ["GroupA", "GroupB"],
         "activityUrlForMock",
-        message,
-        (err, statusmessage) => {
-          const sentMail = singleSentEmail();
-          expect(sentMail.bcc).to.contain("memberA");
-          expect(sentMail.bcc).to.contain("memberB");
-          expect(sentMail.html).to.contain("mark down");
-          expect(sentMail.icalEvent).to.contain("BEGIN:VCALENDAR");
-          expect(sentMail.icalEvent).to.contain("URL:http://localhost:17125/activities/urlOfTheActivity");
-          expect(statusmessage.contents().type).to.equal("alert-success");
-          done(err);
-        }
+        message
       );
+      const sentMail = singleSentEmail();
+      expect(sentMail.bcc).to.contain("memberA");
+      expect(sentMail.bcc).to.contain("memberB");
+      expect(sentMail.html).to.contain("mark down");
+      expect(sentMail.icalEvent).to.contain("BEGIN:VCALENDAR");
+      expect(sentMail.icalEvent).to.contain("URL:http://localhost:17125/activities/urlOfTheActivity");
+      expect(statusmessage.contents().type).to.equal("alert-success");
     });
 
-    it("ignores errors finding the activity when sending to members of selected groups", (done) => {
+    it("ignores errors finding the activity when sending to members of selected groups", async () => {
       sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
         if (group === null) {
           return null;
@@ -352,54 +324,41 @@ describe("MailsenderService", () => {
         }
         return group;
       });
-      mailsenderService.sendMailToInvitedGroups(
+      const statusmessage = await mailsenderService.sendMailToInvitedGroups(
         ["GroupA", "GroupB"],
         "errorProvokingUrl",
-        message,
-        (err, statusmessage) => {
-          const sentMail = singleSentEmail();
-          expect(sentMail.bcc).to.contain("memberA");
-          expect(sentMail.bcc).to.contain("memberB");
-          expect(sentMail.html).to.contain("mark down");
-          expect(sentMail.icalEvent).to.be(undefined);
-          expect(statusmessage.contents().type).to.equal("alert-success");
-          done(err);
-        }
+        message
       );
+      const sentMail = singleSentEmail();
+      expect(sentMail.bcc).to.contain("memberA");
+      expect(sentMail.bcc).to.contain("memberB");
+      expect(sentMail.html).to.contain("mark down");
+      expect(sentMail.icalEvent).to.be(undefined);
+      expect(statusmessage.contents().type).to.equal("alert-success");
     });
 
-    it("does not send to members if no groups selected", (done) => {
-      mailsenderService.sendMailToInvitedGroups([], "activityUrlForMock", message, (err, statusmessage) => {
-        expect(sendmail.calledOnce).to.not.be(true);
-        expect(err).not.to.exist();
-        expect(statusmessage.contents().type).to.equal("alert-danger");
-        done();
-      });
+    it("does not send to members if no groups selected", async () => {
+      const statusmessage = await mailsenderService.sendMailToInvitedGroups([], "activityUrlForMock", message);
+      expect(sendmail.calledOnce).to.not.be(true);
+      expect(statusmessage.contents().type).to.equal("alert-danger");
     });
 
-    it("does not send to members if finding groups causes error", (done) => {
-      mailsenderService.sendMailToInvitedGroups(null, "activityUrlForMock", message, (err, statusmessage) => {
-        expect(sendmail.calledOnce).to.not.be(true);
-        expect(err).to.exist();
-        expect(statusmessage.contents().type).to.equal("alert-danger");
-        done();
-      });
+    it("does not send to members if finding groups causes error", async () => {
+      const statusmessage = await mailsenderService.sendMailToInvitedGroups(null, "activityUrlForMock", message);
+      expect(sendmail.calledOnce).to.not.be(true);
+      expect(statusmessage.contents().type).to.equal("alert-danger");
     });
 
-    it("does not send to members if filling groups with members causes error", (done) => {
+    it("does not send to members if filling groups with members causes error", async () => {
       sinon.stub(groupsAndMembersService, "addMembersToGroup").throws(new Error());
 
-      mailsenderService.sendMailToInvitedGroups(
+      const statusmessage = await mailsenderService.sendMailToInvitedGroups(
         ["GroupA", "GroupB"],
         "activityUrlForMock",
-        message,
-        (err, statusmessage) => {
-          expect(sendmail.calledOnce).to.not.be(true);
-          expect(err).to.exist();
-          expect(statusmessage.contents().type).to.equal("alert-danger");
-          done();
-        }
+        message
       );
+      expect(sendmail.calledOnce).to.not.be(true);
+      expect(statusmessage.contents().type).to.equal("alert-danger");
     });
   });
 
@@ -443,57 +402,48 @@ describe("MailsenderService", () => {
     const groupId = "any-group-id";
 
     describe("when contact organizers is disabled for group", () => {
-      it("does not send any mail", (done) => {
+      it("does not send any mail", async () => {
         const group = new Group({ id: groupId, contactingOrganizersEnabled: false });
         thereIsAGroup(group);
         provideValidOrganizersForGroup(groupId);
 
-        mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err, statusMessage) => {
-          expect(err).to.not.exist();
-          expectNoEmailWasSent();
-          expect(statusMessage.contents().type).to.eql("alert-danger");
-          expect(statusMessage.contents().additionalArguments.type).to.eql("$t(mailsender.notification)");
-          expect(statusMessage.contents().additionalArguments.err).to.eql(
-            "$t(mailsender.contact_the_organizers_disabled)"
-          );
-          done();
-        });
+        const statusMessage = await mailsenderService.sendMailToContactPersonsOfGroup(groupId, message);
+        expectNoEmailWasSent();
+        expect(statusMessage.contents().type).to.eql("alert-danger");
+        expect(statusMessage.contents().additionalArguments.type).to.eql("$t(mailsender.notification)");
+        expect(statusMessage.contents().additionalArguments.err).to.eql(
+          "$t(mailsender.contact_the_organizers_disabled)"
+        );
       });
     });
 
     describe("when getting group fails", () => {
-      it("does not send any mail to the organizers", (done) => {
+      it("does not send any mail to the organizers", async () => {
         getGroupFails(groupId);
         groupIsOrganizedBy(groupId, [anyMemberWithEmail]);
 
-        mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err, statusMessage) => {
-          expect(err).to.exist();
-          expectNoEmailWasSent();
+        const statusMessage = await mailsenderService.sendMailToContactPersonsOfGroup(groupId, message);
+        expectNoEmailWasSent();
 
-          expect(statusMessage.contents().type).to.eql("alert-danger");
-          expect(statusMessage.contents().additionalArguments.type).to.eql("$t(mailsender.notification)");
-          expect(statusMessage.contents().additionalArguments.err).to.eql("Error: getGroups failed");
-          done();
-        });
+        expect(statusMessage.contents().type).to.eql("alert-danger");
+        expect(statusMessage.contents().additionalArguments.type).to.eql("$t(mailsender.notification)");
+        expect(statusMessage.contents().additionalArguments.err).to.eql("Error: getGroups failed");
       });
     });
 
     describe("when group does not exist", () => {
-      it("does not send any mail to the organizers", (done) => {
+      it("does not send any mail to the organizers", async () => {
         thereIsNoGroup();
         groupIsOrganizedBy(groupId, [anyMemberWithEmail]);
 
-        mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err, statusMessage) => {
-          expect(err).to.exist();
-          expectNoEmailWasSent();
+        const statusMessage = await mailsenderService.sendMailToContactPersonsOfGroup(groupId, message);
+        expectNoEmailWasSent();
 
-          expect(statusMessage.contents().type).to.eql("alert-danger");
-          expect(statusMessage.contents().additionalArguments.type).to.eql("$t(mailsender.notification)");
-          expect(statusMessage.contents().additionalArguments.err).to.eql(
-            "Error: Das senden der E-Mail ist fehlgeschlagen. Es liegt ein technisches Problem vor."
-          );
-          done();
-        });
+        expect(statusMessage.contents().type).to.eql("alert-danger");
+        expect(statusMessage.contents().additionalArguments.type).to.eql("$t(mailsender.notification)");
+        expect(statusMessage.contents().additionalArguments.err).to.eql(
+          "Error: Das senden der E-Mail ist fehlgeschlagen. Es liegt ein technisches Problem vor."
+        );
       });
     });
 
@@ -510,7 +460,7 @@ describe("MailsenderService", () => {
         thereIsAGroup(group);
       });
 
-      it("sends BCC to all organizers of given group", (done) => {
+      it("sends BCC to all organizers of given group", async () => {
         groupIsOrganizedBy(groupId, [
           new Member({
             id: organizerId1,
@@ -522,66 +472,50 @@ describe("MailsenderService", () => {
           }),
         ]);
 
-        mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err) => {
-          expect(err).to.not.exist();
-          const sentMail = singleSentEmail();
-          expect(sentMail.bcc).to.contain("first@example.org");
-          expect(sentMail.bcc).to.contain("second@example.org");
-          done();
-        });
+        await mailsenderService.sendMailToContactPersonsOfGroup(groupId, message);
+        const sentMail = singleSentEmail();
+        expect(sentMail.bcc).to.contain("first@example.org");
+        expect(sentMail.bcc).to.contain("second@example.org");
       });
 
-      it("allows organizers to see the source of the mail by prepending a prefix to the subject", (done) => {
+      it("allows organizers to see the source of the mail by prepending a prefix to the subject", async () => {
         groupIsOrganizedBy(groupId, [anyMemberWithEmail]);
 
         message.setSubject("Email-Subject");
 
-        mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err) => {
-          expect(err).to.not.exist();
-          const sentMail = singleSentEmail();
-          expect(sentMail.subject).to.eql("[Anfrage an Ansprechpartner/Mail to organizers] Email-Subject");
-          done();
-        });
+        await mailsenderService.sendMailToContactPersonsOfGroup(groupId, message);
+        const sentMail = singleSentEmail();
+        expect(sentMail.subject).to.eql("[Anfrage an Ansprechpartner/Mail to organizers] Email-Subject");
       });
 
       describe("organizers for group can not be read", () => {
-        it("does not send any email", (done) => {
+        it("does not send any email", async () => {
           loadingGroupOrganizersFailsFor(groupId);
 
-          mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err, statusMessage) => {
-            expect(err).to.exist();
-
-            expectNoEmailWasSent();
-            expect(statusMessage.contents().type).to.eql("alert-danger");
-            expect(statusMessage.contents().additionalArguments.type).to.eql("$t(mailsender.notification)");
-            expect(statusMessage.contents().additionalArguments.err).to.eql("Error: no soup for you");
-            done();
-          });
+          const statusMessage = await mailsenderService.sendMailToContactPersonsOfGroup(groupId, message);
+          expectNoEmailWasSent();
+          expect(statusMessage.contents().type).to.eql("alert-danger");
+          expect(statusMessage.contents().additionalArguments.type).to.eql("$t(mailsender.notification)");
+          expect(statusMessage.contents().additionalArguments.err).to.eql("Error: no soup for you");
         });
       });
 
       describe("in case of a group without any organizers", () => {
-        it("does not send any email", function (done) {
+        it("does not send any email", async () => {
           groupIsOrganizedBy(groupId, []);
 
-          mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err, statusMessage) => {
-            expect(err).to.not.exist();
-            expectNoEmailWasSent();
-            expect(statusMessage.contents().type).to.eql("alert-danger");
-            expect(statusMessage.contents().additionalArguments.err).to.eql("$t(mailsender.group_has_no_organizers)");
-            expect(statusMessage.contents().additionalArguments.type).to.eql("$t(mailsender.notification)");
-            done();
-          });
+          const statusMessage = await mailsenderService.sendMailToContactPersonsOfGroup(groupId, message);
+          expectNoEmailWasSent();
+          expect(statusMessage.contents().type).to.eql("alert-danger");
+          expect(statusMessage.contents().additionalArguments.err).to.eql("$t(mailsender.group_has_no_organizers)");
+          expect(statusMessage.contents().additionalArguments.type).to.eql("$t(mailsender.notification)");
         });
       });
 
-      it("returns a message indicating the success when message is successfully send", (done) => {
+      it("returns a message indicating the success when message is successfully send", async () => {
         groupIsOrganizedBy(groupId, [anyMemberWithEmail]);
-        mailsenderService.sendMailToContactPersonsOfGroup(groupId, message, (err, statusmessage) => {
-          expect(err).not.to.exist();
-          expect(statusmessage.contents().type).to.eql("alert-success");
-          done();
-        });
+        const statusMessage = await mailsenderService.sendMailToContactPersonsOfGroup(groupId, message);
+        expect(statusMessage.contents().type).to.eql("alert-success");
       });
     });
   });

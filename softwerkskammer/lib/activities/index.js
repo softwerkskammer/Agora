@@ -1,4 +1,3 @@
-const async = require("async");
 const R = require("ramda");
 
 const conf = require("simple-configure");

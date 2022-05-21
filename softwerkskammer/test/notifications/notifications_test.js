@@ -64,73 +64,63 @@ describe("Notifications", () => {
       return null;
     });
     sinon.stub(memberstore, "allMembers").returns([hans, alice, bob, superuser]);
-    sinon.stub(transport, "sendMail").callsFake((opts, callback) => callback());
+    sinon.stub(transport, "sendMail");
   });
 
   afterEach(() => {
     sinon.restore();
   });
 
-  it("creates a meaningful text and subject", (done) => {
+  it("creates a meaningful text and subject", async () => {
     activity.state.owner = "hans";
 
-    notifications.visitorRegistration(activity, "bob", (err) => {
-      expect(transport.sendMail.calledOnce).to.be(true);
-      const options = transport.sendMail.firstCall.args[0];
-      expect(options.subject).to.equal("Neue Anmeldung für Aktivität");
-      expect(options.html).to.contain(
-        'Für die Aktivität "Title of the Activity" () hat sich ein neuer Besucher angemeldet:'
-      );
-      expect(options.html).to.contain("firstname of bob lastname of bob (nickbob)");
-      expect(options.html).to.contain("/activities/urlurl");
-      done(err);
-    });
+    await notifications.visitorRegistration(activity, "bob");
+    expect(transport.sendMail.calledOnce).to.be(true);
+    const options = transport.sendMail.firstCall.args[0];
+    expect(options.subject).to.equal("Neue Anmeldung für Aktivität");
+    expect(options.html).to.contain(
+      'Für die Aktivität "Title of the Activity" () hat sich ein neuer Besucher angemeldet:'
+    );
+    expect(options.html).to.contain("firstname of bob lastname of bob (nickbob)");
+    expect(options.html).to.contain("/activities/urlurl");
   });
 
-  it("creates a meaningful text and subject on each invocation when invoked twice", (done) => {
+  it("creates a meaningful text and subject on each invocation when invoked twice", async () => {
     activity.state.owner = "hans";
     activity2.state.owner = "hans";
 
-    notifications.visitorRegistration(activity, "bob", (err) => {
-      if (err) {
-        return done(err);
-      }
-      notifications.visitorRegistration(activity2, "alice", (err1) => {
-        expect(transport.sendMail.calledTwice).to.be(true);
-        let options = transport.sendMail.firstCall.args[0];
-        expect(options.subject).to.equal("Neue Anmeldung für Aktivität");
-        expect(options.html).to.contain(
-          'Für die Aktivität "Title of the Activity" () hat sich ein neuer Besucher angemeldet:'
-        );
-        expect(options.html).to.contain("firstname of bob lastname of bob (nickbob)");
-        expect(options.html).to.contain("/activities/urlurl");
+    await notifications.visitorRegistration(activity, "bob");
+    await notifications.visitorRegistration(activity2, "alice");
+    expect(transport.sendMail.calledTwice).to.be(true);
+    let options = transport.sendMail.firstCall.args[0];
+    expect(options.subject).to.equal("Neue Anmeldung für Aktivität");
+    expect(options.html).to.contain(
+      'Für die Aktivität "Title of the Activity" () hat sich ein neuer Besucher angemeldet:'
+    );
+    expect(options.html).to.contain("firstname of bob lastname of bob (nickbob)");
+    expect(options.html).to.contain("/activities/urlurl");
 
-        options = transport.sendMail.secondCall.args[0];
-        expect(options.subject).to.equal("Neue Anmeldung für Aktivität");
-        expect(options.html).to.contain(
-          'Für die Aktivität "Another Nice Activity" () hat sich ein neuer Besucher angemeldet:'
-        );
-        expect(options.html).to.contain("firstname of alice lastname of alice ()");
-        expect(options.html).to.contain("/activities/niceurl");
-        done(err1);
-      });
-    });
+    options = transport.sendMail.secondCall.args[0];
+    expect(options.subject).to.equal("Neue Anmeldung für Aktivität");
+    expect(options.html).to.contain(
+      'Für die Aktivität "Another Nice Activity" () hat sich ein neuer Besucher angemeldet:'
+    );
+    expect(options.html).to.contain("firstname of alice lastname of alice ()");
+    expect(options.html).to.contain("/activities/niceurl");
   });
 
-  it("triggers mail sending for group organizers and activity owner", (done) => {
+  it("triggers mail sending for group organizers and activity owner", async () => {
     activity.state.owner = "hans";
     group.organizers = ["alice"];
     group.members = [hans, alice, bob];
 
-    notifications.visitorRegistration(activity, "bob", (err) => {
-      expect(transport.sendMail.calledOnce).to.be(true);
-      const options = transport.sendMail.firstCall.args[0];
-      expect(options.bcc).to.contain("hans@email.de");
-      expect(options.bcc).to.contain("alice@email.de");
-      expect(options.bcc).to.not.contain("bob");
-      expect(options.from).to.contain("Softwerkskammer Benachrichtigungen");
-      done(err);
-    });
+    await notifications.visitorRegistration(activity, "bob");
+    expect(transport.sendMail.calledOnce).to.be(true);
+    const options = transport.sendMail.firstCall.args[0];
+    expect(options.bcc).to.contain("hans@email.de");
+    expect(options.bcc).to.contain("alice@email.de");
+    expect(options.bcc).to.not.contain("bob");
+    expect(options.from).to.contain("Softwerkskammer Benachrichtigungen");
   });
 
   it("triggers mail sending for only group organizers if activity has no owner", () => {
@@ -153,30 +143,26 @@ describe("Notifications", () => {
     expect(transport.sendMail.called).to.be(false);
   });
 
-  it("sorts directories in wikiChanges", (done) => {
+  it("sorts directories in wikiChanges", async () => {
     const changes = [
       { dir: "A", sortedFiles: () => [] },
       { dir: "Z", sortedFiles: () => [] },
       { dir: "C", sortedFiles: () => [] },
     ];
-    notifications.wikiChanges(changes, (err) => {
-      const options = transport.sendMail.firstCall.args[0];
-      expect(options.html).to.contain(
-        '<h3>Wiki "A"</h3>\n    <hr>\n    <h3>Wiki "C"</h3>\n    <hr>\n    <h3>Wiki "Z"</h3>'
-      );
-      done(err);
-    });
+    await notifications.wikiChanges(changes);
+    const options = transport.sendMail.firstCall.args[0];
+    expect(options.html).to.contain(
+      '<h3>Wiki "A"</h3>\n    <hr>\n    <h3>Wiki "C"</h3>\n    <hr>\n    <h3>Wiki "Z"</h3>'
+    );
   });
 
-  it("unions superusers and wikisubscribers", (done) => {
+  it("unions superusers and wikisubscribers", async () => {
     const changes = [{ dir: "A", sortedFiles: () => [] }];
-    notifications.wikiChanges(changes, (err) => {
-      const options = transport.sendMail.firstCall.args[0];
-      expect(options.bcc).to.contain("superuser");
-      expect(options.bcc).to.contain("hans");
-      expect(options.bcc).to.not.contain("alice");
-      expect(options.bcc).to.not.contain("bob");
-      done(err);
-    });
+    await notifications.wikiChanges(changes);
+    const options = transport.sendMail.firstCall.args[0];
+    expect(options.bcc).to.contain("superuser");
+    expect(options.bcc).to.contain("hans");
+    expect(options.bcc).to.not.contain("alice");
+    expect(options.bcc).to.not.contain("bob");
   });
 });

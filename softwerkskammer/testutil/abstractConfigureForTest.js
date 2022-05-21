@@ -38,6 +38,7 @@ module.exports = function (testBeansFilename) {
     imageDirectory: null,
     socratesURL: "https://socrates.com:12345",
     fullyQualifiedHomeDir: null,
+    doNotSendMails: "",
   });
 
   return conf;

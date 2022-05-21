@@ -118,7 +118,7 @@ app.get("/resign/:nickname", (req, res) => {
   res.render("compose-resign", { nickname: req.params.nickname });
 });
 
-app.post("/resign", async (req, res, next) => {
+app.post("/resign", async (req, res) => {
   const nickname = req.body.nickname;
   if (req.user.member.nickname() !== nickname) {
     return res.redirect("/members/" + encodeURIComponent(nickname));
@@ -134,16 +134,12 @@ app.post("/resign", async (req, res, next) => {
       req.i18n.t("mailsender.notes-resign") +
       "**\n" +
       req.body.notes;
-    return mailsenderService.sendResignment(markdown, req.user.member, (err1) => {
-      if (err1) {
-        return next(err1);
-      }
-      statusmessage
-        .successMessage("message.title.save_successful", "message.content.members.deleted")
-        .putIntoSession(req);
-      req.logout();
-      res.redirect("/goodbye.html");
-    });
+    await mailsenderService.sendResignment(markdown, req.user.member);
+    statusmessage
+      .successMessage("message.title.save_successful", "message.content.members.deleted")
+      .putIntoSession(req);
+    req.logout();
+    res.redirect("/goodbye.html");
   } catch (e) {
     if (e.message !== "hasSubscriptions") {
       throw e;

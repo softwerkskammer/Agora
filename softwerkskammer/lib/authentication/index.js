@@ -172,24 +172,20 @@ function setupMagicLink(app1) {
         { authenticationId: member.authentications()[0] },
         conf.get("magicLinkSecret"),
         { expiresIn: "30 minutes" },
-        (err1, token) => {
+        async (err1, token) => {
           if (err1) {
             return next(err1);
           }
 
-          mailsenderService.sendMagicLinkToMember(member, token, (err2) => {
-            if (err2) {
-              return next(err2);
-            }
+          await mailsenderService.sendMagicLinkToMember(member, token);
 
-            statusmessage
-              .successMessage(
-                "Magic Link ist unterwegs",
-                "Wir haben Dir einen Magic Link geschickt. Er ist 30 Minuten lang gültig. Bitte prüfe auch Deinen Spamfolder, falls Du ihn nicht bekommst."
-              )
-              .putIntoSession(req, res);
-            return res.redirect("/");
-          });
+          statusmessage
+            .successMessage(
+              "Magic Link ist unterwegs",
+              "Wir haben Dir einen Magic Link geschickt. Er ist 30 Minuten lang gültig. Bitte prüfe auch Deinen Spamfolder, falls Du ihn nicht bekommst."
+            )
+            .putIntoSession(req, res);
+          return res.redirect("/");
         }
       );
     } catch (e) {

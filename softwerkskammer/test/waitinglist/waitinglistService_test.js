@@ -56,43 +56,37 @@ describe("Waitinglist Service", () => {
       sinon.stub(activitystore, "getActivity").returns(activity1);
     });
 
-    it("returns an empty list when the waitinglist is empty", (done) => {
-      waitinglistService.waitinglistFor("myActivity", (err, waitinglist) => {
-        expect(waitinglist).to.be.empty();
-        done(err);
-      });
+    it("returns an empty list when the waitinglist is empty", async () => {
+      const waitinglist = await waitinglistService.waitinglistFor("myActivity");
+      expect(waitinglist).to.be.empty();
     });
 
-    it("returns one entry with its member nickname when the waitinglist contains one entry", (done) => {
+    it("returns one entry with its member nickname when the waitinglist contains one entry", async () => {
       activity1.resourceNamed("Veranstaltung").addToWaitinglist("12345", Date.now());
 
-      waitinglistService.waitinglistFor("myActivity", (err, waitinglist) => {
-        expect(waitinglist.length).to.equal(1);
-        expect(waitinglist[0].registrantNickname).to.equal("hansdampf");
-        expect(waitinglist[0].resourceName()).to.equal("Veranstaltung");
-        expect(waitinglist[0].registrationDate()).to.not.be(undefined);
-        expect(waitinglist[0].registrationValidUntil()).to.be(undefined);
-        done(err);
-      });
+      const waitinglist = await waitinglistService.waitinglistFor("myActivity");
+      expect(waitinglist.length).to.equal(1);
+      expect(waitinglist[0].registrantNickname).to.equal("hansdampf");
+      expect(waitinglist[0].resourceName()).to.equal("Veranstaltung");
+      expect(waitinglist[0].registrationDate()).to.not.be(undefined);
+      expect(waitinglist[0].registrationValidUntil()).to.be(undefined);
     });
 
-    it("returns two entries with their member nicknames when the waitinglist contains two entries", (done) => {
+    it("returns two entries with their member nicknames when the waitinglist contains two entries", async () => {
       activity1.resourceNamed("Veranstaltung").addToWaitinglist("12345", Date.now());
       activity1.resourceNamed("Veranstaltung").addToWaitinglist("abcxyz", Date.now());
 
-      waitinglistService.waitinglistFor("myActivity", (err, waitinglist) => {
-        expect(waitinglist.length).to.equal(2);
-        expect(waitinglist[0].registrantNickname).to.equal("hansdampf");
-        expect(waitinglist[1].registrantNickname).to.equal("nickinick");
-        done(err);
-      });
+      const waitinglist = await waitinglistService.waitinglistFor("myActivity");
+      expect(waitinglist.length).to.equal(2);
+      expect(waitinglist[0].registrantNickname).to.equal("hansdampf");
+      expect(waitinglist[1].registrantNickname).to.equal("nickinick");
     });
   });
 
   describe("- when saving a waitinglist entry -", () => {
     beforeEach(() => undefined);
 
-    it("succeeds no matter whether registration is open or not", (done) => {
+    it("succeeds no matter whether registration is open or not", async () => {
       activityWithEinzelzimmer({
         _waitinglist: [{ _memberId: "otherId" }],
       });
@@ -103,38 +97,40 @@ describe("Waitinglist Service", () => {
       sinon.stub(memberstore, "getMember").returns(new Member({ id: "memberId", nickname: "hansdampf" }));
 
       const args = { nickname: "memberId", activityUrl: "activity-url", resourcename: "Einzelzimmer" };
-      waitinglistService.saveWaitinglistEntry(args, (err) => {
-        const waitinglistMembers = waitinglistMembersOf(savedActivity, "Einzelzimmer");
-        expect(waitinglistMembers).to.contain("memberId");
-        expect(waitinglistMembers).to.contain("otherId");
-        done(err);
-      });
+      await waitinglistService.saveWaitinglistEntry(args);
+      const waitinglistMembers = waitinglistMembersOf(savedActivity, "Einzelzimmer");
+      expect(waitinglistMembers).to.contain("memberId");
+      expect(waitinglistMembers).to.contain("otherId");
     });
 
-    it("gives an error when activity could not be loaded", (done) => {
+    it("gives an error when activity could not be loaded", async () => {
       sinon.stub(activitystore, "getActivity").callsFake((id, callback) => {
         callback(new Error("error"));
       });
       sinon.stub(memberstore, "getMember").returns(new Member({ id: "memberId", nickname: "hansdampf" }));
 
       const args = { nickname: "memberId", activityUrl: "activity-url", resourcename: "Einzelzimmer" };
-      waitinglistService.saveWaitinglistEntry(args, (err) => {
-        expect(err, "Error").to.exist();
-        done(); // error condition - do not pass err
-      });
+      try {
+        await waitinglistService.saveWaitinglistEntry(args);
+        expect(true).to.be(false);
+      } catch (e) {
+        expect(e, "Error").to.exist();
+      }
     });
 
-    it("gives an error when member could not be loaded", (done) => {
+    it("gives an error when member could not be loaded", async () => {
       sinon.stub(activitystore, "getActivity").callsFake((id, callback) => {
         callback(null, new Activity());
       });
       sinon.stub(memberstore, "getMember").throws(new Error("error"));
 
       const args = { nickname: "memberId", activityUrl: "activity-url", resourcename: "Einzelzimmer" };
-      waitinglistService.saveWaitinglistEntry(args, (err) => {
-        expect(err, "Error").to.exist();
-        done(); // error condition - do not pass err
-      });
+      try {
+        await waitinglistService.saveWaitinglistEntry(args);
+        expect(true).to.be(false);
+      } catch (e) {
+        expect(e, "Error").to.exist();
+      }
     });
   });
 
@@ -143,13 +139,12 @@ describe("Waitinglist Service", () => {
 
     beforeEach(() => {
       mailNotification = undefined;
-      sinon.stub(mailsenderService, "sendRegistrationAllowed").callsFake((member, activity, entry, callback) => {
+      sinon.stub(mailsenderService, "sendRegistrationAllowed").callsFake((member, activity, entry) => {
         mailNotification = { member, activity, entry };
-        callback(null);
       });
     });
 
-    it("succeeds no matter whether registration is open or not", (done) => {
+    it("succeeds no matter whether registration is open or not", async () => {
       activityWithEinzelzimmer({
         _waitinglist: [{ _memberId: "memberId" }, { _memberId: "otherId" }],
       });
@@ -160,19 +155,17 @@ describe("Waitinglist Service", () => {
       sinon.stub(memberstore, "getMember").returns(new Member({ id: "memberId", nickname: "hansdampf" }));
 
       const args = { nickname: "memberId", activityUrl: "activity-url", resourcename: "Einzelzimmer" };
-      waitinglistService.allowRegistrationForWaitinglistEntry(args, (err) => {
-        const waitinglistMembers = waitinglistMembersOf(savedActivity, "Einzelzimmer");
-        expect(waitinglistMembers).to.contain("memberId");
-        expect(waitinglistMembers).to.contain("otherId");
+      await waitinglistService.allowRegistrationForWaitinglistEntry(args);
+      const waitinglistMembers = waitinglistMembersOf(savedActivity, "Einzelzimmer");
+      expect(waitinglistMembers).to.contain("memberId");
+      expect(waitinglistMembers).to.contain("otherId");
 
-        expect(mailNotification.member.id()).to.equal("memberId");
-        expect(mailNotification.activity.url()).to.equal("activity-url");
-        expect(mailNotification.entry.registrantId()).to.equal("memberId");
-        done(err);
-      });
+      expect(mailNotification.member.id()).to.equal("memberId");
+      expect(mailNotification.activity.url()).to.equal("activity-url");
+      expect(mailNotification.entry.registrantId()).to.equal("memberId");
     });
 
-    it("gives an error and does not notify when save failed", (done) => {
+    it("gives an error and does not notify when save failed", async () => {
       activityWithEinzelzimmer({
         _waitinglist: [{ _memberId: "memberId" }, { _memberId: "otherId" }],
       });
@@ -182,14 +175,16 @@ describe("Waitinglist Service", () => {
       sinon.stub(memberstore, "getMember").returns(new Member({ id: "memberId", nickname: "hansdampf" }));
 
       const args = { nickname: "memberId", activityUrl: "activity-url", resourcename: "Einzelzimmer" };
-      waitinglistService.allowRegistrationForWaitinglistEntry(args, (err) => {
+      try {
+        await waitinglistService.allowRegistrationForWaitinglistEntry(args);
+        expect(true).to.be(false);
+      } catch (e) {
         expect(mailNotification, "Notification was not sent").to.be(undefined);
-        expect(err, "Error").to.exist();
-        done(); // error condition - do not pass err
-      });
+        expect(e, "Error").to.exist();
+      }
     });
 
-    it("does not change anything when member is not in waitinglist", (done) => {
+    it("does not change anything when member is not in waitinglist", async () => {
       const activity = activityWithEinzelzimmer({
         _waitinglist: [{ _memberId: "otherId" }],
       });
@@ -200,42 +195,42 @@ describe("Waitinglist Service", () => {
       sinon.stub(memberstore, "getMember").returns(new Member({ id: "memberId", nickname: "hansdampf" }));
 
       const args = { nickname: "memberId", activityUrl: "activity-url", resourcename: "Einzelzimmer" };
-      waitinglistService.allowRegistrationForWaitinglistEntry(args, (err) => {
-        expect(savedActivity, "Activity was not saved").to.be(undefined);
-        expect(mailNotification, "Notification was not sent").to.be(undefined);
-        const waitinglistMembers = waitinglistMembersOf(activity, "Einzelzimmer");
-        expect(waitinglistMembers, "Activity remains unchanged: memberId was not added").to.not.contain("memberId");
-        expect(waitinglistMembers, "Activity remains unchanged: otherId is still there").to.contain("otherId");
-        done(err);
-      });
+      await waitinglistService.allowRegistrationForWaitinglistEntry(args);
+      expect(savedActivity, "Activity was not saved").to.be(undefined);
+      expect(mailNotification, "Notification was not sent").to.be(undefined);
+      const waitinglistMembers = waitinglistMembersOf(activity, "Einzelzimmer");
+      expect(waitinglistMembers, "Activity remains unchanged: memberId was not added").to.not.contain("memberId");
+      expect(waitinglistMembers, "Activity remains unchanged: otherId is still there").to.contain("otherId");
     });
 
-    it("gives an error when activity could not be loaded", (done) => {
-      sinon.stub(activitystore, "getActivity").callsFake((id, callback) => {
-        callback(new Error("error"));
-      });
+    it("gives an error when activity could not be loaded", async () => {
+      sinon.stub(activitystore, "getActivity").throws(new Error("error"));
       sinon.stub(memberstore, "getMember").returns(new Member({ id: "memberId", nickname: "hansdampf" }));
 
       const args = { nickname: "memberId", activityUrl: "activity-url", resourcename: "Einzelzimmer" };
-      waitinglistService.allowRegistrationForWaitinglistEntry(args, (err) => {
+      try {
+        await waitinglistService.allowRegistrationForWaitinglistEntry(args);
+        expect(true).to.be(false);
+      } catch (e) {
         expect(mailNotification, "Notification was not sent").to.be(undefined);
-        expect(err, "Error").to.exist();
-        done(); // error condition - do not pass err
-      });
+        expect(e, "Error").to.exist();
+      }
     });
 
-    it("gives an error when member could not be loaded", (done) => {
+    it("gives an error when member could not be loaded", async () => {
       sinon.stub(activitystore, "getActivity").callsFake((id, callback) => {
         callback(null, new Activity());
       });
       sinon.stub(memberstore, "getMember").throws(new Error("error"));
 
       const args = { nickname: "memberId", activityUrl: "activity-url", resourcename: "Einzelzimmer" };
-      waitinglistService.allowRegistrationForWaitinglistEntry(args, (err) => {
+      try {
+        await waitinglistService.allowRegistrationForWaitinglistEntry(args);
+        expect(true).to.be(false);
+      } catch (e) {
         expect(mailNotification, "Notification was not sent").to.be(undefined);
-        expect(err, "Error").to.exist();
-        done(); // error condition - do not pass err
-      });
+        expect(e, "Error").to.exist();
+      }
     });
   });
 });

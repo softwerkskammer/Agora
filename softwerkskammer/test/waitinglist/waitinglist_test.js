@@ -16,9 +16,7 @@ describe("Waitinglist application", () => {
     sinon.stub(activitiesService, "getActivityWithGroupAndParticipants").callsFake((url) => {
       return new Activity({ url, title: "Activity's Title" });
     });
-    sinon.stub(waitinglistService, "waitinglistFor").callsFake((url, callback) => {
-      callback(null, []);
-    });
+    sinon.stub(waitinglistService, "waitinglistFor").returns([]);
   });
 
   afterEach(() => {
