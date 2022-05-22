@@ -31,72 +31,45 @@ describe("Groups Service (getSubscribedGroupsForMember)", () => {
       }
       return g;
     });
-    sinon.stub(groupstore, "allGroups").callsFake((callback) => {
-      callback(null, testGroupsArray);
-    });
+    sinon.stub(groupstore, "allGroups").returns(testGroupsArray);
   }
 
-  it("returns an empty array of groups for a user who is not subscribed anywhere", (done) => {
+  it("returns an empty array of groups for a user who is not subscribed anywhere", async () => {
     setupSubscribedListsForUser([]);
 
-    groupsService.getSubscribedGroupsForMember(testMember, (err, validLists) => {
-      expect(validLists).to.not.be(null);
-      expect(validLists.length).to.equal(0);
-      done(err);
-    });
+    const validLists = await groupsService.getSubscribedGroupsForMember(testMember);
+    expect(validLists).to.not.be(null);
+    expect(validLists.length).to.equal(0);
   });
 
-  it("returns one group for a user who is subscribed to one list", (done) => {
+  it("returns one group for a user who is subscribed to one list", async () => {
     setupSubscribedListsForUser(["groupa"]);
 
-    groupsService.getSubscribedGroupsForMember(testMember, (err, validLists) => {
-      expect(validLists).to.not.be(null);
-      expect(validLists.length).to.equal(1);
-      expect(validLists[0]).to.equal(testGroups.GroupA);
-      done(err);
-    });
+    const validLists = await groupsService.getSubscribedGroupsForMember(testMember);
+    expect(validLists).to.not.be(null);
+    expect(validLists.length).to.equal(1);
+    expect(validLists[0]).to.equal(testGroups.GroupA);
   });
 
-  it("returns two groups for a user who is subscribed to two lists", (done) => {
+  it("returns two groups for a user who is subscribed to two lists", async () => {
     setupSubscribedListsForUser(["groupa", "groupb"]);
 
-    groupsService.getSubscribedGroupsForMember(testMember, (err, validLists) => {
-      expect(validLists).to.not.be(null);
-      expect(validLists.length).to.equal(2);
-      expect(validLists[0]).to.equal(testGroups.GroupA);
-      expect(validLists[1]).to.equal(testGroups.GroupB);
-      done(err);
-    });
+    const validLists = await groupsService.getSubscribedGroupsForMember(testMember);
+    expect(validLists).to.not.be(null);
+    expect(validLists.length).to.equal(2);
+    expect(validLists[0]).to.equal(testGroups.GroupA);
+    expect(validLists[1]).to.equal(testGroups.GroupB);
   });
 
-  it("handles errors in retrieving lists", (done) => {
-    sinon.stub(groupstore, "allGroups").callsFake((callback) => {
-      callback(new Error());
-    });
+  it("handles errors in retrieving lists", async () => {
+    sinon.stub(groupstore, "allGroups").throws(new Error());
 
-    groupsService.getSubscribedGroupsForMember("admin@softwerkskammer.de", (err) => {
-      expect(err).to.exist();
-      done();
-    });
-  });
-});
-
-describe("Groups Service (getAllAvailableGroups)", () => {
-  afterEach(() => {
-    sinon.restore();
-  });
-
-  it("returns an empty array of groups if there are no lists defined in mailinglist", (done) => {
-    const spy = sinon.stub(groupstore, "allGroups").callsFake((callback) => {
-      callback(null, []);
-    });
-
-    groupstore.allGroups((err, lists) => {
-      expect(spy.called).to.be(true);
-      expect(lists).to.not.be(null);
-      expect(lists.length).to.equal(0);
-      done(err);
-    });
+    try {
+      await groupsService.getSubscribedGroupsForMember("admin@softwerkskammer.de");
+      expect(false.to.be(true));
+    } catch (e) {
+      expect(e).to.exist();
+    }
   });
 });
 
@@ -105,15 +78,11 @@ describe("Groups Service (createOrSaveGroup)", () => {
     sinon.restore();
   });
 
-  it("creates a new group and saves it if there is no group with the given name", (done) => {
-    const spy = sinon.stub(groupstore, "saveGroup").callsFake((group, callback) => {
-      callback(null);
-    });
+  it("creates a new group and saves it if there is no group with the given name", async () => {
+    const spy = sinon.stub(groupstore, "saveGroup").callsFake(() => {});
 
-    groupstore.saveGroup({}, (err) => {
-      expect(spy.calledOnce).to.be(true);
-      done(err);
-    });
+    await groupstore.saveGroup({});
+    expect(spy.calledOnce).to.be(true);
   });
 });
 
@@ -155,29 +124,25 @@ describe("Groups Service (allGroupColors)", () => {
     sinon.restore();
   });
 
-  it("returns an object with group id and color", (done) => {
+  it("returns an object with group id and color", async () => {
     GroupA.color = "#FFFFFF";
     GroupB.color = "#AAAAAA";
-    sinon.stub(groupstore, "allGroups").callsFake((globalCallback) => {
-      globalCallback(null, [GroupA, GroupB]);
-    });
+    sinon.stub(groupstore, "allGroups").returns([GroupA, GroupB]);
 
-    groupsService.allGroupColors((err, colorMap) => {
-      expect(colorMap).to.have.ownProperty("groupa", "#FFFFFF");
-      expect(colorMap).to.have.ownProperty("groupb", "#AAAAAA");
-      done(err);
-    });
+    const colorMap = await groupsService.allGroupColors();
+    expect(colorMap).to.have.ownProperty("groupa", "#FFFFFF");
+    expect(colorMap).to.have.ownProperty("groupb", "#AAAAAA");
   });
 
-  it("handles an error gracefully", (done) => {
-    sinon.stub(groupstore, "allGroups").callsFake((globalCallback) => {
-      globalCallback(new Error());
-    });
+  it("handles an error gracefully", async () => {
+    sinon.stub(groupstore, "allGroups").throws(new Error());
 
-    groupsService.allGroupColors((err) => {
-      expect(err).to.exist();
-      done();
-    });
+    try {
+      groupsService.allGroupColors();
+      expect(true).to.be(false);
+    } catch (e) {
+      expect(e).to.exist();
+    }
   });
 });
 
@@ -187,15 +152,15 @@ describe("Groups Service (isGroupNameAvailable)", () => {
   const GroupB = groups.GroupB;
 
   before(() => {
-    sinon.stub(groupstore, "getGroup").callsFake((groupname, callback) => {
+    sinon.stub(groupstore, "getGroup").callsFake((groupname) => {
       if (groupname === "GroupA") {
-        callback(null, GroupA);
+        return GroupA;
       } else if (groupname === "GroupB") {
-        callback(null, GroupB);
+        return GroupB;
       } else if (groupname === "ErrorGroup") {
-        callback(new Error("Ouch! Something bad happened..."));
+        throw new Error("Ouch! Something bad happened...");
       } else {
-        callback(null, null);
+        return null;
       }
     });
   });
@@ -204,92 +169,79 @@ describe("Groups Service (isGroupNameAvailable)", () => {
     sinon.restore();
   });
 
-  it("handles Errors", (done) => {
-    groupsService.isGroupNameAvailable("ErrorGroup", (err) => {
-      expect(err).to.exist();
-      done();
-    });
+  it("handles Errors", async () => {
+    try {
+      await groupsService.isGroupNameAvailable("ErrorGroup");
+      expect(false).to.be(true);
+    } catch (e) {
+      expect(e).to.exist();
+    }
   });
 
-  it("returns false when there is already a group of this name present", (done) => {
-    groupsService.isGroupNameAvailable("GroupA", (err, result) => {
-      expect(result).to.not.be(null);
-      expect(result).to.be(false);
-      done(err);
-    });
+  it("returns false when there is already a group of this name present", async () => {
+    const result = await groupsService.isGroupNameAvailable("GroupA");
+    expect(result).to.not.be(null);
+    expect(result).to.be(false);
   });
 
-  it("returns true when there is no group of this name present", (done) => {
-    groupsService.isGroupNameAvailable("MyGroup", (err, result) => {
-      expect(result).to.not.be(null);
-      expect(result).to.be(true);
-      done(err);
-    });
+  it("returns true when there is no group of this name present", async () => {
+    const result = await groupsService.isGroupNameAvailable("MyGroup");
+    expect(result).to.not.be(null);
+    expect(result).to.be(true);
   });
 
-  it("returns an error when the group fetching is not successful", function (done) {
-    groupsService.isGroupNameAvailable("ErrorGroup", function (err, result) {
-      expect(result).to.be(false);
-      expect(err).to.not.be(null);
-      done(); // we expect an error
-    });
+  it("returns an error when the group fetching is not successful", async () => {
+    try {
+      await groupsService.isGroupNameAvailable("ErrorGroup");
+      expect(false).to.be(true);
+    } catch (e) {
+      expect(e).to.not.be(null);
+    }
   });
 
-  it("rejects groupnames that contain special characters", function (done) {
+  it("rejects groupnames that contain special characters", async () => {
     expect(groupsService.isReserved("Sch adar")).to.be(true);
     expect(groupsService.isReserved("Sch/adar")).to.be(true);
     expect(groupsService.isReserved("Schad\nar")).to.be(true);
     expect(groupsService.isReserved("Schad@r")).to.be(true);
 
-    groupsService.isGroupNameAvailable("Scha dar", (err, result) => {
-      expect(result).to.be(false);
-      done(err);
-    });
+    const result = await groupsService.isGroupNameAvailable("Scha dar");
+    expect(result).to.be(false);
   });
 
-  it("allows groupnames that contain alphanumeric characters only", (done) => {
+  it("allows groupnames that contain alphanumeric characters only", async () => {
     expect(groupsService.isReserved("Schad_r")).to.be(false);
     expect(groupsService.isReserved("Schadar")).to.be(false);
 
-    groupsService.isGroupNameAvailable("Schadar", (err, result) => {
-      expect(result).to.be(true);
-      done(err);
-    });
+    const result = await groupsService.isGroupNameAvailable("Schadar");
+    expect(result).to.be(true);
   });
 
-  it("rejects groupnames that contain reserved routes", (done) => {
+  it("rejects groupnames that contain reserved routes", async () => {
     expect(groupsService.isReserved("new")).to.be(true);
     expect(groupsService.isReserved("submit")).to.be(true);
     expect(groupsService.isReserved("administration")).to.be(true);
     expect(groupsService.isReserved("edit")).to.be(true);
     expect(groupsService.isReserved("checkgroupname")).to.be(true);
 
-    groupsService.isGroupNameAvailable("edit", (err, result) => {
-      expect(result).to.be(false);
-      done(err);
-    });
+    const result = await groupsService.isGroupNameAvailable("edit");
+    expect(result).to.be(false);
   });
 });
 
 describe("Groups Service (isEmailPrefixAvailable)", () => {
-  it("returns false for an undefined prefix", (done) => {
-    groupsService.isEmailPrefixAvailable(undefined, (err, result) => {
-      expect(result).to.be(false);
-      done(err);
-    });
+  it("returns false for an undefined prefix", async () => {
+    const result = await groupsService.isEmailPrefixAvailable(undefined);
+    expect(result).to.be(false);
   });
 
-  it("returns false for a null prefix", (done) => {
-    groupsService.isEmailPrefixAvailable(null, (err, result) => {
-      expect(result).to.be(false);
-      done(err);
-    });
+  it("returns false for a null prefix", async () => {
+    const result = await groupsService.isEmailPrefixAvailable(null);
+    expect(result).to.be(false);
   });
 
-  it("returns false for an empty prefix", (done) => {
-    groupsService.isEmailPrefixAvailable("", (err, result) => {
-      expect(result).to.be(false);
-      done(err);
-    });
+  it("returns false for an empty prefix", async () => {
+    const result = await groupsService.isEmailPrefixAvailable("");
+    expect(result).to.be(false);
   });
 });

@@ -107,109 +107,75 @@ describe("Activity application with DB - shows activities for Group-Ids -", () =
     version: 1,
   });
 
-  beforeEach((done) => {
+  beforeEach(async () => {
     // if this fails, you need to start your mongo DB
-
-    persistence.drop(() => {
-      activitystore.saveActivity(pastActivity1, (err) => {
-        if (err) {
-          done(err);
-        }
-        activitystore.saveActivity(pastActivity2, (err1) => {
-          if (err1) {
-            done(err1);
-          }
-          activitystore.saveActivity(futureActivity1, (err2) => {
-            if (err2) {
-              done(err2);
-            }
-            activitystore.saveActivity(futureActivity2, (err3) => {
-              if (err3) {
-                done(err3);
-              }
-              activitystore.saveActivity(currentActivity1, (err4) => {
-                if (err4) {
-                  done(err4);
-                }
-                activitystore.saveActivity(currentActivity2, (err5) => {
-                  done(err5);
-                });
-              });
-            });
-          });
-        });
-      });
-    });
+    await persistence.dropMongoCollection();
+    await activitystore.saveActivity(pastActivity1);
+    await activitystore.saveActivity(pastActivity2);
+    await activitystore.saveActivity(futureActivity1);
+    await activitystore.saveActivity(futureActivity2);
+    await activitystore.saveActivity(currentActivity1);
+    await activitystore.saveActivity(currentActivity2);
   });
 
   afterEach(() => {
     sinon.restore();
   });
 
-  it("shows only current and future activities of Group 1", (done) => {
-    activitystore.upcomingActivitiesForGroupIds(["groupname1"], (err, activities) => {
-      expect(activities.length).to.equal(2);
-      expect(activities[0].title()).to.equal("Current Activity 1");
-      expect(activities[1].title()).to.equal("Future Activity 1");
-      done(err);
-    });
+  it("shows only current and future activities of Group 1", async () => {
+    const activities = await activitystore.upcomingActivitiesForGroupIds(["groupname1"]);
+    expect(activities.length).to.equal(2);
+    expect(activities[0].title()).to.equal("Current Activity 1");
+    expect(activities[1].title()).to.equal("Future Activity 1");
   });
 
-  it("shows current and future activities of Group 1 and activities with subscribed member", (done) => {
-    activitystore.activitiesForGroupIdsAndRegisteredMemberId(["groupname1"], "memberId", true, (err, activities) => {
-      expect(activities.length).to.equal(3);
-      expect(activities[0].title()).to.equal("Current Activity 1");
-      expect(activities[1].title()).to.equal("Future Activity 1");
-      expect(activities[2].title()).to.equal("Future Activity 2");
-      done(err);
-    });
+  it("shows current and future activities of Group 1 and activities with subscribed member", async () => {
+    const activities = await activitystore.activitiesForGroupIdsAndRegisteredMemberId(["groupname1"], "memberId", true);
+    expect(activities.length).to.equal(3);
+    expect(activities[0].title()).to.equal("Current Activity 1");
+    expect(activities[1].title()).to.equal("Future Activity 1");
+    expect(activities[2].title()).to.equal("Future Activity 2");
   });
 
-  it("shows activity only once even if member is subscribed to multiple resources", (done) => {
-    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], "memberId2", true, (err, activities) => {
-      expect(activities.length).to.equal(1);
-      expect(activities[0].title()).to.equal("Future Activity 1");
-      done(err);
-    });
+  it("shows activity only once even if member is subscribed to multiple resources", async () => {
+    const activities = await activitystore.activitiesForGroupIdsAndRegisteredMemberId([], "memberId2", true);
+    expect(activities.length).to.equal(1);
+    expect(activities[0].title()).to.equal("Future Activity 1");
   });
 
-  it("shows past activities of Group 1 and activities with subscribed member", (done) => {
-    activitystore.activitiesForGroupIdsAndRegisteredMemberId(["groupname1"], "memberId", false, (err, activities) => {
-      expect(activities.length).to.equal(2);
-      expect(activities[0].title()).to.equal("Past Activity 1");
-      expect(activities[1].title()).to.equal("Past Activity 2");
-      done(err);
-    });
+  it("shows past activities of Group 1 and activities with subscribed member (current is included)", async () => {
+    const activities = await activitystore.activitiesForGroupIdsAndRegisteredMemberId(
+      ["groupname1"],
+      "memberId",
+      false
+    );
+    expect(activities.length).to.equal(3);
+    expect(activities[0].title()).to.equal("Current Activity 1");
+    expect(activities[1].title()).to.equal("Past Activity 1");
+    expect(activities[2].title()).to.equal("Past Activity 2");
   });
 
-  it("shows current and future activities of activities with subscribed member", (done) => {
-    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], "memberId", true, (err, activities) => {
-      expect(activities.length).to.equal(2);
-      expect(activities[0].title()).to.equal("Current Activity 1");
-      expect(activities[1].title()).to.equal("Future Activity 2");
-      done(err);
-    });
+  it("shows current and future activities of activities with subscribed member", async () => {
+    const activities = await activitystore.activitiesForGroupIdsAndRegisteredMemberId([], "memberId", true);
+    expect(activities.length).to.equal(2);
+    expect(activities[0].title()).to.equal("Current Activity 1");
+    expect(activities[1].title()).to.equal("Future Activity 2");
   });
 
-  it("returns an empty list if no matching activities are found", (done) => {
-    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], "unknownMemberId", true, (err, activities) => {
-      expect(activities.length).to.equal(0);
-      done(err);
-    });
+  it("returns an empty list if no matching activities are found", async () => {
+    const activities = await activitystore.activitiesForGroupIdsAndRegisteredMemberId([], "unknownMemberId", true);
+    expect(activities.length).to.equal(0);
   });
 });
 
 describe("Activity application with DB - activitiesForGroupIdsAndRegisteredMemberId without activities -", () => {
-  beforeEach((done) => {
+  beforeEach(async () => {
     // if this fails, you need to start your mongo DB
-    persistence.drop(done);
+    await persistence.dropMongoCollection();
   });
 
-  it("returns an empty list if there is no collection at all", (done) => {
-    activitystore.activitiesForGroupIdsAndRegisteredMemberId([], "unknownMemberId", true, (err, activities) => {
-      expect(err).to.not.exist();
-      expect(activities.length).to.equal(0);
-      done(err);
-    });
+  it("returns an empty list if there is no collection at all", async () => {
+    const activities = await activitystore.activitiesForGroupIdsAndRegisteredMemberId([], "unknownMemberId", true);
+    expect(activities.length).to.equal(0);
   });
 });

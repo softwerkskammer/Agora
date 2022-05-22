@@ -38,49 +38,33 @@ describe("Groups and Members Service (member deletion)", () => {
   beforeEach(() => {
     savedGroups = [];
     removeMemberSpy = null;
-    sinon.stub(memberstore, "getMember").callsFake((nick, callback) => {
-      callback(null, dummymember);
-    });
-    sinon.stub(memberstore, "getMemberForId").callsFake((memberID, callback) => {
-      callback(null, dummymember);
-    });
-    sinon.stub(groupstore, "saveGroup").callsFake((group, callback) => {
+    sinon.stub(memberstore, "getMember").returns(dummymember);
+    sinon.stub(memberstore, "getMemberForId").returns(dummymember);
+    sinon.stub(groupstore, "saveGroup").callsFake((group) => {
       savedGroups.push(group);
-      callback();
     });
-    removeMemberSpy = sinon.stub(memberstore, "removeMember").callsFake((member, callback) => {
-      callback();
-    });
+    removeMemberSpy = sinon.stub(memberstore, "removeMember");
   });
 
   afterEach(() => {
     sinon.restore();
   });
 
-  it("removes the groups membership and kills the member", (done) => {
-    sinon.stub(groupsService, "getSubscribedGroupsForMember").callsFake((member, callback) => {
-      callback(null, [GroupA, GroupB]);
-    });
+  it("removes the groups membership and kills the member", async () => {
+    sinon.stub(groupsService, "getSubscribedGroupsForMember").returns([GroupA, GroupB]);
 
-    groupsAndMembersService.removeMember("nick", (err) => {
-      expect(savedGroups.length).to.equal(2);
-      savedGroups.forEach((g) => {
-        expect(g.subscribedMembers).not.to.include("nick");
-      });
-      sinon.assert.calledWith(removeMemberSpy, dummymember);
-
-      done(err);
+    await groupsAndMembersService.removeMember("nick");
+    expect(savedGroups.length).to.equal(2);
+    savedGroups.forEach((g) => {
+      expect(g.subscribedMembers).not.to.include("nick");
     });
+    sinon.assert.calledWith(removeMemberSpy, dummymember);
   });
 
-  it("does not call the groups when no groups subscribed but kills the member", (done) => {
-    sinon.stub(groupsService, "getSubscribedGroupsForMember").callsFake((member, callback) => {
-      callback(null, []);
-    });
+  it("does not call the groups when no groups subscribed but kills the member", async () => {
+    sinon.stub(groupsService, "getSubscribedGroupsForMember").returns([]);
 
-    groupsAndMembersService.removeMember("nick", (err) => {
-      expect(savedGroups.length).to.equal(0);
-      done(err);
-    });
+    await groupsAndMembersService.removeMember("nick");
+    expect(savedGroups.length).to.equal(0);
   });
 });

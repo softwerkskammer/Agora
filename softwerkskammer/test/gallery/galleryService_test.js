@@ -21,138 +21,95 @@ function exists(name) {
 
 describe("the gallery repository on real files", () => {
   describe("metadata for images", () => {
-    it("provides exif data for a given image", (done) => {
+    it("provides exif data for a given image", async () => {
       const exifPath = path.join(__dirname, "/fixtures/exif_image.jpg");
-      service.storeImage(exifPath, (err, imageId) => {
-        if (err) {
-          return done(err);
-        }
-        service.getMetadataForImage(imageId, (err1, metadata) => {
-          expect(metadata.exif).to.have.property("DateTimeOriginal");
-          done(err1);
-        });
-      });
+      const imageId = await service.storeImage(exifPath);
+      const metadata = await service.getMetadataForImage(imageId);
+      expect(metadata.exif).to.have.property("DateTimeOriginal");
     });
   });
 
   describe("stores an image", () => {
-    it("in the file system", (done) => {
-      service.storeImage(sourceImage, (err, storedImageId) => {
-        expect(exists(storedImageId)).to.be(true);
-        done(err);
-      });
+    it("in the file system", async () => {
+      const storedImageId = await service.storeImage(sourceImage);
+      expect(exists(storedImageId)).to.be(true);
     });
   });
 
   describe("retrieval of images", () => {
-    it("provides the original image when no width is provided", (done) => {
-      service.storeImage(sourceImage, (err, imageId) => {
-        if (err) {
-          return done(err);
-        }
-        service.retrieveScaledImage(imageId, undefined, (err2, retrievedImagePath) => {
-          expect(fs.existsSync(retrievedImagePath)).to.be(true);
-          expect(retrievedImagePath).to.be(tmpPathFor(imageId));
-          done(err2);
-        });
-      });
+    it("provides the original image when no width is provided", async () => {
+      const imageId = await service.storeImage(sourceImage);
+      const retrievedImagePath = await service.retrieveScaledImage(imageId, undefined);
+      expect(fs.existsSync(retrievedImagePath)).to.be(true);
+      expect(retrievedImagePath).to.be(tmpPathFor(imageId));
     });
 
-    it("provides scaled image path when width is provided", (done) => {
-      service.storeImage(sourceImage, (err, imageId) => {
-        if (err) {
-          return done(err);
-        }
+    it("provides scaled image path when width is provided", async () => {
+      const imageId = await service.storeImage(sourceImage);
 
-        // first retrieve: scaled image does not exist yet
-        service.retrieveScaledImage(imageId, "thumb", (err2, retrievedImagePath) => {
-          expect(fs.existsSync(retrievedImagePath)).to.be(true);
-          expect(retrievedImagePath).to.not.be(tmpPathFor(imageId));
-          expect(retrievedImagePath).to.match(/_400\.jpg$/);
+      // first retrieve: scaled image does not exist yet
+      const retrievedImagePath = await service.retrieveScaledImage(imageId, "thumb");
+      expect(fs.existsSync(retrievedImagePath)).to.be(true);
+      expect(retrievedImagePath).to.not.be(tmpPathFor(imageId));
+      expect(retrievedImagePath).to.match(/_400\.jpg$/);
 
-          // second retrieve: scaled image already exists
-          service.retrieveScaledImage(imageId, "thumb", (err3, retrievedImagePath2) => {
-            expect(retrievedImagePath2).to.be(retrievedImagePath);
-            done(err3);
-          });
-        });
-      });
+      // second retrieve: scaled image already exists
+      const retrievedImagePath2 = await service.retrieveScaledImage(imageId, "thumb");
+      expect(retrievedImagePath2).to.be(retrievedImagePath);
     });
 
-    it("returns error for invalid imageId when width is not provided", (done) => {
-      service.retrieveScaledImage("invalidId", null, (err) => {
-        expect(err).to.exist();
-        done();
-      });
+    it("returns error for invalid imageId when width is not provided", async () => {
+      try {
+        await service.retrieveScaledImage("invalidId");
+        expect(false).to.be(true);
+      } catch (e) {
+        expect(e).to.exist();
+      }
     });
 
-    it("returns error for invalid imageId when width is provided", (done) => {
-      service.retrieveScaledImage("invalidId", "thumb", (err) => {
-        expect(err).to.exist();
-        done();
-      });
+    it("returns error for invalid imageId when width is provided", async () => {
+      try {
+        await service.retrieveScaledImage("invalidId", "thumb");
+        expect(false).to.be(true);
+      } catch (e) {
+        expect(e).to.exist();
+      }
     });
   });
 
   describe("deletion of images", () => {
-    it("deletes an image", (done) => {
-      service.storeImage(sourceImage, (err1, imageId) => {
-        if (err1) {
-          return done(err1);
-        }
-        expect(exists(imageId)).to.be.true();
-        service.deleteImage(tmpPathFor(imageId), (err2) => {
-          expect(exists(imageId)).to.be.false();
-          done(err2);
-        });
-      });
+    it("deletes an image", async () => {
+      const imageId = await service.storeImage(sourceImage);
+      expect(exists(imageId)).to.be.true();
+      await service.deleteImage(tmpPathFor(imageId));
+      expect(exists(imageId)).to.be.false();
     });
   });
 
   describe("avatar images", () => {
-    it("stores an avatar image", (done) => {
-      service.storeAvatar(sourceImage, {}, (err, name) => {
-        expect(err).to.not.exist();
-        service.retrieveScaledImage(name, undefined, (err1) => {
-          done(err1);
-        });
-      });
+    it("stores an avatar image", async () => {
+      const name = await service.storeAvatar(sourceImage, {});
+      await service.retrieveScaledImage(name, undefined);
     });
 
-    it("stores a miniavatar image", (done) => {
-      service.storeAvatar(sourceImage, {}, (err, name) => {
-        expect(err).to.not.exist();
-        service.retrieveScaledImage(name, "mini", (err1, lname) => {
-          expect(lname).to.match(/_16\.jpg/);
-          done(err1);
-        });
-      });
+    it("stores a miniavatar image", async () => {
+      const name = await service.storeAvatar(sourceImage, {});
+      const lname = await service.retrieveScaledImage(name, "mini");
+      expect(lname).to.match(/_16\.jpg/);
     });
 
-    it("deletes an existing avatar image", (done) => {
-      service.storeAvatar(sourceImage, {}, (err, name) => {
-        if (err) {
-          return done(err);
-        }
-        expect(exists(name)).to.be.true();
-        service.deleteImage(name, (err1) => {
-          expect(exists(name)).to.be.false();
-          done(err1);
-        });
-      });
+    it("deletes an existing avatar image", async () => {
+      const name = await service.storeAvatar(sourceImage, {});
+      expect(exists(name)).to.be.true();
+      await service.deleteImage(name);
+      expect(exists(name)).to.be.false();
     });
 
-    it('is happy with "deleting" a non-existing avatar image', (done) => {
-      service.storeAvatar(sourceImage, {}, (err, name) => {
-        if (err) {
-          return done(err);
-        }
-        expect(exists(name)).to.be.true();
-        service.deleteImage("nonexisting" + name, (err1) => {
-          expect(exists(name)).to.be.true();
-          done(err1);
-        });
-      });
+    it('is happy with "deleting" a non-existing avatar image', async () => {
+      const name = await service.storeAvatar(sourceImage, {});
+      expect(exists(name)).to.be.true();
+      await service.deleteImage("nonexisting" + name);
+      expect(exists(name)).to.be.true();
     });
   });
 });

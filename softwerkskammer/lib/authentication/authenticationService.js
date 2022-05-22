@@ -7,17 +7,19 @@ const membersService = beans.get("membersService");
 const memberstore = beans.get("memberstore");
 
 function createUserObject(req, authenticationId, profile, done) {
-  process.nextTick(
-    membersService.findMemberFor(req.user, authenticationId, (err, member) => {
-      if (err) {
-        return done(err);
-      }
+  async function callback() {
+    try {
+      const member = await membersService.findMemberForAuthentication(req.user, authenticationId);
       if (!member) {
         return done(null, { authenticationId, profile });
       }
       return done(null, { authenticationId, member });
-    })
-  );
+    } catch (e) {
+      return done(e);
+    }
+  }
+
+  process.nextTick(callback);
 }
 
 const pwdAuthenticationPrefix = "password:";
@@ -63,7 +65,7 @@ module.exports = {
     createUserObject(req, authenticationId, {}, done);
   },
 
-  createUserObjectFromPassword: (req, email, password, done) => {
+  createUserObjectFromPassword: async (req, email, password, done) => {
     const authenticationId = pwdAuthenticationPrefix + email;
 
     if (req.route.path === "/login") {
@@ -77,17 +79,16 @@ module.exports = {
         done(null, null, "authentication.wrong_credentials");
       });
     } else if (req.route.path === "/signup") {
-      memberstore.getMemberForEMail(email, (err, member) => {
-        if (err) {
-          return done(err);
-        }
-
+      try {
+        const member = await memberstore.getMemberForEMail(email);
         if (member) {
           logger.error(new Error('On Signup: Member with email address "' + email + '" already exists'));
           return done(null, null, "authentication.error_member_exists");
         }
         createUserObject(req, authenticationId, { emails: [{ value: email }], password }, done);
-      });
+      } catch (e) {
+        return done(e);
+      }
     }
   },
 };

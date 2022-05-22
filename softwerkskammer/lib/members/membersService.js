@@ -1,5 +1,5 @@
 const R = require("ramda");
-const fs = require("fs");
+const fsProm = require("fs/promises");
 const mimetypes = require("mime-types");
 
 const beans = require("simple-configure").get("beans");
@@ -24,98 +24,72 @@ function wordList(members, groupingFunction) {
   return result;
 }
 
-function setCustomAvatarImageInMember(member, callback) {
-  return galleryService.retrieveScaledImage(member.customAvatar(), "mini", (err, result) => {
-    if (err || !result) {
-      if (err.message.match(/does not exist/)) {
-        delete member.state.customAvatar;
-      }
-      return callback();
+async function setCustomAvatarImageInMember(member) {
+  try {
+    const result = await galleryService.retrieveScaledImage(member.customAvatar(), "mini");
+    if (!result) {
+      delete member.state.customAvatar;
     }
-    fs.readFile(result, function (err1, data) {
-      member.setAvatarData({
-        image: "data:" + mimetypes.lookup(result) + ";base64," + Buffer.from(data).toString("base64"),
-        hasNoImage: false,
-      });
-      callback(err1);
+    const data = await fsProm.readFile(result);
+    member.setAvatarData({
+      image: "data:" + mimetypes.lookup(result) + ";base64," + Buffer.from(data).toString("base64"),
+      hasNoImage: false,
     });
-  });
+  } catch (e) {
+    if (e.message.match(/does not exist/)) {
+      delete member.state.customAvatar;
+    }
+  }
 }
 
-function updateImage(member, callback) {
+async function updateImage(member) {
   // to be called at regular intervals
   if (member.hasCustomAvatar()) {
-    return callback();
+    return;
   }
-  avatarProvider.getImage(member, (imageData) => {
-    member.setAvatarData(imageData);
-    store.saveMember(member, callback); // never, ever "fork" stuff in node by not having return values *I AM IDIOT*
-  });
+  const imageData = await avatarProvider.getImage(member);
+  member.setAvatarData(imageData);
+  return store.saveMember(member);
 }
 
 module.exports = {
-  isValidNickname: function isValidNickname(nickname, callback) {
+  isValidNickname: async function isValidNickname(nickname) {
     if (fieldHelpers.containsSlash(nickname) || isReserved(nickname)) {
-      return callback(null, false);
+      return false;
     }
-    store.getMember(nickname, (err, result) => {
-      if (err) {
-        return callback(err);
-      }
-      callback(null, !result);
-    });
+    const b = await store.getMember(nickname);
+    return !b;
   },
 
-  isValidEmail: function isValidEmail(email, callback) {
-    store.getMemberForEMail(email, (err, result) => {
-      if (err) {
-        return callback(err);
-      }
-      callback(null, !result);
-    });
+  isValidEmail: async function isValidEmail(email) {
+    const b = await store.getMemberForEMail(email);
+    return !b;
   },
 
-  saveCustomAvatarForNickname: function saveCustomAvatarForNickname(nickname, files, params, callback) {
-    store.getMember(nickname, (err, member) => {
-      if (err) {
-        return callback(err);
-      }
-      galleryService.storeAvatar(files.image[0].path, params, (err1, filename) => {
-        if (err1) {
-          return callback(err1);
-        }
-        member.setCustomAvatar(filename);
-        setCustomAvatarImageInMember(member, () => {
-          // we ignore the error here
-          store.saveMember(member, callback);
-        });
-      });
-    });
+  saveCustomAvatarForNickname: async function saveCustomAvatarForNickname(nickname, files, params) {
+    const member = await store.getMember(nickname);
+    const filename = await galleryService.storeAvatar(files.image[0].path, params);
+    member.setCustomAvatar(filename);
+    await setCustomAvatarImageInMember(member);
+    return store.saveMember(member);
   },
 
-  deleteCustomAvatarForNickname: function deleteCustomAvatarForNickname(nickname, callback) {
-    store.getMember(nickname, (err, member) => {
-      if (err || !member.hasCustomAvatar()) {
-        return callback(err);
-      }
-      const avatar = member.customAvatar();
-      member.deleteCustomAvatar();
-      store.saveMember(member, (err1) => {
-        if (err1) {
-          return callback(err1);
-        }
-        galleryService.deleteAvatar(avatar, (err2) => {
-          callback(err2);
-        });
-      });
-    });
+  deleteCustomAvatarForNickname: async function deleteCustomAvatarForNickname(nickname) {
+    const member = await store.getMember(nickname);
+    if (!member.hasCustomAvatar()) {
+      return;
+    }
+    const avatar = member.customAvatar();
+    member.deleteCustomAvatar();
+    await store.saveMember(member);
+    galleryService.deleteAvatar(avatar);
   },
 
-  putAvatarIntoMemberAndSave: function putAvatarIntoMemberAndSave(member, callback) {
+  putAvatarIntoMemberAndSave: async function putAvatarIntoMemberAndSave(member) {
     if (member.getAvatarData()) {
-      return callback();
+      return;
     }
-    updateImage(member, callback);
+    return updateImage(member);
   },
 
   updateImage,
@@ -128,44 +102,30 @@ module.exports = {
     return wordList(members, R.identity).sort((a, b) => a.text.localeCompare(b.text));
   },
 
-  findMemberFor: function findMemberFor(user, authenticationId, callback) {
-    return () => {
-      if (!user) {
-        // not currently logged in
-        return store.getMemberForAuthentication(authenticationId, (err, member) => {
-          if (err) {
-            return callback(err);
-          }
-          return callback(null, member);
-        });
-      }
+  findMemberForAuthentication: async function findMemberForAuthentication(user, authenticationId) {
+    if (!user) {
+      // not currently logged in
+      return store.getMemberForAuthentication(authenticationId);
+    }
 
-      // logged in -> we don't care about the legacy id, we only want to add a new authentication provider to our profile
-      const memberOfSession = user.member;
-      return store.getMemberForAuthentication(authenticationId, (err, member) => {
-        if (err) {
-          return callback(err);
-        }
-        if (member && memberOfSession.id() !== member.id()) {
-          return callback(new Error("Unter dieser Authentifizierung existiert schon ein Mitglied."));
-        }
-        if (member && memberOfSession.id() === member.id()) {
-          return callback(null, member);
-        }
-        // no member found:
-        memberOfSession.addAuthentication(authenticationId);
-        store.saveMember(memberOfSession, (err1) => callback(err1, memberOfSession));
-      });
-    };
+    // logged in -> we don't care about the legacy id, we only want to add a new authentication provider to our profile
+    const memberOfSession = user.member;
+    const member = await store.getMemberForAuthentication(authenticationId);
+    if (member && memberOfSession.id() !== member.id()) {
+      throw new Error("Unter dieser Authentifizierung existiert schon ein Mitglied.");
+    }
+    if (member && memberOfSession.id() === member.id()) {
+      return member;
+    }
+    // no member found:
+    memberOfSession.addAuthentication(authenticationId);
+    await store.saveMember(memberOfSession);
+    return memberOfSession;
   },
 
-  superuserEmails: function superuserEmails(callback) {
-    store.superUsers((err, members) =>
-      callback(
-        err,
-        members.map((member) => member.email())
-      )
-    );
+  superuserEmails: async function superuserEmails() {
+    const members = await store.superUsers();
+    return members.map((member) => member.email());
   },
 
   isReserved,

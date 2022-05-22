@@ -102,9 +102,9 @@ module.exports = {
     return app;
   },
 
-  validate: function validate(currentValue, previousValue, validator, callback) {
+  validate: async function validate(currentValue, previousValue, validator) {
     if (!currentValue) {
-      return callback("false");
+      return "false";
     }
 
     currentValue = currentValue.trim();
@@ -113,15 +113,15 @@ module.exports = {
     }
 
     if (previousValue === currentValue) {
-      return callback("true");
+      return "true";
     }
 
-    validator(currentValue, (err, result) => {
-      if (err) {
-        return callback("false");
-      }
-      callback(result.toString());
-    });
+    try {
+      const result = await validator(currentValue);
+      return result.toString();
+    } catch (e) {
+      return "false";
+    }
   },
 
   representsImage: function representsImage(filenameOrExtension) {

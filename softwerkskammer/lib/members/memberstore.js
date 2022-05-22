@@ -1,6 +1,5 @@
 /* eslint no-underscore-dangle: 0 */
 
-const async = require("async");
 const conf = require("simple-configure");
 const beans = conf.get("beans");
 const R = require("ramda");
@@ -8,7 +7,6 @@ const persistence = beans.get("membersPersistence");
 const Member = beans.get("member");
 const misc = beans.get("misc");
 const logger = require("winston").loggers.get("transactions");
-const toMember = R.partial(misc.toObject, [Member]);
 
 function sortCaseInsensitive(objectlist) {
   return objectlist.sort((a, b) =>
@@ -19,87 +17,81 @@ function sortCaseInsensitive(objectlist) {
   );
 }
 
-function toMemberList(callback, err, result) {
-  if (err) {
-    return callback(err);
-  }
-  callback(
-    null,
-    sortCaseInsensitive(result).map((each) => new Member(each))
-  );
+function toMemberList(result) {
+  return sortCaseInsensitive(result).map((each) => new Member(each));
 }
 
 module.exports = {
-  allMembers: function allMembers(callback) {
-    persistence.listByField({}, { lastname: 1, firstname: 1 }, R.partial(toMemberList, [callback]));
+  allMembers: async function allMembers() {
+    const members = await persistence.listMongoByField({}, { lastname: 1, firstname: 1 });
+    return toMemberList(members);
   },
 
-  superUsers: function superUsers(callback) {
+  superUsers: async function superUsers() {
     const superusersids = conf.get("superuser");
-    persistence.listByField(
+    const superusers = await persistence.listMongoByField(
       { id: misc.arrayToLowerCaseRegExp(superusersids) },
       {
         lastname: 1,
         firstname: 1,
-      },
-      R.partial(toMemberList, [callback])
+      }
     );
+    return toMemberList(superusers);
   },
 
-  getMembersForEMails: function getMembersForEMails(emails, callback) {
+  getMembersForEMails: async function getMembersForEMails(emails) {
     if (emails.length === 0) {
-      return callback(null, []);
+      return [];
     }
-    async.map(
-      R.splitEvery(500, emails),
-      (chunk, callbackOfChunk) =>
-        persistence.listByField(
-          { email: misc.arrayToLowerCaseRegExp(chunk) },
-          {},
-          R.partial(toMemberList, [callbackOfChunk])
-        ),
-      (err, members) => callback(err, R.flatten(members))
-    );
+    async function listThem(memberChunk) {
+      const members = await persistence.listMongoByField({ email: misc.arrayToLowerCaseRegExp(memberChunk) }, {});
+      return toMemberList(members);
+    }
+
+    return R.flatten(await Promise.all(R.splitEvery(500, emails).map(listThem)));
   },
 
-  getMember: function getMember(nickname, callback) {
-    persistence.getByField({ nickname: misc.toLowerCaseRegExp(nickname.trim()) }, R.partial(toMember, [callback]));
+  getMember: async function getMember(nickname) {
+    const member = await persistence.getMongoByField({ nickname: misc.toLowerCaseRegExp(nickname.trim()) });
+    return member ? new Member(member) : null;
   },
 
-  getMemberForId: function getMemberForId(id, callback) {
-    persistence.getById(id, R.partial(toMember, [callback]));
+  getMemberForId: async function getMemberForId(id) {
+    const member = await persistence.getMongoById(id);
+    return member ? new Member(member) : null;
   },
 
-  getMemberForAuthentication: function getMemberForAuthentication(authenticationId, callback) {
-    persistence.getByField({ authentications: authenticationId }, R.partial(toMember, [callback]));
+  getMemberForAuthentication: async function getMemberForAuthentication(authenticationId) {
+    const member = await persistence.getMongoByField({ authentications: authenticationId });
+    return member ? new Member(member) : null;
   },
 
-  getMembersForIds: function getMembersForIds(ids, callback) {
-    persistence.listByIds(ids, {}, R.partial(toMemberList, [callback]));
+  getMembersForIds: async function getMembersForIds(ids) {
+    const members = await persistence.listMongoByIds(ids, {});
+    return toMemberList(members);
   },
 
-  getMemberForEMail: function getMemberForEMail(email, callback) {
-    persistence.getByField({ email: misc.toLowerCaseRegExp(email) }, R.partial(toMember, [callback]));
+  getMemberForEMail: async function getMemberForEMail(email) {
+    const member = await persistence.getMongoByField({ email: misc.toLowerCaseRegExp(email) });
+    return member ? new Member(member) : null;
   },
 
-  getMembersWithInterest: function getMembersWithInterest(interest, options, callback) {
-    persistence.listByField(
+  getMembersWithInterest: async function getMembersWithInterest(interest, options) {
+    const members = await persistence.listMongoByField(
       {
         interests: { $regex: "(^|\\s*,\\s*)" + misc.regexEscape(interest.trim()) + "($|\\s*,\\s*)", $options: options },
       },
-      {},
-      R.partial(toMemberList, [callback])
+      {}
     );
+    return toMemberList(members);
   },
 
-  saveMember: function saveMember(member, callback) {
-    persistence.save(member.state, callback);
+  saveMember: async function saveMember(member) {
+    return persistence.saveMongo(member.state);
   },
 
-  removeMember: function removeMember(member, callback) {
-    persistence.remove(member.id(), (err) => {
-      logger.info("Member removed:" + JSON.stringify(member));
-      callback(err);
-    });
+  removeMember: async function removeMember(member) {
+    await persistence.removeMongo(member.id());
+    logger.info("Member removed:" + JSON.stringify(member));
   },
 };

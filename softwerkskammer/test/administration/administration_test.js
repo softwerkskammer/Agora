@@ -44,13 +44,9 @@ describe("Administration application", () => {
   });
 
   beforeEach(() => {
-    sinon
-      .stub(groupstore, "allGroups")
-      .callsFake((callback) => callback(null, [new Group({ id: "id", longName: "GRUPPO", description: "desc" })]));
-    sinon.stub(memberstore, "allMembers").callsFake((callback) => callback(null, [dummymember]));
-    sinon.stub(membersService, "putAvatarIntoMemberAndSave").callsFake((member, callback) => {
-      callback();
-    });
+    sinon.stub(groupstore, "allGroups").returns([new Group({ id: "id", longName: "GRUPPO", description: "desc" })]);
+    sinon.stub(memberstore, "allMembers").returns([dummymember]);
+    sinon.stub(membersService, "putAvatarIntoMemberAndSave");
   });
 
   afterEach(() => {
@@ -83,9 +79,7 @@ describe("Administration application", () => {
   });
 
   it("shows the table for activities", (done) => {
-    sinon
-      .stub(activitiesService, "getActivitiesForDisplay")
-      .callsFake((activitiesFetcher, callback) => callback(null, [emptyActivity]));
+    sinon.stub(activitiesService, "getActivitiesForDisplay").returns([emptyActivity]);
     appWithSuperuser
       .get("/activityTable")
       .expect(200)

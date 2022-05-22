@@ -11,77 +11,59 @@ describe("Members application with DB", () => {
   describe("getMembersWithInterest", () => {
     const member = new Member({ id: "id", interests: "a, bb, c d e,f g h ,ü+p" });
 
-    beforeEach((done) => {
+    beforeEach(async () => {
       // if this fails, you need to start your mongo DB
-      persistence.drop(() => {
-        memberstore.saveMember(member, (err) => {
-          done(err);
-        });
-      });
+      await persistence.dropMongoCollection();
+      await memberstore.saveMember(member);
     });
 
-    it("finds a member by simple interest", (done) => {
-      memberstore.getMembersWithInterest("a", "i", (err, members) => {
-        expect(members).to.have.length(1);
-        expect(members[0].id()).to.be("id");
-        done(err);
-      });
+    it("finds a member by simple interest", async () => {
+      const members = await memberstore.getMembersWithInterest("a", "i");
+      expect(members).to.have.length(1);
+      expect(members[0].id()).to.be("id");
     });
 
-    it('finds a member by interest with umlaut and "+"', (done) => {
-      memberstore.getMembersWithInterest("ü+p", "i", (err, members) => {
-        expect(members).to.have.length(1);
-        expect(members[0].id()).to.be("id");
-        done(err);
-      });
+    it('finds a member by interest with umlaut and "+"', async () => {
+      const members = await memberstore.getMembersWithInterest("ü+p", "i");
+      expect(members).to.have.length(1);
+      expect(members[0].id()).to.be("id");
     });
 
-    it("finds a member by interest with spaces (case 1)", (done) => {
-      memberstore.getMembersWithInterest("c d e", "i", (err, members) => {
-        expect(members).to.have.length(1);
-        expect(members[0].id()).to.be("id");
-        done(err);
-      });
+    it("finds a member by interest with spaces (case 1)", async () => {
+      const members = await memberstore.getMembersWithInterest("c d e", "i");
+      expect(members).to.have.length(1);
+      expect(members[0].id()).to.be("id");
     });
 
-    it("finds a member by interest with spaces (case 2)", (done) => {
-      memberstore.getMembersWithInterest("f g h", "i", (err, members) => {
-        expect(members).to.have.length(1);
-        expect(members[0].id()).to.be("id");
-        done(err);
-      });
+    it("finds a member by interest with spaces (case 2)", async () => {
+      const members = await memberstore.getMembersWithInterest("f g h", "i");
+      expect(members).to.have.length(1);
+      expect(members[0].id()).to.be("id");
     });
 
-    it("does not find a member by partial matches of an interest", (done) => {
-      memberstore.getMembersWithInterest("b", "i", (err, members) => {
-        expect(members).to.have.length(0);
-        done(err);
-      });
+    it("does not find a member by partial matches of an interest", async () => {
+      const members = await memberstore.getMembersWithInterest("b", "i");
+      expect(members).to.have.length(0);
     });
 
-    it("does not find a member when searching case sensitive", (done) => {
-      memberstore.getMembersWithInterest("Bb", "", (err, members) => {
-        expect(members).to.have.length(0);
-        done(err);
-      });
+    it("does not find a member when searching case sensitive", async () => {
+      const members = await memberstore.getMembersWithInterest("Bb", "");
+      expect(members).to.have.length(0);
     });
   });
 
   describe("allMembers", () => {
     const swkMember = new Member({ id: "id1" });
-    beforeEach((done) => {
+    beforeEach(async () => {
       // if this fails, you need to start your mongo DB
-      persistence.drop(() => {
-        memberstore.saveMember(swkMember, done);
-      });
+      await persistence.dropMongoCollection();
+      await memberstore.saveMember(swkMember);
     });
 
-    it("finds all members", (done) => {
-      memberstore.allMembers((err, members) => {
-        expect(members).to.have.length(1);
-        expect(members[0].id()).is("id1");
-        done(err);
-      });
+    it("finds all members", async () => {
+      const members = await memberstore.allMembers();
+      expect(members).to.have.length(1);
+      expect(members[0].id()).is("id1");
     });
   });
 });

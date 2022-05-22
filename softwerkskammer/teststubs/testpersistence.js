@@ -1,55 +1,31 @@
 "use strict";
 
 module.exports = {
-  list: function () {
-    throw new Error("Testpersistence - function list not implemented");
+  listMongo: async function () {
+    throw new Error("Testpersistence - function listMongo not implemented");
   },
 
-  listByIds: function () {
-    throw new Error("Testpersistence - function listByIds not implemented");
+  listMongoByIds: async function () {
+    throw new Error("Testpersistence - function listMongoByIds not implemented");
   },
 
-  listByEMails: function () {
-    throw new Error("Testpersistence - function listByEMails not implemented");
+  listMongoByField: async function () {
+    throw new Error("Testpersistence - function listMongoByField not implemented");
   },
 
-  listByField: function () {
-    throw new Error("Testpersistence - function listByField not implemented");
+  getMongoById: function () {
+    throw new Error("Testpersistence - function getMongoById not implemented");
   },
 
-  listByFieldWithOptions: function () {
-    throw new Error("Testpersistence - function listByFieldWithOptions not implemented");
+  getMongoByField: function () {
+    throw new Error("Testpersistence - function getMongoByField not implemented");
   },
 
-  getById: function () {
-    throw new Error("Testpersistence - function getById not implemented");
+  saveMongo: function () {
+    throw new Error("Testpersistence - function saveMongo not implemented");
   },
 
-  getByField: function () {
-    throw new Error("Testpersistence - function getByField not implemented");
-  },
-
-  save: function () {
-    throw new Error("Testpersistence - function save not implemented");
-  },
-
-  saveWithVersion: function () {
-    throw new Error("Testpersistence - function saveWithVersion not implemented");
-  },
-
-  saveAll: function () {
-    throw new Error("Testpersistence - function saveAll not implemented");
-  },
-
-  saveValueObject: function () {
-    throw new Error("Testpersistence - function saveValueObject not implemented");
-  },
-
-  remove: function () {
-    throw new Error("Testpersistence - function remove not implemented");
-  },
-
-  drop: function () {
-    throw new Error("Testpersistence - function drop not implemented");
+  removeMongo: function () {
+    throw new Error("Testpersistence - function removeMongo not implemented");
   },
 };

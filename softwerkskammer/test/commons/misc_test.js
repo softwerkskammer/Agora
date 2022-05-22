@@ -166,65 +166,43 @@ describe("differenceCaseInsensitive function", () => {
 });
 
 describe("validate function", () => {
-  it("returns true if the new value is identical to the previous value", (done) => {
-    misc.validate("abc", "abc", undefined, (result) => {
-      expect(result).to.equal("true");
-      done();
-    });
+  it("returns true if the new value is identical to the previous value", async () => {
+    const result = await misc.validate("abc", "abc");
+    expect(result).to.equal("true");
   });
 
-  it("returns true if the new value is different to the previous value and the validator returns true", (done) => {
-    const validator = (value, callback) => {
-      callback(null, true);
+  it("returns true if the new value is different to the previous value and the validator returns true", async () => {
+    const result = await misc.validate("def", "abc", () => true);
+    expect(result).to.equal("true");
+  });
+
+  it("returns false if the new value is different to the previous value and the validator returns false", async () => {
+    const result = await misc.validate("def", "abc", () => false);
+    expect(result).to.equal("false");
+  });
+
+  it("returns false if the new value is different to the previous value and the validator returns an error", async () => {
+    const validator = () => {
+      throw new Error("Error!");
     };
 
-    misc.validate("def", "abc", validator, (result) => {
-      expect(result).to.equal("true");
-      done();
-    });
+    const result = await misc.validate("def", "abc", validator);
+    expect(result).to.equal("false");
   });
 
-  it("returns false if the new value is different to the previous value and the validator returns false", (done) => {
-    const validator = (value, callback) => {
-      callback(null, false);
-    };
-
-    misc.validate("def", "abc", validator, (result) => {
-      expect(result).to.equal("false");
-      done();
-    });
+  it("trims the new value", async () => {
+    const result = await misc.validate(" abc ", "abc");
+    expect(result).to.equal("true");
   });
 
-  it("returns false if the new value is different to the previous value and the validator returns an error", (done) => {
-    const validator = (value, callback) => {
-      callback(new Error("Error!"));
-    };
-
-    misc.validate("def", "abc", validator, (result) => {
-      expect(result).to.equal("false");
-      done();
-    });
+  it("trims the previous value", async () => {
+    const result = await misc.validate("abc", " abc ");
+    expect(result).to.equal("true");
   });
 
-  it("trims the new value", (done) => {
-    misc.validate(" abc ", "abc", undefined, (result) => {
-      expect(result).to.equal("true");
-      done();
-    });
-  });
-
-  it("trims the previous value", (done) => {
-    misc.validate("abc", " abc ", undefined, (result) => {
-      expect(result).to.equal("true");
-      done();
-    });
-  });
-
-  it("returns false when the current value is null", (done) => {
-    misc.validate(null, null, undefined, (result) => {
-      expect(result).to.equal("false");
-      done();
-    });
+  it("returns false when the current value is null", async () => {
+    const result = await misc.validate(null, null, undefined);
+    expect(result).to.equal("false");
   });
 });
 

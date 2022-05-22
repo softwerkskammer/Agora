@@ -17,19 +17,15 @@ describe("Wikisubdirs", () => {
     new Group({ id: "groupWithoutWiki", type: Group.allTypes()[1] }),
   ];
   beforeEach(() => {
-    sinon.stub(Git, "lsdirs").callsFake((callback) => {
-      callback(null, ["a", "c", "b", "andere"]);
-    });
-    sinon.stub(groupstore, "allGroups").callsFake((callback) => {
-      callback(null, allGroups);
-    });
+    sinon.stub(Git, "lsdirs").returns(["a", "c", "b", "andere"]);
+    sinon.stub(groupstore, "allGroups").returns(allGroups);
   });
 
   afterEach(() => {
     sinon.restore();
   });
 
-  it("transforms the dirs and groups correctly", () => {
+  it("transforms the dirs and groups correctly", async () => {
     const req = {
       originalUrl: "/something",
       headers: {},
@@ -38,7 +34,7 @@ describe("Wikisubdirs", () => {
     };
     const res = { locals: {} };
     const next = () => "";
-    wikiSubdirs(req, res, next);
+    await wikiSubdirs(req, res, next);
     expect(res.locals.structuredWikisubdirs.regional).to.eql(["c"]);
     expect(res.locals.structuredWikisubdirs.themed).to.eql(["a", "b"]);
     expect(res.locals.structuredWikisubdirs.other).to.eql(["andere"]);

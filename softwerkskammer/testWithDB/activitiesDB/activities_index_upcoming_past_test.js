@@ -60,24 +60,12 @@ describe("Activity application with DB - shows activities -", () => {
     version: 1,
   });
 
-  beforeEach((done) => {
+  beforeEach(async () => {
     // if this fails, you need to start your mongo DB
-
-    persistence.drop(() => {
-      activitystore.saveActivity(futureActivity, (err) => {
-        if (err) {
-          done(err);
-        }
-        activitystore.saveActivity(currentActivity, (err1) => {
-          if (err1) {
-            done(err1);
-          }
-          activitystore.saveActivity(pastActivity, (err2) => {
-            done(err2);
-          });
-        });
-      });
-    });
+    await persistence.dropMongoCollection();
+    await activitystore.saveActivity(futureActivity);
+    await activitystore.saveActivity(currentActivity);
+    await activitystore.saveActivity(pastActivity);
   });
 
   afterEach(() => {

@@ -14,14 +14,10 @@ const misc = beans.get("misc");
 const app = misc.expressAppIn(__dirname);
 app.locals.pretty = true;
 
-app.get("/", (req, res, next) => {
+app.get("/", async (req, res) => {
   // display all groups
-  groupstore.allGroups((err, groups) => {
-    if (err) {
-      return next(err);
-    }
-    res.render("index", { regionalgroups: Group.regionalsFrom(groups) });
-  });
+  const groups = await groupstore.allGroups();
+  res.render("index", { regionalgroups: Group.regionalsFrom(groups) });
 });
 
 app.get("/robots.txt", (req, res, next) => {

@@ -1,6 +1,5 @@
 const R = require("ramda");
 const conf = require("simple-configure");
-const async = require("async");
 
 const beans = conf.get("beans");
 const validation = beans.get("validation");
@@ -13,122 +12,97 @@ function isReserved(groupname) {
 
 module.exports = {
   // API geändert von email() auf member und Methode umbenannt
-  getSubscribedGroupsForMember: function getSubscribedGroupsForMember(member, callback) {
-    groupstore.allGroups((err, groups) => {
-      if (err) {
-        return callback(err);
-      }
-      callback(
-        null,
-        groups.filter((g) => g.subscribedMembers.includes(member.id()))
-      );
-    });
+  getSubscribedGroupsForMember: async function getSubscribedGroupsForMember(member) {
+    const groups = await groupstore.allGroups();
+    return groups.filter((g) => g.subscribedMembers.includes(member.id()));
   },
 
-  allGroupColors: function allGroupColors(callback) {
-    groupstore.allGroups((err, groups) => {
-      callback(
-        err,
-        (groups || []).reduce((result, group) => {
-          result[group.id] = group.color;
-          return result;
-        }, {})
-      );
-    });
+  allGroupColors: async function allGroupColors() {
+    const groups = await groupstore.allGroups();
+    return (groups || []).reduce((result, group) => {
+      result[group.id] = group.color;
+      return result;
+    }, {});
   },
 
-  isGroupValid: function isGroupValid(group, callback) {
-    const self = this;
+  isGroupValid: async function isGroupValid(group) {
     const errors = validation.isValidGroup(group);
-    groupstore.getGroup(group.id, (err, existingGroup) => {
-      if (err) {
-        errors.push("Technical error validating the group.");
-      }
+    try {
+      const existingGroup = await groupstore.getGroup(group.id);
       if (existingGroup) {
-        return callback(errors);
+        return errors;
       }
-      self.isGroupNameAvailable(group.id, (err1, result) => {
-        if (err1) {
-          errors.push("Technical error validating name of group.");
-        }
-        if (!result) {
-          errors.push("Dieser Gruppenname ist bereits vergeben.");
-        }
-        self.isEmailPrefixAvailable(group.emailPrefix, (err2, result1) => {
-          if (err2) {
-            errors.push("Technical error validating email prefix.");
-          }
-          if (!result1) {
-            errors.push("Dieses Präfix ist bereits vergeben.");
-          }
-          callback(errors);
-        });
-      });
-    });
+    } catch (e) {
+      errors.push("Technical error validating the group.");
+    }
+    const self = this;
+    const result = await self.isGroupNameAvailable(group.id);
+    if (!result) {
+      errors.push("Dieser Gruppenname ist bereits vergeben.");
+    }
+    try {
+      const result1 = await self.isEmailPrefixAvailable(group.emailPrefix);
+      if (!result1) {
+        errors.push("Dieses Präfix ist bereits vergeben.");
+      }
+    } catch (e) {
+      errors.push("Technical error validating email prefix.");
+    }
+    return errors;
   },
 
   // API change email() -> member and renamed
-  addMemberToGroupNamed: function addMemberToGroupNamed(member, groupname, callback) {
-    groupstore.getGroup(groupname, (err, group) => {
-      if (err) {
-        return callback(err);
-      }
-      group.subscribe(member);
-      groupstore.saveGroup(group, callback);
-    });
+  addMemberToGroupNamed: async function addMemberToGroupNamed(member, groupname) {
+    const group = await groupstore.getGroup(groupname);
+    group.subscribe(member);
+    return groupstore.saveGroup(group);
   },
 
   // API change email() -> member and renamed
-  removeMemberFromGroupNamed: function removeMemberFromGroupNamed(member, groupname, callback) {
-    groupstore.getGroup(groupname, (err, group) => {
-      if (err) {
-        return callback(err);
-      }
-      group.unsubscribe(member);
-      groupstore.saveGroup(group, callback);
-    });
+  removeMemberFromGroupNamed: async function removeMemberFromGroupNamed(member, groupname) {
+    const group = await groupstore.getGroup(groupname);
+    group.unsubscribe(member);
+    return groupstore.saveGroup(group);
   },
 
   // API change: email() -> member, oldUserMail removed
-  updateSubscriptions: function updateSubscriptions(member, newSubscriptions, callback) {
-    groupstore.allGroups((err, groups) => {
-      if (err) {
-        return callback(err);
-      }
-      const subscribedGroups = groups.filter((g) => g.subscribedMembers.includes(member.id()));
-      const groupsForNewSubscriptions = groups.filter((g) => misc.toArray(newSubscriptions).includes(g.id));
+  updateSubscriptions: async function updateSubscriptions(member, newSubscriptions) {
+    const groups = await groupstore.allGroups();
+    const subscribedGroups = groups.filter((g) => g.subscribedMembers.includes(member.id()));
+    const groupsForNewSubscriptions = groups.filter((g) => misc.toArray(newSubscriptions).includes(g.id));
 
-      const groupsToSubscribe = R.difference(groupsForNewSubscriptions, subscribedGroups);
-      const groupsToUnsubscribe = R.difference(subscribedGroups, groupsForNewSubscriptions);
+    const groupsToSubscribe = R.difference(groupsForNewSubscriptions, subscribedGroups);
+    const groupsToUnsubscribe = R.difference(subscribedGroups, groupsForNewSubscriptions);
 
-      groupsToSubscribe.forEach((g) => g.subscribe(member));
-      groupsToUnsubscribe.forEach((g) => g.unsubscribe(member));
+    groupsToSubscribe.forEach((g) => g.subscribe(member));
+    groupsToUnsubscribe.forEach((g) => g.unsubscribe(member));
 
-      async.each(groupsToSubscribe.concat(groupsToUnsubscribe), groupstore.saveGroup, callback);
-    });
+    return Promise.all(groupsToSubscribe.concat(groupsToUnsubscribe).map(groupstore.saveGroup));
   },
 
   markGroupsSelected: function markGroupsSelected(groupsToMark, availableGroups) {
     return availableGroups.map((group) => ({ group, selected: groupsToMark.some((subG) => subG.id === group.id) }));
   },
 
-  isGroupNameAvailable: function isGroupNameAvailable(groupname, callback) {
+  isGroupNameAvailable: async function isGroupNameAvailable(groupname) {
     const trimmedGroupname = groupname.trim();
     if (isReserved(trimmedGroupname)) {
-      return callback(null, false);
+      return false;
     }
-    groupstore.getGroup(trimmedGroupname, (err, group) => callback(err, group === null));
+    const group = await groupstore.getGroup(trimmedGroupname);
+    return group === null;
   },
 
-  isEmailPrefixAvailable: function isEmailPrefixAvailable(prefix, callback) {
+  isEmailPrefixAvailable: async function isEmailPrefixAvailable(prefix) {
     if (!prefix) {
-      return callback(null, false);
+      return false;
     }
-    groupstore.getGroupForPrefix(prefix.trim(), (err, group) => callback(err, group === null));
+    const group = await groupstore.getGroupForPrefix(prefix.trim());
+    return group === null;
   },
 
-  getGroups: function getGroups(groupnames, callback) {
-    groupstore.groupsByLists(misc.toArray(groupnames), callback);
+  getGroups: async function getGroups(groupnames) {
+    return groupstore.groupsByLists(misc.toArray(groupnames));
   },
 
   isReserved,

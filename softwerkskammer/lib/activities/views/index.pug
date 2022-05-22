@@ -20,7 +20,6 @@ block content
                 a.dropdown-item(href='/activities/upcoming') #{t('activities.upcoming')}
                 a.dropdown-item(href='/activities/past') #{t('activities.past')}
                 a.dropdown-item(href='/activities') #{t('general.all')}
-                a.dropdown-item(href='/activities/gdcr') #{t('general.gdcr_activities')}
             a.btn.btn-light(href=webcalURL, title=t('activities.export_subscribe')): i.fa-regular.fa-calendar-alt.fa-fw
             if (accessrights.isSuperuser())
               button.btn.btn-light(type='submit'): i.fa-brands.fa-meetup.fa-fw

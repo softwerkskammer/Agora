@@ -1,7 +1,6 @@
 /* eslint no-underscore-dangle: 0 */
 
 const R = require("ramda");
-const async = require("async");
 const conf = require("simple-configure");
 
 const beans = conf.get("beans");
@@ -18,122 +17,105 @@ function addPrettyAndUrlTo(object) {
   object.url = conf.get("publicUrlPrefix");
 }
 
-function sendMail(emailAddresses, subject, html, callback) {
+async function sendMail(emailAddresses, subject, html) {
   const fromName = conf.get("sender-name") || "Softwerkskammer Benachrichtigungen";
-  sendBulkMail(emailAddresses, subject, html, fromName, conf.get("sender-address"), callback);
+  return sendBulkMail(emailAddresses, subject, html, fromName, conf.get("sender-address"));
 }
 
-function activityParticipation(activity, visitorID, ressourceName, content, type, callback) {
-  async.parallel(
-    {
-      group: (cb) => groupsAndMembers.getGroupAndMembersForList(activity.assignedGroup(), cb),
-      owner: (cb) => memberstore.getMemberForId(activity.owner(), cb),
-      visitor: (cb) => memberstore.getMemberForId(visitorID, cb),
-    },
-
-    (err, results) => {
-      if (err) {
-        return logger.error(err);
-      }
-      const organizers = (results.group.members || []).filter((member) =>
-        results.group.organizers.includes(member.id())
-      );
-      const organizersEmails = organizers.map((member) => member.email());
-      if (results.owner) {
-        organizersEmails.push(results.owner.email());
-      }
-      if (R.isEmpty(organizersEmails)) {
-        return;
-      }
-      const renderingOptions = {
-        activity,
-        ressourceName,
-        content,
-        count: activity.allRegisteredMembers().length,
-        totalcount: activity.allRegisteredMembers().length,
-        visitor: results.visitor,
-      };
-      addPrettyAndUrlTo(renderingOptions);
-      const filename = path.join(__dirname, "pug/activitytemplate.pug");
-      sendMail(organizersEmails, type, pug.renderFile(filename, renderingOptions), callback);
+async function activityParticipation(activity, visitorID, ressourceName, content, type) {
+  try {
+    const [group, owner, visitor] = await Promise.all([
+      groupsAndMembers.getGroupAndMembersForList(activity.assignedGroup()),
+      memberstore.getMemberForId(activity.owner()),
+      memberstore.getMemberForId(visitorID),
+    ]);
+    const organizers = (group.members || []).filter((member) => group.organizers.includes(member.id()));
+    const organizersEmails = organizers.map((member) => member.email());
+    if (owner) {
+      organizersEmails.push(owner.email());
     }
-  );
+    if (R.isEmpty(organizersEmails)) {
+      return;
+    }
+    const renderingOptions = {
+      activity,
+      ressourceName,
+      content,
+      count: activity.allRegisteredMembers().length,
+      totalcount: activity.allRegisteredMembers().length,
+      visitor: visitor,
+    };
+    addPrettyAndUrlTo(renderingOptions);
+    const filename = path.join(__dirname, "pug/activitytemplate.pug");
+    return sendMail(organizersEmails, type, pug.renderFile(filename, renderingOptions));
+  } catch (e) {
+    logger.error(e);
+    throw e;
+  }
 }
 
 module.exports = {
-  visitorRegistration: function visitorRegistration(activity, visitorID, callback) {
-    activityParticipation(
+  visitorRegistration: async function visitorRegistration(activity, visitorID) {
+    return activityParticipation(
       activity,
       visitorID,
       "",
       "hat sich ein neuer Besucher angemeldet",
-      "Neue Anmeldung für Aktivität",
-      callback
+      "Neue Anmeldung für Aktivität"
     );
   },
 
-  visitorUnregistration: function visitorUnregistration(activity, visitorID, callback) {
-    activityParticipation(
+  visitorUnregistration: async function visitorUnregistration(activity, visitorID) {
+    return activityParticipation(
       activity,
       visitorID,
       "",
       "hat sich ein Besucher abgemeldet",
-      "Abmeldung für Aktivität",
-      callback
+      "Abmeldung für Aktivität"
     );
   },
 
-  waitinglistAddition: function waitinglistAddition(activity, visitorID, callback) {
-    activityParticipation(
+  waitinglistAddition: async function waitinglistAddition(activity, visitorID) {
+    return activityParticipation(
       activity,
       visitorID,
       "",
       "hat sich jemand auf die Warteliste eingetragen",
-      "Zugang auf Warteliste",
-      callback
+      "Zugang auf Warteliste"
     );
   },
 
-  waitinglistRemoval: function waitinglistRemoval(activity, visitorID, callback) {
-    activityParticipation(
+  waitinglistRemoval: async function waitinglistRemoval(activity, visitorID) {
+    return activityParticipation(
       activity,
       visitorID,
       "",
       "hat sich jemand von der Warteliste entfernt",
-      "Streichung aus Warteliste",
-      callback
+      "Streichung aus Warteliste"
     );
   },
 
-  wikiChanges: function wikiChanges(changes, callback) {
-    memberstore.allMembers((err, members) => {
-      if (err) {
-        return callback(err);
-      }
-      const renderingOptions = {
-        directories: R.sortBy(R.prop("dir"), changes),
-      };
-      addPrettyAndUrlTo(renderingOptions);
-      const filename = path.join(__dirname, "pug/wikichangetemplate.pug");
-      const receivers = R.union(Member.superuserEmails(members), Member.wikiNotificationMembers(members));
-      sendMail(receivers, "Wiki Änderungen", pug.renderFile(filename, renderingOptions), callback);
-    });
+  wikiChanges: async function wikiChanges(changes) {
+    const members = await memberstore.allMembers();
+    const renderingOptions = {
+      directories: R.sortBy(R.prop("dir"), changes),
+    };
+    addPrettyAndUrlTo(renderingOptions);
+    const filename = path.join(__dirname, "pug/wikichangetemplate.pug");
+    const receivers = R.union(Member.superuserEmails(members), Member.wikiNotificationMembers(members));
+    return sendMail(receivers, "Wiki Änderungen", pug.renderFile(filename, renderingOptions));
   },
 
-  newMemberRegistered: function newMemberRegistered(member, subscriptions) {
-    memberstore.allMembers((err, members) => {
-      if (err) {
-        return;
-      }
-      const renderingOptions = {
-        member,
-        groups: subscriptions,
-        count: members.length,
-      };
-      addPrettyAndUrlTo(renderingOptions);
-      const filename = path.join(__dirname, "pug/newmembertemplate.pug");
-      const receivers = Member.superuserEmails(members);
-      sendMail(receivers, "Neues Mitglied", pug.renderFile(filename, renderingOptions));
-    });
+  newMemberRegistered: async function newMemberRegistered(member, subscriptions) {
+    const members = await memberstore.allMembers();
+    const renderingOptions = {
+      member,
+      groups: subscriptions,
+      count: members.length,
+    };
+    addPrettyAndUrlTo(renderingOptions);
+    const filename = path.join(__dirname, "pug/newmembertemplate.pug");
+    const receivers = Member.superuserEmails(members);
+    return sendMail(receivers, "Neues Mitglied", pug.renderFile(filename, renderingOptions));
   },
 };

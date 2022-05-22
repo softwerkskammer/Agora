@@ -66,6 +66,9 @@ mixin wikichangesOrBlogs(items, panelid, prefix, title)
     ul.list-group.list-group-flush(class=prefix + ' collapse show')
       each item in items
         li.list-group-item.py-0
-          a.modaldialog(data-bs-toggle='modal', data-bs-target='#wikidialog', data-link=item.dialogUrl(), href='#') #{item.pureName()}
+          if item.deleted
+            | #{item.pureName()} (deleted)
+          else
+            a.modaldialog(data-bs-toggle='modal', data-bs-target='#wikidialog', data-link=item.dialogUrl(), href='#') #{item.pureName()}
           small.float-end #{item.date().setLocale(language).toLocaleString(DateTime.DATE_SHORT)}&nbsp;
             a(href=item.url()): i.fa-solid.fa-book.fa-fw.tooltipify(data-bs-toggle='tooltip', title=t('wiki.tooltip.gotopage'))

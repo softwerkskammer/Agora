@@ -14,11 +14,11 @@ describe("Wiki application", () => {
   const content = "Hallo, ich bin der Dateiinhalt";
   const nonExistingPage = "global/nonexisting";
   beforeEach(() => {
-    pageShow = sinon.stub(wikiService, "showPage").callsFake((completePageName, pageVersion, callback) => {
+    pageShow = sinon.stub(wikiService, "showPage").callsFake((completePageName) => {
       if (completePageName === nonExistingPage) {
-        return callback(new Error());
+        throw new Error();
       }
-      callback(null, content);
+      return content;
     });
   });
 

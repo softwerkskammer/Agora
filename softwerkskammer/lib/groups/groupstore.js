@@ -1,40 +1,40 @@
 const beans = require("simple-configure").get("beans");
-const R = require("ramda");
 
 const persistence = beans.get("groupsPersistence");
 const Group = beans.get("group");
 const misc = beans.get("misc");
 
-const toGroup = R.partial(misc.toObject, [Group]);
-const toGroupList = R.partial(misc.toObjectList, [Group]);
-
 module.exports = {
-  allGroups: function allGroups(callback) {
-    persistence.list({ longName: 1 }, R.partial(toGroupList, [callback]));
+  allGroups: async function allGroups() {
+    const result = await persistence.listMongo({ longName: 1 });
+    return result.map((each) => new Group(each));
   },
 
-  groupsByLists: function groupsByLists(lists, callback) {
-    persistence.listByIds(lists, { longName: 1 }, R.partial(toGroupList, [callback]));
+  groupsByLists: async function groupsByLists(lists) {
+    const groups = await persistence.listMongoByIds(lists, { longName: 1 });
+    return groups.map((each) => new Group(each));
   },
 
-  getGroup: function getGroup(groupname, callback) {
-    persistence.getById(misc.toLowerCaseRegExp(groupname), R.partial(toGroup, [callback]));
+  getGroup: async function getGroup(groupname) {
+    const group = await persistence.getMongoById(misc.toLowerCaseRegExp(groupname));
+    return group ? new Group(group) : null;
   },
 
-  getGroupForPrefix: function getGroupForPrefix(prefix, callback) {
-    persistence.getByField({ emailPrefix: misc.toLowerCaseRegExp(prefix) }, R.partial(toGroup, [callback]));
+  getGroupForPrefix: async function getGroupForPrefix(prefix) {
+    const group = await persistence.getMongoByField({ emailPrefix: misc.toLowerCaseRegExp(prefix) });
+    return group ? new Group(group) : null;
   },
 
-  getGroupsWithMeetupURL: function getGroupsWithMeetupURL(callback) {
-    persistence.listByField(
+  getGroupsWithMeetupURL: async function getGroupsWithMeetupURL() {
+    const groups = await persistence.listMongoByField(
       { meetupURL: { $exists: true, $nin: ["", null, undefined] } },
-      {},
-      R.partial(toGroupList, [callback])
+      {}
     );
+    return groups.map((each) => new Group(each));
   },
 
-  saveGroup: function saveGroup(group, callback) {
+  saveGroup: async function saveGroup(group) {
     delete group.members; // we do not want to persist the group members
-    persistence.save(group, callback);
+    return persistence.saveMongo(group);
   },
 };

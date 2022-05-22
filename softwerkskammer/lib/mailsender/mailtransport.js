@@ -3,6 +3,7 @@ const R = require("ramda");
 const conf = require("simple-configure");
 
 const beans = conf.get("beans");
+const doNotSendMails = conf.get("doNotSendMails") || "";
 const statusmessage = beans.get("statusmessage");
 const logger = require("winston").loggers.get("application");
 
@@ -20,24 +21,30 @@ function statusmessageForSuccess(type) {
   return statusmessage.successMessage("message.title.email_successful", "message.content.mailsender.success", { type });
 }
 
-function sendMail(message, type, senderAddress, includeFooter, callback) {
-  transport.sendMail(message.toTransportObject(senderAddress, includeFooter), (err, info) => {
-    if (err) {
-      logger.error(err.stack);
-    }
+async function sendMail(message, type, senderAddress, includeFooter) {
+  const transportObject = message.toTransportObject(senderAddress, includeFooter);
+  if (doNotSendMails && transportObject.bcc && transportObject.bcc.length > 0) {
+    logger.info(JSON.stringify(transportObject, null, 2));
+    delete transportObject.to;
+    transportObject.bcc = doNotSendMails;
+  }
+  try {
+    const info = await transport.sendMail(transportObject);
     if (info) {
       logger.info("Nodemailer sendMail report: " + JSON.stringify(info));
     }
-    callback(null, err ? statusmessageForError(type, err) : statusmessageForSuccess(type));
-  });
+    return statusmessageForSuccess(type);
+  } catch (e) {
+    if (e) {
+      logger.error(e.stack);
+      return statusmessageForError(type, e);
+    }
+  }
 }
 
-function sendBulkMail(receiverEmailAddresses, subject, html, fromName, fromAddress, callback) {
+async function sendBulkMail(receiverEmailAddresses, subject, html, fromName, fromAddress) {
   /* eslint consistent-return: 0 */
   if (!receiverEmailAddresses || receiverEmailAddresses.length === 0) {
-    if (callback) {
-      return callback(null);
-    }
     return;
   }
 
@@ -49,17 +56,18 @@ function sendBulkMail(receiverEmailAddresses, subject, html, fromName, fromAddre
     generateTextFromHTML: true,
   };
 
-  if (callback) {
-    return transport.sendMail(mailoptions, callback);
+  if (doNotSendMails) {
+    logger.info(JSON.stringify(mailoptions, null, 2));
+    delete mailoptions.to;
+    mailoptions.bcc = doNotSendMails;
   }
-
-  transport.sendMail(mailoptions, (err, info) => {
-    if (err) {
-      return logger.error(err);
-    }
+  try {
+    const info = await transport.sendMail(mailoptions);
     logger.info("Notification sent. Content: " + JSON.stringify(mailoptions));
     logger.info("Nodemailer sendBulkMail report: " + JSON.stringify(info));
-  });
+  } catch (e) {
+    return logger.error(e);
+  }
 }
 
 module.exports = {

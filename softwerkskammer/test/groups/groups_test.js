@@ -35,57 +35,44 @@ let blogposts = [];
 
 describe("Groups application", () => {
   before(() => {
-    sinon.stub(memberstore, "getMembersForIds").callsFake((memberIds, callback) => {
+    sinon.stub(memberstore, "getMembersForIds").callsFake((memberIds) => {
       const members = [
         new Member({ id: "id1", nickname: "hada", firstname: "Hans", lastname: "Dampf", email: "hans@aol.com" }),
         new Member({ id: "id2", nickname: "pepe", firstname: "Peter", lastname: "Meyer", email: "peter@google.de" }),
       ];
-      callback(
-        null,
-        members.filter((m) => memberIds.includes(m.id()))
-      );
+      return members.filter((m) => memberIds.includes(m.id()));
     });
 
-    sinon.stub(membersService, "putAvatarIntoMemberAndSave").callsFake((member, callback) => {
-      callback();
-    });
+    sinon.stub(membersService, "putAvatarIntoMemberAndSave");
 
-    sinon.stub(groupstore, "groupsByLists").callsFake((list, callback) => {
+    sinon.stub(groupstore, "groupsByLists").callsFake((list) => {
       if (list[0] === "GroupA") {
-        return callback(null, [GroupA]);
+        return [GroupA];
       }
-      return callback(null, []);
+      return [];
     });
 
-    sinon.stub(groupstore, "getGroup").callsFake((list, callback) => {
+    sinon.stub(groupstore, "getGroup").callsFake((list) => {
       if (list === "GroupA") {
-        return callback(null, GroupA);
+        return GroupA;
       }
-      return callback(null, null);
+      return null;
     });
 
-    sinon.stub(groupstore, "getGroupForPrefix").callsFake((list, callback) => {
+    sinon.stub(groupstore, "getGroupForPrefix").callsFake((list) => {
       if (list === "Group-A") {
-        return callback(null, GroupA);
+        return GroupA;
       }
-      return callback(null, null);
+      return null;
     });
 
-    sinon.stub(groupstore, "allGroups").callsFake((callback) => {
-      return callback(null, [GroupA]);
-    });
+    sinon.stub(groupstore, "allGroups").returns([GroupA]);
 
-    sinon.stub(wikiService, "getBlogpostsForGroup").callsFake((groupname, callback) => {
-      return callback(null, blogposts);
-    });
+    sinon.stub(wikiService, "getBlogpostsForGroup").callsFake(() => blogposts);
 
-    sinon.stub(activitystore, "pastActivitiesForGroupIds").callsFake((groupIds, callback) => {
-      return callback(null, []);
-    });
+    sinon.stub(activitystore, "pastActivitiesForGroupIds").returns([]);
 
-    sinon.stub(activitystore, "upcomingActivitiesForGroupIds").callsFake((groupIds, callback) => {
-      return callback(null, upcomingActivities);
-    });
+    sinon.stub(activitystore, "upcomingActivitiesForGroupIds").callsFake(() => upcomingActivities);
   });
 
   after(() => {
@@ -275,9 +262,8 @@ describe("Groups application", () => {
       let savedGroup;
 
       before(() => {
-        sinon.stub(groupsPersistence, "save").callsFake((group, callback) => {
+        sinon.stub(groupsPersistence, "saveMongo").callsFake((group) => {
           savedGroup = group;
-          callback();
         });
       });
 
