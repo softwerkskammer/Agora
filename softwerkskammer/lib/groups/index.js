@@ -73,12 +73,12 @@ app.post("/clone-from-meetup-for-group", async (req, res) => {
 });
 
 app.get("/checkgroupname", async (req, res) => {
-  const result = await misc.validateAsync(req.query.id, null, groupsService.isGroupNameAvailable);
+  const result = await misc.validate(req.query.id, null, groupsService.isGroupNameAvailable);
   res.end(result);
 });
 
 app.get("/checkemailprefix", async (req, res) => {
-  const result = await misc.validateAsync(req.query.emailPrefix, null, groupsService.isEmailPrefixAvailable);
+  const result = await misc.validate(req.query.emailPrefix, null, groupsService.isEmailPrefixAvailable);
   res.end(result);
 });
 

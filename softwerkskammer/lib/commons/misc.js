@@ -102,29 +102,7 @@ module.exports = {
     return app;
   },
 
-  validate: function validate(currentValue, previousValue, validator, callback) {
-    if (!currentValue) {
-      return callback("false");
-    }
-
-    currentValue = currentValue.trim();
-    if (previousValue) {
-      previousValue = previousValue.trim();
-    }
-
-    if (previousValue === currentValue) {
-      return callback("true");
-    }
-
-    validator(currentValue, (err, result) => {
-      if (err) {
-        return callback("false");
-      }
-      callback(result.toString());
-    });
-  },
-
-  validateAsync: async function validateAsync(currentValue, previousValue, validator) {
+  validate: async function validate(currentValue, previousValue, validator) {
     if (!currentValue) {
       return "false";
     }

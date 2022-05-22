@@ -55,8 +55,8 @@ async function activitySubmitted(req, res) {
   }
 }
 
-async function activitiesForDisplayAsync(activitiesFetcher, res, title) {
-  const activities = await activitiesService.getActivitiesForDisplayAsync(activitiesFetcher);
+async function activitiesForDisplay(activitiesFetcher, res, title) {
+  const activities = await activitiesService.getActivitiesForDisplay(activitiesFetcher);
   res.render("index", {
     activities,
     range: title,
@@ -71,7 +71,7 @@ function sendCalendarStringNamedToResult(ical, filename, res) {
 }
 
 app.get("/", async (req, res) => {
-  activitiesForDisplayAsync(activitystore.allActivitiesAsync, res, req.i18n.t("general.all"));
+  activitiesForDisplay(activitystore.allActivities, res, req.i18n.t("general.all"));
 });
 
 async function renderGdcrFor(gdcrDay, res) {
@@ -81,7 +81,7 @@ async function renderGdcrFor(gdcrDay, res) {
     gdcrDate.getTime() + 86400000,
   ]); // 1 day
 
-  const activities = await activitiesService.getActivitiesForDisplayAsync(gdcrActivities);
+  const activities = await activitiesService.getActivitiesForDisplay(gdcrActivities);
   const gdcrYear = gdcrDate.getFullYear();
   res.render("gdcr", {
     activities,
@@ -107,11 +107,11 @@ app.get("/gdcr2018", async (req, res, next) => renderGdcrFor("2018-11-17", res, 
 app.get("/gdcr", async (req, res, next) => renderGdcrFor("2019-11-16", res, next));
 
 app.get("/upcoming", async (req, res) =>
-  activitiesForDisplayAsync(activitystore.upcomingActivities, res, req.i18n.t("activities.upcoming"))
+  activitiesForDisplay(activitystore.upcomingActivities, res, req.i18n.t("activities.upcoming"))
 );
 
 app.get("/past", async (req, res) =>
-  activitiesForDisplayAsync(activitystore.pastActivities, res, req.i18n.t("activities.past"))
+  activitiesForDisplay(activitystore.pastActivities, res, req.i18n.t("activities.past"))
 );
 
 app.get("/ical", async (req, res) => {
@@ -196,7 +196,7 @@ app.get("/edit/:url", async (req, res, next) => {
 app.post("/submit", async (req, res) => {
   async function validate() {
     try {
-      const result = await validation.checkValidityAsync(
+      const result = await validation.checkValidity(
         req.body.previousUrl.trim(),
         req.body.url.trim(),
         R.partial(activitiesService.isValidUrl, [reservedURLs])
@@ -226,7 +226,7 @@ app.post("/clone-from-meetup", (req, res, next) => {
 });
 
 app.get("/checkurl", async (req, res) => {
-  const result = await misc.validateAsync(
+  const result = await misc.validate(
     req.query.url,
     req.query.previousUrl,
     R.partial(activitiesService.isValidUrl, [reservedURLs])

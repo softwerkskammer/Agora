@@ -17,7 +17,7 @@ const util = require("util");
 const lastNotifications = "lastWikiNotifications";
 
 async function closeAndExit() {
-  await persistence.closeDBAsync();
+  await persistence.closeMongo();
   /* eslint no-process-exit: 0 */
   logger.info("Terminating the process.......");
   process.exit();

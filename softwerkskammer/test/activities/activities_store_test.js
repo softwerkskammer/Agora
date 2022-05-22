@@ -50,7 +50,7 @@ describe("Activity store", () => {
   });
 
   it("calls persistence.list for store.allActivities and transforms the result to an Activity", async () => {
-    const activities = await store.allActivitiesAsync();
+    const activities = await store.allActivities();
     expect(activities[0].title()).to.equal(activity1.title);
     expect(activities[1].title()).to.equal(activity2.title);
     expect(activities[0].descriptionHTML()).to.contain("bli");
@@ -58,7 +58,7 @@ describe("Activity store", () => {
   });
 
   it("calls persistence.list for store.allActivities and transforms the result to an Activity", async () => {
-    const activities = await store.allActivitiesAsync();
+    const activities = await store.allActivities();
     expect(activities[0].title()).to.equal(activity1.title);
     expect(activities[1].title()).to.equal(activity2.title);
     expect(activities[0].descriptionHTML()).to.contain("bli");
@@ -113,7 +113,7 @@ describe("Activity store", () => {
     list.restore();
     sinon.stub(persistence, "listMongo").returns([{ url: "activityUrl" }]);
 
-    const activities = await store.allActivitiesAsync();
+    const activities = await store.allActivities();
     expect(activities).to.have.length(1);
     expect(activities[0].url()).to.equal("activityUrl");
   });
@@ -147,7 +147,7 @@ describe("Activity store", () => {
       list.restore();
       sinon.stub(persistence, "listMongo").returns([socrates]);
 
-      const activities = await store.allActivitiesAsync();
+      const activities = await store.allActivities();
       expect(activities[0]).to.be.a(SoCraTesActivity);
     });
 

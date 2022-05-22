@@ -13,10 +13,6 @@ const Activity = beans.get("activity");
 
 const activityUrl = "urlOfTheActivity";
 
-const getActivity = (url, callback) => {
-  persistence.getByField({ url }, (err, activityState) => callback(err, new Activity(activityState)));
-};
-
 const getActivityAsync = async (url) => {
   const activityState = await persistence.getMongoByField({ url });
   return new Activity(activityState);

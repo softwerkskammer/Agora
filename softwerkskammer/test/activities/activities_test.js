@@ -106,7 +106,7 @@ describe("Activity application", () => {
       owner: "ownerId",
     });
     sinon.stub(activitystore, "upcomingActivities").returns([emptyActivity]);
-    sinon.stub(activitiesService, "getActivitiesForDisplayAsync").returns([emptyActivity]);
+    sinon.stub(activitiesService, "getActivitiesForDisplay").returns([emptyActivity]);
     sinon.stub(memberstore, "getMembersForIds").callsFake((ids) => {
       const members = ids.map((id) =>
         id === "memberId1"

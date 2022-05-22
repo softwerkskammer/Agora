@@ -12,7 +12,7 @@ const fieldHelpers = beans.get("fieldHelpers");
 const CONFLICTING_VERSIONS = beans.get("constants").CONFLICTING_VERSIONS;
 
 module.exports = {
-  getActivitiesForDisplayAsync: async function getActivitiesForDisplay(asynActivitiesFetcher) {
+  getActivitiesForDisplay: async function getActivitiesForDisplay(asynActivitiesFetcher) {
     /*
     const activities = await asynActivitiesFetcher();
     const groups = await groupstore.allGroups();
@@ -42,7 +42,7 @@ module.exports = {
       true,
     ]);
 
-    return this.getActivitiesForDisplayAsync(activitiesFetcher);
+    return this.getActivitiesForDisplay(activitiesFetcher);
   },
 
   getPastActivitiesOfMember: async function getPastActivitiesOfMember(member) {
@@ -51,12 +51,12 @@ module.exports = {
       member.id(),
       false,
     ]);
-    return this.getActivitiesForDisplayAsync(activitiesFetcher);
+    return this.getActivitiesForDisplay(activitiesFetcher);
   },
 
   getOrganizedOrEditedActivitiesOfMember: async function getOrganizedOrEditedActivitiesOfMember(member) {
     const activitiesFetcher = R.partial(activitystore.organizedOrEditedActivitiesForMemberId, [member.id()]);
-    return this.getActivitiesForDisplayAsync(activitiesFetcher);
+    return this.getActivitiesForDisplay(activitiesFetcher);
   },
 
   getActivityWithGroupAndParticipants: async function getActivityWithGroupAndParticipants(url) {

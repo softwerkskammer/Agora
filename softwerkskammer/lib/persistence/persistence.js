@@ -18,18 +18,7 @@ module.exports = function persistenceFunc(collectionName) {
     }
   }
 
-  async function getOpenDb() {
-    if (ourDBConnectionState === DBSTATE.OPEN) {
-      logInfo("connection is open");
-      return ourDB;
-    }
-    logInfo("connection is " + ourDBConnectionState + ", opening it and retrying");
-    await persistence.openDBAsync();
-    await new Promise((resolve) => setTimeout(resolve, 100));
-    return getOpenDb();
-  }
-
-  async function openDBAsync() {
+  async function openMongo() {
     if (ourDBConnectionState !== DBSTATE.CLOSED) {
       logInfo("connection state is " + ourDBConnectionState + ". Returning.");
       return;
@@ -56,6 +45,17 @@ module.exports = function persistenceFunc(collectionName) {
       ourDBConnectionState = DBSTATE.CLOSED;
       logger.error(err);
     }
+  }
+
+  async function getOpenDb() {
+    if (ourDBConnectionState === DBSTATE.OPEN) {
+      logInfo("connection is open");
+      return ourDB;
+    }
+    logInfo("connection is " + ourDBConnectionState + ", opening it and retrying");
+    await openMongo();
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    return getOpenDb();
   }
 
   async function listByFieldWithOptions(searchObject, options, sortOrder) {
@@ -153,7 +153,7 @@ module.exports = function persistenceFunc(collectionName) {
       return db.dropCollection(collectionName);
     },
 
-    closeDBAsync: async function closeDBAsync() {
+    closeMongo: async function closeDBAsync() {
       if (ourDBConnectionState === DBSTATE.CLOSED) {
         return;
       }
@@ -165,6 +165,6 @@ module.exports = function persistenceFunc(collectionName) {
     },
   };
 
-  openDBAsync();
+  openMongo();
   return persistence;
 };

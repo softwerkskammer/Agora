@@ -52,7 +52,7 @@ describe("Activities Service", () => {
   beforeEach(() => {
     //sinon.stub(membersService, 'getImage', function(member, callback) { callback(); });
 
-    sinon.stub(activitystore, "allActivitiesAsync").returns([dummyActivity]);
+    sinon.stub(activitystore, "allActivities").returns([dummyActivity]);
 
     sinon.stub(groupstore, "allGroups").returns([{ id: "assignedGroup", longName: "The name of the assigned Group" }]);
     sinon.stub(groupsService, "allGroupColors").returns({ assignedGroup: "#123456" });
@@ -63,7 +63,7 @@ describe("Activities Service", () => {
   });
 
   it("returns the queried activities and enhances them with their color and group name", async () => {
-    const activities = await activitiesService.getActivitiesForDisplayAsync(activitystore.allActivitiesAsync);
+    const activities = await activitiesService.getActivitiesForDisplay(activitystore.allActivities);
     expect(activities.length).to.equal(1);
     const activity = activities[0];
     expect(activity.title()).to.equal("Title of the Activity");

@@ -17,7 +17,7 @@ async function run() {
       process.exit(1);
     }
     await Promise.all(members.map(service.updateImage));
-    await persistence.closeDBAsync();
+    await persistence.closeMongo();
     process.exit();
   } catch (e) {
     console.log("avatar updater encountered an error: " + e.message); // for cron mail

@@ -12,7 +12,7 @@ function toActivity(jsobject) {
   return jsobject ? new Activity(jsobject) : null;
 }
 
-function toActivityListAsync(jsobjects) {
+function toActivityList(jsobjects) {
   return jsobjects.map((record) => {
     return record && record.isSoCraTes ? new SoCraTesActivity(record) : new Activity(record);
   });
@@ -25,7 +25,7 @@ async function allActivitiesByDateRange(rangeFrom, rangeTo, sortOrder) {
     },
     sortOrder
   );
-  return toActivityListAsync(result);
+  return toActivityList(result);
 }
 
 async function allActivitiesByDateRangeInAscendingOrder(rangeFrom, rangeTo) {
@@ -41,9 +41,9 @@ function flattenAndSortMongoResultCollection(collection) {
 }
 
 module.exports = {
-  allActivitiesAsync: async function allActivities() {
+  allActivities: async function allActivities() {
     const result = await persistence.listMongo({ startDate: 1 });
-    return toActivityListAsync(result);
+    return toActivityList(result);
   },
 
   allActivitiesByDateRangeInAscendingOrder,
@@ -87,7 +87,7 @@ module.exports = {
       },
       { startDate: 1 }
     );
-    return toActivityListAsync(result);
+    return toActivityList(result);
   },
 
   pastActivitiesForGroupIds: async function pastActivitiesForGroupIds(groupIds) {
@@ -99,7 +99,7 @@ module.exports = {
       },
       { startDate: -1 }
     );
-    return toActivityListAsync(result);
+    return toActivityList(result);
   },
 
   organizedOrEditedActivitiesForMemberId: async function organizedOrEditedActivitiesForMemberId(memberId) {
@@ -112,7 +112,7 @@ module.exports = {
       },
       { startDate: -1 }
     );
-    return toActivityListAsync(result);
+    return toActivityList(result);
   },
 
   activitiesForGroupIdsAndRegisteredMemberId: async function activitiesForGroupIdsAndRegisteredMemberId(

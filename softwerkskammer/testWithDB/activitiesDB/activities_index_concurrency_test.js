@@ -77,7 +77,7 @@ describe("Activity application with DB - on submit -", () => {
       .expect(302)
       .expect(/Redirecting to \/activities\/edit\/urlOfTheActivity/, async (err) => {
         if (err) {
-          throw (err);
+          throw err;
         }
         // check that activity did not get changed on the database
         const activity = await getActivity("urlOfTheActivity");

@@ -25,7 +25,7 @@ app.get("/groupTable", async (req, res) => {
 });
 
 app.get("/activityTable", async (req, res) => {
-  const activities = await activitiesService.getActivitiesForDisplayAsync(activitystore.allActivitiesAsync);
+  const activities = await activitiesService.getActivitiesForDisplay(activitystore.allActivities);
   res.render("activityTable", { activities });
 });
 

@@ -66,16 +66,12 @@ app.get("/interests", async (req, res) => {
 });
 
 app.get("/checknickname", async (req, res) => {
-  const result = await misc.validateAsync(
-    req.query.nickname,
-    req.query.previousNickname,
-    membersService.isValidNickname
-  );
+  const result = await misc.validate(req.query.nickname, req.query.previousNickname, membersService.isValidNickname);
   res.end(result);
 });
 
 app.get("/checkemail", async (req, res) => {
-  const result = await misc.validateAsync(req.query.email, req.query.previousEmail, membersService.isValidEmail);
+  const result = await misc.validate(req.query.email, req.query.previousEmail, membersService.isValidEmail);
   res.end(result);
 });
 
@@ -144,7 +140,7 @@ app.post("/updatePassword", async (req, res) => {
 app.post("/submit", async (req, res, next) => {
   async function checkNick() {
     try {
-      const result = await validation.checkValidityAsync(
+      const result = await validation.checkValidity(
         req.body.previousNickname,
         req.body.nickname,
         membersService.isValidNickname
@@ -160,7 +156,7 @@ app.post("/submit", async (req, res, next) => {
 
   async function checkMail() {
     try {
-      const result = await validation.checkValidityAsync(
+      const result = await validation.checkValidity(
         req.body.previousEmail,
         req.body.email,
         membersService.isValidEmail

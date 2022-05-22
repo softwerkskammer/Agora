@@ -39,7 +39,7 @@ describe("the gallery repository on real files", () => {
   describe("retrieval of images", () => {
     it("provides the original image when no width is provided", async () => {
       const imageId = await service.storeImage(sourceImage);
-      const retrievedImagePath = await service.retrieveScaledImageAsync(imageId, undefined);
+      const retrievedImagePath = await service.retrieveScaledImage(imageId, undefined);
       expect(fs.existsSync(retrievedImagePath)).to.be(true);
       expect(retrievedImagePath).to.be(tmpPathFor(imageId));
     });
@@ -48,19 +48,19 @@ describe("the gallery repository on real files", () => {
       const imageId = await service.storeImage(sourceImage);
 
       // first retrieve: scaled image does not exist yet
-      const retrievedImagePath = await service.retrieveScaledImageAsync(imageId, "thumb");
+      const retrievedImagePath = await service.retrieveScaledImage(imageId, "thumb");
       expect(fs.existsSync(retrievedImagePath)).to.be(true);
       expect(retrievedImagePath).to.not.be(tmpPathFor(imageId));
       expect(retrievedImagePath).to.match(/_400\.jpg$/);
 
       // second retrieve: scaled image already exists
-      const retrievedImagePath2 = await service.retrieveScaledImageAsync(imageId, "thumb");
+      const retrievedImagePath2 = await service.retrieveScaledImage(imageId, "thumb");
       expect(retrievedImagePath2).to.be(retrievedImagePath);
     });
 
     it("returns error for invalid imageId when width is not provided", async () => {
       try {
-        await service.retrieveScaledImageAsync("invalidId");
+        await service.retrieveScaledImage("invalidId");
         expect(false).to.be(true);
       } catch (e) {
         expect(e).to.exist();
@@ -69,7 +69,7 @@ describe("the gallery repository on real files", () => {
 
     it("returns error for invalid imageId when width is provided", async () => {
       try {
-        await service.retrieveScaledImageAsync("invalidId", "thumb");
+        await service.retrieveScaledImage("invalidId", "thumb");
         expect(false).to.be(true);
       } catch (e) {
         expect(e).to.exist();
@@ -89,12 +89,12 @@ describe("the gallery repository on real files", () => {
   describe("avatar images", () => {
     it("stores an avatar image", async () => {
       const name = await service.storeAvatar(sourceImage, {});
-      await service.retrieveScaledImageAsync(name, undefined);
+      await service.retrieveScaledImage(name, undefined);
     });
 
     it("stores a miniavatar image", async () => {
       const name = await service.storeAvatar(sourceImage, {});
-      const lname = await service.retrieveScaledImageAsync(name, "mini");
+      const lname = await service.retrieveScaledImage(name, "mini");
       expect(lname).to.match(/_16\.jpg/);
     });
 

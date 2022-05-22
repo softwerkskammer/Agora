@@ -77,17 +77,17 @@ describe("Dashboard Service", () => {
     const changedFiles = ["change1", "change2"];
 
     beforeEach(() => {
-      sinon.stub(wikiService, "getBlogpostsForGroup").callsFake((groupid, callback) => {
+      sinon.stub(wikiService, "getBlogpostsForGroup").callsFake((groupid) => {
         if (groupid === CRASH_BLOG) {
-          return callback(new Error());
+          throw new Error();
         }
-        callback(null, blogs);
+        return blogs;
       });
-      sinon.stub(wikiService, "listChangedFilesinDirectory").callsFake((groupid, callback) => {
+      sinon.stub(wikiService, "listChangedFilesinDirectory").callsFake((groupid) => {
         if (groupid === CRASH_CHANGE) {
-          return callback(new Error());
+          throw new Error();
         }
-        callback(null, changedFiles);
+        return changedFiles;
       });
     });
 

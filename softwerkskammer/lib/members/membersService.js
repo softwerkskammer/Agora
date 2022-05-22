@@ -26,7 +26,7 @@ function wordList(members, groupingFunction) {
 
 async function setCustomAvatarImageInMember(member) {
   try {
-    const result = await galleryService.retrieveScaledImageAsync(member.customAvatar(), "mini");
+    const result = await galleryService.retrieveScaledImage(member.customAvatar(), "mini");
     if (!result) {
       delete member.state.customAvatar;
     }

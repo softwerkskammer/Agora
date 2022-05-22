@@ -65,7 +65,7 @@ module.exports = {
     return { exif };
   },
 
-  retrieveScaledImageAsync: async function retrieveScaledImageAsync(id, miniOrThumb) {
+  retrieveScaledImage: async function retrieveScaledImage(id, miniOrThumb) {
     const image = fullPathFor(id);
     const width = widths[miniOrThumb];
 

@@ -12,12 +12,12 @@ async function sendfile(image, next, res) {
 }
 
 app.get("/avatarFor/:nickname", async (req, res, next) => {
-  const image = await galleryService.retrieveScaledImageAsync(req.params.nickname);
+  const image = await galleryService.retrieveScaledImage(req.params.nickname);
   sendfile(image, next, res);
 });
 
 app.get("/:imageId", async (req, res, next) => {
-  const image = await galleryService.retrieveScaledImageAsync(req.params.imageId, req.query.size);
+  const image = await galleryService.retrieveScaledImage(req.params.imageId, req.query.size);
   sendfile(image, next, res);
 });
 
