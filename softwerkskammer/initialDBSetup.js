@@ -136,15 +136,15 @@ async function run() {
   const allForGroups = groups.map(async (group) => {
     group.description =
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras at pellentesque leo. Suspendisse at ante in lorem faucibus aliquet volutpat ac metus. Aenean vel mauris et lacus venenatis venenatis rhoncus eu nisi. Nam imperdiet pretium ante vel hendrerit. Etiam lacinia lacinia bibendum. Ut malesuada neque sed enim accumsan, id tristique lectus gravida. Morbi lorem justo, vestibulum quis est non, pretium cursus ante. Aenean porttitor nulla eget elit rhoncus rhoncus. In vitae lacinia arcu, quis aliquet nibh. ";
-    return groupsPersistence.saveAsync(new Group(group));
+    return groupsPersistence.saveMongo(new Group(group));
   });
   const allForMembers = members.map(async (member) => {
-    const existingMember = await membersPersistence.getByIdAsync(member.id);
+    const existingMember = await membersPersistence.getMongoById(member.id);
     if (existingMember) {
       console.log('Member "' + member.nickname + '" (already existing)');
       return;
     }
-    return membersPersistence.saveAsync(new Member(member).state);
+    return membersPersistence.saveMongo(new Member(member).state);
   });
 
   return await Promise.all(allForGroups.concat(allForMembers));

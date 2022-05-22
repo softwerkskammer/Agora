@@ -266,7 +266,7 @@ describe("Groups application", () => {
       let savedGroup;
 
       before(() => {
-        sinon.stub(groupsPersistence, "saveAsync").callsFake((group) => {
+        sinon.stub(groupsPersistence, "saveMongo").callsFake((group) => {
           savedGroup = group;
         });
       });

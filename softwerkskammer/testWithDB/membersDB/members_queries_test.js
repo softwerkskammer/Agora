@@ -13,7 +13,7 @@ describe("Members application with DB", () => {
 
     beforeEach(async () => {
       // if this fails, you need to start your mongo DB
-      await persistence.dropAsync();
+      await persistence.dropMongoCollection();
       await memberstore.saveMember(member);
     });
 
@@ -56,7 +56,7 @@ describe("Members application with DB", () => {
     const swkMember = new Member({ id: "id1" });
     beforeEach(async () => {
       // if this fails, you need to start your mongo DB
-      await persistence.dropAsync();
+      await persistence.dropMongoCollection();
       await memberstore.saveMember(swkMember);
     });
 

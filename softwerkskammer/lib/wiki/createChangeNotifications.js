@@ -43,7 +43,7 @@ persistence.getByField({ id: lastNotifications }, async (err, result) => {
     }
     await notifications.wikiChanges(changes);
     lastNotified.moment = new Date();
-    await persistence.saveAsync(lastNotified);
+    await persistence.saveMongo(lastNotified);
     logger.info("Wiki-Changes notified at: " + lastNotified.moment);
     return await closeAndExit();
   } catch (e) {

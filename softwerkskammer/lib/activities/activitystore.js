@@ -19,7 +19,7 @@ function toActivityListAsync(jsobjects) {
 }
 
 async function allActivitiesByDateRange(rangeFrom, rangeTo, sortOrder) {
-  const result = await persistence.listByFieldAsync(
+  const result = await persistence.listMongoByField(
     {
       $and: [{ endDate: { $gt: new Date(rangeFrom) } }, { startDate: { $lt: new Date(rangeTo) } }],
     },
@@ -42,7 +42,7 @@ function flattenAndSortMongoResultCollection(collection) {
 
 module.exports = {
   allActivitiesAsync: async function allActivities() {
-    const result = await persistence.listAsync({ startDate: 1 });
+    const result = await persistence.listMongo({ startDate: 1 });
     return toActivityListAsync(result);
   },
 
@@ -61,27 +61,27 @@ module.exports = {
   },
 
   getActivity: async function getActivity(url) {
-    const result = await persistence.getByFieldAsync({ url });
+    const result = await persistence.getMongoByField({ url });
     return toActivity(result);
   },
 
   getActivityForId: async function getActivityForId(id) {
-    const result = await persistence.getByIdAsync(id);
+    const result = await persistence.getMongoById(id);
     return toActivity(result);
   },
 
   saveActivity: async function saveActivity(activity) {
-    return persistence.saveWithVersionAsync(activity.state);
+    return persistence.saveMongoWithVersion(activity.state);
   },
 
   removeActivity: async function removeActivity(activity) {
-    return persistence.removeAsync(activity.id());
+    return persistence.removeMongo(activity.id());
   },
 
   upcomingActivitiesForGroupIds: async function upcomingActivitiesForGroupIds(groupIds) {
     const start = new Date();
 
-    const result = await persistence.listByFieldAsync(
+    const result = await persistence.listMongoByField(
       {
         $and: [{ endDate: { $gt: start } }, { assignedGroup: { $in: groupIds } }],
       },
@@ -93,7 +93,7 @@ module.exports = {
   pastActivitiesForGroupIds: async function pastActivitiesForGroupIds(groupIds) {
     const start = new Date();
 
-    const result = await persistence.listByFieldAsync(
+    const result = await persistence.listMongoByField(
       {
         $and: [{ endDate: { $lt: start } }, { assignedGroup: { $in: groupIds } }],
       },
@@ -103,7 +103,7 @@ module.exports = {
   },
 
   organizedOrEditedActivitiesForMemberId: async function organizedOrEditedActivitiesForMemberId(memberId) {
-    const result = await persistence.listByFieldAsync(
+    const result = await persistence.listMongoByField(
       {
         $or: [
           { owner: memberId },

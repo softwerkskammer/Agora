@@ -8,7 +8,7 @@ const CONFLICTING_VERSIONS = beans.get("constants").CONFLICTING_VERSIONS;
 const persistence = require("../../lib/persistence/persistence")("teststore");
 
 async function clearStore() {
-  await persistence.dropAsync();
+  await persistence.dropMongoCollection();
 }
 
 describe("The persistence store", () => {
@@ -18,13 +18,13 @@ describe("The persistence store", () => {
     const toPersist = { id: "toPersist", name: "Heinz" };
 
     async function storeSampleData() {
-      return persistence.saveAsync(toPersist);
+      return persistence.saveMongo(toPersist);
     }
 
     describe("on save", () => {
       it("fails to save object without id", async () => {
         try {
-          await persistence.saveAsync({});
+          await persistence.saveMongo({});
           expect(false).to.be(true);
         } catch (err) {
           expect(err.message).to.equal("Given object has no valid id");
@@ -33,7 +33,7 @@ describe("The persistence store", () => {
 
       it("fails to save object with id null", async () => {
         try {
-          await persistence.saveAsync({ id: null });
+          await persistence.saveMongo({ id: null });
           expect(false).to.be(true);
         } catch (err) {
           expect(err.message).to.equal("Given object has no valid id");
@@ -44,7 +44,7 @@ describe("The persistence store", () => {
     describe("on save-with-version", () => {
       it("fails to save-with-version object without id", async () => {
         try {
-          await persistence.saveWithVersionAsync({});
+          await persistence.saveMongoWithVersion({});
           expect(false).to.be(true);
         } catch (err) {
           expect(err.message).to.equal("Given object has no valid id");
@@ -53,7 +53,7 @@ describe("The persistence store", () => {
 
       it("fails to save-with-version object with id null", async () => {
         try {
-          await persistence.saveWithVersionAsync({ id: null });
+          await persistence.saveMongoWithVersion({ id: null });
           expect(false).to.be(true);
         } catch (err) {
           expect(err.message).to.equal("Given object has no valid id");
@@ -61,29 +61,29 @@ describe("The persistence store", () => {
       });
 
       it("on save-with-version, saves an object that is not yet in database and initializes version with 1", async () => {
-        await persistence.saveWithVersionAsync({ id: 123 });
-        const result = await persistence.getByIdAsync(123);
+        await persistence.saveMongoWithVersion({ id: 123 });
+        const result = await persistence.getMongoById(123);
         expect(result.version).to.equal(1);
       });
 
       it("on save-with-version, updates an object that is in database with same version", async () => {
-        await persistence.saveAsync({ id: 123, data: "abc", version: 1 });
-        await persistence.saveWithVersionAsync({ id: 123, data: "def", version: 1 });
-        const result = await persistence.getByIdAsync(123);
+        await persistence.saveMongo({ id: 123, data: "abc", version: 1 });
+        await persistence.saveMongoWithVersion({ id: 123, data: "def", version: 1 });
+        const result = await persistence.getMongoById(123);
         expect(result.data).to.equal("def");
         expect(result.version).to.equal(2);
       });
 
       it("on save-with-version, does not update an object that is in database with a different version", async () => {
-        await persistence.saveAsync({ id: 123, data: "abc", version: 2 });
+        await persistence.saveMongo({ id: 123, data: "abc", version: 2 });
         const objectToSave = { id: 123, data: "def", version: 1 };
         try {
-          await persistence.saveWithVersionAsync(objectToSave);
+          await persistence.saveMongoWithVersion(objectToSave);
           expect(false).to.be(true);
         } catch (err) {
           expect(err.message).to.equal(CONFLICTING_VERSIONS);
         }
-        const result = await persistence.getByIdAsync(123);
+        const result = await persistence.getMongoById(123);
         expect(result.data, "Data of object in database remains unchanged").to.equal("abc");
         expect(result.version, "Version of object in database remains unchanged").to.equal(2);
         expect(objectToSave.version, "Version of object to save remains unchanged").to.equal(1);
@@ -93,8 +93,8 @@ describe("The persistence store", () => {
     describe("on update", () => {
       it("replaces old object with new object", async () => {
         await storeSampleData();
-        await persistence.updateAsync({ id: "toPersist", firstname: "Peter" }, "toPersist");
-        const result = await persistence.getByIdAsync("toPersist");
+        await persistence.updateMongo({ id: "toPersist", firstname: "Peter" }, "toPersist");
+        const result = await persistence.getMongoById("toPersist");
         expect(result.id).to.equal("toPersist");
         expect(result.name).to.be.undefined();
         expect(result.firstname).to.equal("Peter");
@@ -102,10 +102,10 @@ describe("The persistence store", () => {
 
       it("replaces old object with new object even if id's differ", async () => {
         await storeSampleData();
-        await persistence.updateAsync({ id: "toPersist2", name: "Heinz" }, "toPersist");
-        const result = await persistence.getByIdAsync("toPersist");
+        await persistence.updateMongo({ id: "toPersist2", name: "Heinz" }, "toPersist");
+        const result = await persistence.getMongoById("toPersist");
         expect(result).to.be.undefined();
-        const result1 = await persistence.getByIdAsync("toPersist2");
+        const result1 = await persistence.getMongoById("toPersist2");
         expect(result1.id).to.equal("toPersist2");
         expect(result1.name).to.equal("Heinz");
       });
@@ -113,33 +113,33 @@ describe("The persistence store", () => {
 
     describe("on getById", () => {
       it("retrieves none for non-existing id", async () => {
-        const result = await persistence.getByIdAsync("non-existing-id");
+        const result = await persistence.getMongoById("non-existing-id");
         expect(result).not.to.exist();
       });
 
       it("retrieves one for existing id", async () => {
         await storeSampleData();
-        const result = await persistence.getByIdAsync("toPersist");
+        const result = await persistence.getMongoById("toPersist");
         expect(result.id).to.equal("toPersist");
         expect(result.name).to.equal("Heinz");
       });
 
       it("retrieves undefined if the id should be null", async () => {
         await storeSampleData();
-        const result = await persistence.getByIdAsync(null);
+        const result = await persistence.getMongoById(null);
         expect(result).not.to.exist();
       });
     });
 
     describe("on list", () => {
       it("retrieves an empty list when no data is inserted", async () => {
-        const result = await persistence.listAsync({});
+        const result = await persistence.listMongo({});
         expect(result).to.have.length(0);
       });
 
       it("retrieves all", async () => {
         await storeSampleData();
-        const result = await persistence.listAsync({});
+        const result = await persistence.listMongo({});
         expect(result).to.have.length(1);
         expect(result[0].name).to.equal("Heinz");
       });
@@ -148,7 +148,7 @@ describe("The persistence store", () => {
     describe("on getByField", () => {
       it("retrieves undefined if some field should be null", async () => {
         await storeSampleData();
-        const result = await persistence.getByFieldAsync({ id: null });
+        const result = await persistence.getMongoByField({ id: null });
         expect(result).not.to.exist();
       });
     });
@@ -156,14 +156,14 @@ describe("The persistence store", () => {
     describe("on remove", () => {
       it("removes an object having an id", async () => {
         await storeSampleData();
-        await persistence.removeAsync("toPersist");
-        const result = await persistence.getByIdAsync("toPersist");
+        await persistence.removeMongo("toPersist");
+        const result = await persistence.getMongoById("toPersist");
         expect(result).not.to.exist();
       });
 
       it("cannot remove an object with no id", async () => {
         try {
-          await persistence.removeAsync(undefined);
+          await persistence.removeMongo(undefined);
           expect(false).to.be(true);
         } catch (err) {
           expect(err.message).to.equal("Given object has no valid id");
@@ -179,12 +179,12 @@ describe("The persistence store", () => {
     const user4 = { id: "4", firstname: "Anna", lastname: "Albers" };
 
     async function storeSampleData() {
-      return await persistence.saveAllAsync([user1, user2, user3, user4]);
+      return await Promise.all([user1, user2, user3, user4].map((obj) => persistence.saveMongo(obj)));
     }
 
     it("retrieves all members in ascending order", async () => {
       await storeSampleData();
-      const result = await persistence.listAsync({ lastname: 1, firstname: 1 });
+      const result = await persistence.listMongo({ lastname: 1, firstname: 1 });
       expect(result).to.have.length(4);
       expect(result[0].firstname).to.equal("Anna");
       expect(result[0].lastname).to.equal("Albers");
@@ -198,7 +198,7 @@ describe("The persistence store", () => {
 
     it("retrieves those members whose IDs are contained in the list", async () => {
       await storeSampleData();
-      const result = await persistence.listByIdsAsync(["3", "4", "6", "test"], { lastname: 1, firstname: 1 });
+      const result = await persistence.listMongoByIds(["3", "4", "6", "test"], { lastname: 1, firstname: 1 });
       expect(result).to.have.length(2);
       expect(result[0].firstname).to.equal("Anna");
       expect(result[0].lastname).to.equal("Albers");
@@ -208,7 +208,7 @@ describe("The persistence store", () => {
 
     it("stores all objects with one call", async () => {
       await storeSampleData();
-      const result = await persistence.listAsync({ lastname: 1, firstname: 1 });
+      const result = await persistence.listMongo({ lastname: 1, firstname: 1 });
       expect(result).to.have.length(4);
       expect(result[0].firstname).to.equal("Anna");
       expect(result[0].lastname).to.equal("Albers");
@@ -226,14 +226,14 @@ describe("The persistence store", () => {
     const toPersist = new Member().initFromSessionUser({ authenticationId: "toPersist" }).state;
 
     async function storeSampleData() {
-      return persistence.saveAsync(toPersist);
+      return persistence.saveMongo(toPersist);
     }
 
     it("checks that created has been written", async () => {
       // this test will definitely fail, if run a microsecond before midnight. - Ideas?
       const today = DateTime.local().toFormat("dd.MM.yy");
       await storeSampleData();
-      const result = await persistence.getByIdAsync("toPersist");
+      const result = await persistence.getMongoById("toPersist");
       expect(result.id).to.equal("toPersist");
       expect(result.created).to.exist();
       expect(result.created).to.equal(today);

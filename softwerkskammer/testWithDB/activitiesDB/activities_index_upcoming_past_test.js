@@ -62,7 +62,7 @@ describe("Activity application with DB - shows activities -", () => {
 
   beforeEach(async () => {
     // if this fails, you need to start your mongo DB
-    await persistence.dropAsync();
+    await persistence.dropMongoCollection();
     await activitystore.saveActivity(futureActivity);
     await activitystore.saveActivity(currentActivity);
     await activitystore.saveActivity(pastActivity);

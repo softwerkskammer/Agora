@@ -1,18 +1,8 @@
 {
-  "name": "Agora",
+  "name": "agora",
   "description": "The platform for Softwerkskammer",
-  "version": "1.0.0",
-  "author": "Nicole Rauch",
-  "contributors ": [
-    {
-      "name": "Markus M. May",
-      "web": "http://www.javafreedom.org"
-    },
-    {
-      "name": "Andreas Leidig",
-      "web": "https://github.com/leider"
-    }
-  ],
+  "version": "2.0.0",
+  "author": "Andreas Leidig",
   "repository": {
     "type": "git",
     "url": "https://github.com/softwerkskammer/Agora"
@@ -20,13 +10,12 @@
   "license": "(MIT OR Apache-2.0)",
   "main": "",
   "engines": {
-    "node": ">=6.0"
+    "node": ">=12.0"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "6.1.1",
     "@popperjs/core": "2.11.5",
     "CoolBeans": "0.0.9",
-    "async": "3.2.3",
     "awesome-bootstrap-checkbox": "1.0.1",
     "body-parser": "1.20.0",
     "bootstrap": "5.1.3",

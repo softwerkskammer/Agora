@@ -12,12 +12,12 @@ describe("Groups store", () => {
   let getById;
 
   before(() => {
-    getById = sinon.stub(persistence, "getByIdAsync");
+    getById = sinon.stub(persistence, "getMongoById");
     getById.returns(sampleGroup);
   });
 
   after(() => {
-    persistence.getByIdAsync.restore();
+    persistence.getMongoById.restore();
   });
 
   it("retrieves groupnames given the intended case", async () => {

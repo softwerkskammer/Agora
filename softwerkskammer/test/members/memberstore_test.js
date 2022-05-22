@@ -20,14 +20,14 @@ describe("Members store", () => {
   });
 
   it("calls persistence.getById for store.getMemberForId and passes on the given callback", async () => {
-    const getById = sinon.stub(persistence, "getByIdAsync").returns(sampleMember);
+    const getById = sinon.stub(persistence, "getMongoById").returns(sampleMember);
     const member = await store.getMemberForId("id");
     expect(member.nickname()).to.equal(sampleMember.nickname);
     expect(getById.calledWith("id")).to.be(true);
   });
 
   it("calls persistence.listByIds for store.getMembersForIds and passes on the given callback", async () => {
-    const listByIds = sinon.stub(persistence, "listByIdsAsync").returns(sampleList);
+    const listByIds = sinon.stub(persistence, "listMongoByIds").returns(sampleList);
 
     const members = await store.getMembersForIds(["id1", "id2"]);
     expect(members[0].nickname()).to.equal(sampleMember.nickname);
@@ -36,7 +36,7 @@ describe("Members store", () => {
   });
 
   it("calls persistence.getByField for store.getMemberForEMail and passes on the given callback", async () => {
-    sinon.stub(persistence, "getByFieldAsync").callsFake((object) => {
+    sinon.stub(persistence, "getMongoByField").callsFake((object) => {
       if (object.email.test("nick2s mail")) {
         return sampleMember2;
       }
@@ -50,7 +50,7 @@ describe("Members store", () => {
   });
 
   it("calls persistence.getByField for each member for store.getMembersForEMails and passes on the given callback", async () => {
-    sinon.stub(persistence, "listByFieldAsync").returns(sampleList);
+    sinon.stub(persistence, "listMongoByField").returns(sampleList);
     const members = await store.getMembersForEMails(["nicks mail", "nick2s mail"]);
     expect(members.length).to.equal(2);
     expect(members[0].nickname()).to.equal(sampleMember.nickname);
@@ -59,7 +59,7 @@ describe("Members store", () => {
   });
 
   it("calls persistence.getByField with an appropriate regex", async () => {
-    const getByField = sinon.stub(persistence, "getByFieldAsync").returns(sampleMember);
+    const getByField = sinon.stub(persistence, "getMongoByField").returns(sampleMember);
     const member = await store.getMember("nick");
     expect(member.nickname()).to.equal(sampleMember.nickname);
     expect(getByField.called).to.be(true);
@@ -68,7 +68,7 @@ describe("Members store", () => {
   });
 
   it("calls persistence.list for store.allMembers and passes on the given callback", async () => {
-    sinon.stub(persistence, "listByFieldAsync").returns(sampleList);
+    sinon.stub(persistence, "listMongoByField").returns(sampleList);
     const members = await store.allMembers();
 
     expect(members[0].nickname()).to.equal(sampleMember.nickname);
@@ -82,7 +82,7 @@ describe("Members store", () => {
     const bettiLow = { lastname: "betti", firstname: "Bodo" };
     const adonisLow = { lastname: "adonis", firstname: "Abbu" };
 
-    sinon.stub(persistence, "listByFieldAsync").returns([adonis, betti, dave, bettiLow, adonisLow]);
+    sinon.stub(persistence, "listMongoByField").returns([adonis, betti, dave, bettiLow, adonisLow]);
 
     const members = await store.allMembers();
     expect(members[0].lastname()).to.equal(adonisLow.lastname);
@@ -97,7 +97,7 @@ describe("Members store", () => {
     const tata10 = { lastname: "Tata10", firstname: "Egal" };
     const tata2 = { lastname: "Tata2", firstname: "Egal" };
 
-    sinon.stub(persistence, "listByFieldAsync").returns([tata1, tata10, tata2]);
+    sinon.stub(persistence, "listMongoByField").returns([tata1, tata10, tata2]);
 
     const members = await store.allMembers();
     expect(members[0].lastname()).to.equal(tata1.lastname);
@@ -106,14 +106,14 @@ describe("Members store", () => {
   });
 
   it("calls persistence.save for store.saveMember and passes on the given callback", async () => {
-    const save = sinon.stub(persistence, "saveAsync").callsFake(() => {});
+    const save = sinon.stub(persistence, "saveMongo").callsFake(() => {});
 
     await store.saveMember(sampleMember);
     expect(save.calledWith(sampleMember.state)).to.be(true);
   });
 
   it("calls persistence.remove for store.removeMember and passes on the given callback", async () => {
-    const remove = sinon.stub(persistence, "removeAsync");
+    const remove = sinon.stub(persistence, "removeMongo");
     const member = new Member(sampleMember);
     member.state.id = "I D";
     await store.removeMember(member);

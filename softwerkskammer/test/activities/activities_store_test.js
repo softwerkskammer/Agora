@@ -34,11 +34,10 @@ describe("Activity store", () => {
 
   beforeEach(() => {
     sampleList = [activity1, activity2];
-    list = sinon.stub(persistence, "listAsync").returns(sampleList);
-    sinon.stub(persistence, "listByField").callsFake((searchObject, sortOrder, callback) => callback(null, sampleList));
-    sinon.stub(persistence, "listByFieldAsync").returns(sampleList);
-    getByField = sinon.stub(persistence, "getByFieldAsync").returns(activity1);
-    getById = sinon.stub(persistence, "getByIdAsync").callsFake((id) => {
+    list = sinon.stub(persistence, "listMongo").returns(sampleList);
+    sinon.stub(persistence, "listMongoByField").returns(sampleList);
+    getByField = sinon.stub(persistence, "getMongoByField").returns(activity1);
+    getById = sinon.stub(persistence, "getMongoById").callsFake((id) => {
       if (id === "socrates") {
         return socrates;
       }
@@ -84,7 +83,7 @@ describe("Activity store", () => {
 
   it("returns an activity object for the given id although the persistence only returns a JS object", async () => {
     getByField.restore();
-    sinon.stub(persistence, "getByFieldAsync").returns({ url: "activityUrl" });
+    sinon.stub(persistence, "getMongoByField").returns({ url: "activityUrl" });
 
     const result = await store.getActivity("activityUrl");
     expect(result.url()).to.equal("activityUrl");
@@ -92,7 +91,7 @@ describe("Activity store", () => {
 
   it("returns null when id does not exist", async () => {
     getByField.restore();
-    sinon.stub(persistence, "getByFieldAsync");
+    sinon.stub(persistence, "getMongoByField");
 
     const result = await store.getActivity(1234);
     expect(result).to.be(null);
@@ -100,7 +99,7 @@ describe("Activity store", () => {
 
   it("returns undefined when persistence yields an error", async () => {
     getByField.restore();
-    sinon.stub(persistence, "getByFieldAsync").throws(new Error("error"));
+    sinon.stub(persistence, "getMongoByField").throws(new Error("error"));
 
     try {
       await store.getActivity(1234);
@@ -112,7 +111,7 @@ describe("Activity store", () => {
 
   it("returns all activites although the persistence only returns JS objects", async () => {
     list.restore();
-    sinon.stub(persistence, "listAsync").returns([{ url: "activityUrl" }]);
+    sinon.stub(persistence, "listMongo").returns([{ url: "activityUrl" }]);
 
     const activities = await store.allActivitiesAsync();
     expect(activities).to.have.length(1);
@@ -130,7 +129,7 @@ describe("Activity store", () => {
   });
 
   it("calls persistence.remove for store.removeActivity and passes on the given callback", async () => {
-    const remove = sinon.stub(persistence, "removeAsync");
+    const remove = sinon.stub(persistence, "removeMongo");
     const activity = new Activity(activity1);
     activity.state.id = "I D";
     await store.removeActivity(activity);
@@ -146,7 +145,7 @@ describe("Activity store", () => {
 
     it("on fetching all activities - when the isSoCraTes flag is set", async () => {
       list.restore();
-      sinon.stub(persistence, "listAsync").returns([socrates]);
+      sinon.stub(persistence, "listMongo").returns([socrates]);
 
       const activities = await store.allActivitiesAsync();
       expect(activities[0]).to.be.a(SoCraTesActivity);

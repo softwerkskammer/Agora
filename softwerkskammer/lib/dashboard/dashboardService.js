@@ -39,27 +39,17 @@ module.exports = {
     const changesByGroup = {};
     const linesPerGroup = {};
 
-    const functions = (member.subscribedGroups || []).map((group) => {
-      return new Promise((resolve, reject) => {
-        const groupid = group.id;
-        linesPerGroup[groupid] = basicHeight;
-        wikiService.getBlogpostsForGroup(groupid, (err2, blogposts) => {
-          if (err2) {
-            return reject(err2);
-          }
-          postsByGroup[groupid] = blogposts;
-          linesPerGroup[groupid] = linesPerGroup[groupid] + basicHeightPerSection + blogposts.length;
-          wikiService.listChangedFilesinDirectory(groupid, (err3, metadatas) => {
-            if (err3) {
-              return reject(err3);
-            }
-            changesByGroup[groupid] = metadatas;
-            linesPerGroup[groupid] = linesPerGroup[groupid] + basicHeightPerSection + metadatas.length;
-            return resolve();
-          });
-        });
-      });
-    });
+    async function calcLinesPerGroup(group) {
+      const groupid = group.id;
+      linesPerGroup[groupid] = basicHeight;
+      const blogposts = await wikiService.getBlogpostsForGroup(groupid);
+      postsByGroup[groupid] = blogposts;
+      linesPerGroup[groupid] = linesPerGroup[groupid] + basicHeightPerSection + blogposts.length;
+      const metadatas = await wikiService.listChangedFilesinDirectory(groupid);
+      changesByGroup[groupid] = metadatas;
+      linesPerGroup[groupid] = linesPerGroup[groupid] + basicHeightPerSection + metadatas.length;
+    }
+    const functions = (member.subscribedGroups || []).map(calcLinesPerGroup);
     await Promise.all(functions);
     return {
       member,

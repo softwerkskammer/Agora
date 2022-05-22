@@ -6,7 +6,7 @@ const galleryService = beans.get("galleryService");
 const ActivityResult = beans.get("activityresult");
 
 async function load(activityResultName) {
-  const data = await persistence.getByIdAsync(activityResultName);
+  const data = await persistence.getMongoById(activityResultName);
   return data ? new ActivityResult(data) : undefined;
 }
 
@@ -29,7 +29,7 @@ module.exports = {
       // eslint-disable-next-line camelcase
       uploaded_by: memberId,
     });
-    await persistence.saveAsync(activityResult.state);
+    await persistence.saveMongo(activityResult.state);
     return imageUri;
   },
 
@@ -46,14 +46,14 @@ module.exports = {
     }
     if (accessrights.canEditPhoto(photo)) {
       activityResult.updatePhotoById(photoId, data);
-      return persistence.saveAsync(activityResult.state);
+      return persistence.saveMongo(activityResult.state);
     }
   },
 
   deletePhotoOfActivityResult: async function deletePhotoOfActivityResult(activityResultName, photoId) {
     const activityResult = await load(activityResultName);
     activityResult.deletePhotoById(photoId);
-    await persistence.saveAsync(activityResult.state);
+    await persistence.saveMongo(activityResult.state);
     return galleryService.deleteImage(photoId);
   },
 };

@@ -17,7 +17,7 @@ describe("Groups application with DB", () => {
 
     beforeEach(async () => {
       // if this fails, you need to start your mongo DB
-      await persistence.dropAsync();
+      await persistence.dropMongoCollection();
       await groupstore.saveGroup(group1);
       await groupstore.saveGroup(group2);
       await groupstore.saveGroup(group3);

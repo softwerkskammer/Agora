@@ -8,7 +8,7 @@ const persistence = beans.get("activitiesPersistence");
 const CONFLICTING_VERSIONS = beans.get("constants").CONFLICTING_VERSIONS;
 
 async function getEntry() {
-  return persistence.getByFieldAsync({ url: "url" });
+  return persistence.getMongoByField({ url: "url" });
 }
 
 describe("Persistence with DB", () => {
@@ -16,9 +16,9 @@ describe("Persistence with DB", () => {
 
   beforeEach(async () => {
     // if this fails, you need to start your mongo DB
-    await persistence.dropAsync();
+    await persistence.dropMongoCollection();
     // save our sample activity
-    await persistence.saveWithVersionAsync(emptyRecord);
+    await persistence.saveMongoWithVersion(emptyRecord);
   });
 
   // Note: This test only shows the general mechanism of avoiding racing conditions with the help of version numbers.
@@ -33,13 +33,13 @@ describe("Persistence with DB", () => {
     // add member to the second instance:
     entry2.entries.push("entry2");
     // save first instance:
-    await persistence.saveWithVersionAsync(entry1);
+    await persistence.saveMongoWithVersion(entry1);
     // load it again:
     const entry = await await getEntry();
     expect(entry.entries, "First entry is stored").to.contain("entry1");
     // save second instance:
     try {
-      await persistence.saveWithVersionAsync(entry2);
+      await persistence.saveMongoWithVersion(entry2);
       expect(false).to.be(true);
     } catch (e) {
       expect(e.message).to.equal(CONFLICTING_VERSIONS); // Conflict is discovered
@@ -47,7 +47,7 @@ describe("Persistence with DB", () => {
     // repeat loading and adding:
     const entry3 = await getEntry();
     entry3.entries.push("entry2");
-    await persistence.saveWithVersionAsync(entry3);
+    await persistence.saveMongoWithVersion(entry3);
     // load the resulting activity
     const entry4 = await getEntry();
     expect(entry4.entries, "Second entry is stored").to.contain("entry2");

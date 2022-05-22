@@ -17,7 +17,7 @@ app.post("/", async (req, res, next) => {
   }
   const tags = misc.toArray(req.body.tags);
 
-  await activityresultsPersistence.saveAsync(
+  await activityresultsPersistence.saveMongo(
     new ActivityResult({
       id: activityResultName,
       tags,

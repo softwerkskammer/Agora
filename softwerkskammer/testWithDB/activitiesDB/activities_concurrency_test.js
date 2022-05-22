@@ -18,7 +18,7 @@ const getActivity = (url, callback) => {
 };
 
 const getActivityAsync = async (url) => {
-  const activityState = await persistence.getByFieldAsync({ url });
+  const activityState = await persistence.getMongoByField({ url });
   return new Activity(activityState);
 };
 
@@ -67,7 +67,7 @@ describe("Activities Service with DB", () => {
       return activityAfterConcurrentAccess;
     });
 
-    await persistence.dropAsync();
+    await persistence.dropMongoCollection();
     // save our activity with one registrant
     await activitystore.saveActivity(activityAfterConcurrentAccess);
 

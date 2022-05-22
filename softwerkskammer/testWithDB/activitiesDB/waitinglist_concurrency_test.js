@@ -16,7 +16,7 @@ const Member = beans.get("member");
 const activityUrl = "urlOfTheActivity";
 
 async function getActivity(url) {
-  const activityState = await persistence.getByFieldAsync({ url });
+  const activityState = await persistence.getMongoByField({ url });
   return new Activity(activityState);
 }
 
@@ -77,7 +77,7 @@ describe("Waitinglist Service with DB", () => {
 
     sinon.stub(mailsenderService, "sendRegistrationAllowed");
 
-    await persistence.dropAsync();
+    await persistence.dropMongoCollection();
     // save our activity with one registrant
     await activitystore.saveActivity(activityAfterConcurrentAccess);
   });
