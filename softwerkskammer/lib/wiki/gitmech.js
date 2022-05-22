@@ -16,8 +16,8 @@ function esc(arg) {
   return "'" + arg + "'";
 }
 
-function commit(path, message, author, callback) {
-  gitExec.command(["commit", "--author=" + esc(author), "-m", esc(message), esc(path)], callback);
+async function commit(path, message, author) {
+  return gitExec.command(["commit", "--author=" + esc(author), "-m", esc(message), esc(path)]);
 }
 
 module.exports = {
@@ -25,169 +25,134 @@ module.exports = {
     return workTree + "/" + path;
   },
 
-  readFileFs: function readFileFs(path, callback) {
-    Fs.readFile(this.absPath(path), "utf8", callback);
+  readFileFs: async function readFileFs(path) {
+    return Fs.readFile(this.absPath(path), "utf8");
   },
 
-  readFile: function readFile(path, version, callback) {
-    gitExec.command(["show", version + ":" + esc(path)], callback);
+  readFile: async function readFile(path, version) {
+    return gitExec.command(["show", version + ":" + esc(path)]);
   },
 
-  log: function log(path, version, howMany, callback) {
-    gitExec.command(
-      [
-        "log",
-        "-" + howMany,
-        "--no-notes",
-        "--follow",
-        "--pretty=format:%h%n%H%n%an%n%ai%n%s",
-        version,
-        "--name-only",
-        "--",
-        esc(path),
-      ],
-      (err, data) => {
-        if (err) {
-          return callback(err);
-        }
-        const logdata = data ? data.split("\n\n") : [];
-        const metadata = misc.compact(logdata).map((chunk) => {
-          const group = chunk.split("\n");
-          return new Metadata({
-            hashRef: group[0],
-            fullhash: group[1],
-            author: group[2],
-            date: group[3],
-            comment: group[4],
-            name: group[5],
-          });
-        });
-        if (metadata[0]) {
-          metadata[0].hashRef = "HEAD"; // This can be used linking this version, but needs to be empty for HEAD
-        }
-        return callback(null, metadata);
-      }
-    );
-  },
-
-  latestChanges: function latestChanges(path, jsDate, callback) {
-    gitExec.command(
-      ["log", '--since="' + jsDate.toISOString() + '"', "--pretty=format:%h%n%H%n%an%n%ai%n%s", "--", esc(path)],
-      (err, data) => {
-        if (err) {
-          return callback(err);
-        }
-        const logdata = data ? data.split("\n") : [];
-        const metadata = [];
-        for (let i = Math.floor(logdata.length / 5); i > 0; i = i - 1) {
-          const group = logdata.slice((i - 1) * 5, i * 5);
-          metadata.push(
-            new Metadata({
-              name: path.replace(".md", ""),
-              hashRef: group[0],
-              fullhash: group[1],
-              author: group[2],
-              date: group[3],
-              comment: group[4],
-            })
-          );
-        }
-        return callback(null, metadata);
-      }
-    );
-  },
-
-  add: function add(path, message, author, callback) {
-    gitExec.command(["add", esc(path)], (err) => {
-      if (err) {
-        return callback(err);
-      }
-      return commit(path, message, author, callback);
-    });
-  },
-
-  mv: function mv(oldpath, newpath, message, author, callback) {
-    gitExec.command(["mv", esc(oldpath), esc(newpath)], (err) => {
-      if (err) {
-        return callback(err);
-      }
-      return commit(".", message, author, callback);
-    });
-  },
-
-  rm: function rm(path, message, author, callback) {
-    gitExec.command(["rm", esc(path)], (err) => {
-      if (err) {
-        return callback(err);
-      }
-      return commit(path, message, author, callback);
-    });
-  },
-
-  grep: function grep(pattern, callback) {
-    gitExec.command(["grep", "--no-color", "-F", "-n", "-i", "-I", esc(pattern)], (err, data) => {
-      if (err) {
-        if (err.message.split("\n").length < 3) {
-          return callback(null, []);
-        }
-        return callback(err);
-      }
-      const result = data ? data.split("\n") : [];
-      // Search in the file names
-      return gitExec.command(["ls-files", "*" + esc(pattern) + "*.md"], (err1, data1) => {
-        if (data1) {
-          data1.split("\n").forEach((name) => result.push(name));
-        }
-
-        return callback(err1, result);
+  log: async function log(path, version, howMany) {
+    const data = await gitExec.command([
+      "log",
+      "-" + howMany,
+      "--no-notes",
+      "--follow",
+      "--pretty=format:%h%n%H%n%an%n%ai%n%s",
+      version,
+      "--name-only",
+      "--",
+      esc(path),
+    ]);
+    const logdata = data ? data.split("\n\n") : [];
+    const metadata = misc.compact(logdata).map((chunk) => {
+      const group = chunk.split("\n");
+      return new Metadata({
+        hashRef: group[0],
+        fullhash: group[1],
+        author: group[2],
+        date: group[3],
+        comment: group[4],
+        name: group[5],
       });
     });
+    if (metadata[0]) {
+      metadata[0].hashRef = "HEAD"; // This can be used linking this version, but needs to be empty for HEAD
+    }
+    return metadata;
   },
 
-  diff: function diff(path, revisions, callback) {
-    gitExec.command(["diff", "--no-color", "-b", esc(revisions), "--", esc(path)], callback);
+  latestChanges: async function latestChanges(path, jsDate) {
+    const data = await gitExec.command([
+      "log",
+      '--since="' + jsDate.toISOString() + '"',
+      "--pretty=format:%h%n%H%n%an%n%ai%n%s",
+      "--",
+      esc(path),
+    ]);
+    const logdata = data ? data.split("\n") : [];
+    const metadata = [];
+    for (let i = Math.floor(logdata.length / 5); i > 0; i = i - 1) {
+      const group = logdata.slice((i - 1) * 5, i * 5);
+      metadata.push(
+        new Metadata({
+          name: path.replace(".md", ""),
+          hashRef: group[0],
+          fullhash: group[1],
+          author: group[2],
+          date: group[3],
+          comment: group[4],
+        })
+      );
+    }
+    return metadata;
   },
 
-  ls: function ls(subdir, callback) {
-    gitExec.command(["ls-tree", "--name-only", "-r", "HEAD", esc(subdir)], (err, data) => {
-      if (err) {
-        return callback(err);
+  add: async function add(path, message, author) {
+    await gitExec.command(["add", esc(path)]);
+    return commit(path, message, author);
+  },
+
+  mv: async function mv(oldpath, newpath, message, author) {
+    await gitExec.command(["mv", esc(oldpath), esc(newpath)]);
+    return commit(".", message, author);
+  },
+
+  rm: async function rm(path, message, author) {
+    await gitExec.command(["rm", esc(path)]);
+    return commit(path, message, author);
+  },
+
+  grep: async function grep(pattern) {
+    try {
+      const data = await gitExec.command(["grep", "--no-color", "-F", "-n", "-i", "-I", esc(pattern)]);
+      const result = data ? data.split("\n") : [];
+      // Search in the file names
+      const data1 = await gitExec.command(["ls-files", "*" + esc(pattern) + "*.md"]);
+      if (data1) {
+        data1.split("\n").forEach((name) => result.push(name));
       }
-      return callback(null, dataToLines(data));
-    });
+      return result;
+    } catch (e) {
+      if (e.message && e.message.split("\n").length < 3) {
+        return [];
+      }
+      throw e;
+    }
   },
 
-  lsdirs: function lsdirs(callback) {
+  diff: async function diff(path, revisions) {
+    return gitExec.command(["diff", "--no-color", "-b", esc(revisions), "--", esc(path)]);
+  },
+
+  ls: async function ls(subdir) {
+    const data = await gitExec.command(["ls-tree", "--name-only", "-r", "HEAD", esc(subdir)]);
+    return dataToLines(data);
+  },
+
+  lsdirs: async function lsdirs() {
     if (!workTree) {
-      return callback(null, []);
+      return [];
     } // to make it run on dev systems
-    return gitExec.command(["ls-tree", "--name-only", "-d", "HEAD"], (err, data) => {
-      if (err) {
-        return callback(err);
-      }
-      return callback(null, dataToLines(data));
-    });
+    const data = await gitExec.command(["ls-tree", "--name-only", "-d", "HEAD"]);
+    return dataToLines(data);
   },
 
-  lsblogposts: function lsblogposts(groupname, pattern, callback) {
-    gitExec.command(["ls-files", esc(groupname + "/" + pattern)], (err, data) => {
-      if (err) {
-        return callback(err);
-      }
-      return callback(null, dataToLines(data));
-    });
+  lsblogposts: async function lsblogposts(groupname, pattern) {
+    const data = await gitExec.command(["ls-files", esc(groupname + "/" + pattern)]);
+    return dataToLines(data);
   },
 
-  lsFilesModifiedByMember: function lsblogposts(nickname, callback) {
+  lsFilesModifiedByMember: async function lsblogposts(nickname) {
     // thanks to https://stackoverflow.com/questions/6349139/can-i-get-git-to-tell-me-all-the-files-one-user-has-modified
-    gitExec.command(
-      ["log", "--no-merges", '--author="' + nickname + '"', "--name-only", '--pretty=format:""'],
-      (err, data) => {
-        if (err) {
-          return callback(err);
-        }
-        return callback(null, dataToLines(data));
-      }
-    );
+    const data = await gitExec.command([
+      "log",
+      "--no-merges",
+      '--author="' + nickname + '"',
+      "--name-only",
+      '--pretty=format:""',
+    ]);
+    return dataToLines(data);
   },
 };

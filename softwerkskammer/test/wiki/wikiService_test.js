@@ -13,15 +13,13 @@ describe("Wiki Service", () => {
   const nonExistingPage = "global/nonExisting";
 
   beforeEach(() => {
-    sinon.stub(Git, "readFile").callsFake((completePageName, pageVersion, callback) => {
+    sinon.stub(Git, "readFile").callsFake((completePageName) => {
       if (completePageName === nonExistingPage + ".md") {
-        return callback(new Error());
+        throw new Error();
       }
-      callback(null, content);
+      return content;
     });
-    sinon.stub(Git, "log").callsFake((path, version, howMany, callback) => {
-      callback(null, []);
-    });
+    sinon.stub(Git, "log").returns([]);
     sinon.stub(Git, "absPath").callsFake((path) => path);
   });
 
@@ -30,37 +28,32 @@ describe("Wiki Service", () => {
   });
 
   describe("(showPage)", () => {
-    it("returns content for a requested existing page", (done) => {
-      wikiService.showPage("pageName", "11", (err, cont) => {
-        expect(content).to.equal(cont);
-        done(err);
-      });
+    it("returns content for a requested existing page", async () => {
+      const cont = await wikiService.showPage("pageName", "11");
+      expect(content).to.equal(cont);
     });
 
-    it("returns an error if the requested page is not found", (done) => {
-      wikiService.showPage(nonExistingPage, "11", (err, cont) => {
-        expect(err).to.exist();
-        expect(cont).to.not.exist();
-        done(); // error condition - do not pass err
-      });
+    it("returns an error if the requested page is not found", async () => {
+      try {
+        await wikiService.showPage(nonExistingPage, "11");
+        expect(true).to.be(false);
+      } catch (e) {
+        expect(e).to.exist();
+      }
     });
   });
 
   describe("(editPage)", () => {
-    it("indicates that the file is none existent", (done) => {
-      wikiService.pageEdit("pageName", (err, cont, metadata) => {
-        expect("").to.equal(cont);
-        expect(metadata).to.contain("NEW");
-        done(err);
-      });
+    it("indicates that the file is none existent", async () => {
+      const { content: cont, metadata } = await wikiService.pageEdit("pageName");
+      expect("").to.equal(cont);
+      expect(metadata).to.contain("NEW");
     });
 
-    it("returns the content of the file to edit if it exists", (done) => {
-      wikiService.pageEdit("README", (err, cont, metadata) => {
-        expect(cont).to.equal(content);
-        expect(metadata).to.be.empty();
-        done(err);
-      });
+    it("returns the content of the file to edit if it exists", async () => {
+      const { content: cont, metadata } = await wikiService.pageEdit("README");
+      expect(cont).to.equal(content);
+      expect(metadata).to.be.empty();
     });
   });
 });
@@ -125,76 +118,70 @@ describe("WikiService (list for dashboard)", () => {
         comment: "no comment",
       },
     ];
-    sinon.stub(Git, "log").callsFake((path, version, howMany, callback) => {
-      callback(null, metadatas);
-    });
+    sinon.stub(Git, "log").returns(metadatas);
   });
 
   afterEach(() => {
     sinon.restore();
   });
 
-  it("removes duplicate entries and blogposts for the dashboard", (done) => {
-    wikiService.listChangedFilesinDirectory("crafterswap", (err, metadata) => {
-      expect(metadata).to.have.length(2);
-      expect(metadata[0].name).to.equal("crafterswap/index.md");
-      expect(metadata[0].datestring).to.equal("2014-04-30 17:25:48 +0200");
-      expect(metadata[1].name).to.equal("crafterswap/blog_vonmorgen.md");
-      expect(metadata[1].datestring).to.equal("2014-02-13 08:26:01 +0100");
-      done(err);
-    });
+  it("removes duplicate entries and blogposts for the dashboard", async () => {
+    const metadata = await wikiService.listChangedFilesinDirectory("crafterswap");
+    expect(metadata).to.have.length(2);
+    expect(metadata[0].name).to.equal("crafterswap/index.md");
+    expect(metadata[0].datestring).to.equal("2014-04-30 17:25:48 +0200");
+    expect(metadata[1].name).to.equal("crafterswap/blog_vonmorgen.md");
+    expect(metadata[1].datestring).to.equal("2014-02-13 08:26:01 +0100");
   });
 });
 //This is an extra group because the Git.readFile mock has a different objective
 describe("WikiService (getBlogPosts)", () => {
   beforeEach(() => {
-    sinon.stub(Git, "lsblogposts").callsFake((groupname, pattern, callback) => {
+    sinon.stub(Git, "lsblogposts").callsFake((groupname) => {
       if (groupname === "internet") {
-        callback(null, ["internet/blog_2013-10-01AgoraCodeKata.md", "internet/blog_2013-11-01LeanCoffeeTest.md"]);
+        return ["internet/blog_2013-10-01AgoraCodeKata.md", "internet/blog_2013-11-01LeanCoffeeTest.md"];
       } else if (groupname === "alle") {
-        callback(null, []);
+        return [];
       } else if (groupname === "error") {
-        callback(null, [
+        return [
           "error/blog_2013-10-01.md",
           "error/blog_notadate.md",
           "error/blog_2013-05-01.md",
           "error/blog_2013-05-1.md",
           "error/blog_2013-5-01.md",
           "error/blog_.md",
-        ]);
+        ];
       }
     });
-    sinon.stub(Git, "readFileFs").callsFake((path, callback) => {
+    sinon.stub(Git, "readFileFs").callsFake((path) => {
       if (path === "internet/blog_2013-11-01LeanCoffeeTest.md") {
-        callback(
-          null,
+        return (
           "####   Lean Coffee November 2013\n" +
-            "\n" +
-            "Und beim nächsten Mal haben wir dann.\n" +
-            "\n" +
-            "Diesen Blog gemacht."
+          "\n" +
+          "Und beim nächsten Mal haben wir dann.\n" +
+          "\n" +
+          "Diesen Blog gemacht."
         );
       } else if (path === "internet/blog_2013-10-01AgoraCodeKata.md") {
-        callback(
-          null,
+        return (
           "Agora Code-Kata Oktober 2013\n" +
-            "\n" +
-            "Weil viele uns weder JavaScript noch populäre JavaScript...\n" +
-            "\n" +
-            "Leider hatten wir vorher keine Anweisungen herumgeschickt, ..."
+          "\n" +
+          "Weil viele uns weder JavaScript noch populäre JavaScript...\n" +
+          "\n" +
+          "Leider hatten wir vorher keine Anweisungen herumgeschickt, ..."
         );
       } else if (path === "error/blog_2013-10-01.md") {
-        callback(null, "#1");
+        return "#1";
       } else if (path === "error/blog_notadate.md") {
-        callback(null, "#2");
+        return "#2";
       } else if (path === "error/blog_2013-05-01.md") {
-        callback(null, "#3");
+        return "#3";
       } else if (path === "error/blog_2013-05-1.md") {
-        callback(null, "#4");
+        return "#4";
       } else if (path === "error/blog_2013-5-01.md") {
-        callback(null, "#5");
+        return "#5";
       } else if (path === "error/blog_.md") {
-        callback(null, "");
+        return "";
       }
     });
   });
@@ -203,43 +190,36 @@ describe("WikiService (getBlogPosts)", () => {
     sinon.restore();
   });
 
-  it("returns two properly parsed blog posts for the group internet", (done) => {
-    wikiService.getBlogpostsForGroup("internet", (err, result) => {
-      expect(result.length === 2).to.be(true);
+  it("returns two properly parsed blog posts for the group internet", async () => {
+    const result = await wikiService.getBlogpostsForGroup("internet");
+    expect(result.length === 2).to.be(true);
 
-      const post1 = result[0];
-      expect(post1.title).to.equal("Lean Coffee November 2013");
-      expect(post1.teaser).to.equal("<p>Und beim nächsten Mal haben wir dann.</p>\n");
-      expect(post1.dialogId()).to.equal("internet-blog_2013-11-01LeanCoffeeTest");
-      expect(post1.date()).to.eql(DateTime.fromFormat("2013-11-01", "yyyy-MM-dd"));
+    const post1 = result[0];
+    expect(post1.title).to.equal("Lean Coffee November 2013");
+    expect(post1.teaser).to.equal("<p>Und beim nächsten Mal haben wir dann.</p>\n");
+    expect(post1.dialogId()).to.equal("internet-blog_2013-11-01LeanCoffeeTest");
+    expect(post1.date()).to.eql(DateTime.fromFormat("2013-11-01", "yyyy-MM-dd"));
 
-      const post2 = result[1];
-      expect(post2.title).to.equal("Agora Code-Kata Oktober 2013");
-      expect(post2.teaser).to.equal("<p>Weil viele uns weder JavaScript noch populäre JavaScript...</p>\n");
-      expect(post2.dialogId()).to.equal("internet-blog_2013-10-01AgoraCodeKata");
-      expect(post2.date()).to.eql(DateTime.fromFormat("2013-10-01", "yyyy-MM-dd"));
-
-      done(err);
-    });
+    const post2 = result[1];
+    expect(post2.title).to.equal("Agora Code-Kata Oktober 2013");
+    expect(post2.teaser).to.equal("<p>Weil viele uns weder JavaScript noch populäre JavaScript...</p>\n");
+    expect(post2.dialogId()).to.equal("internet-blog_2013-10-01AgoraCodeKata");
+    expect(post2.date()).to.eql(DateTime.fromFormat("2013-10-01", "yyyy-MM-dd"));
   });
 
-  it("returns no blog posts if there are none", (done) => {
-    wikiService.getBlogpostsForGroup("alle", (err, result) => {
-      expect(result.length === 0).to.be(true);
-      done(err);
-    });
+  it("returns no blog posts if there are none", async () => {
+    const result = await wikiService.getBlogpostsForGroup("alle");
+    expect(result.length === 0).to.be(true);
   });
 
-  it("skips empty posts and posts without proper date", (done) => {
-    wikiService.getBlogpostsForGroup("error", (err, result) => {
-      expect(result.length).to.equal(4);
-      const titles = result.map((post) => post.title);
-      expect(titles).to.contain("1");
-      expect(titles).to.contain("3");
-      expect(titles).to.contain("4");
-      expect(titles).to.contain("5");
-      done(err);
-    });
+  it("skips empty posts and posts without proper date", async () => {
+    const result = await wikiService.getBlogpostsForGroup("error");
+    expect(result.length).to.equal(4);
+    const titles = result.map((post) => post.title);
+    expect(titles).to.contain("1");
+    expect(titles).to.contain("3");
+    expect(titles).to.contain("4");
+    expect(titles).to.contain("5");
   });
 });
 
@@ -276,31 +256,29 @@ describe("Wiki Service (daily digest)", () => {
   };
 
   beforeEach(() => {
-    sinon.stub(Git, "ls").callsFake((dirname, callback) => {
+    sinon.stub(Git, "ls").callsFake((dirname) => {
       if (dirname === "dirA") {
-        return callback(null, filesForDirA);
+        return filesForDirA;
       }
       if (dirname === "dirB") {
-        return callback(null, filesForDirB);
+        return filesForDirB;
       }
     });
 
-    sinon.stub(Git, "latestChanges").callsFake((filename, somedate, callback) => {
+    sinon.stub(Git, "latestChanges").callsFake((filename) => {
       if (filename.indexOf("A1") > -1) {
-        return callback(null, [metadataA1]);
+        return [metadataA1];
       }
       if (filename.indexOf("A2") > -1) {
-        return callback(null, [metadataA2]);
+        return [metadataA2];
       }
       if (filename.indexOf("B1") > -1) {
-        return callback(null, [metadataB1]);
+        return [metadataB1];
       }
-      callback(null, []);
+      return [];
     });
 
-    sinon.stub(Git, "readFile").callsFake((filename, tag, callback) => {
-      callback(null);
-    });
+    sinon.stub(Git, "readFile");
   });
 
   afterEach(() => {
@@ -308,37 +286,31 @@ describe("Wiki Service (daily digest)", () => {
   });
 
   describe("Digest", () => {
-    it("finds all changed pages", (done) => {
-      sinon.stub(Git, "lsdirs").callsFake((callback) => {
-        callback(null, subdirs);
-      });
+    it("finds all changed pages", async () => {
+      sinon.stub(Git, "lsdirs").returns(subdirs);
 
-      sinon.stub(Git, "diff").callsFake((path, revisions, callback) => {
-        callback(null, "");
-      });
+      sinon.stub(Git, "diff").returns("");
 
-      wikiService.findPagesForDigestSince(Date.now(), (err, pages) => {
-        expect(pages.length).to.equal(2);
-        pages.forEach((page) => {
-          if (page.dir === "dirA") {
-            expect(page.files.length).to.equal(2);
-          } else {
-            expect(page.files.length).to.equal(1);
-          }
-        });
-        done(err);
+      const pages = await wikiService.findPagesForDigestSince(Date.now());
+      expect(pages.length).to.equal(2);
+      pages.forEach((page) => {
+        if (page.dir === "dirA") {
+          expect(page.files.length).to.equal(2);
+        } else {
+          expect(page.files.length).to.equal(1);
+        }
       });
     });
 
-    it("handles an error correctly", (done) => {
-      sinon.stub(Git, "lsdirs").callsFake((callback) => {
-        callback(new Error());
-      });
+    it("handles an error correctly", async () => {
+      sinon.stub(Git, "lsdirs").throws(new Error());
 
-      wikiService.findPagesForDigestSince(Date.now(), (err) => {
-        expect(err).to.exist();
-        done();
-      });
+      try {
+        await wikiService.findPagesForDigestSince(Date.now());
+        expect(true).to.be(false);
+      } catch (e) {
+        expect(e).to.exist();
+      }
     });
   });
 });
@@ -377,44 +349,38 @@ describe("Wiki Service (replaceNonExistentNicknames)", () => {
     sinon.restore();
   });
 
-  it("updates the entries author if not found in memberstore", (done) => {
-    wikiService.replaceNonExistentNicknames(metadatas, (err, updatedMetadatas) => {
-      expect(updatedMetadatas[0].author).to.be("known");
-      expect(updatedMetadatas[1].author).to.be(null);
-      done();
-    });
+  it("updates the entries author if not found in memberstore", async () => {
+    const updatedMetadatas = await wikiService.replaceNonExistentNicknames(metadatas);
+    expect(updatedMetadatas[0].author).to.be("known");
+    expect(updatedMetadatas[1].author).to.be(null);
   });
 });
 
 describe("Wiki Service (listFilesModifiedByMember)", () => {
   beforeEach(() => {
-    sinon.stub(Git, "lsFilesModifiedByMember").callsFake((nickname, callback) => {
-      callback(null, [
-        "dummyfile", // we want to ignore this one because it is not in a wiki
-        "wiki1/file1.md",
-        "wiki1/file3.md",
-        "wiki1/file2.md", // multiple entries, unsorted
-        "wiki2/file1.md", // single entry
-        "wiki3/file1.md",
-        "wiki3/file1.md",
-        "wiki3/file2.md",
-        "wiki3/file1.md", // duplicate entries, unsorted
-        '"global/CodeAndCakeM\\303\\274nster.md"', // in quotes, with unicode
-      ]);
-    });
+    sinon.stub(Git, "lsFilesModifiedByMember").returns([
+      "dummyfile", // we want to ignore this one because it is not in a wiki
+      "wiki1/file1.md",
+      "wiki1/file3.md",
+      "wiki1/file2.md", // multiple entries, unsorted
+      "wiki2/file1.md", // single entry
+      "wiki3/file1.md",
+      "wiki3/file1.md",
+      "wiki3/file2.md",
+      "wiki3/file1.md", // duplicate entries, unsorted
+      '"global/CodeAndCakeM\\303\\274nster.md"', // in quotes, with unicode
+    ]);
   });
 
   afterEach(() => {
     sinon.restore();
   });
 
-  it("returns the files modified by the member, grouped by wiki", (done) => {
-    wikiService.listFilesModifiedByMember("memberId", (err, results) => {
-      expect(results.wiki1).to.eql(["file1", "file2", "file3"]);
-      expect(results.wiki2).to.eql(["file1"]);
-      expect(results.wiki3).to.eql(["file1", "file2"]);
-      expect(results.global).to.eql(["CodeAndCakeM\\303\\274nster"]);
-      done(err);
-    });
+  it("returns the files modified by the member, grouped by wiki", async () => {
+    const results = await wikiService.listFilesModifiedByMember("memberId");
+    expect(results.wiki1).to.eql(["file1", "file2", "file3"]);
+    expect(results.wiki2).to.eql(["file1"]);
+    expect(results.wiki3).to.eql(["file1", "file2"]);
+    expect(results.global).to.eql(["CodeAndCakeM\\303\\274nster"]);
   });
 });

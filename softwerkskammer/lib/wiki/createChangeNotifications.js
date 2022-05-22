@@ -16,19 +16,18 @@ const util = require("util");
 
 const lastNotifications = "lastWikiNotifications";
 
-function closeAndExit() {
-  persistence.closeDB(() => {
-    /* eslint no-process-exit: 0 */
-    logger.info("Terminating the process.......");
-    process.exit();
-  });
+async function closeAndExit() {
+  await persistence.closeDBAsync();
+  /* eslint no-process-exit: 0 */
+  logger.info("Terminating the process.......");
+  process.exit();
 }
 
 logger.info("== Wiki Changes ==========================================================================");
-persistence.getByField({ id: lastNotifications }, (err, result) => {
+persistence.getByField({ id: lastNotifications }, async (err, result) => {
   if (err) {
     logger.error("Error when reading lastWikiNotifications: " + err);
-    return closeAndExit();
+    return await closeAndExit();
   }
   logger.info("No error when reading lastWikiNotifications");
   const yesterday = new Date(Date.now() - 86400000); // minus 1 day
@@ -36,34 +35,20 @@ persistence.getByField({ id: lastNotifications }, (err, result) => {
   if (result) {
     logger.info("Last notified: " + util.inspect(result.moment));
   }
-  wikiService.findPagesForDigestSince(lastNotified.moment.getTime(), (err1, changes) => {
-    /* eslint no-console: 0 */
-
-    if (err1) {
-      logger.error("Error when finding pages for Digest: " + err1);
-      console.log("Error when finding pages for Digest: " + err1); // for cron mail
-      return closeAndExit();
-    }
+  try {
+    const changes = await wikiService.findPagesForDigestSince(lastNotified.moment.getTime());
     if (changes.length === 0) {
       logger.info("no changes to report");
-      return closeAndExit();
+      return await closeAndExit();
     }
-    notifications.wikiChanges(changes, (err2) => {
-      if (err2) {
-        logger.error(err2);
-        console.log(err2); // for cron mail
-        return closeAndExit();
-      }
-      lastNotified.moment = new Date();
-      persistence.save(lastNotified, (err3) => {
-        if (err3) {
-          logger.error(err3);
-          console.log(err3); // for cron mail
-          return closeAndExit();
-        }
-        logger.info("Wiki-Changes notified at: " + lastNotified.moment);
-        return closeAndExit();
-      });
-    });
-  });
+    await notifications.wikiChanges(changes);
+    lastNotified.moment = new Date();
+    await persistence.saveAsync(lastNotified);
+    logger.info("Wiki-Changes notified at: " + lastNotified.moment);
+    return await closeAndExit();
+  } catch (e) {
+    logger.error("Error when finding pages for Digest: " + e);
+    console.log("Error when finding pages for Digest: " + e); // for cron mail
+    return await closeAndExit();
+  }
 });
