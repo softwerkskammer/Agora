@@ -50,8 +50,6 @@ function activityWithEinzelzimmer(ressource) {
 
 describe("Activities Service", () => {
   beforeEach(() => {
-    //sinon.stub(membersService, 'getImage', function(member, callback) { callback(); });
-
     sinon.stub(activitystore, "allActivities").returns([dummyActivity]);
 
     sinon.stub(groupstore, "allGroups").returns([{ id: "assignedGroup", longName: "The name of the assigned Group" }]);

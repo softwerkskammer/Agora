@@ -135,9 +135,6 @@ describe("Groups and Members Service", () => {
       const groupId = GroupA.id;
       thereAreNoMailingListUsers();
       sinon.stub(groupstore, "getGroup").returns(GroupA);
-      sinon.stub(memberstore, "getMembersForEMails").callsFake((member, callback) => {
-        callback(null, []);
-      });
 
       const group = await groupsAndMembersService.getGroupAndMembersForList(groupId);
       expect(group).to.equal(GroupA);

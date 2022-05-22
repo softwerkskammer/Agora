@@ -119,74 +119,58 @@ app.get("/:groupname", async (req, res, next) => {
     return activities;
   }
 
-  try {
-    const group = await groupsAndMembers.getGroupAndMembersForList(req.params.groupname);
-    if (!group) {
-      return next();
-    }
-    wikiService.getBlogpostsForGroup(req.params.groupname, async (err1, blogposts) => {
-      if (err1) {
-        return next(err1);
-      }
-      const activities = await activitystore.upcomingActivitiesForGroupIds([group.id]);
-      const pastActivities = await activitystore.pastActivitiesForGroupIds([group.id]);
-      const registeredUserId = req && req.user ? req.user.member.id() : undefined;
-      res.render("get", {
-        group,
-        users: group.members,
-        userIsGroupMember: registeredUserId && group.isMemberSubscribed(req.user.member),
-        organizers: group.organizers,
-        blogposts,
-        blogpostsFeedUrl: req.originalUrl + "/feed",
-        webcalURL: conf.get("publicUrlPrefix").replace("http", "webcal") + "/activities/icalForGroup/" + group.id,
-        upcomingGroupActivities: addGroupDataToActivity(activities, group) || [],
-        recentGroupActivities: addGroupDataToActivity(pastActivities ? R.take(5, pastActivities) : [], group),
-      });
-    });
-  } catch (e) {
-    return next(e);
+  const group = await groupsAndMembers.getGroupAndMembersForList(req.params.groupname);
+  if (!group) {
+    return next();
   }
+  const blogposts = await wikiService.getBlogpostsForGroup(req.params.groupname);
+  const activities = await activitystore.upcomingActivitiesForGroupIds([group.id]);
+  const pastActivities = await activitystore.pastActivitiesForGroupIds([group.id]);
+  const registeredUserId = req && req.user ? req.user.member.id() : undefined;
+  res.render("get", {
+    group,
+    users: group.members,
+    userIsGroupMember: registeredUserId && group.isMemberSubscribed(req.user.member),
+    organizers: group.organizers,
+    blogposts,
+    blogpostsFeedUrl: req.originalUrl + "/feed",
+    webcalURL: conf.get("publicUrlPrefix").replace("http", "webcal") + "/activities/icalForGroup/" + group.id,
+    upcomingGroupActivities: addGroupDataToActivity(activities, group) || [],
+    recentGroupActivities: addGroupDataToActivity(pastActivities ? R.take(5, pastActivities) : [], group),
+  });
 });
 
 app.get("/:groupname/feed", async (req, res, next) => {
-  try {
-    const group = await groupsAndMembers.getGroupAndMembersForList(req.params.groupname);
-    if (!group) {
-      return next();
-    }
-    wikiService.getBlogpostsForGroup(req.params.groupname, (err1, blogposts) => {
-      if (err1) {
-        return next(err1);
-      }
-
-      const updated = blogposts.length > 0 ? blogposts[0].date().toJSDate() : undefined;
-      const baseUrl = conf.get("publicUrlPrefix");
-
-      const feed = new Feed({
-        id: baseUrl + req.originalUrl,
-        title: [res.locals.siteTitle, group.longName, req.i18n.t("wiki.blogposts")].join(" - "),
-        favicon: baseUrl + "/favicon.ico",
-        image: baseUrl + res.locals.siteLogoPath,
-        updated: updated,
-        generator: "Agora",
-      });
-
-      blogposts.forEach((post) => {
-        feed.addItem({
-          title: post.title,
-          id: post.name,
-          link: baseUrl + post.url(),
-          content: post.renderBody(),
-          date: post.date().toJSDate(),
-        });
-      });
-
-      res.type("application/atom+xml");
-      res.send(feed.atom1());
-    });
-  } catch (e) {
-    return next(e);
+  const group = await groupsAndMembers.getGroupAndMembersForList(req.params.groupname);
+  if (!group) {
+    return next();
   }
+  const blogposts = await wikiService.getBlogpostsForGroup(req.params.groupname);
+
+  const updated = blogposts.length > 0 ? blogposts[0].date().toJSDate() : undefined;
+  const baseUrl = conf.get("publicUrlPrefix");
+
+  const feed = new Feed({
+    id: baseUrl + req.originalUrl,
+    title: [res.locals.siteTitle, group.longName, req.i18n.t("wiki.blogposts")].join(" - "),
+    favicon: baseUrl + "/favicon.ico",
+    image: baseUrl + res.locals.siteLogoPath,
+    updated: updated,
+    generator: "Agora",
+  });
+
+  blogposts.forEach((post) => {
+    feed.addItem({
+      title: post.title,
+      id: post.name,
+      link: baseUrl + post.url(),
+      content: post.renderBody(),
+      date: post.date().toJSDate(),
+    });
+  });
+
+  res.type("application/atom+xml");
+  res.send(feed.atom1());
 });
 
 module.exports = app;

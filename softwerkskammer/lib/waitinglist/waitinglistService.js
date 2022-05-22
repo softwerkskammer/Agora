@@ -7,14 +7,13 @@ const CONFLICTING_VERSIONS = beans.get("constants").CONFLICTING_VERSIONS;
 module.exports = {
   waitinglistFor: async function waitinglistFor(activityUrl) {
     const activity = await activitystore.getActivity(activityUrl);
-    const entries = await Promise.all(
+    return await Promise.all(
       activity.allWaitinglistEntries().map(async (waitinglistEntry) => {
         const member = await memberstore.getMemberForId(waitinglistEntry.registrantId());
         waitinglistEntry.registrantNickname = member.nickname();
         return waitinglistEntry;
       })
     );
-    return entries;
   },
 
   saveWaitinglistEntry: async function saveWaitinglistEntry(args) {

@@ -68,15 +68,11 @@ describe("Groups application", () => {
 
     sinon.stub(groupstore, "allGroups").returns([GroupA]);
 
-    sinon.stub(wikiService, "getBlogpostsForGroup").callsFake((groupname, callback) => {
-      return callback(null, blogposts);
-    });
+    sinon.stub(wikiService, "getBlogpostsForGroup").callsFake(() => blogposts);
 
     sinon.stub(activitystore, "pastActivitiesForGroupIds").returns([]);
 
-    sinon.stub(activitystore, "upcomingActivitiesForGroupIds").callsFake(() => {
-      return upcomingActivities;
-    });
+    sinon.stub(activitystore, "upcomingActivitiesForGroupIds").callsFake(() => upcomingActivities);
   });
 
   after(() => {

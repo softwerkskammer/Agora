@@ -7,15 +7,18 @@ const membersService = beans.get("membersService");
 const memberstore = beans.get("memberstore");
 
 function createUserObject(req, authenticationId, profile, done) {
-  const callback = membersService.findMemberFor(req.user, authenticationId, (err, member) => {
-    if (err) {
-      return done(err);
+  async function callback() {
+    try {
+      const member = await membersService.findMemberForAuthentication(req.user, authenticationId);
+      if (!member) {
+        return done(null, { authenticationId, profile });
+      }
+      return done(null, { authenticationId, member });
+    } catch (e) {
+      return done(e);
     }
-    if (!member) {
-      return done(null, { authenticationId, profile });
-    }
-    return done(null, { authenticationId, member });
-  });
+  }
+
   process.nextTick(callback);
 }
 

@@ -104,9 +104,6 @@ describe("Waitinglist Service", () => {
     });
 
     it("gives an error when activity could not be loaded", async () => {
-      sinon.stub(activitystore, "getActivity").callsFake((id, callback) => {
-        callback(new Error("error"));
-      });
       sinon.stub(memberstore, "getMember").returns(new Member({ id: "memberId", nickname: "hansdampf" }));
 
       const args = { nickname: "memberId", activityUrl: "activity-url", resourcename: "Einzelzimmer" };
@@ -119,9 +116,7 @@ describe("Waitinglist Service", () => {
     });
 
     it("gives an error when member could not be loaded", async () => {
-      sinon.stub(activitystore, "getActivity").callsFake((id, callback) => {
-        callback(null, new Activity());
-      });
+      sinon.stub(activitystore, "getActivity").returns(new Activity());
       sinon.stub(memberstore, "getMember").throws(new Error("error"));
 
       const args = { nickname: "memberId", activityUrl: "activity-url", resourcename: "Einzelzimmer" };
@@ -204,7 +199,6 @@ describe("Waitinglist Service", () => {
     });
 
     it("gives an error when activity could not be loaded", async () => {
-      sinon.stub(activitystore, "getActivity").throws(new Error("error"));
       sinon.stub(memberstore, "getMember").returns(new Member({ id: "memberId", nickname: "hansdampf" }));
 
       const args = { nickname: "memberId", activityUrl: "activity-url", resourcename: "Einzelzimmer" };
@@ -218,10 +212,7 @@ describe("Waitinglist Service", () => {
     });
 
     it("gives an error when member could not be loaded", async () => {
-      sinon.stub(activitystore, "getActivity").callsFake((id, callback) => {
-        callback(null, new Activity());
-      });
-      sinon.stub(memberstore, "getMember").throws(new Error("error"));
+      sinon.stub(activitystore, "getActivity").returns(new Activity());
 
       const args = { nickname: "memberId", activityUrl: "activity-url", resourcename: "Einzelzimmer" };
       try {

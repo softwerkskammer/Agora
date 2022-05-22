@@ -41,9 +41,7 @@ describe("Members application", () => {
     sinon.stub(activitiesService, "getPastActivitiesOfMember").returns([]);
     sinon.stub(activitiesService, "getOrganizedOrEditedActivitiesOfMember").returns([]);
     sinon.stub(groupstore, "allGroups").returns([]);
-    sinon.stub(wikiService, "listFilesModifiedByMember").callsFake((nickname, callback) => {
-      callback(null, []);
-    });
+    sinon.stub(wikiService, "listFilesModifiedByMember").returns([]);
   });
 
   afterEach(() => {

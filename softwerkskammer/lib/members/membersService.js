@@ -102,40 +102,25 @@ module.exports = {
     return wordList(members, R.identity).sort((a, b) => a.text.localeCompare(b.text));
   },
 
-  findMemberFor: function findMemberFor(user, authenticationId, callback) {
-    return async () => {
-      if (!user) {
-        // not currently logged in
-        try {
-          const member = await store.getMemberForAuthentication(authenticationId);
-          return callback(null, member);
-        } catch (e) {
-          return callback(e);
-        }
-      }
+  findMemberForAuthentication: async function findMemberForAuthentication(user, authenticationId) {
+    if (!user) {
+      // not currently logged in
+      return store.getMemberForAuthentication(authenticationId);
+    }
 
-      // logged in -> we don't care about the legacy id, we only want to add a new authentication provider to our profile
-      const memberOfSession = user.member;
-      try {
-        const member = await store.getMemberForAuthentication(authenticationId);
-        if (member && memberOfSession.id() !== member.id()) {
-          return callback(new Error("Unter dieser Authentifizierung existiert schon ein Mitglied."));
-        }
-        if (member && memberOfSession.id() === member.id()) {
-          return callback(null, member);
-        }
-        // no member found:
-        memberOfSession.addAuthentication(authenticationId);
-        try {
-          await store.saveMember(memberOfSession);
-          callback(null, memberOfSession);
-        } catch (e) {
-          callback(e, memberOfSession);
-        }
-      } catch (e) {
-        return callback(e);
-      }
-    };
+    // logged in -> we don't care about the legacy id, we only want to add a new authentication provider to our profile
+    const memberOfSession = user.member;
+    const member = await store.getMemberForAuthentication(authenticationId);
+    if (member && memberOfSession.id() !== member.id()) {
+      throw new Error("Unter dieser Authentifizierung existiert schon ein Mitglied.");
+    }
+    if (member && memberOfSession.id() === member.id()) {
+      return member;
+    }
+    // no member found:
+    memberOfSession.addAuthentication(authenticationId);
+    await store.saveMember(memberOfSession);
+    return memberOfSession;
   },
 
   superuserEmails: async function superuserEmails() {
