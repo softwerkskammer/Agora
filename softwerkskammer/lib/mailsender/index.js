@@ -8,7 +8,7 @@ const groupsAndMembersService = beans.get("groupsAndMembersService");
 const groupstore = beans.get("groupstore");
 const Message = beans.get("message");
 
-function messageSubmitted(req, res, next) {
+async function messageSubmitted(req, res) {
   if (req.body && req.body.massMailing && !res.locals.accessrights.isSuperuser()) {
     return res.redirect("/login");
   }
@@ -20,38 +20,31 @@ function messageSubmitted(req, res, next) {
 
   const message = new Message(req.body, req.user.member);
 
-  function processResult(err, statusmsg) {
-    if (err) {
-      return next(err);
+  async function doTheRightSending() {
+    if (req.body.massMailing === "members") {
+      return mailsenderService.sendMailToAllMembers(message);
     }
-    statusmsg.putIntoSession(req);
-    res.redirect(req.body.successURL);
+    const activityURL = req.body.successURL.replace("/activities/", "");
+    if (req.body.toParticipants) {
+      message.removeAllButFirstButton();
+      return mailsenderService.sendMailToParticipantsOf(activityURL, message);
+    }
+    if (req.body.invitedGroups) {
+      return mailsenderService.sendMailToInvitedGroups(req.body.invitedGroups, activityURL, message);
+    }
+    if (req.body.groupName) {
+      message.subject = `[${req.body.emailPrefix}] ${message.subject}`;
+      return mailsenderService.sendMailToInvitedGroups([req.body.groupName], undefined, message);
+    }
+    if (req.body.nickname) {
+      return mailsenderService.sendMailToMember(req.body.nickname, message);
+    }
+    if (req.body.groupNameForContact) {
+      return mailsenderService.sendMailToContactPersonsOfGroup(req.body.groupNameForContact, message);
+    }
   }
-
-  if (req.body.massMailing === "members") {
-    return mailsenderService.sendMailToAllMembers(message, processResult);
-  }
-  const activityURL = req.body.successURL.replace("/activities/", "");
-  if (req.body.toParticipants) {
-    message.removeAllButFirstButton();
-    return mailsenderService.sendMailToParticipantsOf(activityURL, message, processResult);
-  }
-  if (req.body.invitedGroups) {
-    return mailsenderService.sendMailToInvitedGroups(req.body.invitedGroups, activityURL, message, processResult);
-  }
-  if (req.body.groupName) {
-    message.subject = `[${req.body.emailPrefix}] ${message.subject}`;
-    return mailsenderService.sendMailToInvitedGroups([req.body.groupName], undefined, message, processResult);
-  }
-  if (req.body.nickname) {
-    return mailsenderService.sendMailToMember(req.body.nickname, message, processResult);
-  }
-  if (req.body.groupNameForContact) {
-    return mailsenderService.sendMailToContactPersonsOfGroup(req.body.groupNameForContact, message, processResult);
-  }
-  statusmessage
-    .errorMessage("message.title.email_problem", "message.content.mailsender.error_no_recipient")
-    .putIntoSession(req);
+  const statmessage = await doTheRightSending();
+  statmessage.putIntoSession(req);
   res.redirect(req.body.successURL);
 }
 
