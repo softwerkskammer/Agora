@@ -1,4 +1,3 @@
-const async = require("async");
 const { DateTime } = require("luxon");
 const conf = require("simple-configure");
 const logger = require("winston").loggers.get("application");
@@ -18,8 +17,8 @@ const misc = beans.get("misc");
 
 const mailtransport = beans.get("mailtransport");
 
-function sendMail(message, type, callback) {
-  mailtransport.sendMail(message, type, conf.get("sender-address"), conf.get("include-footer"), callback);
+async function sendMail(message, type) {
+  return mailtransport.sendMail(message, type, conf.get("sender-address"), conf.get("include-footer"));
 }
 
 function activityMarkdown(activity, language) {
@@ -41,119 +40,107 @@ function activityMarkdown(activity, language) {
 module.exports = {
   activityMarkdown,
 
-  dataForShowingMessageForActivity: function (activityURL, language, globalCallback) {
-    async.parallel(
-      {
-        activity: (callback) => activitiesService.getActivityWithGroupAndParticipants(activityURL, callback),
-        groups: (callback) => groupstore.allGroups(callback),
-      },
-      (err, results) => {
-        if (err || !results.activity) {
-          return globalCallback(err);
-        }
-        const activity = results.activity;
-        const invitationGroup = results.groups.find((group) => group.id === activity.assignedGroup());
-        const regionalgroups = groupsService.markGroupsSelected([invitationGroup], Group.regionalsFrom(results.groups));
-        const themegroups = groupsService.markGroupsSelected([invitationGroup], Group.thematicsFrom(results.groups));
+  dataForShowingMessageForActivity: async function (activityURL, language) {
+    const [activity, groups] = await Promise.all([
+      activitiesService.getActivityWithGroupAndParticipants(activityURL),
+      groupstore.allGroups(),
+    ]);
+    if (!activity) {
+      return;
+    }
+    const invitationGroup = groups.find((group) => group.id === activity.assignedGroup());
+    const regionalgroups = groupsService.markGroupsSelected([invitationGroup], Group.regionalsFrom(groups));
+    const themegroups = groupsService.markGroupsSelected([invitationGroup], Group.thematicsFrom(groups));
 
-        const message = new Message();
-        message.setSubject("Einladung: " + activity.title());
-        message.setMarkdown(activityMarkdown(activity, language));
-        message.addToButtons({
-          text: "Zur Aktivität",
-          url: misc.toFullQualifiedUrl("activities", encodeURIComponent(activity.url())),
-        });
-        const result = {
-          message,
-          regionalgroups,
-          themegroups,
-          successURL: "/activities/" + encodeURIComponent(activityURL),
-          activity,
-        };
-        globalCallback(null, result);
-      }
-    );
-  },
-
-  dataForShowingMessageToMember: function dataForShowingMessageToMember(nickname, callback) {
-    memberstore.getMember(nickname, (err, member) => {
-      if (err) {
-        return callback(err);
-      }
-      if (!member) {
-        return callback(new Error("Empfänger wurde nicht gefunden."));
-      }
-      const message = new Message();
-      message.setReceiver(member);
-      callback(null, { message, successURL: "/members/" + encodeURIComponent(nickname) });
+    const message = new Message();
+    message.setSubject("Einladung: " + activity.title());
+    message.setMarkdown(activityMarkdown(activity, language));
+    message.addToButtons({
+      text: "Zur Aktivität",
+      url: misc.toFullQualifiedUrl("activities", encodeURIComponent(activity.url())),
     });
+    return {
+      message,
+      regionalgroups,
+      themegroups,
+      successURL: "/activities/" + encodeURIComponent(activityURL),
+      activity,
+    };
   },
 
-  sendMailToParticipantsOf: function sendMailToParticipantsOf(activityURL, message, callback) {
+  dataForShowingMessageToMember: async function dataForShowingMessageToMember(nickname) {
+    const member = await memberstore.getMember(nickname);
+    if (!member) {
+      throw new Error("Empfänger wurde nicht gefunden.");
+    }
+    const message = new Message();
+    message.setReceiver(member);
+    return { message, successURL: "/members/" + encodeURIComponent(nickname) };
+  },
+
+  sendMailToParticipantsOf: async function sendMailToParticipantsOf(activityURL, message) {
     const type = "$t(mailsender.reminder)";
-    return activitiesService.getActivityWithGroupAndParticipants(activityURL, (err, activity) => {
-      if (err) {
-        return callback(err, mailtransport.statusmessageForError(type, err));
-      }
+    try {
+      const activity = await activitiesService.getActivityWithGroupAndParticipants(activityURL);
       message.setBccToMemberAddresses(activity.participants);
       message.setIcal(icalService.activityAsICal(activity).toString());
-      sendMail(message, type, callback);
-    });
+      return sendMail(message, type);
+    } catch (err) {
+      return mailtransport.statusmessageForError(type, err);
+    }
   },
 
-  sendMailToInvitedGroups: function sendMailToInvitedGroups(invitedGroups, activityURL, message, callback) {
+  sendMailToInvitedGroups: async function sendMailToInvitedGroups(invitedGroups, activityURL, message) {
     const type = "$t(mailsender.invitation)";
-    return groupsService.getGroups(invitedGroups, (err, groups) => {
-      if (err) {
-        return callback(err, mailtransport.statusmessageForError(type, err));
-      }
+    try {
+      const groups = await groupsService.getGroups(invitedGroups);
       if (groups.length === 0) {
-        return callback(
-          null,
-          mailtransport.statusmessageForError(type, new Error("Keine der Gruppen wurde gefunden."))
-        );
+        return mailtransport.statusmessageForError(type, new Error("Keine der Gruppen wurde gefunden."));
       }
-      async.map(groups, groupsAndMembersService.addMembersToGroup, (err1, groups1) => {
-        if (err1) {
-          return callback(err1, mailtransport.statusmessageForError(type, err1));
-        }
+      try {
+        const groups1 = await Promise.all(groups.map(groupsAndMembersService.addMembersToGroup));
         message.setBccToGroupMemberAddresses(groups1);
-        activitystore.getActivity(activityURL, (err2, activity) => {
-          if (activity) {
-            message.setIcal(icalService.activityAsICal(activity).toString());
-          }
-          sendMail(message, type, callback);
-        });
-      });
-    });
+        let activity;
+        try {
+          activity = await activitystore.getActivity(activityURL);
+        } catch (e) {
+          // do nothing
+        }
+        if (activity) {
+          message.setIcal(icalService.activityAsICal(activity).toString());
+        }
+        return sendMail(message, type);
+      } catch (err1) {
+        return mailtransport.statusmessageForError(type, err1);
+      }
+    } catch (err) {
+      return mailtransport.statusmessageForError(type, err);
+    }
   },
 
-  sendMailToMember: function sendMailToMember(nickname, message, callback) {
+  sendMailToMember: async function sendMailToMember(nickname, message) {
     const type = "$t(mailsender.notification)";
-    return memberstore.getMember(nickname, (err, member) => {
-      if (err) {
-        return callback(err, mailtransport.statusmessageForError(type, err));
-      }
+
+    try {
+      const member = await memberstore.getMember(nickname);
       if (!member) {
-        return callback(null, mailtransport.statusmessageForError(type, new Error("Empfänger wurde nicht gefunden.")));
+        return mailtransport.statusmessageForError(type, new Error("Empfänger wurde nicht gefunden."));
       }
       message.setReceiver(member);
-      sendMail(message, type, callback);
-    });
+      return sendMail(message, type);
+    } catch (e) {
+      return mailtransport.statusmessageForError(type, e);
+    }
   },
 
-  sendMailToAllMembers: function sendMailToAllMembers(message, callback) {
+  sendMailToAllMembers: async function sendMailToAllMembers(message) {
     const type = "$t(mailsender.notification)";
-    memberstore.allMembers((err, members) => {
-      if (err) {
-        return callback(err, mailtransport.statusmessageForError(type, err));
-      }
-      message.setBccToMemberAddresses(members);
-      sendMail(message, type, callback);
-    });
+    const members = await memberstore.allMembers();
+    message.setBccToMemberAddresses(members);
+    return sendMail(message, type);
   },
 
-  sendMagicLinkToMember: function sendMagicLinkToMember(member, token, callback) {
+  sendMagicLinkToMember: async function sendMagicLinkToMember(member, token) {
     const baseUrl = conf.get("publicUrlPrefix");
     const link = baseUrl + "/auth/magiclink/callback?token=" + encodeURIComponent(token);
     const messageData = {
@@ -167,10 +154,10 @@ module.exports = {
       sendCopyToSelf: true,
     };
     const message = new Message(messageData, member);
-    sendMail(message, "E-Mail", callback);
+    return sendMail(message, "E-Mail");
   },
 
-  sendRegistrationAllowed: function sendRegistrationAllowed(member, activity, waitinglistEntry, callback) {
+  sendRegistrationAllowed: async function sendRegistrationAllowed(member, activity, waitinglistEntry) {
     const activityFullUrl = misc.toFullQualifiedUrl("activities", encodeURIComponent(activity.url()));
     const markdownGerman =
       'Für die Veranstaltung ["' +
@@ -196,10 +183,10 @@ module.exports = {
       text: "Zur Aktivität",
       url: activityFullUrl,
     });
-    sendMail(message, "Nachricht", callback);
+    return sendMail(message, "Nachricht");
   },
 
-  sendResignment: function sendResignment(markdown, member, callback) {
+  sendResignment: async function sendResignment(markdown, member) {
     const memberUrl = conf.get("publicUrlPrefix") + "/members/" + encodeURIComponent(member.nickname());
     const messageData = {
       markdown:
@@ -214,43 +201,32 @@ module.exports = {
       sendCopyToSelf: true,
     };
     const message = new Message(messageData, member);
-    membersService.superuserEmails((err, superusers) => {
-      if (err) {
-        return callback(err);
-      }
-      message.setTo(superusers);
-      sendMail(message, "E-Mail", callback);
-    });
+    const superusers = await membersService.superuserEmails();
+    message.setTo(superusers);
+    return sendMail(message, "E-Mail");
   },
 
-  sendMailToContactPersonsOfGroup: function sendMailToContactPersonsOfGroup(groupId, message, callback) {
+  sendMailToContactPersonsOfGroup: async function sendMailToContactPersonsOfGroup(groupId, message) {
     const type = "$t(mailsender.notification)";
-    groupsService.getGroups([groupId], (groupLoadErr, groups) => {
-      if (groupLoadErr) {
-        return callback(groupLoadErr, mailtransport.statusmessageForError(type, groupLoadErr));
-      }
+    try {
+      const groups = await groupsService.getGroups([groupId]);
       if (groups.length !== 1) {
         logger.error(`${groups.length} Gruppen für Id ${groupId} gefunden. Erwarte genau eine Gruppe.`);
         const error = new Error("Das senden der E-Mail ist fehlgeschlagen. Es liegt ein technisches Problem vor.");
-        return callback(error, mailtransport.statusmessageForError(type, error));
+        return mailtransport.statusmessageForError(type, error);
       }
       if (!groups[0].canTheOrganizersBeContacted()) {
-        return callback(
-          null,
-          mailtransport.statusmessageForError(type, "$t(mailsender.contact_the_organizers_disabled)")
-        );
+        return mailtransport.statusmessageForError(type, "$t(mailsender.contact_the_organizers_disabled)");
       }
-      groupsAndMembersService.getOrganizersOfGroup(groupId, (err, organizers) => {
-        if (err) {
-          return callback(err, mailtransport.statusmessageForError(type, err));
-        }
-        if (!organizers.length) {
-          return callback(null, mailtransport.statusmessageForError(type, "$t(mailsender.group_has_no_organizers)"));
-        }
-        message.setSubject(`[Anfrage an Ansprechpartner/Mail to organizers] ${message.subject}`);
-        message.setBccToMemberAddresses(organizers);
-        sendMail(message, type, callback);
-      });
-    });
+      const organizers = await groupsAndMembersService.getOrganizersOfGroup(groupId);
+      if (!organizers.length) {
+        return mailtransport.statusmessageForError(type, "$t(mailsender.group_has_no_organizers)");
+      }
+      message.setSubject(`[Anfrage an Ansprechpartner/Mail to organizers] ${message.subject}`);
+      message.setBccToMemberAddresses(organizers);
+      return sendMail(message, type);
+    } catch (e) {
+      return mailtransport.statusmessageForError(type, e);
+    }
   },
 };

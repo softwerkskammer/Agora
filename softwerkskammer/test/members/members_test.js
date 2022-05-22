@@ -34,32 +34,14 @@ describe("Members application", () => {
       lastname: "Dampf",
       authentications: [],
     });
-    allMembers = sinon.stub(memberstore, "allMembers").callsFake((callback) => {
-      callback(null, [dummymember]);
-    });
-    getMember = sinon.stub(memberstore, "getMember").callsFake((nickname, callback) => {
-      callback(null, dummymember);
-    });
-    sinon.stub(membersService, "putAvatarIntoMemberAndSave").callsFake((member, callback) => {
-      callback();
-    });
-    getSubscribedGroupsForUser = sinon
-      .stub(groupsService, "getSubscribedGroupsForMember")
-      .callsFake((member, callback) => {
-        callback(null, []);
-      });
-    sinon.stub(activitiesService, "getPastActivitiesOfMember").callsFake((member, callback) => {
-      callback(null, []);
-    });
-    sinon.stub(activitiesService, "getOrganizedOrEditedActivitiesOfMember").callsFake((member, callback) => {
-      callback(null, []);
-    });
-    sinon.stub(groupstore, "allGroups").callsFake((callback) => {
-      callback(null, []);
-    });
-    sinon.stub(wikiService, "listFilesModifiedByMember").callsFake((nickname, callback) => {
-      callback(null, []);
-    });
+    allMembers = sinon.stub(memberstore, "allMembers").returns([dummymember]);
+    getMember = sinon.stub(memberstore, "getMember").callsFake(() => dummymember);
+    sinon.stub(membersService, "putAvatarIntoMemberAndSave");
+    getSubscribedGroupsForUser = sinon.stub(groupsService, "getSubscribedGroupsForMember").returns([]);
+    sinon.stub(activitiesService, "getPastActivitiesOfMember").returns([]);
+    sinon.stub(activitiesService, "getOrganizedOrEditedActivitiesOfMember").returns([]);
+    sinon.stub(groupstore, "allGroups").returns([]);
+    sinon.stub(wikiService, "listFilesModifiedByMember").returns([]);
   });
 
   afterEach(() => {
@@ -153,9 +135,7 @@ describe("Members application", () => {
   });
 
   it("rejects a member with invalid and different nickname on submit", (done) => {
-    sinon.stub(membersService, "isValidNickname").callsFake((nickname, callback) => {
-      callback(null, false);
-    });
+    sinon.stub(membersService, "isValidNickname").returns(false);
 
     request(app)
       .post("/submit")
@@ -168,9 +148,7 @@ describe("Members application", () => {
   });
 
   it("rejects a member with invalid and different email address on submit", (done) => {
-    sinon.stub(membersService, "isValidEmail").callsFake((nickname, callback) => {
-      callback(null, false);
-    });
+    sinon.stub(membersService, "isValidEmail").returns(false);
 
     request(app)
       .post("/submit")
@@ -196,12 +174,8 @@ describe("Members application", () => {
 
   it("rejects a member with missing first name who validly changed their nickname and mailaddress on submit", (done) => {
     // attention: This combination is required to prove the invocations of the callbacks in case of no error!
-    sinon.stub(membersService, "isValidNickname").callsFake((nickname, callback) => {
-      callback(null, true);
-    });
-    sinon.stub(membersService, "isValidEmail").callsFake((nickname, callback) => {
-      callback(null, true);
-    });
+    sinon.stub(membersService, "isValidNickname").returns(true);
+    sinon.stub(membersService, "isValidEmail").returns(true);
 
     request(app)
       .post("/submit")
@@ -214,12 +188,8 @@ describe("Members application", () => {
   });
 
   it("rejects a member with invalid nickname and email address on submit, giving two error messages", (done) => {
-    sinon.stub(membersService, "isValidNickname").callsFake((nickname, callback) => {
-      callback(null, false);
-    });
-    sinon.stub(membersService, "isValidEmail").callsFake((nickname, callback) => {
-      callback(null, false);
-    });
+    sinon.stub(membersService, "isValidNickname").returns(false);
+    sinon.stub(membersService, "isValidEmail").returns(false);
 
     request(app)
       .post("/submit")
@@ -235,24 +205,14 @@ describe("Members application", () => {
   });
 
   it("saves an existing member and does not trigger notification sending", (done) => {
-    sinon.stub(membersService, "isValidNickname").callsFake((nickname, callback) => {
-      callback(null, true);
-    });
-    sinon.stub(membersService, "isValidEmail").callsFake((nickname, callback) => {
-      callback(null, true);
-    });
-    sinon.stub(groupsService, "updateSubscriptions").callsFake((member, subscriptions, callback) => {
-      callback();
-    });
-    sinon.stub(memberstore, "saveMember").callsFake((member, callback) => {
-      callback(null);
-    });
+    sinon.stub(membersService, "isValidNickname").returns(true);
+    sinon.stub(membersService, "isValidEmail").returns(true);
+    sinon.stub(groupsService, "updateSubscriptions").callsFake(() => {});
+    sinon.stub(memberstore, "saveMember");
     const notificationCall = sinon.stub(notifications, "newMemberRegistered").callsFake(() => undefined);
 
     // the following stub indicates that the member already exists
-    sinon.stub(groupsAndMembersService, "getMemberWithHisGroups").callsFake((nickname, callback) => {
-      callback(null, dummymember);
-    });
+    sinon.stub(groupsAndMembersService, "getMemberWithHisGroups").returns(dummymember);
     request(createApp({ id: "memberID" }))
       .post("/submit")
       .send("id=0815&firstname=A&lastname=B&location=x&profession=y&reference=z&country=x")
@@ -266,24 +226,14 @@ describe("Members application", () => {
   });
 
   it("saves a new member and triggers notification sending", (done) => {
-    sinon.stub(membersService, "isValidNickname").callsFake((nickname, callback) => {
-      callback(null, true);
-    });
-    sinon.stub(membersService, "isValidEmail").callsFake((nickname, callback) => {
-      callback(null, true);
-    });
-    sinon.stub(groupsService, "updateSubscriptions").callsFake((member, subscriptions, callback) => {
-      callback();
-    });
-    sinon.stub(memberstore, "saveMember").callsFake((member, callback) => {
-      callback(null);
-    });
+    sinon.stub(membersService, "isValidNickname").returns(true);
+    sinon.stub(membersService, "isValidEmail").returns(true);
+    sinon.stub(groupsService, "updateSubscriptions").callsFake(() => {});
+    sinon.stub(memberstore, "saveMember");
     const notificationCall = sinon.stub(notifications, "newMemberRegistered").callsFake(() => undefined);
 
     // the following stub indicates that the member does not exist yet
-    sinon.stub(groupsAndMembersService, "getMemberWithHisGroups").callsFake((nickname, callback) => {
-      callback(null);
-    });
+    sinon.stub(groupsAndMembersService, "getMemberWithHisGroups").returns(null);
     request(createApp({ id: "memberID" }))
       .post("/submit")
       .send("id=0815&firstname=A&lastname=B&location=x&profession=y&reference=z")

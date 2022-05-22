@@ -19,16 +19,11 @@ function checkCommonMemberFields(validator, memberInput) {
 }
 
 module.exports = {
-  checkValidity: function checkValidity(oldValue, newValue, checkFunction, errorMessage, callback) {
+  checkValidity: async function checkValidity(oldValue, newValue, checkFunction) {
     if (newValue !== oldValue) {
-      return checkFunction(newValue, (err, check) => {
-        if (err || !check) {
-          return callback(null, errorMessage);
-        }
-        return callback(null);
-      });
+      return await checkFunction(newValue);
     }
-    return callback(null);
+    return true;
   },
 
   isValidForMember: function isValidForMember(memberInput) {

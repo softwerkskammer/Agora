@@ -1,6 +1,6 @@
 "use strict";
 const expect = require("must-dist");
-const httpRequest = require("request");
+const httpRequest = require("superagent");
 const sinon = require("sinon").createSandbox();
 const conf = require("../testutil/configureForTest");
 const beans = conf.get("beans");
@@ -12,7 +12,7 @@ const app = require("../app.js");
 
 describe("SWK Plattform server", () => {
   beforeEach((done) => {
-    sinon.stub(groupstore, "allGroups").callsFake((callback) => callback(null, []));
+    sinon.stub(groupstore, "allGroups").returns([]);
     app.start(done);
   });
 
@@ -21,61 +21,35 @@ describe("SWK Plattform server", () => {
     app.stop(done);
   });
 
-  it("responds on a GET for the home page", (done) => {
-    httpRequest({ uri: baseUri }, (req, resp) => {
-      expect(resp).to.exist();
-      expect(resp.statusCode).to.equal(200);
-      done(); // without error check
-    });
+  it("responds with HTML on a GET for the home page showing 'Softwerkskammer' and translated page text", async () => {
+    const resp = await httpRequest.get(baseUri);
+    expect(resp).to.exist();
+    expect(resp.statusCode).to.equal(200);
+    expect(resp.headers["content-type"]).to.contain("text/html");
+    expect(resp.text).to.contain("Softwerkskammer");
+    expect(resp.text).to.contain(
+      "Die Softwerkskammer hat sich 2011 gegründet, um den Austausch Interessierter zum Thema Software Craft und Testing\nzu vereinfachen."
+    );
   });
 
-  it("responds with HTML on a GET for the home page", (done) => {
-    httpRequest({ uri: baseUri }, (req, resp) => {
-      expect(resp.headers["content-type"]).to.contain("text/html");
-      done(); // without error check
-    });
+  it("provides the screen style sheet", async () => {
+    const resp = await httpRequest.get(baseUri + "/stylesheets/screen.css");
+    expect(resp.statusCode).to.equal(200);
+    expect(resp.headers["content-type"]).to.contain("text/css");
+    expect(resp.text).to.contain("color:");
   });
 
-  it('shows "Softwerkskammer" on the home page', (done) => {
-    httpRequest({ uri: baseUri }, (req, resp) => {
-      expect(resp.body).to.contain("Softwerkskammer");
-      done(); // without error check
-    });
-  });
-
-  it("renders the i18n translated text on the home page correctly", (done) => {
-    httpRequest({ uri: baseUri }, (req, resp) => {
-      expect(resp.body).to.contain(
-        "Die Softwerkskammer hat sich 2011 gegründet, um den Austausch Interessierter zum Thema Software Craft und Testing\nzu vereinfachen."
-      );
-      done(); // without error check
-    });
-  });
-
-  it("provides the screen style sheet", (done) => {
-    const stylesheetUri = baseUri + "/stylesheets/screen.css";
-    httpRequest({ uri: stylesheetUri }, (req, resp) => {
-      expect(resp.statusCode).to.equal(200);
-      expect(resp.headers["content-type"]).to.contain("text/css");
-      expect(resp.body).to.contain("color:");
-      done(); // without error check
-    });
-  });
-
-  it("provides the clientside membercheck functions", (done) => {
-    const stylesheetUri = baseUri + "/clientscripts/check-memberform.js";
-    httpRequest({ uri: stylesheetUri }, (req, resp) => {
-      expect(resp.statusCode).to.equal(200);
-      expect(resp.headers["content-type"]).to.contain("application/javascript");
-      expect(resp.body).to.contain("#memberform");
-      done(); // without error check
-    });
+  it("provides the clientside membercheck functions", async () => {
+    const resp = await httpRequest.get(baseUri + "/clientscripts/check-memberform.js");
+    expect(resp.statusCode).to.equal(200);
+    expect(resp.headers["content-type"]).to.contain("application/javascript");
+    expect(resp.body.toString()).to.contain("#memberform");
   });
 });
 
 describe("SWK Plattform server with Error", () => {
   beforeEach((done) => {
-    sinon.stub(groupstore, "allGroups").callsFake((callback) => callback(new Error(), []));
+    sinon.stub(groupstore, "allGroups").throws(new Error());
     app.start(done);
   });
 
@@ -84,13 +58,15 @@ describe("SWK Plattform server with Error", () => {
     app.stop(done);
   });
 
-  it("renders the i18n translated text on the home page correctly", (done) => {
-    httpRequest({ uri: baseUri }, (req, resp) => {
-      expect(resp.body).to.contain("<li>Was hast Du getan?</li>");
-      expect(resp.body).to.contain("<li>Betriebssystem und Browser inkl. Version.</li>");
-      expect(resp.body).to.contain("<li>Den Stacktrace</li>");
-      expect(resp.body).to.contain("<p>Das Agora-Team bittet um Entschuldigung.</p>");
-      done(); // without error check
-    });
+  it("renders the i18n translated text on the home page correctly", async () => {
+    try {
+      await httpRequest.get(baseUri);
+    } catch (e) {
+      const text = e.response.text;
+      expect(text).to.contain("<li>Was hast Du getan?</li>");
+      expect(text).to.contain("<li>Betriebssystem und Browser inkl. Version.</li>");
+      expect(text).to.contain("<li>Den Stacktrace</li>");
+      expect(text).to.contain("<p>Das Agora-Team bittet um Entschuldigung.</p>");
+    }
   });
 });

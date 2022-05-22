@@ -3,23 +3,26 @@
 
 require("../../configure"); // initializing parameters
 
-const async = require("async");
 const beans = require("simple-configure").get("beans");
 const store = beans.get("memberstore");
 const persistence = beans.get("membersPersistence");
 
 const service = beans.get("membersService");
 
-store.allMembers((err, members) => {
-  if (err || !members) {
-    console.log("avatar updater had problems loading members"); // for cron mail
-  }
-  async.each(members, service.updateImage, (err2) => {
-    if (err2) {
-      console.log("avatar updater encountered an error: " + err2.message); // for cron mail
+async function run() {
+  try {
+    const members = await store.allMembers();
+    if (!members) {
+      console.log("avatar updater had problems loading members"); // for cron mail
+      process.exit(1);
     }
-    persistence.closeDB(() => {
-      process.exit();
-    });
-  });
-});
+    await Promise.all(members.map(service.updateImage));
+    await persistence.closeMongo();
+    process.exit();
+  } catch (e) {
+    console.log("avatar updater encountered an error: " + e.message); // for cron mail
+    process.exit(1);
+  }
+}
+
+run();

@@ -11,7 +11,7 @@ describe("Wiki Service - Event Parsing", () => {
     sinon.restore();
   });
 
-  it("parses an expected content", (done) => {
+  it("parses an expected content", async () => {
     const wikifile =
       "## Europaweite Veranstaltungen 2016\n" +
       "\n" +
@@ -30,15 +30,11 @@ describe("Wiki Service - Event Parsing", () => {
       "[OOP](http://www.oop-konferenz.de/) | München  | 1.2.\n" +
       "[microXchg - The Microservices Conference](http://microxchg.io) | Berlin | 4.2.  - 5.2.";
 
-    sinon.stub(Git, "readFile").callsFake((name, version, callback) => {
-      callback(null, wikifile);
-    });
+    sinon.stub(Git, "readFile").returns(wikifile);
 
-    wikiService.parseEvents(2018, (err, events) => {
-      expect(events).to.have.length(4);
-      expect(events[0].start).to.eql("2018-01-11T00:00:00.000Z");
-      expect(events[0].end).to.eql("2018-01-11T22:00:00.000Z");
-      done();
-    });
+    const events = await wikiService.parseEvents(2018);
+    expect(events).to.have.length(4);
+    expect(events[0].start).to.eql("2018-01-11T00:00:00.000Z");
+    expect(events[0].end).to.eql("2018-01-11T22:00:00.000Z");
   });
 });

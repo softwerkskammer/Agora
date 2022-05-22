@@ -1,4 +1,3 @@
-const async = require("async");
 const R = require("ramda");
 const Form = require("multiparty").Form;
 
@@ -18,223 +17,182 @@ const statusmessage = beans.get("statusmessage");
 const notifications = beans.get("notifications");
 const authenticationService = beans.get("authenticationService");
 
-function memberSubmitted(req, res, next) {
+async function memberSubmitted(req, res) {
   function notifyNewMemberRegistration(member, subscriptions) {
     // must be done here, not in Service to avoid circular deps
     notifications.newMemberRegistered(member, subscriptions);
   }
 
-  groupsAndMembersService.updateAndSaveSubmittedMember(
+  const nickname = await groupsAndMembersService.updateAndSaveSubmittedMember(
     req.user,
     req.body,
     res.locals.accessrights,
-    notifyNewMemberRegistration,
-    (err, nickname) => {
-      if (err) {
-        return next(err);
-      }
-
-      if (nickname) {
-        statusmessage
-          .successMessage("message.title.save_successful", "message.content.members.saved")
-          .putIntoSession(req);
-        return res.redirect("/members/" + encodeURIComponent(nickname));
-      }
-
-      return res.redirect("/members");
-    }
+    notifyNewMemberRegistration
   );
+
+  if (nickname) {
+    statusmessage.successMessage("message.title.save_successful", "message.content.members.saved").putIntoSession(req);
+    return res.redirect("/members/" + encodeURIComponent(nickname));
+  }
+
+  return res.redirect("/members");
 }
 
-function tagsFor(callback) {
-  memberstore.allMembers((err, members) => {
-    callback(
-      err,
-      membersService
-        .toWordList(members)
-        .map((wordlist) => wordlist.text)
-        .sort()
-    );
-  });
+async function tagsFor() {
+  const members = await memberstore.allMembers();
+  return membersService
+    .toWordList(members)
+    .map((wordlist) => wordlist.text)
+    .sort();
 }
 
 const app = misc.expressAppIn(__dirname);
 
-app.get("/", (req, res, next) => {
-  memberstore.allMembers((err, members) => {
-    if (err) {
-      return next(err);
-    }
-    async.each(members, membersService.putAvatarIntoMemberAndSave, (err1) => {
-      if (err1) {
-        return next(err1);
-      }
-      res.render("index", { members, wordList: membersService.toWordList(members) });
-    });
-  });
+app.get("/", async (req, res) => {
+  const members = await memberstore.allMembers();
+  await Promise.all(members.map((m) => membersService.putAvatarIntoMemberAndSave(m)));
+  res.render("index", { members, wordList: membersService.toWordList(members) });
 });
 
-app.get("/interests", (req, res, next) => {
+app.get("/interests", async (req, res) => {
   const casesensitive = req.query.casesensitive ? "" : "i";
-  memberstore.getMembersWithInterest(req.query.interest, casesensitive, (err, members) => {
-    if (err) {
-      return next(err);
-    }
-    async.each(members, membersService.putAvatarIntoMemberAndSave, (err1) => {
-      if (err1) {
-        return next(err1);
-      }
-      res.render("indexForTag", {
-        interest: req.query.interest,
-        members,
-        wordList: membersService.toWordList(members),
-      });
-    });
+  const members = await memberstore.getMembersWithInterest(req.query.interest, casesensitive);
+  await Promise.all(members.map(membersService.putAvatarIntoMemberAndSave));
+  res.render("indexForTag", {
+    interest: req.query.interest,
+    members,
+    wordList: membersService.toWordList(members),
   });
 });
 
-app.get("/checknickname", (req, res) => {
-  misc.validate(req.query.nickname, req.query.previousNickname, membersService.isValidNickname, res.end);
+app.get("/checknickname", async (req, res) => {
+  const result = await misc.validate(req.query.nickname, req.query.previousNickname, membersService.isValidNickname);
+  res.end(result);
 });
 
-app.get("/checkemail", (req, res) => {
-  misc.validate(req.query.email, req.query.previousEmail, membersService.isValidEmail, res.end);
+app.get("/checkemail", async (req, res) => {
+  const result = await misc.validate(req.query.email, req.query.previousEmail, membersService.isValidEmail);
+  res.end(result);
 });
 
-app.get("/new", (req, res, next) => {
+app.get("/new", async (req, res) => {
   if (req.user.member) {
     return res.redirect("/members/");
   }
-  async.parallel(
-    {
-      allGroups: (callback) => groupstore.allGroups(callback),
-      allTags: (callback) => tagsFor(callback),
-    },
-    (err, results) => {
-      if (err) {
-        return next(err);
-      }
-      const allGroups = results.allGroups;
-      res.render("edit", {
-        member: new Member().initFromSessionUser(req.user),
-        regionalgroups: groupsService.markGroupsSelected([], Group.regionalsFrom(allGroups)),
-        themegroups: groupsService.markGroupsSelected([], Group.thematicsFrom(allGroups)),
-        tags: results.allTags,
-      });
-    }
-  );
+  const [allGroups, allTags] = await Promise.all([groupstore.allGroups(), tagsFor()]);
+  res.render("edit", {
+    member: new Member().initFromSessionUser(req.user),
+    regionalgroups: groupsService.markGroupsSelected([], Group.regionalsFrom(allGroups)),
+    themegroups: groupsService.markGroupsSelected([], Group.thematicsFrom(allGroups)),
+    tags: allTags,
+  });
 });
 
-app.get("/edit/:nickname", (req, res, next) => {
-  async.parallel(
-    {
-      member: (callback) => groupsAndMembersService.getMemberWithHisGroups(req.params.nickname, callback),
-      allGroups: (callback) => groupstore.allGroups(callback),
-      allTags: (callback) => tagsFor(callback),
-    },
-    (err, results) => {
-      if (err) {
-        return next(err);
-      }
-      const member = results.member;
-      if (err || !member) {
-        return next(err);
-      }
-      if (!res.locals.accessrights.canEditMember(member)) {
-        return res.redirect("/members/" + encodeURIComponent(member.nickname()));
-      }
-      const allGroups = results.allGroups;
-      res.render("edit", {
-        member,
-        regionalgroups: groupsService.markGroupsSelected(member.subscribedGroups, Group.regionalsFrom(allGroups)),
-        themegroups: groupsService.markGroupsSelected(member.subscribedGroups, Group.thematicsFrom(allGroups)),
-        tags: results.allTags,
-      });
-    }
-  );
+app.get("/edit/:nickname", async (req, res, next) => {
+  const [allGroups, allTags, member] = await Promise.all([
+    groupstore.allGroups(),
+    tagsFor(),
+    groupsAndMembersService.getMemberWithHisGroups(req.params.nickname),
+  ]);
+
+  if (!member) {
+    return next();
+  }
+  if (!res.locals.accessrights.canEditMember(member)) {
+    return res.redirect("/members/" + encodeURIComponent(member.nickname()));
+  }
+  res.render("edit", {
+    member,
+    regionalgroups: groupsService.markGroupsSelected(member.subscribedGroups, Group.regionalsFrom(allGroups)),
+    themegroups: groupsService.markGroupsSelected(member.subscribedGroups, Group.thematicsFrom(allGroups)),
+    tags: allTags,
+  });
 });
 
-app.post("/delete", (req, res, next) => {
+app.post("/delete", async (req, res) => {
   const nickname = req.body.nickname;
   if (!res.locals.accessrights.canDeleteMemberByNickname(nickname)) {
     return res.redirect("/members/" + encodeURIComponent(nickname));
   }
-  groupsAndMembersService.removeMember(nickname, (err) => {
-    if (err) {
-      if (err.message !== "hasSubscriptions") {
-        return next(err);
-      }
-      statusmessage
-        .errorMessage("message.title.problem", "message.content.members.hasSubscriptions")
-        .putIntoSession(req);
-      return res.redirect("/members/edit/" + encodeURIComponent(nickname));
-    }
+  try {
+    await groupsAndMembersService.removeMember(nickname);
     statusmessage
       .successMessage("message.title.save_successful", "message.content.members.deleted")
       .putIntoSession(req);
     res.redirect("/members/");
-  });
+  } catch (e) {
+    if (e.message !== "hasSubscriptions") {
+      throw e;
+    }
+    statusmessage.errorMessage("message.title.problem", "message.content.members.hasSubscriptions").putIntoSession(req);
+    return res.redirect("/members/edit/" + encodeURIComponent(nickname));
+  }
 });
 
-app.post("/updatePassword", (req, res, next) => {
-  memberstore.getMemberForId(req.body.id, (err, member) => {
-    if (err) {
-      return next(err);
-    }
-    member.updatePassword(req.body.password);
-    member.addAuthentication(authenticationService.pwdAuthenticationPrefix + member.email());
-    memberstore.saveMember(member, (err1) => {
-      if (err1) {
-        return next(err1);
+app.post("/updatePassword", async (req, res) => {
+  const member = await memberstore.getMemberForId(req.body.id);
+  member.updatePassword(req.body.password);
+  member.addAuthentication(authenticationService.pwdAuthenticationPrefix + member.email());
+  await memberstore.saveMember(member);
+  res.redirect("/members/" + encodeURIComponent(member.nickname()));
+});
+
+app.post("/submit", async (req, res, next) => {
+  async function checkNick() {
+    try {
+      const result = await validation.checkValidity(
+        req.body.previousNickname,
+        req.body.nickname,
+        membersService.isValidNickname
+      );
+      if (!result) {
+        return [req.i18n.t("validation.nickname_not_available")];
       }
-      res.redirect("/members/" + encodeURIComponent(member.nickname()));
+      return [];
+    } catch (e) {
+      return [req.i18n.t("validation.nickname_not_available")];
+    }
+  }
+
+  async function checkMail() {
+    try {
+      const result = await validation.checkValidity(
+        req.body.previousEmail,
+        req.body.email,
+        membersService.isValidEmail
+      );
+      if (!result) {
+        return [req.i18n.t("validation.duplicate_email")];
+      }
+      return [];
+    } catch (e) {
+      return [req.i18n.t("validation.duplicate_email")];
+    }
+  }
+  const errorMessages = await Promise.all([checkNick(), checkMail(), validation.isValidForMember(req.body)]);
+  const realErrors = R.flatten(errorMessages).filter((message) => !!message);
+  if (realErrors.length === 0) {
+    return memberSubmitted(req, res, next);
+  }
+  return res.render("../../../views/errorPages/validationError", { errors: realErrors });
+});
+
+app.post("/submitavatar", async (req, res) => {
+  const promisifyUpload = (req1) =>
+    new Promise((resolve, reject) => {
+      new Form().parse(req1, function (err, fields, files) {
+        if (err) {
+          return reject(err);
+        }
+
+        return resolve([fields, files]);
+      });
     });
-  });
-});
 
-app.post("/submit", (req, res, next) => {
-  async.parallel(
-    [
-      (callback) => {
-        validation.checkValidity(
-          req.body.previousNickname,
-          req.body.nickname,
-          membersService.isValidNickname,
-          req.i18n.t("validation.nickname_not_available"),
-          callback
-        );
-      },
-      (callback) => {
-        validation.checkValidity(
-          req.body.previousEmail,
-          req.body.email,
-          membersService.isValidEmail,
-          req.i18n.t("validation.duplicate_email"),
-          callback
-        );
-      },
-      (callback) => {
-        const errors = validation.isValidForMember(req.body);
-        callback(null, errors);
-      },
-    ],
-    (err, errorMessages) => {
-      if (err) {
-        return next(err);
-      }
-      const realErrors = R.flatten(errorMessages).filter((message) => !!message);
-      if (realErrors.length === 0) {
-        return memberSubmitted(req, res, next);
-      }
-      return res.render("../../../views/errorPages/validationError", { errors: realErrors });
-    }
-  );
-});
-
-app.post("/submitavatar", (req, res, next) => {
-  new Form().parse(req, (err, fields, files) => {
+  try {
+    const [fields, files] = await promisifyUpload(req);
     const nickname = fields.nickname[0];
-    if (err || !files || files.length < 1) {
+    if (!files || files.length < 1) {
       return res.redirect("/members/" + nickname);
     }
     const params = {
@@ -247,60 +205,38 @@ app.post("/submitavatar", (req, res, next) => {
         top: parseInt(fields.y[0]),
       },
     };
-    membersService.saveCustomAvatarForNickname(nickname, files, params, (err1) => {
-      if (err1) {
-        return next(err1);
-      }
-      res.redirect("/members/" + encodeURIComponent(nickname)); // Es fehlen Prüfungen im Frontend
-    });
-  });
+    await membersService.saveCustomAvatarForNickname(nickname, files, params);
+    res.redirect("/members/" + encodeURIComponent(nickname)); // Es fehlen Prüfungen im Frontend
+  } catch (e) {
+    return res.redirect("/members/");
+  }
 });
 
-app.post("/deleteAvatarFor", (req, res, next) => {
+app.post("/deleteAvatarFor", async (req, res) => {
   const nicknameOfEditMember = req.body.nickname;
-  memberstore.getMember(nicknameOfEditMember, (err, member) => {
-    if (err) {
-      return next(err);
-    }
-    if (res.locals.accessrights.canEditMember(member)) {
-      return membersService.deleteCustomAvatarForNickname(nicknameOfEditMember, (err1) => {
-        if (err1) {
-          return next(err1);
-        }
-        res.redirect("/members/" + encodeURIComponent(nicknameOfEditMember));
-      });
-    }
-    res.redirect("/members/" + encodeURIComponent(nicknameOfEditMember));
-  });
+  const member = await memberstore.getMember(nicknameOfEditMember);
+  if (res.locals.accessrights.canEditMember(member)) {
+    await membersService.deleteCustomAvatarForNickname(nicknameOfEditMember);
+    return res.redirect("/members/" + encodeURIComponent(nicknameOfEditMember));
+  }
+  res.redirect("/members/" + encodeURIComponent(nicknameOfEditMember));
 });
 
-app.get("/:nickname", (req, res, next) => {
-  groupsAndMembersService.getMemberWithHisGroups(req.params.nickname, (err, member, subscribedGroups) => {
-    if (err || !member) {
-      return next(err);
-    }
-    activitiesService.getPastActivitiesOfMember(member, (err1, pastActivities) => {
-      if (err1) {
-        return next(err1);
-      }
-      activitiesService.getOrganizedOrEditedActivitiesOfMember(member, (err2, organizedOrEditedActivities) => {
-        if (err2) {
-          return next(err2);
-        }
-        wikiService.listFilesModifiedByMember(member.nickname(), (err3, modifiedWikiFiles) => {
-          if (err3) {
-            return next(err3);
-          }
-          res.render("get", {
-            member,
-            pastActivities,
-            organizedOrEditedActivities,
-            subscribedGroups,
-            modifiedWikiFiles,
-          });
-        });
-      });
-    });
+app.get("/:nickname", async (req, res, next) => {
+  const member = await groupsAndMembersService.getMemberWithHisGroups(req.params.nickname);
+  if (!member) {
+    return next();
+  }
+  const subscribedGroups = member.subscribedGroups;
+  const pastActivities = await activitiesService.getPastActivitiesOfMember(member);
+  const organizedOrEditedActivities = await activitiesService.getOrganizedOrEditedActivitiesOfMember(member);
+  const modifiedWikiFiles = await wikiService.listFilesModifiedByMember(member.nickname());
+  res.render("get", {
+    member,
+    pastActivities,
+    organizedOrEditedActivities,
+    subscribedGroups,
+    modifiedWikiFiles,
   });
 });
 

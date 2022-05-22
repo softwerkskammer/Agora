@@ -25,301 +25,272 @@ describe("the gitmech module", () => {
       "'path'",
     ];
 
-    it('"readFile" returns file contents as string', (done) => {
-      const gitCommand = sinon.stub(gitExec, "command").callsFake((args, callback) => callback(null, "string"));
+    it('"readFile" returns file contents as string', async () => {
+      const gitCommand = sinon.stub(gitExec, "command").returns("string");
 
-      Git.readFile("path", 1, (err, string) => {
-        expect(gitCommand.withArgs(["show", "1:'path'"]).calledOnce).to.be(true);
-        expect(string).to.equal("string");
-        done(err);
-      });
+      const string = await Git.readFile("path", 1);
+      expect(gitCommand.withArgs(["show", "1:'path'"]).calledOnce).to.be(true);
+      expect(string).to.equal("string");
     });
 
-    it('"readFile" returns error on error', (done) => {
-      sinon.stub(gitExec, "command").callsFake((args, callback) => callback(new Error()));
-      Git.readFile("path", 1, (err) => {
-        expect(err).to.exist();
-        done();
-      });
+    it('"readFile" returns error on error', async () => {
+      sinon.stub(gitExec, "command").throws(new Error());
+      try {
+        await Git.readFile("path", 1);
+        expect(true).to.be(false);
+      } catch (e) {
+        expect(e).to.exist();
+      }
     });
 
-    it('escapes the dynamic argument in "readFile" to avoid cmd injection', (done) => {
+    it('escapes the dynamic argument in "readFile" to avoid cmd injection', async () => {
       const pathGiven = "Given | Path";
-      const gitCommand = sinon.stub(gitExec, "command").callsFake((args, callback) => callback(null, "string"));
+      const gitCommand = sinon.stub(gitExec, "command").returns("string");
 
-      Git.readFile(pathGiven, 1, (err) => {
-        expect(gitCommand.firstCall.args[0][1]).to.be("1:'Given | Path'");
-        done(err);
-      });
+      await Git.readFile(pathGiven, 1);
+      expect(gitCommand.firstCall.args[0][1]).to.be("1:'Given | Path'");
     });
 
-    it('produces sensible metadata via "git log" for editing', (done) => {
+    it('produces sensible metadata via "git log" for editing', async () => {
       const gitCommand = sinon
         .stub(gitExec, "command")
-        .callsFake((args, callback) =>
-          callback(
-            null,
-            "7f91fc6\n" +
-              "7f91fc607da7947e62b2d8a52088ee0ce29a88c8\n" +
-              "leider\n" +
-              "2014-03-01 18:36:29 +0100\n" +
-              "no comment\n" +
-              "path/file.md\n\n"
-          )
+        .returns(
+          "7f91fc6\n" +
+            "7f91fc607da7947e62b2d8a52088ee0ce29a88c8\n" +
+            "leider\n" +
+            "2014-03-01 18:36:29 +0100\n" +
+            "no comment\n" +
+            "path/file.md\n\n"
         );
-      Git.log("path", "HEAD", 1, (err, metadatas) => {
-        expect(gitCommand.withArgs(argsForLog).calledOnce).to.be(true);
-        const metadata = metadatas[0];
-        expect(metadatas).to.have.length(1);
-        expect(metadata.name).to.equal("path/file.md");
-        expect(metadata.hashRef).to.equal("HEAD");
-        expect(metadata.fullhash).to.equal("7f91fc607da7947e62b2d8a52088ee0ce29a88c8");
-        expect(metadata.author).to.equal("leider");
-        expect(metadata.datestring).to.equal("2014-03-01 18:36:29 +0100");
-        expect(metadata.comment).to.equal("no comment");
-        done(err);
-      });
+      const metadatas = await Git.log("path", "HEAD", 1);
+      expect(gitCommand.withArgs(argsForLog).calledOnce).to.be(true);
+      const metadata = metadatas[0];
+      expect(metadatas).to.have.length(1);
+      expect(metadata.name).to.equal("path/file.md");
+      expect(metadata.hashRef).to.equal("HEAD");
+      expect(metadata.fullhash).to.equal("7f91fc607da7947e62b2d8a52088ee0ce29a88c8");
+      expect(metadata.author).to.equal("leider");
+      expect(metadata.datestring).to.equal("2014-03-01 18:36:29 +0100");
+      expect(metadata.comment).to.equal("no comment");
     });
 
-    it('produces sensible metadata via "git log" for viewing the history', (done) => {
+    it('produces sensible metadata via "git log" for viewing the history', async () => {
       const gitCommand = sinon
         .stub(gitExec, "command")
-        .callsFake((args, callback) =>
-          callback(
-            null,
+        .returns(
+          "7f91fc6\n" +
+            "7f91fc607da7947e62b2d8a52088ee0ce29a88c8\n" +
+            "leider\n" +
+            "2014-03-01 18:36:29 +0100\n" +
+            "no comment\n" +
+            "path/file.md\n\n" +
             "7f91fc6\n" +
-              "7f91fc607da7947e62b2d8a52088ee0ce29a88c8\n" +
-              "leider\n" +
-              "2014-03-01 18:36:29 +0100\n" +
-              "no comment\n" +
-              "path/file.md\n\n" +
-              "7f91fc6\n" +
-              "7f91fc607da7947e62b2d8a52088ee0ce29a88c8\n" +
-              "leider\n" +
-              "2014-03-01 18:36:29 +0100\n" +
-              "no comment\n" +
-              "path/file.md\n\n" +
-              "16e441b\n" +
-              "16e441b7db64acf4980a067047b0d9fb5cf9bb3e\n" +
-              "trauerleider\n" +
-              "2014-02-15 16:18:44 +0100\n" +
-              "no comment\n" +
-              "path/file.md\n\n" +
-              "a5967c3\n" +
-              "a5967c3594f637618798b6687e0a36ae2873b60d\n" +
-              "trauerleider\n" +
-              "2014-02-06 21:10:33 +0100\n" +
-              "no comment\n" +
-              "path/file.md\n\n" +
-              "3d38d9d\n" +
-              "3d38d9dad4d205ceedb4861bc0cfe292e245c307\n" +
-              "trauerleider\n" +
-              "2013-12-08 12:53:42 +0100\n" +
-              "no comment\n" +
-              "path/file.md\n\n"
-          )
+            "7f91fc607da7947e62b2d8a52088ee0ce29a88c8\n" +
+            "leider\n" +
+            "2014-03-01 18:36:29 +0100\n" +
+            "no comment\n" +
+            "path/file.md\n\n" +
+            "16e441b\n" +
+            "16e441b7db64acf4980a067047b0d9fb5cf9bb3e\n" +
+            "trauerleider\n" +
+            "2014-02-15 16:18:44 +0100\n" +
+            "no comment\n" +
+            "path/file.md\n\n" +
+            "a5967c3\n" +
+            "a5967c3594f637618798b6687e0a36ae2873b60d\n" +
+            "trauerleider\n" +
+            "2014-02-06 21:10:33 +0100\n" +
+            "no comment\n" +
+            "path/file.md\n\n" +
+            "3d38d9d\n" +
+            "3d38d9dad4d205ceedb4861bc0cfe292e245c307\n" +
+            "trauerleider\n" +
+            "2013-12-08 12:53:42 +0100\n" +
+            "no comment\n" +
+            "path/file.md\n\n"
         );
-      Git.log("path", "HEAD", 1, (err, metadatas) => {
-        expect(gitCommand.withArgs(argsForLog).calledOnce).to.be(true);
-        const metadata = metadatas[0];
-        expect(metadatas).to.have.length(5);
+      const metadatas = await Git.log("path", "HEAD", 1);
+      expect(gitCommand.withArgs(argsForLog).calledOnce).to.be(true);
+      const metadata = metadatas[0];
+      expect(metadatas).to.have.length(5);
 
-        expect(metadata.name).to.equal("path/file.md");
-        expect(metadata.hashRef).to.equal("HEAD");
-        expect(metadata.fullhash).to.equal("7f91fc607da7947e62b2d8a52088ee0ce29a88c8");
-        expect(metadata.author).to.equal("leider");
-        expect(metadata.datestring).to.equal("2014-03-01 18:36:29 +0100");
-        expect(metadata.comment).to.equal("no comment");
+      expect(metadata.name).to.equal("path/file.md");
+      expect(metadata.hashRef).to.equal("HEAD");
+      expect(metadata.fullhash).to.equal("7f91fc607da7947e62b2d8a52088ee0ce29a88c8");
+      expect(metadata.author).to.equal("leider");
+      expect(metadata.datestring).to.equal("2014-03-01 18:36:29 +0100");
+      expect(metadata.comment).to.equal("no comment");
 
-        expect(metadatas[1].hashRef).to.equal("7f91fc6");
-        expect(metadatas[2].hashRef).to.equal("16e441b");
-        expect(metadatas[3].hashRef).to.equal("a5967c3");
-        expect(metadatas[4].hashRef).to.equal("3d38d9d");
-        done(err);
-      });
+      expect(metadatas[1].hashRef).to.equal("7f91fc6");
+      expect(metadatas[2].hashRef).to.equal("16e441b");
+      expect(metadatas[3].hashRef).to.equal("a5967c3");
+      expect(metadatas[4].hashRef).to.equal("3d38d9d");
     });
 
-    it('can handle renames via "git log" for viewing the history', (done) => {
+    it('can handle renames via "git log" for viewing the history', async () => {
       const gitCommand = sinon
         .stub(gitExec, "command")
-        .callsFake((args, callback) =>
-          callback(
-            null,
+        .returns(
+          "7f91fc6\n" +
+            "7f91fc607da7947e62b2d8a52088ee0ce29a88c8\n" +
+            "leider\n" +
+            "2014-03-01 18:36:29 +0100\n" +
+            'rename: "blog_vonheute" -> "blog_2014-03-19_der_blog"\n' +
+            "crafterswap/blog_2014-03-19_der_blog.md\n" +
+            "crafterswap/blog_vonheute.md\n\n" +
             "7f91fc6\n" +
-              "7f91fc607da7947e62b2d8a52088ee0ce29a88c8\n" +
-              "leider\n" +
-              "2014-03-01 18:36:29 +0100\n" +
-              'rename: "blog_vonheute" -> "blog_2014-03-19_der_blog"\n' +
-              "crafterswap/blog_2014-03-19_der_blog.md\n" +
-              "crafterswap/blog_vonheute.md\n\n" +
-              "7f91fc6\n" +
-              "7f91fc607da7947e62b2d8a52088ee0ce29a88c8\n" +
-              "leider\n" +
-              "2014-03-01 18:36:29 +0100\n" +
-              "no comment\n" +
-              "path/file.md\n\n"
-          )
+            "7f91fc607da7947e62b2d8a52088ee0ce29a88c8\n" +
+            "leider\n" +
+            "2014-03-01 18:36:29 +0100\n" +
+            "no comment\n" +
+            "path/file.md\n\n"
         );
-      Git.log("path", "HEAD", 1, (err, metadatas) => {
-        expect(gitCommand.withArgs(argsForLog).calledOnce).to.be(true);
-        let metadata = metadatas[0];
-        expect(metadatas).to.have.length(2);
+      const metadatas = await Git.log("path", "HEAD", 1);
+      expect(gitCommand.withArgs(argsForLog).calledOnce).to.be(true);
+      let metadata = metadatas[0];
+      expect(metadatas).to.have.length(2);
 
-        expect(metadata.name).to.equal("crafterswap/blog_2014-03-19_der_blog.md");
-        expect(metadata.hashRef).to.equal("HEAD");
-        expect(metadata.fullhash).to.equal("7f91fc607da7947e62b2d8a52088ee0ce29a88c8");
-        expect(metadata.author).to.equal("leider");
-        expect(metadata.datestring).to.equal("2014-03-01 18:36:29 +0100");
-        expect(metadata.comment).to.equal('rename: "blog_vonheute" -> "blog_2014-03-19_der_blog"');
+      expect(metadata.name).to.equal("crafterswap/blog_2014-03-19_der_blog.md");
+      expect(metadata.hashRef).to.equal("HEAD");
+      expect(metadata.fullhash).to.equal("7f91fc607da7947e62b2d8a52088ee0ce29a88c8");
+      expect(metadata.author).to.equal("leider");
+      expect(metadata.datestring).to.equal("2014-03-01 18:36:29 +0100");
+      expect(metadata.comment).to.equal('rename: "blog_vonheute" -> "blog_2014-03-19_der_blog"');
 
-        metadata = metadatas[1];
-        expect(metadata.name).to.equal("path/file.md");
-        expect(metadata.hashRef).to.equal("7f91fc6");
-        done(err);
-      });
+      metadata = metadatas[1];
+      expect(metadata.name).to.equal("path/file.md");
+      expect(metadata.hashRef).to.equal("7f91fc6");
     });
 
-    it('calls the callback with an error when failing at "log"', (done) => {
-      sinon.stub(gitExec, "command").callsFake((args, callback) => callback(new Error()));
-      Git.log("path", "HEAD", 1, (err) => {
-        expect(err).to.exist();
-        done();
-      });
+    it('calls the callback with an error when failing at "log"', async () => {
+      sinon.stub(gitExec, "command").throws(new Error());
+      try {
+        await Git.log("path", "HEAD", 1);
+        expect(true).to.be(false);
+      } catch (e) {
+        expect(e).to.exist();
+      }
     });
 
-    it('escapes the dynamic argument in "git log" to avoid cmd injection', (done) => {
+    it('escapes the dynamic argument in "git log" to avoid cmd injection', async () => {
       const pathGiven = "Given | Path";
-      const gitCommand = sinon.stub(gitExec, "command").callsFake((args, callback) => callback(null));
-      Git.log(pathGiven, "HEAD", 1, (err) => {
-        expect(gitCommand.firstCall.args[0][8]).to.be("'Given | Path'");
-        done(err);
-      });
+      const gitCommand = sinon.stub(gitExec, "command");
+      await Git.log(pathGiven, "HEAD", 1);
+      expect(gitCommand.firstCall.args[0][8]).to.be("'Given | Path'");
     });
 
-    it('produces sensible metadata via "latestChanges" for sending change emails', (done) => {
-      const gitCommand = sinon.stub(gitExec, "command").callsFake((args, callback) => {
+    it('produces sensible metadata via "latestChanges" for sending change emails', async () => {
+      const gitCommand = sinon.stub(gitExec, "command").callsFake((args) => {
         if (args[0] === "log") {
-          callback(
-            null,
+          return (
             "60ca4ed\n" +
-              "60ca4eda5b79fd55461a78725ff0815cfd3f8550\n" +
-              "leider\n" +
-              "2014-03-13 20:06:51 +0100\n" +
-              "no comment\n" +
-              "19c89ae\n" +
-              "19c89ae3e7601b002133df569a1a4d57aaaa3271\n" +
-              "leider\n" +
-              "2014-03-13 20:06:19 +0100\n" +
-              'rename: "blog_2014-02-12neuereintrag" -> "blog_2014-02-12---fdadfadfjj-neuereintrag"\n' +
-              "f327d71\n" +
-              "f327d711e3e8f0104cde2902198512444af46df3\n" +
-              "leider\n" +
-              "2014-03-09 14:37:59 +0100\n" +
-              "no comment\n"
+            "60ca4eda5b79fd55461a78725ff0815cfd3f8550\n" +
+            "leider\n" +
+            "2014-03-13 20:06:51 +0100\n" +
+            "no comment\n" +
+            "19c89ae\n" +
+            "19c89ae3e7601b002133df569a1a4d57aaaa3271\n" +
+            "leider\n" +
+            "2014-03-13 20:06:19 +0100\n" +
+            'rename: "blog_2014-02-12neuereintrag" -> "blog_2014-02-12---fdadfadfjj-neuereintrag"\n' +
+            "f327d71\n" +
+            "f327d711e3e8f0104cde2902198512444af46df3\n" +
+            "leider\n" +
+            "2014-03-09 14:37:59 +0100\n" +
+            "no comment\n"
           );
         }
       });
-      Git.latestChanges("path", new Date(), (err, metadatas) => {
-        expect(gitCommand.firstCall.args[0][1]).to.match("--since");
-        expect(metadatas).to.have.length(3);
-        expect(metadatas[0].hashRef).to.equal("f327d71");
-        expect(metadatas[1].hashRef).to.equal("19c89ae");
-        expect(metadatas[2].hashRef).to.equal("60ca4ed");
-        done(err);
-      });
+      const metadatas = await Git.latestChanges("path", new Date());
+      expect(gitCommand.firstCall.args[0][1]).to.match("--since");
+      expect(metadatas).to.have.length(3);
+      expect(metadatas[0].hashRef).to.equal("f327d71");
+      expect(metadatas[1].hashRef).to.equal("19c89ae");
+      expect(metadatas[2].hashRef).to.equal("60ca4ed");
     });
 
-    it('calls the callback with an error when failing at "latestChanges"', (done) => {
-      sinon.stub(gitExec, "command").callsFake((args, callback) => callback(new Error()));
-      Git.latestChanges("path", new Date(), (err) => {
-        expect(err).to.exist();
-        done();
-      });
+    it('calls the callback with an error when failing at "latestChanges"', async () => {
+      sinon.stub(gitExec, "command").throws(new Error());
+      try {
+        await Git.latestChanges("path", new Date());
+        expect(true).to.be(false);
+      } catch (e) {
+        expect(e).to.exist();
+      }
     });
   });
 
   describe(" - write operations", () => {
     function runTestsFor(commandName, gitmechCommand) {
       return () => {
-        it("calls commit when successful", (done) => {
+        it("calls commit when successful", async () => {
           let commitcalled = false;
-          sinon.stub(gitExec, "command").callsFake((args, callback) => {
-            if (args[0] === commandName) {
-              callback(null);
-            }
+          sinon.stub(gitExec, "command").callsFake((args) => {
             if (args[0] === "commit") {
               commitcalled = true;
-              callback(null);
             }
           });
-          gitmechCommand("message", "author", (err) => {
-            expect(err).to.be(null);
-            expect(commitcalled).to.be(true);
-            done(err);
-          });
+          await gitmechCommand("message", "author");
+          expect(commitcalled).to.be(true);
         });
 
-        it("does not call commit when failing", (done) => {
+        it("does not call commit when failing", async () => {
           let commitcalled = false;
-          sinon.stub(gitExec, "command").callsFake((args, callback) => {
+          sinon.stub(gitExec, "command").callsFake((args) => {
             if (args[0] === commandName) {
-              callback(new Error());
+              throw new Error();
             }
             if (args[0] === "commit") {
               commitcalled = true;
-              callback(null);
             }
           });
-          gitmechCommand("message", "author", (err) => {
-            expect(err).to.exist();
+          try {
+            await gitmechCommand("message", "author");
+            expect(true).to.be(false);
+          } catch (e) {
+            expect(e).to.exist();
             expect(commitcalled).to.be(false);
-            done();
-          });
+          }
         });
 
-        it('handles "commit" errors', (done) => {
+        it('handles "commit" errors', async () => {
           let commitcalled = false;
-          sinon.stub(gitExec, "command").callsFake((args, callback) => {
-            if (args[0] === commandName) {
-              callback(null);
-            }
+          sinon.stub(gitExec, "command").callsFake((args) => {
             if (args[0] === "commit") {
               commitcalled = true;
-              callback(new Error());
+              throw new Error();
             }
           });
-          gitmechCommand("message", "author", (err) => {
-            expect(err).to.exist();
+          try {
+            await gitmechCommand("message", "author");
+            expect(true).to.be(false);
+          } catch (e) {
+            expect(e).to.exist();
             expect(commitcalled).to.be(true);
-            done();
-          });
+          }
         });
 
-        it('escapes the dynamic argument in "command" to avoid cmd injection', (done) => {
-          const stub = sinon.stub(gitExec, "command").callsFake((args, callback) => callback(null));
-          gitmechCommand("message", "author", (err) => {
-            const argument = stub.firstCall.args[0];
-            if (argument[0] === commandName) {
-              expect(argument[1]).to.match(/'?.'/);
-              if (argument.length === 3) {
-                expect(argument[2]).to.match(/'?.'/);
-              }
+        it('escapes the dynamic argument in "command" to avoid cmd injection', async () => {
+          const stub = sinon.stub(gitExec, "command");
+          await gitmechCommand("message", "author");
+          const argument = stub.firstCall.args[0];
+          if (argument[0] === commandName) {
+            expect(argument[1]).to.match(/'?.'/);
+            if (argument.length === 3) {
+              expect(argument[2]).to.match(/'?.'/);
             }
-            done(err);
-          });
+          }
         });
 
-        it('escapes the dynamic argument in "commit" to avoid cmd injection', (done) => {
-          const stub = sinon.stub(gitExec, "command").callsFake((args, callback) => callback(null));
-          gitmechCommand("message", "author", (err) => {
-            const argument = stub.lastCall.args[0];
-            if (argument[0] === "commit") {
-              expect(argument[1]).to.be("--author='author'");
-              expect(argument[3]).to.be("'message'");
-              expect(argument[4]).to.match(/'?.'/);
-            }
-            done(err);
-          });
+        it('escapes the dynamic argument in "commit" to avoid cmd injection', async () => {
+          const stub = sinon.stub(gitExec, "command");
+          await gitmechCommand("message", "author");
+          const argument = stub.lastCall.args[0];
+          if (argument[0] === "commit") {
+            expect(argument[1]).to.be("--author='author'");
+            expect(argument[3]).to.be("'message'");
+            expect(argument[4]).to.match(/'?.'/);
+          }
         });
       };
     }
@@ -330,214 +301,187 @@ describe("the gitmech module", () => {
   });
 
   describe(" - searching", () => {
-    it("finds in file contents", (done) => {
-      sinon.stub(gitExec, "command").callsFake((args, callback) => {
+    it("finds in file contents", async () => {
+      sinon.stub(gitExec, "command").callsFake((args) => {
         if (args[0] === "grep") {
-          callback(
-            null,
+          return (
             "global/index.md:8:Dies ist der Index [für] das [[andreas:test]] -dudelo\n" +
-              "global/veran.md:12:[UK Tester Forums - Test Management Forum](http://uktmf.com/index.php?q=node/5271)                                             | London                  | 5.2.             \n" +
-              "global/veran.md:16:[Belgium Testing Days](http://btdconf.com/)                                                                                    | Brügge                  | 17.3. - 20.3.    \n" +
-              "global/veran.md:20:[SIGIST (Specialist Group in Software Testing) Spring Conference](http://www.bcs.org/category/9264)                            | London                  | 11.3.            "
+            "global/veran.md:12:[UK Tester Forums - Test Management Forum](http://uktmf.com/index.php?q=node/5271)                                             | London                  | 5.2.             \n" +
+            "global/veran.md:16:[Belgium Testing Days](http://btdconf.com/)                                                                                    | Brügge                  | 17.3. - 20.3.    \n" +
+            "global/veran.md:20:[SIGIST (Specialist Group in Software Testing) Spring Conference](http://www.bcs.org/category/9264)                            | London                  | 11.3.            "
           );
         }
+      });
+      const chunks = await Git.grep("test");
+      expect(chunks).to.have.length(4);
+      expect(chunks).to.contain(
+        "global/veran.md:16:[Belgium Testing Days](http://btdconf.com/)                                                                                    | Brügge                  | 17.3. - 20.3.    "
+      );
+    });
+
+    it("finds in file names", async () => {
+      sinon.stub(gitExec, "command").callsFake((args) => {
         if (args[0] === "ls-files") {
-          callback();
+          return "andex.md\n" + "andreas.md\n" + "andreastest.md";
         }
       });
-      Git.grep("test", (err, chunks) => {
-        expect(chunks).to.have.length(4);
-        expect(chunks).to.contain(
-          "global/veran.md:16:[Belgium Testing Days](http://btdconf.com/)                                                                                    | Brügge                  | 17.3. - 20.3.    "
-        );
-        done(err);
-      });
+      const chunks = await Git.grep("test");
+      expect(chunks).to.have.length(3);
+      expect(chunks).to.contain("andex.md");
     });
 
-    it("finds in file names", (done) => {
-      sinon.stub(gitExec, "command").callsFake((args, callback) => {
+    it("handles errors in grep search with more than two lines", async () => {
+      sinon.stub(gitExec, "command").callsFake((args) => {
         if (args[0] === "grep") {
-          callback();
+          throw new Error("line1\nline2\nline3");
         }
+      });
+      try {
+        await Git.grep("test");
+        expect(true).to.be(false);
+      } catch (e) {
+        expect(e).to.exist();
+      }
+    });
+
+    it("handles errors in grep search with less than two lines", async () => {
+      sinon.stub(gitExec, "command").callsFake((args) => {
+        if (args[0] === "grep") {
+          throw new Error("line1\nline2");
+        }
+      });
+      const result = await Git.grep("test");
+      expect(result).to.eql([]);
+    });
+
+    it("handles errors in file search", async () => {
+      sinon.stub(gitExec, "command").callsFake((args) => {
         if (args[0] === "ls-files") {
-          callback(null, "andex.md\n" + "andreas.md\n" + "andreastest.md");
+          throw new Error();
         }
       });
-      Git.grep("test", (err, chunks) => {
-        expect(chunks).to.have.length(3);
-        expect(chunks).to.contain("andex.md");
-        done(err);
-      });
+      try {
+        await Git.grep("test");
+        expect(true).to.be(false);
+      } catch (e) {
+        expect(e).to.exist();
+      }
     });
 
-    it("handles errors in grep search with more than two lines", (done) => {
-      sinon.stub(gitExec, "command").callsFake((args, callback) => {
-        if (args[0] === "grep") {
-          callback(new Error("line1\nline2\nline3"));
-        }
-      });
-      Git.grep("test", (err) => {
-        expect(err).to.exist();
-        done();
-      });
+    it('escapes the dynamic argument in "grep" to avoid cmd injection', async () => {
+      const stub = sinon.stub(gitExec, "command");
+      await Git.grep("some | text");
+      const argument = stub.firstCall.args[0];
+      if (argument[0] === "grep") {
+        expect(argument[6]).to.be("'some | text'");
+      }
     });
 
-    it("handles errors in grep search with less than two lines", (done) => {
-      sinon.stub(gitExec, "command").callsFake((args, callback) => {
-        if (args[0] === "grep") {
-          callback(new Error("line1\nline2"));
-        }
-      });
-      Git.grep("test", (err, result) => {
-        expect(err).to.not.exist();
-        expect(result).to.eql([]);
-        done();
-      });
-    });
-
-    it("handles errors in file search", (done) => {
-      sinon.stub(gitExec, "command").callsFake((args, callback) => {
-        if (args[0] === "grep") {
-          callback();
-        }
-        if (args[0] === "ls-files") {
-          callback(new Error());
-        }
-      });
-      Git.grep("test", (err) => {
-        expect(err).to.exist();
-        done();
-      });
-    });
-
-    it('escapes the dynamic argument in "grep" to avoid cmd injection', (done) => {
-      const stub = sinon.stub(gitExec, "command").callsFake((args, callback) => callback(null));
-      Git.grep("some | text", (err) => {
-        const argument = stub.firstCall.args[0];
-        if (argument[0] === "grep") {
-          expect(argument[6]).to.be("'some | text'");
-        }
-        done(err);
-      });
-    });
-
-    it('escapes the dynamic argument in "ls-files" to avoid cmd injection', (done) => {
-      const stub = sinon.stub(gitExec, "command").callsFake((args, callback) => callback(null, "andex.md"));
-      Git.grep("some | text", (err) => {
-        const argument = stub.lastCall.args[0];
-        if (argument[0] === "ls-files") {
-          expect(argument[1]).to.be("*'some | text'*.md");
-        }
-        done(err);
-      });
+    it('escapes the dynamic argument in "ls-files" to avoid cmd injection', async () => {
+      const stub = sinon.stub(gitExec, "command").returns("andex.md");
+      await Git.grep("some | text");
+      const argument = stub.lastCall.args[0];
+      if (argument[0] === "ls-files") {
+        expect(argument[1]).to.be("*'some | text'*.md");
+      }
     });
   });
 
   describe(" - listing files", () => {
-    it('"ls" - converts the data to an array of single non empty lines', (done) => {
-      sinon.stub(gitExec, "command").callsFake((args, callback) => {
+    it('"ls" - converts the data to an array of single non empty lines', async () => {
+      sinon.stub(gitExec, "command").callsFake((args) => {
         if (args[0] === "ls-tree") {
-          callback(null, "andex.md\n" + "\n" + "andreastest.md");
+          return "andex.md\n" + "\n" + "andreastest.md";
         }
       });
-      Git.ls("subdir", (err, lines) => {
-        expect(err).to.not.exist();
-        expect(lines).to.have.length(2);
-        done();
-      });
+      const lines = await Git.ls("subdir");
+      expect(lines).to.have.length(2);
     });
 
-    it('"ls" - handles errors correct', (done) => {
-      sinon.stub(gitExec, "command").callsFake((args, callback) => {
+    it('"ls" - handles errors correct', async () => {
+      sinon.stub(gitExec, "command").callsFake((args) => {
         if (args[0] === "ls-tree") {
-          callback(new Error());
+          throw new Error();
         }
       });
-      Git.ls("subdir", (err) => {
-        expect(err).to.exist();
-        done();
-      });
+      try {
+        await Git.ls("subdir");
+        expect(true).to.be(false);
+      } catch (e) {
+        expect(e).to.exist();
+      }
     });
 
-    it('escapes the dynamic argument in "ls" to avoid cmd injection', (done) => {
-      const stub = sinon.stub(gitExec, "command").callsFake((args, callback) => callback(null));
-      Git.ls("subdir | dd", (err) => {
-        const argument = stub.firstCall.args[0];
-        expect(argument[4]).to.be("'subdir | dd'");
-        done(err);
-      });
+    it('escapes the dynamic argument in "ls" to avoid cmd injection', async () => {
+      const stub = sinon.stub(gitExec, "command");
+      await Git.ls("subdir | dd");
+      const argument = stub.firstCall.args[0];
+      expect(argument[4]).to.be("'subdir | dd'");
     });
 
-    it('"lsdirs" - converts the data to an array of single non empty lines', (done) => {
-      sinon.stub(gitExec, "command").callsFake((args, callback) => {
+    it('"lsdirs" - converts the data to an array of single non empty lines', async () => {
+      sinon.stub(gitExec, "command").callsFake((args) => {
         if (args[0] === "ls-tree") {
-          callback(null, "andex\n" + "\n" + "andreastest");
+          return "andex\n" + "\n" + "andreastest";
         }
       });
-      Git.lsdirs((err, lines) => {
-        expect(err).to.not.exist();
-        expect(lines).to.have.length(2);
-        done();
-      });
+      const lines = await Git.lsdirs();
+      expect(lines).to.have.length(2);
     });
 
-    it('"lsdirs" - handles errors correctly', (done) => {
-      sinon.stub(gitExec, "command").callsFake((args, callback) => {
+    it('"lsdirs" - handles errors correctly', async () => {
+      sinon.stub(gitExec, "command").callsFake((args) => {
         if (args[0] === "ls-tree") {
-          callback(new Error());
+          throw new Error();
         }
       });
-      Git.lsdirs((err) => {
-        expect(err).to.exist();
-        done();
-      });
+      try {
+        await Git.lsdirs();
+        expect(true).to.be(false);
+      } catch (e) {
+        expect(e).to.exist();
+      }
     });
 
-    it('"lsdirs" - converts the data to an array of single non empty lines', (done) => {
-      sinon.stub(gitExec, "command").callsFake((args, callback) => {
+    it('"lsdirs" - converts the data to an array of single non empty lines', async () => {
+      sinon.stub(gitExec, "command").callsFake((args) => {
         if (args[0] === "ls-tree") {
-          callback(null, "");
+          return "";
         }
       });
-      Git.lsdirs((err, lines) => {
-        expect(err).to.not.exist();
-        expect(lines).to.be.empty();
-        done();
-      });
+      const lines = await Git.lsdirs();
+      expect(lines).to.be.empty();
     });
 
-    it('"lsblogposts" - converts the data to an array of single non empty lines', (done) => {
-      sinon.stub(gitExec, "command").callsFake((args, callback) => {
+    it('"lsblogposts" - converts the data to an array of single non empty lines', async () => {
+      sinon.stub(gitExec, "command").callsFake((args) => {
         if (args[0] === "ls-files") {
-          callback(null, "andex.md\n" + "\n" + "andreastest.md");
+          return "andex.md\n" + "\n" + "andreastest.md";
         }
       });
-      Git.lsblogposts("group", "pattern", (err, lines) => {
-        expect(err).to.not.exist();
-        expect(lines).to.have.length(2);
-        done();
-      });
+      const lines = await Git.lsblogposts("group", "pattern");
+      expect(lines).to.have.length(2);
     });
 
-    it('"lsblogposts" - handles errors correct', (done) => {
-      sinon.stub(gitExec, "command").callsFake((args, callback) => {
+    it('"lsblogposts" - handles errors correct', async () => {
+      sinon.stub(gitExec, "command").callsFake((args) => {
         if (args[0] === "ls-files") {
-          callback(new Error());
+          throw new Error();
         }
       });
-      Git.lsblogposts("group", "pattern", (err) => {
-        expect(err).to.exist();
-        done();
-      });
+      try {
+        await Git.lsblogposts("group", "pattern");
+        expect(true).to.be(false);
+      } catch (e) {
+        expect(e).to.exist();
+      }
     });
 
-    it('escapes the dynamic argument in "lsblogposts" to avoid cmd injection', (done) => {
-      const stub = sinon.stub(gitExec, "command").callsFake((args, callback) => callback(null));
-      Git.lsblogposts("group", "some | text", (err) => {
-        const argument = stub.firstCall.args[0];
-        expect(argument[1]).to.be("'group/some | text'");
-        done(err);
-      });
+    it('escapes the dynamic argument in "lsblogposts" to avoid cmd injection', async () => {
+      const stub = sinon.stub(gitExec, "command");
+      await Git.lsblogposts("group", "some | text");
+      const argument = stub.firstCall.args[0];
+      expect(argument[1]).to.be("'group/some | text'");
     });
   });
 });

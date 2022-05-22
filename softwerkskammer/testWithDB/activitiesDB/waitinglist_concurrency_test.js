@@ -15,10 +15,9 @@ const Member = beans.get("member");
 
 const activityUrl = "urlOfTheActivity";
 
-function getActivity(url, callback) {
-  persistence.getByField({ url }, (err, activityState) => {
-    callback(err, new Activity(activityState));
-  });
+async function getActivity(url) {
+  const activityState = await persistence.getMongoByField({ url });
+  return new Activity(activityState);
 }
 
 describe("Waitinglist Service with DB", () => {
@@ -26,7 +25,7 @@ describe("Waitinglist Service with DB", () => {
   let activityAfterConcurrentAccess;
   let invocation;
 
-  beforeEach((done) => {
+  beforeEach(async () => {
     // if this fails, you need to start your mongo DB
     activityBeforeConcurrentAccess = new Activity({
       id: "activityId",
@@ -56,87 +55,73 @@ describe("Waitinglist Service with DB", () => {
 
     invocation = 1;
 
-    sinon.stub(activitystore, "getActivity").callsFake((url, callback) => {
+    sinon.stub(activitystore, "getActivity").callsFake(() => {
       // on the first invocation, getActivity returns an activity without registrant to mimick a racing condition.
       if (invocation === 1) {
         invocation = 2;
-        return callback(null, activityBeforeConcurrentAccess);
+        return activityBeforeConcurrentAccess;
       }
       // on subsequent invocations, getActivity returns an activity with registrant.
-      return callback(null, activityAfterConcurrentAccess);
+      return activityAfterConcurrentAccess;
     });
 
-    sinon.stub(memberstore, "getMember").callsFake((nickname, callback) => {
+    sinon.stub(memberstore, "getMember").callsFake((nickname) => {
       if (nickname === "nick") {
-        return callback(null, new Member({ id: "memberIdNew" }));
+        return new Member({ id: "memberIdNew" });
       }
       if (nickname === "waiting") {
-        return callback(null, new Member({ id: "memberIdWaiting" }));
+        return new Member({ id: "memberIdWaiting" });
       }
-      return callback(new Error("Member " + nickname + " not found."));
+      throw new Error("Member " + nickname + " not found.");
     });
 
-    sinon.stub(mailsenderService, "sendRegistrationAllowed").callsFake((member, activity, entry, callback) => {
-      // we don't want to send an email
-      return callback(null);
-    });
+    sinon.stub(mailsenderService, "sendRegistrationAllowed");
 
-    persistence.drop(() => {
-      // save our activity with one registrant
-      activitystore.saveActivity(activityAfterConcurrentAccess, (err) => done(err));
-    });
+    await persistence.dropMongoCollection();
+    // save our activity with one registrant
+    await activitystore.saveActivity(activityAfterConcurrentAccess);
   });
 
   afterEach(() => {
     sinon.restore();
   });
 
-  it("saveWaitinglistEntry keeps the registrant that is in the database although it only reads an activity without registrant", (done) => {
+  it("saveWaitinglistEntry keeps the registrant that is in the database although it only reads an activity without registrant", async () => {
     // here, we save an activity with a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    waitinglistService.saveWaitinglistEntry({ nickname: "nick", activityUrl, resourcename: "Veranstaltung" }, (err) => {
-      if (err) {
-        return done(err);
-      }
-      getActivity(activityUrl, (err1, activity) => {
-        expect(
-          activity.resourceNamed("Veranstaltung").waitinglistEntries()[0].registrantId(),
-          "Waiting member is still in the waitinglist"
-        ).to.equal("memberIdWaiting");
-        expect(
-          activity.resourceNamed("Veranstaltung").waitinglistEntries()[1].registrantId(),
-          "New member is stored in the waitinglist"
-        ).to.equal("memberIdNew");
-        expect(
-          activity.resourceNamed("Veranstaltung").registeredMembers(),
-          "First registered member is still there"
-        ).to.contain("memberId1");
-        done(err1);
-      });
-    });
+    await waitinglistService.saveWaitinglistEntry({ nickname: "nick", activityUrl, resourcename: "Veranstaltung" });
+    const activity = await getActivity(activityUrl);
+    expect(
+      activity.resourceNamed("Veranstaltung").waitinglistEntries()[0].registrantId(),
+      "Waiting member is still in the waitinglist"
+    ).to.equal("memberIdWaiting");
+    expect(
+      activity.resourceNamed("Veranstaltung").waitinglistEntries()[1].registrantId(),
+      "New member is stored in the waitinglist"
+    ).to.equal("memberIdNew");
+    expect(
+      activity.resourceNamed("Veranstaltung").registeredMembers(),
+      "First registered member is still there"
+    ).to.contain("memberId1");
   });
 
-  it("allowRegistrationForWaitinglistEntry keeps the registrant that is in the database although it only reads an activity without registrant", (done) => {
+  it("allowRegistrationForWaitinglistEntry keeps the registrant that is in the database although it only reads an activity without registrant", async () => {
     // here, we save an activity after removing a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first 'getActivity'.
-    waitinglistService.allowRegistrationForWaitinglistEntry(
-      { nickname: "waiting", activityUrl, resourcename: "Veranstaltung", hoursstring: "10" },
-      (err) => {
-        if (err) {
-          return done(err);
-        }
-        getActivity(activityUrl, (err1, activity) => {
-          expect(
-            activity.resourceNamed("Veranstaltung").waitinglistEntries()[0].canSubscribe(),
-            "Waiting member is now allowed to subscribe"
-          ).to.be(true);
-          expect(
-            activity.resourceNamed("Veranstaltung").registeredMembers(),
-            "First registered member is still there"
-          ).to.contain("memberId1");
-          done(err1);
-        });
-      }
-    );
+    await waitinglistService.allowRegistrationForWaitinglistEntry({
+      nickname: "waiting",
+      activityUrl,
+      resourcename: "Veranstaltung",
+      hoursstring: "10",
+    });
+    const activity = await getActivity(activityUrl);
+    expect(
+      activity.resourceNamed("Veranstaltung").waitinglistEntries()[0].canSubscribe(),
+      "Waiting member is now allowed to subscribe"
+    ).to.be(true);
+    expect(
+      activity.resourceNamed("Veranstaltung").registeredMembers(),
+      "First registered member is still there"
+    ).to.contain("memberId1");
   });
 });

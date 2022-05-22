@@ -1,5 +1,4 @@
 const beans = require("simple-configure").get("beans");
-const async = require("async");
 const R = require("ramda");
 
 const wikiService = beans.get("wikiService");
@@ -28,54 +27,36 @@ function groupsByColumns(groups = [], linesPerGroup) {
 module.exports = {
   groupsByColumns,
 
-  dataForDashboard: function dataForDashboard(nickname, callback) {
-    groupsAndMembersService.getMemberWithHisGroups(nickname, (err, member) => {
-      if (err) {
-        return callback(err);
-      }
-      if (!member) {
-        return callback(new Error("no member found"));
-      }
-      activitiesService.getUpcomingActivitiesOfMemberAndHisGroups(member, (err1, activities) => {
-        if (err1) {
-          return callback(err1);
-        }
-        const basicHeight = 3;
-        const basicHeightPerSection = 1;
-        const postsByGroup = {};
-        const changesByGroup = {};
-        const linesPerGroup = {};
-        async.each(
-          member.subscribedGroups || [],
-          (group, cb) => {
-            linesPerGroup[group.id] = basicHeight;
-            wikiService.getBlogpostsForGroup(group.id, (err2, blogposts) => {
-              if (err2) {
-                return cb(err2);
-              }
-              postsByGroup[group.id] = blogposts;
-              linesPerGroup[group.id] = linesPerGroup[group.id] + basicHeightPerSection + blogposts.length;
-              wikiService.listChangedFilesinDirectory(group.id, (err3, metadatas) => {
-                if (err3) {
-                  return cb(err3);
-                }
-                changesByGroup[group.id] = metadatas;
-                linesPerGroup[group.id] = linesPerGroup[group.id] + basicHeightPerSection + metadatas.length;
-                cb();
-              });
-            });
-          },
-          (err2) => {
-            callback(err2, {
-              member,
-              activities,
-              postsByGroup,
-              changesByGroup,
-              groupsPerColumn: groupsByColumns(member.subscribedGroups, linesPerGroup),
-            });
-          }
-        );
-      });
-    });
+  dataForDashboard: async function dataForDashboard(nickname) {
+    const member = await groupsAndMembersService.getMemberWithHisGroups(nickname);
+    if (!member) {
+      throw new Error("no member found");
+    }
+    const activities = await activitiesService.getUpcomingActivitiesOfMemberAndHisGroups(member);
+    const basicHeight = 3;
+    const basicHeightPerSection = 1;
+    const postsByGroup = {};
+    const changesByGroup = {};
+    const linesPerGroup = {};
+
+    async function calcLinesPerGroup(group) {
+      const groupid = group.id;
+      linesPerGroup[groupid] = basicHeight;
+      const blogposts = await wikiService.getBlogpostsForGroup(groupid);
+      postsByGroup[groupid] = blogposts;
+      linesPerGroup[groupid] = linesPerGroup[groupid] + basicHeightPerSection + blogposts.length;
+      const metadatas = await wikiService.listChangedFilesinDirectory(groupid);
+      changesByGroup[groupid] = metadatas;
+      linesPerGroup[groupid] = linesPerGroup[groupid] + basicHeightPerSection + metadatas.length;
+    }
+    const functions = (member.subscribedGroups || []).map(calcLinesPerGroup);
+    await Promise.all(functions);
+    return {
+      member,
+      activities,
+      postsByGroup,
+      changesByGroup,
+      groupsPerColumn: groupsByColumns(member.subscribedGroups, linesPerGroup),
+    };
   },
 };

@@ -1,5 +1,4 @@
 const conf = require("simple-configure");
-const async = require("async");
 let ourDB;
 let ourClient;
 const loggers = require("winston").loggers;
@@ -19,237 +18,153 @@ module.exports = function persistenceFunc(collectionName) {
     }
   }
 
-  function performInDB(callback) {
+  async function openMongo() {
+    if (ourDBConnectionState !== DBSTATE.CLOSED) {
+      logInfo("connection state is " + ourDBConnectionState + ". Returning.");
+      return;
+    }
+
+    logInfo("Setting connection state to OPENING");
+    ourDBConnectionState = DBSTATE.OPENING;
+
+    const MongoClient = require("mongodb").MongoClient;
+    logInfo("Connecting to Mongo");
+    try {
+      logInfo("In connect callback");
+      const client = await MongoClient.connect(conf.get("mongoURL"), {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      });
+      var db = client.db("swk");
+      ourDB = db;
+      ourClient = client;
+      ourDBConnectionState = DBSTATE.OPEN;
+      logInfo("DB state is now OPEN, db = " + db);
+    } catch (err) {
+      logInfo("An error occurred: " + err);
+      ourDBConnectionState = DBSTATE.CLOSED;
+      logger.error(err);
+    }
+  }
+
+  async function getOpenDb() {
     if (ourDBConnectionState === DBSTATE.OPEN) {
       logInfo("connection is open");
-      return callback(null, ourDB);
+      return ourDB;
     }
     logInfo("connection is " + ourDBConnectionState + ", opening it and retrying");
-    persistence.openDB();
-    setTimeout(function () {
-      performInDB(callback);
-    }, 100);
+    await openMongo();
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    return getOpenDb();
+  }
+
+  async function listByFieldWithOptions(searchObject, options, sortOrder) {
+    const db = await getOpenDb();
+    return db.collection(collectionName).find(searchObject, options).sort(sortOrder).toArray();
   }
 
   persistence = {
-    list: function list(sortOrder, callback) {
-      this.listByField({}, sortOrder, callback);
+    listMongo: async function listMongo(sortOrder) {
+      return this.listMongoByField({}, sortOrder);
     },
 
-    listByIds: function listByIds(list, sortOrder, callback) {
-      this.listByField({ id: { $in: list } }, sortOrder, callback);
+    listMongoByIds: async function listMongoByIds(list, sortOrder) {
+      return this.listMongoByField({ id: { $in: list } }, sortOrder);
     },
 
-    listByField: function listByField(searchObject, sortOrder, callback) {
-      this.listByFieldWithOptions(searchObject, {}, sortOrder, callback);
+    listMongoByField: async function listMongoByField(searchObject, sortOrder) {
+      return listByFieldWithOptions(searchObject, {}, sortOrder);
     },
 
-    listByFieldWithOptions: function listByFieldWithOptions(searchObject, options, sortOrder, callback) {
-      performInDB((err, db) => {
-        if (err) {
-          return callback(err);
-        }
-        const cursor = db.collection(collectionName).find(searchObject, options).sort(sortOrder);
-        return cursor
-          .toArray()
-          .then((res) => callback(null, res))
-          .catch((err1) => callback(err1));
-      });
+    getMongoById: async function getMongoById(id) {
+      return this.getMongoByField({ id });
     },
 
-    getById: function getById(id, callback) {
-      this.getByField({ id }, callback);
+    getMongoByField: async function getMongoByField(fieldAsObject) {
+      const db = await getOpenDb();
+      const result = await db.collection(collectionName).find(fieldAsObject).toArray();
+      return result[0];
     },
 
-    getByField: function getByField(fieldAsObject, callback) {
-      performInDB((err, db) => {
-        if (err) {
-          return callback(err);
-        }
-        db.collection(collectionName)
-          .find(fieldAsObject)
-          .toArray((err1, result) => {
-            if (err1) {
-              return callback(err1);
-            }
-            callback(err1, result[0]);
-          });
-      });
+    saveMongo: async function saveMongo(object) {
+      return this.updateMongo(object, object.id);
     },
 
-    mapReduce: function mapReduce(map, reduce, options, callback) {
-      performInDB((err, db) => {
-        if (err) {
-          return callback(err);
-        }
-        db.listCollections({ name: collectionName }).toArray((err1, names) => {
-          if (err1) {
-            callback(err1);
-          }
-          if (names.length === 0) {
-            callback(null, []);
-          } else {
-            db.collection(collectionName).mapReduce(map, reduce, options, callback);
-          }
-        });
-      });
-    },
-
-    save: function save(object, callback) {
-      this.update(object, object.id, callback);
-    },
-
-    update: function update(object, storedId, callback) {
+    updateMongo: async function updateMongo(object, storedId) {
       if (object.id === null || object.id === undefined) {
-        return callback(new Error("Given object has no valid id"));
+        throw new Error("Given object has no valid id");
       }
-      performInDB((err, db) => {
-        if (err) {
-          return callback(err);
-        }
-        const collection = db.collection(collectionName);
-        collection.replaceOne({ id: storedId }, object, { upsert: true }, (err1) => {
-          if (err1) {
-            return callback(err1);
-          }
-          //logger.info(object.constructor.name + ' saved: ' + JSON.stringify(object));
-          callback(null);
-        });
-      });
+      const db = await getOpenDb();
+      const collection = db.collection(collectionName);
+      return collection.replaceOne({ id: storedId }, object, { upsert: true });
     },
 
-    remove: function remove(objectId, callback) {
+    removeMongo: async function removeMongo(objectId) {
       if (objectId === null || objectId === undefined) {
-        return callback(new Error("Given object has no valid id"));
+        throw new Error("Given object has no valid id");
       }
-      performInDB((err, db) => {
-        if (err) {
-          return callback(err);
+      const db = await getOpenDb();
+      return db.collection(collectionName).deleteOne(
+        { id: objectId },
+        {
+          writeConcern: { w: 1 },
         }
-        const collection = db.collection(collectionName);
-        collection.deleteOne(
-          { id: objectId },
-          {
-            writeConcern: { w: 1 },
-          },
-          (err1) => {
-            callback(err1);
-          }
-        );
-      });
-    },
-
-    saveWithVersion: function saveWithVersion(object, callback) {
-      const self = this;
-      if (object.id === null || object.id === undefined) {
-        return callback(new Error("Given object has no valid id"));
-      }
-      performInDB((err, db) => {
-        if (err) {
-          return callback(err);
-        }
-        const collection = db.collection(collectionName);
-        const oldVersion = object.version;
-        object.version = oldVersion ? oldVersion + 1 : 1;
-        self.getById(object.id, (err1, result) => {
-          if (err1) {
-            return callback(err1);
-          }
-          if (result) {
-            // object exists
-            collection.findOneAndUpdate(
-              { id: object.id, version: oldVersion },
-              { $set: object },
-              { new: true, upsert: false },
-              (err2, newObject) => {
-                if (err2) {
-                  return callback(err2);
-                }
-                if (!newObject.value) {
-                  // something went wrong: restore old version count
-                  object.version = oldVersion;
-                  return callback(new Error(CONFLICTING_VERSIONS));
-                }
-                //logger.info(object.constructor.name + ' found and modified: ' + JSON.stringify(object));
-                callback(null, newObject.value);
-              }
-            );
-          } else {
-            // object is not yet persisted
-            self.save(object, callback);
-          }
-        });
-      });
-    },
-
-    saveAll: function saveAll(objects, outerCallback) {
-      const self = this;
-      async.each(
-        objects,
-        (each, callback) => {
-          self.save(each, callback);
-        },
-        outerCallback
       );
     },
 
-    drop: function drop(callback) {
-      performInDB((err, db) => {
-        if (err) {
-          return callback(err);
+    saveMongoWithVersion: async function saveWithVersion(object) {
+      const self = this;
+      if (object.id === null || object.id === undefined) {
+        throw new Error("Given object has no valid id");
+      }
+      const db = await getOpenDb();
+      const collection = db.collection(collectionName);
+      const oldVersion = object.version;
+      object.version = oldVersion ? oldVersion + 1 : 1;
+      const result = await this.getMongoById(object.id);
+      if (result) {
+        // object exists
+        const newObject = await collection.findOneAndUpdate(
+          { id: object.id, version: oldVersion },
+          { $set: object },
+          { new: true, upsert: false }
+        );
+        if (!newObject.value) {
+          // something went wrong: restore old version count
+          object.version = oldVersion;
+          throw new Error(CONFLICTING_VERSIONS);
         }
-        logger.info("Drop " + collectionName + " called!");
-        db.dropCollection(collectionName, (err1) => {
-          callback(err1);
-        });
-      });
+        //logger.info(object.constructor.name + ' found and modified: ' + JSON.stringify(object));
+        return newObject.value;
+      } else {
+        // object is not yet persisted
+        return self.saveMongo(object);
+      }
     },
 
-    openDB: function openDB() {
-      if (ourDBConnectionState !== DBSTATE.CLOSED) {
-        logInfo("connection state is " + ourDBConnectionState + ". Returning.");
+    dropMongoCollection: async function dropMongoCollection() {
+      const db = await getOpenDb();
+      const colls = await db.collections();
+      const allNames = colls.map((each) => each.namespace).filter((each) => each.endsWith(collectionName));
+      if (allNames.length === 0) {
         return;
       }
-
-      logInfo("Setting connection state to OPENING");
-      ourDBConnectionState = DBSTATE.OPENING;
-
-      const MongoClient = require("mongodb").MongoClient;
-      logInfo("Connecting to Mongo");
-      MongoClient.connect(conf.get("mongoURL"), { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-        var db = client.db("swk");
-        logInfo("In connect callback");
-        if (err) {
-          logInfo("An error occurred: " + err);
-          ourDBConnectionState = DBSTATE.CLOSED;
-          return logger.error(err);
-        }
-        ourDB = db;
-        ourClient = client;
-        ourDBConnectionState = DBSTATE.OPEN;
-        logInfo("DB state is now OPEN, db = " + db);
-      });
+      logger.info("Drop " + collectionName + " called!");
+      return db.dropCollection(collectionName);
     },
 
-    closeDB: function closeDB(callback) {
+    closeMongo: async function closeDB() {
       if (ourDBConnectionState === DBSTATE.CLOSED) {
-        if (callback) {
-          callback();
-        }
         return;
       }
-      performInDB(() => {
-        ourClient.close();
-        ourClient = undefined;
-        ourDBConnectionState = DBSTATE.CLOSED;
-        logInfo("connection closed");
-        if (callback) {
-          callback();
-        }
-      });
+      await ourClient.close();
+      ourClient = undefined;
+      ourDB = undefined;
+      ourDBConnectionState = DBSTATE.CLOSED;
+      logInfo("connection closed");
     },
   };
 
-  persistence.openDB();
+  openMongo();
   return persistence;
 };

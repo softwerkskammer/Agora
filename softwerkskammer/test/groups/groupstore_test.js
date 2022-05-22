@@ -12,29 +12,25 @@ describe("Groups store", () => {
   let getById;
 
   before(() => {
-    getById = sinon.stub(persistence, "getById");
-    getById.callsArgWith(1, null, sampleGroup);
+    getById = sinon.stub(persistence, "getMongoById");
+    getById.returns(sampleGroup);
   });
 
   after(() => {
-    persistence.getById.restore();
+    persistence.getMongoById.restore();
   });
 
-  it("retrieves groupnames given the intended case", (done) => {
+  it("retrieves groupnames given the intended case", async () => {
     const queriedId = "groupA";
-    store.getGroup(queriedId, (err, group) => {
-      expect(group.id).to.equal(sampleGroup.id);
-      expect(getById.calledWith(new RegExp("^" + queriedId + "$", "i"))).to.be(true);
-      done(err);
-    });
+    const group = await store.getGroup(queriedId);
+    expect(group.id).to.equal(sampleGroup.id);
+    expect(getById.calledWith(new RegExp("^" + queriedId + "$", "i"))).to.be(true);
   });
 
-  it("retrieves groupnames given a different case", (done) => {
+  it("retrieves groupnames given a different case", async () => {
     const queriedId = "GRouPA";
-    store.getGroup(queriedId, (err, group) => {
-      expect(group.id).to.equal(sampleGroup.id);
-      expect(getById.calledWith(new RegExp("^" + queriedId + "$", "i"))).to.be(true);
-      done(err);
-    });
+    const group = await store.getGroup(queriedId);
+    expect(group.id).to.equal(sampleGroup.id);
+    expect(getById.calledWith(new RegExp("^" + queriedId + "$", "i"))).to.be(true);
   });
 });

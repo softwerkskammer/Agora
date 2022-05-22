@@ -4,21 +4,21 @@ const galleryService = beans.get("galleryService");
 
 const app = misc.expressAppIn(__dirname);
 
-function sendImage(res, next) {
-  return (err, imagePath) => {
-    if (err || !imagePath) {
-      return next(err);
-    }
-    res.sendFile(imagePath);
-  };
+async function sendfile(image, next, res) {
+  if (!image) {
+    return next();
+  }
+  res.sendFile(image);
 }
 
-app.get("/avatarFor/:nickname", (req, res, next) => {
-  galleryService.retrieveScaledImage(req.params.nickname, undefined, sendImage(res, next));
+app.get("/avatarFor/:nickname", async (req, res, next) => {
+  const image = await galleryService.retrieveScaledImage(req.params.nickname);
+  sendfile(image, next, res);
 });
 
-app.get("/:imageId", (req, res, next) => {
-  galleryService.retrieveScaledImage(req.params.imageId, req.query.size, sendImage(res, next));
+app.get("/:imageId", async (req, res, next) => {
+  const image = await galleryService.retrieveScaledImage(req.params.imageId, req.query.size);
+  sendfile(image, next, res);
 });
 
 module.exports = app;

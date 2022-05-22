@@ -44,3 +44,4 @@ test.html
 docker/local-openid/
 docker/mongo/
 /softwerkskammer/chado-result.json
+/.idea/shelf
