@@ -1,21 +1,18 @@
 const crypto = require("crypto");
-const request = require("request").defaults({ encoding: null });
+const superagent = require("superagent");
 
 function md5(emailAddress) {
   return emailAddress ? crypto.createHash("md5").update(emailAddress).digest("hex") : "";
 }
 
 async function imageDataFromGravatar(url) {
-  return new Promise((resolve) => {
-    request.get(url, (error, response, body) => {
-      if (error) {
-        return resolve(null);
-      }
-      const image = `data:${response.headers["content-type"]};base64,${Buffer.from(body).toString("base64")}`;
-      const data = { image, hasNoImage: body.length < 150 };
-      resolve(data);
-    });
-  });
+  try {
+    const { headers, body } = await superagent.get(url);
+    const image = `data:${headers["content-type"]};base64,${body.toString("base64")}`;
+    return { image, hasNoImage: body.length < 150 };
+  } catch (e) {
+    return null;
+  }
 }
 
 module.exports = {
@@ -33,6 +30,7 @@ module.exports = {
       return data;
     } catch (e) {
       console.log(e);
+      throw e;
     }
   },
 };

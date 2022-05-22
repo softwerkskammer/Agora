@@ -1,4 +1,4 @@
-const request = require("request");
+const superagent = require("superagent");
 
 const conf = require("simple-configure");
 const beans = conf.get("beans");
@@ -13,38 +13,34 @@ function meetupFetchActivitiesURLFor(urlname) {
 }
 
 module.exports = {
-  cloneActivitiesFromMeetupForGroup: function cloneActivitiesFromMeetupForGroup(group) {
-    request(meetupFetchActivitiesURLFor(group.meetupUrlName()), { json: true }, async (err, res, body) => {
-      const all = body.map(async (meetup) => {
-        const meetupDate = fieldHelpers.meetupDateToActivityTimes(
-          meetup.local_date,
-          meetup.local_time,
-          meetup.duration
-        );
-        const activityUrl = "meetup-" + meetup.id;
+  cloneActivitiesFromMeetupForGroup: async function cloneActivitiesFromMeetupForGroup(group) {
+    const { body } = await superagent.get(meetupFetchActivitiesURLFor(group.meetupUrlName())).set("accept", "json");
 
-        const persistentActivity = await activitystore.getActivity(activityUrl);
-        const activity = persistentActivity || new Activity();
+    const all = body.map(async (meetup) => {
+      const meetupDate = fieldHelpers.meetupDateToActivityTimes(meetup.local_date, meetup.local_time, meetup.duration);
+      const activityUrl = "meetup-" + meetup.id;
 
-        return activitystore.saveActivity(
-          activity.fillFromUI({
-            url: activityUrl,
-            title: meetup.name,
-            description: meetup.description,
-            assignedGroup: group.id,
-            location: meetup.venue ? meetup.venue.name + ", " + meetup.venue.address_1 + ", " + meetup.venue.city : "",
-            direction: "",
-            startDate: meetupDate.startDate,
-            startTime: meetupDate.startTime,
-            endDate: meetupDate.endDate,
-            endTime: meetupDate.endTime,
-            clonedFromMeetup: true,
-            meetupRSVPCount: meetup.yes_rsvp_count,
-          })
-        ); // saveActivity
-      });
-      return Promise.all(all);
+      const persistentActivity = await activitystore.getActivity(activityUrl);
+      const activity = persistentActivity || new Activity();
+
+      return activitystore.saveActivity(
+        activity.fillFromUI({
+          url: activityUrl,
+          title: meetup.name,
+          description: meetup.description,
+          assignedGroup: group.id,
+          location: meetup.venue ? meetup.venue.name + ", " + meetup.venue.address_1 + ", " + meetup.venue.city : "",
+          direction: "",
+          startDate: meetupDate.startDate,
+          startTime: meetupDate.startTime,
+          endDate: meetupDate.endDate,
+          endTime: meetupDate.endTime,
+          clonedFromMeetup: true,
+          meetupRSVPCount: meetup.yes_rsvp_count,
+        })
+      ); // saveActivity
     });
+    return Promise.all(all);
   },
 
   cloneActivitiesFromMeetup: async function cloneActivitiesFromMeetup() {
