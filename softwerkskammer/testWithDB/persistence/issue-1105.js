@@ -7,7 +7,7 @@ const beans = require("../../testutil/configureForTestWithDB").get("beans");
 const persistence = beans.get("membersPersistence");
 
 describe("Persistence", () => {
-  describe("listByFieldWithOptionsAsync()", () => {
+  describe("listByFieldWithOptions()", () => {
     it("should not throw error if list is empty", async () => {
       await persistence.listMongoByField({ foo: "bar" }, {});
     });

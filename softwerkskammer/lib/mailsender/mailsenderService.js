@@ -40,51 +40,42 @@ function activityMarkdown(activity, language) {
 module.exports = {
   activityMarkdown,
 
-  dataForShowingMessageForActivity: async function (activityURL, language, globalCallback) {
-    try {
-      const [activity, groups] = await Promise.all([
-        activitiesService.getActivityWithGroupAndParticipants(activityURL),
-        groupstore.allGroups(),
-      ]);
-      if (!activity) {
-        return globalCallback();
-      }
-      const invitationGroup = groups.find((group) => group.id === activity.assignedGroup());
-      const regionalgroups = groupsService.markGroupsSelected([invitationGroup], Group.regionalsFrom(groups));
-      const themegroups = groupsService.markGroupsSelected([invitationGroup], Group.thematicsFrom(groups));
-
-      const message = new Message();
-      message.setSubject("Einladung: " + activity.title());
-      message.setMarkdown(activityMarkdown(activity, language));
-      message.addToButtons({
-        text: "Zur Aktivität",
-        url: misc.toFullQualifiedUrl("activities", encodeURIComponent(activity.url())),
-      });
-      const result = {
-        message,
-        regionalgroups,
-        themegroups,
-        successURL: "/activities/" + encodeURIComponent(activityURL),
-        activity,
-      };
-      globalCallback(null, result);
-    } catch (e) {
-      globalCallback(e);
+  dataForShowingMessageForActivity: async function (activityURL, language) {
+    const [activity, groups] = await Promise.all([
+      activitiesService.getActivityWithGroupAndParticipants(activityURL),
+      groupstore.allGroups(),
+    ]);
+    if (!activity) {
+      return;
     }
+    const invitationGroup = groups.find((group) => group.id === activity.assignedGroup());
+    const regionalgroups = groupsService.markGroupsSelected([invitationGroup], Group.regionalsFrom(groups));
+    const themegroups = groupsService.markGroupsSelected([invitationGroup], Group.thematicsFrom(groups));
+
+    const message = new Message();
+    message.setSubject("Einladung: " + activity.title());
+    message.setMarkdown(activityMarkdown(activity, language));
+    message.addToButtons({
+      text: "Zur Aktivität",
+      url: misc.toFullQualifiedUrl("activities", encodeURIComponent(activity.url())),
+    });
+    return {
+      message,
+      regionalgroups,
+      themegroups,
+      successURL: "/activities/" + encodeURIComponent(activityURL),
+      activity,
+    };
   },
 
-  dataForShowingMessageToMember: async function dataForShowingMessageToMember(nickname, callback) {
-    try {
-      const member = await memberstore.getMember(nickname);
-      if (!member) {
-        return callback(new Error("Empfänger wurde nicht gefunden."));
-      }
-      const message = new Message();
-      message.setReceiver(member);
-      callback(null, { message, successURL: "/members/" + encodeURIComponent(nickname) });
-    } catch (e) {
-      callback(e);
+  dataForShowingMessageToMember: async function dataForShowingMessageToMember(nickname) {
+    const member = await memberstore.getMember(nickname);
+    if (!member) {
+      throw new Error("Empfänger wurde nicht gefunden.");
     }
+    const message = new Message();
+    message.setReceiver(member);
+    return { message, successURL: "/members/" + encodeURIComponent(nickname) };
   },
 
   sendMailToParticipantsOf: async function sendMailToParticipantsOf(activityURL, message) {

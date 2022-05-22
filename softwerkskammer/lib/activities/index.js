@@ -216,13 +216,9 @@ app.post("/submit", async (req, res) => {
   return res.render("../../../views/errorPages/validationError", { errors: realErrors });
 });
 
-app.post("/clone-from-meetup", (req, res, next) => {
-  meetupActivitiesService.cloneActivitiesFromMeetup((err) => {
-    if (err) {
-      return next(err);
-    }
-    res.redirect("/activities");
-  });
+app.post("/clone-from-meetup", async (req, res) => {
+  await meetupActivitiesService.cloneActivitiesFromMeetup();
+  res.redirect("/activities");
 });
 
 app.get("/checkurl", async (req, res) => {

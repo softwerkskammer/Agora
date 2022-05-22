@@ -47,12 +47,8 @@ module.exports = {
     });
   },
 
-  cloneActivitiesFromMeetup: async function cloneActivitiesFromMeetup(callback) {
-    try {
-      const groups = await groupstore.getGroupsWithMeetupURL();
-      return Promise.all(groups.map(async (group) => this.cloneActivitiesFromMeetupForGroup(group)));
-    } catch (e) {
-      callback(e);
-    }
+  cloneActivitiesFromMeetup: async function cloneActivitiesFromMeetup() {
+    const groups = await groupstore.getGroupsWithMeetupURL();
+    return Promise.all(groups.map(async (group) => this.cloneActivitiesFromMeetupForGroup(group)));
   },
 };

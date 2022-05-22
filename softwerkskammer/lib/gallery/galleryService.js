@@ -10,12 +10,12 @@ const misc = conf.get("beans").get("misc");
 
 const widths = { mini: 16, thumb: 400 };
 
-async function autoOrientAsync(sourceImagePath, targetPath) {
+async function autoOrient(sourceImagePath, targetPath) {
   await sharp(sourceImagePath).rotate().withMetadata().toFile(targetPath);
   return targetPath;
 }
 
-async function convertAsync(sourceImagePath, targetPath, params) {
+async function convert(sourceImagePath, targetPath, params) {
   const angle = params.angle || 0;
   const scale = params.scale || 1;
   const geometry = params.geometry || { left: 0, top: 0, width: 100, height: 100 };
@@ -34,29 +34,29 @@ function fullPathFor(name) {
   return path.join(conf.get("imageDirectory") || conf.get("TMPDIR") || "/tmp/", name);
 }
 
-async function deleteAllImagesMatchingAsync(pattern) {
+async function deleteAllImagesMatching(pattern) {
   const files = glob.sync(fullPathFor(pattern));
   return Promise.all(files.filter(misc.representsImage).map(fsProm.unlink));
 }
 
 module.exports = {
   deleteImage: async function deleteImage(id) {
-    return deleteAllImagesMatchingAsync(path.basename(id, path.extname(id)) + "*");
+    return deleteAllImagesMatching(path.basename(id, path.extname(id)) + "*");
   },
 
   storeAvatar: async function storeAvatar(tmpImageFilePath, params) {
     const id = uuid.v4() + path.extname(tmpImageFilePath);
-    await convertAsync(tmpImageFilePath, fullPathFor(id), params);
+    await convert(tmpImageFilePath, fullPathFor(id), params);
     return id;
   },
 
   deleteAvatar: async function deleteAvatar(nickname) {
-    deleteAllImagesMatchingAsync(nickname + "*");
+    deleteAllImagesMatching(nickname + "*");
   },
 
   storeImage: async function storeImage(tmpImageFilePath) {
     const id = uuid.v4() + path.extname(tmpImageFilePath);
-    await autoOrientAsync(tmpImageFilePath, fullPathFor(id));
+    await autoOrient(tmpImageFilePath, fullPathFor(id));
     return id;
   },
 

@@ -27,10 +27,10 @@ function groupsByColumns(groups = [], linesPerGroup) {
 module.exports = {
   groupsByColumns,
 
-  dataForDashboard: async function dataForDashboard(nickname, callback) {
+  dataForDashboard: async function dataForDashboard(nickname) {
     const member = await groupsAndMembersService.getMemberWithHisGroups(nickname);
     if (!member) {
-      return callback(new Error("no member found"));
+      throw new Error("no member found");
     }
     const activities = await activitiesService.getUpcomingActivitiesOfMemberAndHisGroups(member);
     const basicHeight = 3;

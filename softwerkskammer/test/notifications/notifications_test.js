@@ -123,23 +123,22 @@ describe("Notifications", () => {
     expect(options.from).to.contain("Softwerkskammer Benachrichtigungen");
   });
 
-  it("triggers mail sending for only group organizers if activity has no owner", () => {
+  it("triggers mail sending for only group organizers if activity has no owner", async () => {
     group.organizers = ["alice"];
     group.members = [hans, alice, bob];
 
-    notifications.visitorRegistration(activity, "bob", () => {
-      expect(transport.sendMail.calledOnce).to.be(true);
-      const options = transport.sendMail.firstCall.args[0];
-      expect(options.bcc).to.equal("alice@email.de");
-      expect(options.bcc).to.not.contain("bob");
-      expect(options.bcc).to.not.contain("hans");
-    });
+    await notifications.visitorRegistration(activity, "bob");
+    expect(transport.sendMail.calledOnce).to.be(true);
+    const options = transport.sendMail.firstCall.args[0];
+    expect(options.bcc).to.equal("alice@email.de");
+    expect(options.bcc).to.not.contain("bob");
+    expect(options.bcc).to.not.contain("hans");
   });
 
-  it("does not trigger mail sending if activity has no owner and no group organizers", () => {
+  it("does not trigger mail sending if activity has no owner and no group organizers", async () => {
     group.members = [hans, alice, bob];
 
-    notifications.visitorRegistration(activity, "bob");
+    await notifications.visitorRegistration(activity, "bob");
     expect(transport.sendMail.called).to.be(false);
   });
 

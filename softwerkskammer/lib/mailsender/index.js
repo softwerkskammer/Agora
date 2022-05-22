@@ -57,29 +57,24 @@ function messageSubmitted(req, res, next) {
 
 const app = misc.expressAppIn(__dirname);
 
-app.get("/invitation/:activityUrl", (req, res, next) => {
-  mailsenderService.dataForShowingMessageForActivity(req.params.activityUrl, req.session.language, (err, result) => {
-    if (err) {
-      return next(err);
-    }
-    if (!res.locals.accessrights.canEditActivity(result.activity)) {
-      return res.redirect("/activities/" + encodeURIComponent(req.params.activityUrl));
-    }
-    res.render("compose", result);
-  });
+app.get("/invitation/:activityUrl", async (req, res) => {
+  const result = await mailsenderService.dataForShowingMessageForActivity(req.params.activityUrl, req.session.language);
+  if (!res.locals.accessrights.canEditActivity(result.activity)) {
+    return res.redirect("/activities/" + encodeURIComponent(req.params.activityUrl));
+  }
+  res.render("compose", result);
 });
 
 app.post("/", (req, res) => {
   res.render("compose", {});
 });
 
-app.get("/contactMember/:nickname", (req, res, next) => {
-  mailsenderService.dataForShowingMessageToMember(req.params.nickname, (err, result) => {
-    if (err || !result) {
-      return next(err);
-    }
-    res.render("compose", result);
-  });
+app.get("/contactMember/:nickname", async (req, res, next) => {
+  const result = await mailsenderService.dataForShowingMessageToMember(req.params.nickname);
+  if (!result) {
+    return next();
+  }
+  res.render("compose", result);
 });
 
 app.get("/contactMembersOfGroup/:groupname", async (req, res) => {

@@ -103,14 +103,8 @@ module.exports = {
     if (activity.addMemberId(memberId, millis)) {
       try {
         await activitystore.saveActivity(activity);
-        return new Promise((resolve, reject) => {
-          notifications.visitorRegistration(activity, memberId, (err, result) => {
-            if (err) {
-              reject(err);
-            }
-            resolve(Array.isArray(result) ? result : []);
-          });
-        });
+        const result = await notifications.visitorRegistration(activity, memberId);
+        return Array.isArray(result) ? result : [];
       } catch (err1) {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
           // we try again because of a racing condition during save:
@@ -131,14 +125,8 @@ module.exports = {
     activity.removeMemberId(memberId);
     try {
       await activitystore.saveActivity(activity);
-      return new Promise((resolve, reject) => {
-        notifications.visitorUnregistration(activity, memberId, (err, result) => {
-          if (err) {
-            reject(err);
-          }
-          resolve(Array.isArray(result) ? result : []);
-        });
-      });
+      const result = await notifications.visitorUnregistration(activity, memberId);
+      return Array.isArray(result) ? result : [];
     } catch (err1) {
       if (err1 && err1.message === CONFLICTING_VERSIONS) {
         // we try again because of a racing condition during save:
@@ -157,14 +145,8 @@ module.exports = {
       activity.addToWaitinglist(memberId, millis);
       try {
         await activitystore.saveActivity(activity);
-        return new Promise((resolve, reject) => {
-          notifications.waitinglistAddition(activity, memberId, (err, result) => {
-            if (err) {
-              reject(err);
-            }
-            resolve(Array.isArray(result) ? result : []);
-          });
-        });
+        const result = await notifications.waitinglistAddition(activity, memberId);
+        return Array.isArray(result) ? result : [];
       } catch (err1) {
         if (err1 && err1.message === CONFLICTING_VERSIONS) {
           // we try again because of a racing condition during save:
@@ -185,14 +167,8 @@ module.exports = {
     activity.removeFromWaitinglist(memberId);
     try {
       await activitystore.saveActivity(activity);
-      return new Promise((resolve, reject) => {
-        notifications.waitinglistRemoval(activity, memberId, (err, result) => {
-          if (err) {
-            reject(err);
-          }
-          resolve(Array.isArray(result) ? result : []);
-        });
-      });
+      const result = await notifications.waitinglistRemoval(activity, memberId);
+      return Array.isArray(result) ? result : [];
     } catch (err1) {
       if (err1 && err1.message === CONFLICTING_VERSIONS) {
         // we try again because of a racing condition during save:

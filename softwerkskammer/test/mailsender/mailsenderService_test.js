@@ -86,42 +86,34 @@ describe("MailsenderService", () => {
   });
 
   describe("preparing data", () => {
-    it("for showing the edit form for an activity", (done) => {
-      mailsenderService.dataForShowingMessageForActivity(activityURL, "de", (err, result) => {
-        expect(result.message).to.exist();
-        expect(result.regionalgroups).to.exist();
-        expect(result.themegroups).to.exist();
-        expect(result.successURL).to.contain(activityURL);
-        done(err);
-      });
+    it("for showing the edit form for an activity", async () => {
+      const result = await mailsenderService.dataForShowingMessageForActivity(activityURL, "de");
+      expect(result.message).to.exist();
+      expect(result.regionalgroups).to.exist();
+      expect(result.themegroups).to.exist();
+      expect(result.successURL).to.contain(activityURL);
     });
 
-    it("URIescapes the url for an activity", (done) => {
+    it("URIescapes the url for an activity", async () => {
       const url = "some%20thing";
       const encodedURL = encodeURIComponent(url);
-      mailsenderService.dataForShowingMessageForActivity(url, "de", (err, result) => {
-        expect(result.successURL).to.contain(encodedURL);
-        done(err);
-      });
+      const result = await mailsenderService.dataForShowingMessageForActivity(url, "de");
+      expect(result.successURL).to.contain(encodedURL);
     });
 
-    it("for showing the edit form for a member", (done) => {
-      mailsenderService.dataForShowingMessageToMember(nickname, (err, result) => {
-        expect(result.message).to.exist();
-        expect(result.regionalgroups).not.to.exist();
-        expect(result.themegroups).not.to.exist();
-        expect(result.successURL).to.contain(nickname);
-        done(err);
-      });
+    it("for showing the edit form for a member", async () => {
+      const result = await mailsenderService.dataForShowingMessageToMember(nickname);
+      expect(result.message).to.exist();
+      expect(result.regionalgroups).not.to.exist();
+      expect(result.themegroups).not.to.exist();
+      expect(result.successURL).to.contain(nickname);
     });
 
-    it("URIescapes the nickname for a member", (done) => {
+    it("URIescapes the nickname for a member", async () => {
       const nick = "some%20thing";
       const encodedNick = encodeURIComponent(nick);
-      mailsenderService.dataForShowingMessageToMember(nick, (err, result) => {
-        expect(result.successURL).to.contain(encodedNick);
-        done(err);
-      });
+      const result = await mailsenderService.dataForShowingMessageToMember(nick);
+      expect(result.successURL).to.contain(encodedNick);
     });
   });
 

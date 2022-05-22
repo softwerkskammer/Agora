@@ -112,7 +112,7 @@ module.exports = function persistenceFunc(collectionName) {
       );
     },
 
-    saveMongoWithVersion: async function saveWithVersionAsync(object) {
+    saveMongoWithVersion: async function saveWithVersion(object) {
       const self = this;
       if (object.id === null || object.id === undefined) {
         throw new Error("Given object has no valid id");
@@ -153,7 +153,7 @@ module.exports = function persistenceFunc(collectionName) {
       return db.dropCollection(collectionName);
     },
 
-    closeMongo: async function closeDBAsync() {
+    closeMongo: async function closeDB() {
       if (ourDBConnectionState === DBSTATE.CLOSED) {
         return;
       }
