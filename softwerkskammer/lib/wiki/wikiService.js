@@ -2,7 +2,8 @@ const Fs = require("fs/promises");
 const Path = require("path");
 const R = require("ramda");
 const eventsToObject = require("./eventsToObject");
-const beans = require("simple-configure").get("beans");
+const conf = require("simple-configure");
+const beans = conf.get("beans");
 const misc = beans.get("misc");
 const Git = beans.get("gitmech");
 const wikiObjects = beans.get("wikiObjects");
@@ -10,6 +11,12 @@ const memberstore = beans.get("memberstore");
 const FileWithChangelist = wikiObjects.FileWithChangelist;
 const DirectoryWithChangedFiles = wikiObjects.DirectoryWithChangedFiles;
 const Diff = beans.get("gitDiff");
+let workTree = conf.get("wikipath");
+
+async function init() {
+  workTree = await Fs.realpath(workTree);
+}
+init();
 
 async function replaceNonExistentNicknames(metadataList) {
   async function replaceNickPotentially(metadata) {
@@ -191,7 +198,20 @@ module.exports = {
   listChangedFilesinDirectory: async function listChangedFilesinDirectory(directory) {
     try {
       const metadata = await Git.log(directory, "HEAD", 30);
-      return R.uniqBy((item) => item.name, metadata).filter((item) => !item.name.match(wikiObjects.BLOG_ENTRY_REGEX));
+      let currentFiles = await Fs.readdir(Path.join(workTree, directory));
+      currentFiles = currentFiles.map((file) => Path.basename(file, ".md"));
+
+      const gitfiles = R.uniqBy((item) => item.name, metadata).filter(
+        (item) => !item.name.match(wikiObjects.BLOG_ENTRY_REGEX)
+      );
+
+      gitfiles.forEach((item) => {
+        if (!currentFiles.includes(item.pureName())) {
+          item.deleted = true;
+        }
+      });
+
+      return gitfiles;
     } catch (e) {
       return [];
     }

@@ -1,4 +1,5 @@
 "use strict";
+const Fs = require("fs/promises");
 
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
@@ -6,6 +7,7 @@ const beans = require("../../testutil/configureForTest").get("beans");
 const wikiService = beans.get("wikiService");
 const memberstore = beans.get("memberstore");
 const { DateTime } = require("luxon");
+const { Metadata } = require("../../lib/wiki/wikiObjects");
 const Git = beans.get("gitmech");
 
 describe("Wiki Service", () => {
@@ -61,62 +63,62 @@ describe("Wiki Service", () => {
 describe("WikiService (list for dashboard)", () => {
   beforeEach(() => {
     const metadatas = [
-      {
+      new Metadata({
         name: "crafterswap/index.md",
         hashRef: "HEAD",
         fullhash: "baa6d36a37f0f04e1e88b4b57f0d89893789686c",
         author: "leider",
-        datestring: "2014-04-30 17:25:48 +0200",
+        date: "2014-04-30 17:25:48 +0200",
         comment: "no comment",
-      },
-      {
+      }),
+      new Metadata({
         name: "crafterswap/index.md",
         hashRef: "e6eb66c",
         fullhash: "e6eb66c3f666888da4b0da3f9207d88e996e8bf5",
         author: "leider",
-        datestring: "2014-04-30 17:25:37 +0200",
+        date: "2014-04-30 17:25:37 +0200",
         comment: "no comment",
-      },
-      {
+      }),
+      new Metadata({
         name: "crafterswap/blog_2014-03-19_der_blog.md",
         hashRef: "643e958",
         fullhash: "643e958937540da5907f7d32d87647cb5773e626",
         author: "leider",
-        datestring: "2014-03-27 22:39:03 +0100",
+        date: "2014-03-27 22:39:03 +0100",
         comment: "no comment",
-      },
-      {
+      }),
+      new Metadata({
         name: "crafterswap/blog_2014-03-19_der_blog.md",
         hashRef: "a3ab0d7",
         fullhash: "a3ab0d79e3958e21b0367bc952a04596e7892739",
         author: "leider",
-        datestring: "2014-03-27 22:38:04 +0100",
+        date: "2014-03-27 22:38:04 +0100",
         comment: "no comment",
-      },
-      {
+      }),
+      new Metadata({
         name: "crafterswap/index.md",
         hashRef: "f327d71",
         fullhash: "f327d711e3e8f0104cde2902198512444af46df3",
         author: "leider",
-        datestring: "2014-03-09 14:37:59 +0100",
+        date: "2014-03-09 14:37:59 +0100",
         comment: "no comment",
-      },
-      {
+      }),
+      new Metadata({
         name: "crafterswap/blog_vonmorgen.md",
         hashRef: "370dd3c",
         fullhash: "370dd3ce2e09fe74a78be8f8a10d36e7a3d8975b",
         author: "trauerleider",
-        datestring: "2014-02-13 08:26:01 +0100",
+        date: "2014-02-13 08:26:01 +0100",
         comment: "no comment",
-      },
-      {
+      }),
+      new Metadata({
         name: "crafterswap/index.md",
         hashRef: "2c0a379",
         fullhash: "2c0a379a5497d0998ac2ffcad4cc4261fb0a19c3",
         author: "leider",
-        datestring: "2013-12-21 23:06:13 +0100",
+        date: "2013-12-21 23:06:13 +0100",
         comment: "no comment",
-      },
+      }),
     ];
     sinon.stub(Git, "log").returns(metadatas);
   });
@@ -126,12 +128,23 @@ describe("WikiService (list for dashboard)", () => {
   });
 
   it("removes duplicate entries and blogposts for the dashboard", async () => {
+    sinon.stub(Fs, "readdir").returns(["index.md", "blog_vonmorgen.md"]);
+
     const metadata = await wikiService.listChangedFilesinDirectory("crafterswap");
     expect(metadata).to.have.length(2);
     expect(metadata[0].name).to.equal("crafterswap/index.md");
     expect(metadata[0].datestring).to.equal("2014-04-30 17:25:48 +0200");
     expect(metadata[1].name).to.equal("crafterswap/blog_vonmorgen.md");
     expect(metadata[1].datestring).to.equal("2014-02-13 08:26:01 +0100");
+  });
+
+  it("marks deleted files", async () => {
+    sinon.stub(Fs, "readdir").returns(["index.md"]);
+
+    const metadata = await wikiService.listChangedFilesinDirectory("crafterswap");
+    expect(metadata).to.have.length(2);
+    expect(metadata[1].name).to.equal("crafterswap/blog_vonmorgen.md");
+    expect(metadata[1].deleted).to.be(true);
   });
 });
 //This is an extra group because the Git.readFile mock has a different objective
