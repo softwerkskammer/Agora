@@ -24,6 +24,7 @@ async function closeAndExit() {
 }
 
 logger.info("== Wiki Changes ==========================================================================");
+
 async function run() {
   try {
     const result = await persistence.getMongoByField({ id: lastNotifications });
