@@ -24,18 +24,15 @@ async function closeAndExit() {
 }
 
 logger.info("== Wiki Changes ==========================================================================");
-persistence.getByField({ id: lastNotifications }, async (err, result) => {
-  if (err) {
-    logger.error("Error when reading lastWikiNotifications: " + err);
-    return await closeAndExit();
-  }
-  logger.info("No error when reading lastWikiNotifications");
-  const yesterday = new Date(Date.now() - 86400000); // minus 1 day
-  const lastNotified = result || { id: lastNotifications, moment: yesterday }; // moment here is a Date
-  if (result) {
-    logger.info("Last notified: " + util.inspect(result.moment));
-  }
+async function run() {
   try {
+    const result = await persistence.getMongoByField({ id: lastNotifications });
+    logger.info("No error when reading lastWikiNotifications");
+    const yesterday = new Date(Date.now() - 86400000); // minus 1 day
+    const lastNotified = result || { id: lastNotifications, moment: yesterday }; // moment here is a Date
+    if (result) {
+      logger.info("Last notified: " + util.inspect(result.moment));
+    }
     const changes = await wikiService.findPagesForDigestSince(lastNotified.moment.getTime());
     if (changes.length === 0) {
       logger.info("no changes to report");
@@ -51,4 +48,5 @@ persistence.getByField({ id: lastNotifications }, async (err, result) => {
     console.log("Error when finding pages for Digest: " + e); // for cron mail
     return await closeAndExit();
   }
-});
+}
+run();
