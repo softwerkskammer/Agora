@@ -6,7 +6,7 @@ const conf = require("../testutil/configureForTest");
 const beans = conf.get("beans");
 const groupstore = beans.get("groupstore");
 
-const baseUri = "http://localhost:" + parseInt(conf.get("port"), 10);
+const baseUri = `http://localhost:${parseInt(conf.get("port"), 10)}`;
 
 const app = require("../app.js");
 

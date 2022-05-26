@@ -29,7 +29,7 @@ async function groupSubmitted(req, res) {
   }
   await groupstore.saveGroup(group);
   statusmessage.successMessage("message.title.save_successful", "message.content.groups.saved").putIntoSession(req);
-  res.redirect("/groups/" + group.id);
+  res.redirect(`/groups/${group.id}`);
 }
 
 // display all groups
@@ -59,7 +59,7 @@ app.get("/edit/:groupname", async (req, res) => {
     throw new Error();
   }
   if (!res.locals.accessrights.canEditGroup(group)) {
-    return res.redirect("/groups/" + encodeURIComponent(req.params.groupname));
+    return res.redirect(`/groups/${encodeURIComponent(req.params.groupname)}`);
   }
   const realGroup = group || new Group();
   const organizersChecked = realGroup.checkedOrganizers(realGroup.members);
@@ -69,7 +69,7 @@ app.get("/edit/:groupname", async (req, res) => {
 app.post("/clone-from-meetup-for-group", async (req, res) => {
   const group = await groupstore.getGroup(req.body.groupname);
   await meetupActivitiesService.cloneActivitiesFromMeetupForGroup(group);
-  res.redirect("/groups/" + req.body.groupname);
+  res.redirect(`/groups/${req.body.groupname}`);
 });
 
 app.get("/checkgroupname", async (req, res) => {
@@ -93,7 +93,7 @@ app.post("/subscribe", async (req, res) => {
       .errorMessage("message.title.problem", "message.content.save_error_reason", { err: err.toString() })
       .putIntoSession(req);
   }
-  res.redirect("/groups/" + req.body.groupname);
+  res.redirect(`/groups/${req.body.groupname}`);
 });
 
 app.post("/unsubscribe", async (req, res) => {
@@ -107,7 +107,7 @@ app.post("/unsubscribe", async (req, res) => {
       .errorMessage("message.title.problem", "message.content.save_error_reason", { err: err.toString() })
       .putIntoSession(req);
   }
-  res.redirect("/groups/" + req.body.groupname);
+  res.redirect(`/groups/${req.body.groupname}`);
 });
 
 app.get("/:groupname", async (req, res, next) => {
@@ -133,8 +133,8 @@ app.get("/:groupname", async (req, res, next) => {
     userIsGroupMember: registeredUserId && group.isMemberSubscribed(req.user.member),
     organizers: group.organizers,
     blogposts,
-    blogpostsFeedUrl: req.originalUrl + "/feed",
-    webcalURL: conf.get("publicUrlPrefix").replace("http", "webcal") + "/activities/icalForGroup/" + group.id,
+    blogpostsFeedUrl: `${req.originalUrl}/feed`,
+    webcalURL: `${conf.get("publicUrlPrefix").replace("http", "webcal")}/activities/icalForGroup/${group.id}`,
     upcomingGroupActivities: addGroupDataToActivity(activities, group) || [],
     recentGroupActivities: addGroupDataToActivity(pastActivities ? R.take(5, pastActivities) : [], group),
   });

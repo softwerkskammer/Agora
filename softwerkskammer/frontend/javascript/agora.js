@@ -42,28 +42,24 @@ function initParameterisedCalendar(id, date) {
       center: "",
       end: isForActivities ? "prev,today,next" : "",
     },
-    timezone: "Europe/Berlin",
+    timeZone: "Europe/Berlin",
     displayEventTime: false,
     events: isForActivities ? "/activities/eventsForSidebar" : "/wiki/eventsFor",
-    eventMouseEnter: function (mouseEnterInfo) {
-      var event = mouseEnterInfo.event;
-      $(mouseEnterInfo.el).tooltip({
-        title:
-          (isForActivities
-            ? new Intl.DateTimeFormat(fc_lang).format(event.start, { hour: "numeric", minute: "numeric" }) + ": "
-            : "") + event.title,
-        trigger: "manual",
-        container: "body",
-      });
-      $(mouseEnterInfo.el).tooltip("show");
+    eventDidMount: (info) => {
+      var title =
+        (isForActivities
+          ? new Intl.DateTimeFormat(fc_lang, {
+              month: "long",
+              day: "numeric",
+              hour: "numeric",
+              minute: "numeric",
+            }).format(info.event.start) + ": "
+          : "") + info.event.title;
+      info.el.setAttribute("data-bs-trigger", "hover");
+      info.el.setAttribute("data-bs-title", title);
+      return new bootstrap.Tooltip(info.el);
     },
-    eventMouseLeave: function (mouseLeaveInfo) {
-      $(mouseLeaveInfo.el).tooltip("dispose");
-    },
-    eventClick: function (eventClickInfo) {
-      $(eventClickInfo.el).tooltip("dispose");
-    },
-    eventSourceSuccess: function () {
+    eventSourceSuccess: () => {
       if (displayedActivityStart) {
         calendar.gotoDate(displayedActivityStart);
         calendar.select(displayedActivityStart);
@@ -103,16 +99,10 @@ function surroundTwitterName(twittername) {
   return '<a href="http://twitter.com/' + twittername + '" target="_blank">@' + twittername + "</a>";
 }
 
-function surroundEmail(email) {
-  "use strict";
-
-  return '<a href="mailto:' + email + '">' + email + "</a>";
-}
-
 function surroundInterestsWithLinks(string, casesensitive) {
   "use strict";
 
-  var interests = string.split(",").map(function (each) {
+  var interests = string.split(",").map((each) => {
     var interest = each.trim();
     return (
       '<a href="/members/interests?interest=' +
@@ -129,12 +119,13 @@ function surroundInterestsWithLinks(string, casesensitive) {
 function interestify() {
   "use strict";
 
-  $(".interestify").each(function () {
-    $(this).html(surroundInterestsWithLinks(this.innerHTML, ""));
-  });
-  $(".interestify-case-sensitive").each(function () {
-    $(this).html(surroundInterestsWithLinks(this.innerHTML, "&casesensitive=true"));
-  });
+  Array.from(document.querySelectorAll(".interestify")).forEach(
+    (node) => (node.innerHTML = surroundInterestsWithLinks(node.innerHTML, ""))
+  );
+
+  Array.from(document.querySelectorAll(".interestify-case-sensitive")).forEach(
+    (node) => (node.innerHTML = surroundInterestsWithLinks(node.innerHTML, "&casesensitive=true"))
+  );
 }
 
 (function () {
@@ -248,68 +239,77 @@ function interestify() {
   }
 
   function createLinks() {
-    $(".urlify").each(function () {
-      $(this).html(surroundWithLink(this.innerHTML));
-    });
+    Array.from(document.querySelectorAll(".urlify")).forEach(
+      (node) => (node.innerHTML = surroundWithLink(node.innerHTML))
+    );
 
-    $(".twitterify").each(function () {
-      $(this).html(surroundTwitterName(this.innerHTML));
-    });
-
-    $(".mailtoify").each(function () {
-      $(this).html(surroundEmail(this.innerHTML));
-    });
+    Array.from(document.querySelectorAll(".twitterify")).forEach(
+      (node) => (node.innerHTML = surroundTwitterName(node.innerHTML))
+    );
   }
 
   function initTooltipsAndHovers() {
-    [].slice.call(document.querySelectorAll("[rel=tooltip]")).map(function (popoverTriggerEl) {
-      return new bootstrap.Popover(popoverTriggerEl, {
-        html: true,
-        trigger: "hover",
-        delay: { hide: 50 },
-        placement: "auto",
-      });
-    });
+    Array.from(document.querySelectorAll("[rel=tooltip]")).map(
+      (popoverTriggerEl) =>
+        new bootstrap.Popover(popoverTriggerEl, {
+          html: true,
+          trigger: "hover",
+          delay: { hide: 50 },
+          placement: "auto",
+        })
+    );
 
-    [].slice.call(document.querySelectorAll("[rel=tooltip-in-body]")).map(function (popoverTriggerEl) {
-      return new bootstrap.Popover(popoverTriggerEl, {
-        container: "body",
-        html: true,
-        trigger: "hover",
-        delay: { hide: 50 },
-        placement: "auto",
-      });
-    });
+    Array.from(document.querySelectorAll("[rel=tooltip-in-body]")).map(
+      (popoverTriggerEl) =>
+        new bootstrap.Popover(popoverTriggerEl, {
+          container: "body",
+          html: true,
+          trigger: "hover",
+          delay: { hide: 50 },
+          placement: "auto",
+        })
+    );
 
-    [].slice.call(document.querySelectorAll(".tooltipify, .tooltiplabel")).map(function (tooltipTriggerEl) {
-      return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
+    Array.from(document.querySelectorAll(".tooltipify, .tooltiplabel")).map(
+      (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+    );
 
-    $(".tooltipify").each(function () {
-      $(this).addClass("popover-highlight");
-    });
+    Array.from(document.querySelectorAll(".tooltipify")).forEach((node) => node.classList.add("popover-highlight"));
   }
 
   function highlightCurrentSection() {
-    $("[data-agoranav]")
-      .filter(function () {
-        return new RegExp("^/" + $(this).attr("data-agoranav")).test(window.location.pathname);
-      })
-      .addClass("active");
+    var result = document.querySelectorAll("[data-agoranav]");
+    var selectedElementList = Array.from(result).filter(function (node) {
+      return new RegExp("^/" + node.getAttribute("data-agoranav")).test(window.location.pathname);
+    });
+    if (selectedElementList.length > 0) {
+      selectedElementList[0].classList.add("active");
+    }
   }
 
   function initActivitiesCalendar() {
     initParameterisedCalendar("calendar", new Date());
   }
 
-  $(document).ready(highlightCurrentSection);
-  $(document).ready(interestify);
+  function ready(callback) {
+    // in case the document is already rendered
+    if (document.readyState !== "loading") {
+      return callback();
+    }
+    // modern browsers
+    if (document.addEventListener) {
+      return document.addEventListener("DOMContentLoaded", callback);
+    }
+  }
 
-  $(document).ready(addHelpButtonToTextarea);
-  $(document).ready(initPickersAndWidgets);
-  $(document).ready(extendDataTables);
-  $(document).ready(createLinks);
-  $(document).ready(initTooltipsAndHovers);
+  ready(highlightCurrentSection);
+  ready(interestify);
+
+  ready(addHelpButtonToTextarea);
+  ready(initPickersAndWidgets);
+  ready(extendDataTables);
+  ready(createLinks);
+  ready(initTooltipsAndHovers);
   $.fn.select2.defaults.set("theme", "bootstrap-5");
   document.addEventListener("DOMContentLoaded", initActivitiesCalendar);
 })();
