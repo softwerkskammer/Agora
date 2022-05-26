@@ -8,6 +8,5 @@
     '<span id="second" class="urlify">http://my.first.link, http://my.first.link.again</span>' +
     '<span id="third" class="urlify">http://my.first.link, my.first.link.again</span>' +
     '<span id="fourth" class="twitterify">softwerkskammer</span>' +
-    '<span id="fifth" class="mailtoify">softwerks@kammer.de</span>' +
     '<span id="sixth" class="interestify">a, b, a b, a;b ,cb</span>';
 })();
