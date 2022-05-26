@@ -9,7 +9,7 @@ const fieldHelpers = beans.get("fieldHelpers");
 
 function meetupFetchActivitiesURLFor(urlname) {
   // v3 API https://www.meetup.com/de-DE/meetup_api/docs/:urlname/events/
-  return "https://api.meetup.com/" + urlname + "/events";
+  return `https://api.meetup.com/${urlname}/events`;
 }
 
 module.exports = {
@@ -18,7 +18,7 @@ module.exports = {
 
     const all = body.map(async (meetup) => {
       const meetupDate = fieldHelpers.meetupDateToActivityTimes(meetup.local_date, meetup.local_time, meetup.duration);
-      const activityUrl = "meetup-" + meetup.id;
+      const activityUrl = `meetup-${meetup.id}`;
 
       const persistentActivity = await activitystore.getActivity(activityUrl);
       const activity = persistentActivity || new Activity();
@@ -29,7 +29,7 @@ module.exports = {
           title: meetup.name,
           description: meetup.description,
           assignedGroup: group.id,
-          location: meetup.venue ? meetup.venue.name + ", " + meetup.venue.address_1 + ", " + meetup.venue.city : "",
+          location: meetup.venue ? `${meetup.venue.name}, ${meetup.venue.address_1}, ${meetup.venue.city}` : "",
           direction: "",
           startDate: meetupDate.startDate,
           startTime: meetupDate.startTime,

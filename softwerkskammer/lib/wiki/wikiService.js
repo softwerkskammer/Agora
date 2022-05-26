@@ -61,12 +61,12 @@ module.exports = {
   },
 
   pageRename: async function pageRename(subdir, pageNameOld, pageNameNew, member) {
-    const completePageNameOld = subdir + "/" + pageNameOld + ".md";
-    const completePageNameNew = subdir + "/" + pageNameNew + ".md";
+    const completePageNameOld = `${subdir}/${pageNameOld}.md`;
+    const completePageNameNew = `${subdir}/${pageNameNew}.md`;
     return Git.mv(
       completePageNameOld,
       completePageNameNew,
-      'rename: "' + pageNameOld + '" -> "' + pageNameNew + '"',
+      `rename: "${pageNameOld}" -> "${pageNameNew}"`,
       member.asGitAuthor()
     );
   },
@@ -80,7 +80,7 @@ module.exports = {
     } catch (e) {
       await Fs.mkdir(Git.absPath(subdir));
     }
-    const completePageName = subdir + "/" + pageName + ".md";
+    const completePageName = `${subdir}/${pageName}.md`;
     const pageFile = Git.absPath(completePageName);
     await Fs.writeFile(pageFile, body.content);
     let metadata = [];
@@ -169,7 +169,7 @@ module.exports = {
     async function addChangesToResult(item, resultLine) {
       const metadata = await Git.latestChanges(item.fullname + ".md", date);
       if (metadata.length > 0) {
-        const diff = await Git.diff(item.fullname + ".md", "HEAD@{" + date.toISOString() + "}..HEAD");
+        const diff = await Git.diff(item.fullname + ".md", `HEAD@{${date.toISOString()}}..HEAD`);
         resultLine.addFile(
           new FileWithChangelist({
             file: item.name,
@@ -219,7 +219,7 @@ module.exports = {
 
   parseEvents: async function parseEvents(year) {
     try {
-      const contents = await Git.readFile("alle/europaweite-veranstaltungen-" + year + ".md", "HEAD");
+      const contents = await Git.readFile(`alle/europaweite-veranstaltungen-${year}.md`, "HEAD");
       return eventsToObject(contents, year);
     } catch (e) {
       return {};

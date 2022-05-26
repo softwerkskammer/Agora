@@ -10,10 +10,10 @@ const BLOG_ENTRY_REGEX = /blog_(\d{4}-\d{1,2}-\d{1,2})/;
 function pathFunctions(name) {
   return {
     dialogUrl: function () {
-      return "/wiki/modal/" + this.dialogId("/");
+      return `/wiki/modal/${this.dialogId("/")}`;
     },
     url: function () {
-      return "/wiki/" + this.dialogId("/");
+      return `/wiki/${this.dialogId("/")}`;
     },
     dialogId: function (separator) {
       return path.dirname(name) + (separator || "-") + path.basename(name, ".md");

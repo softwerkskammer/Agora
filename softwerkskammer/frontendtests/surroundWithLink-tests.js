@@ -1,4 +1,4 @@
-/*global surroundWithLink, surroundTwitterName, surroundEmail */
+/*global surroundWithLink, surroundTwitterName */
 (function () {
   "use strict";
 
@@ -60,17 +60,6 @@
         expect($("#fourth").html()).to.equal(
           '<a href="http://twitter.com/softwerkskammer" target="_blank">@softwerkskammer</a>'
         );
-      });
-    });
-
-    describe("surround email", function () {
-      it('surrounds a text with a "mailto:" link', function () {
-        var result = surroundEmail("softwerks@kammer");
-        expect(result).to.equal('<a href="mailto:softwerks@kammer">softwerks@kammer</a>');
-      });
-
-      it('surrounds a text inside class "mailtoify" with a "mailto:" link', function () {
-        expect($("#fifth").html()).to.equal('<a href="mailto:softwerks@kammer.de">softwerks@kammer.de</a>');
       });
     });
   });
