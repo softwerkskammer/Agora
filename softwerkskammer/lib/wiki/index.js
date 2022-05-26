@@ -6,12 +6,12 @@ const misc = beans.get("misc");
 
 async function showPage(subdir, pageName, pageVersion, req, res, next) {
   const normalizedPageName = renderer.normalize(pageName);
-  const completePageName = subdir + "/" + normalizedPageName;
+  const completePageName = `${subdir}/${normalizedPageName}`;
   try {
     const content = await wikiService.showPage(completePageName, pageVersion);
     if (!content) {
       if (req.user) {
-        return res.redirect("/wiki/edit/" + completePageName);
+        return res.redirect(`/wiki/edit/${completePageName}`);
       }
       return next();
     }
@@ -25,7 +25,7 @@ async function showPage(subdir, pageName, pageVersion, req, res, next) {
     });
   } catch (e) {
     if (req.user) {
-      return res.redirect("/wiki/edit/" + completePageName);
+      return res.redirect(`/wiki/edit/${completePageName}`);
     }
     return next();
   }
@@ -49,7 +49,7 @@ app.get("/eventsFor", async (req, res) => {
 app.get("/versions/:subdir/:page", async (req, res, next) => {
   const pageName = req.params.page;
   const subdir = req.params.subdir;
-  const completePageName = subdir + "/" + pageName;
+  const completePageName = `${subdir}/${pageName}`;
   const items = await wikiService.pageHistory(completePageName);
   if (!items) {
     return next();
@@ -60,7 +60,7 @@ app.get("/versions/:subdir/:page", async (req, res, next) => {
 app.get("/compare/:subdir/:page/:revisions", async (req, res, next) => {
   const pageName = req.params.page;
   const subdir = req.params.subdir;
-  const completePageName = subdir + "/" + pageName;
+  const completePageName = `${subdir}/${pageName}`;
   const revisions = req.params.revisions;
   const diff = await wikiService.pageCompare(completePageName, revisions);
   if (!diff) {
@@ -74,7 +74,7 @@ app.get("/compare/:subdir/:page/:revisions", async (req, res, next) => {
 app.get("/edit/:subdir/:page", async (req, res) => {
   const pageName = renderer.normalize(req.params.page);
   const subdir = req.params.subdir;
-  const completePageName = subdir + "/" + pageName;
+  const completePageName = `${subdir}/${pageName}`;
   const { content, metadata } = await wikiService.pageEdit(completePageName);
   res.render("edit", { page: { content, comment: "", metadata: metadata[0].fullhash }, subdir, pageName });
 });
@@ -92,7 +92,7 @@ app.post("/:subdir/:page", async (req, res) => {
   } catch (e) {
     statusmessage.errorMessage("message.title.problem", "message.content.save_error").putIntoSession(req);
   }
-  res.redirect("/wiki/" + subdir + "/" + pageName);
+  res.redirect(`/wiki/${subdir}/${pageName}`);
 });
 
 app.post("/rename/:subdir/:page", async (req, res) => {
@@ -101,7 +101,7 @@ app.post("/rename/:subdir/:page", async (req, res) => {
   try {
     await wikiService.pageRename(subdir, req.params.page, pageNameNew, req.user.member);
     statusmessage.successMessage("message.title.save_successful", "message.content.wiki.saved").putIntoSession(req);
-    res.redirect("/wiki/" + subdir + "/" + pageNameNew);
+    res.redirect(`/wiki/${subdir}/${pageNameNew}`);
   } catch (e) {
     statusmessage.errorMessage("message.title.problem", "message.content.save_error").putIntoSession(req);
     throw e;

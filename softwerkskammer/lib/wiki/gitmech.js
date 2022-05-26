@@ -13,16 +13,16 @@ function dataToLines(data) {
 
 function esc(arg) {
   // to secure command line execution
-  return "'" + arg + "'";
+  return `'${arg}'`;
 }
 
 async function commit(path, message, author) {
-  return gitExec.command(["commit", "--author=" + esc(author), "-m", esc(message), esc(path)]);
+  return gitExec.command(["commit", `--author=${esc(author)}`, "-m", esc(message), esc(path)]);
 }
 
 module.exports = {
   absPath: function absPath(path) {
-    return workTree + "/" + path;
+    return `${workTree}/${path}`;
   },
 
   readFileFs: async function readFileFs(path) {
@@ -30,13 +30,13 @@ module.exports = {
   },
 
   readFile: async function readFile(path, version) {
-    return gitExec.command(["show", version + ":" + esc(path)]);
+    return gitExec.command(["show", `${version}:${esc(path)}`]);
   },
 
   log: async function log(path, version, howMany) {
     const data = await gitExec.command([
       "log",
-      "-" + howMany,
+      `-${howMany}`,
       "--no-notes",
       "--follow",
       "--pretty=format:%h%n%H%n%an%n%ai%n%s",
@@ -109,7 +109,7 @@ module.exports = {
       const data = await gitExec.command(["grep", "--no-color", "-F", "-n", "-i", "-I", esc(pattern)]);
       const result = data ? data.split("\n") : [];
       // Search in the file names
-      const data1 = await gitExec.command(["ls-files", "*" + esc(pattern) + "*.md"]);
+      const data1 = await gitExec.command(["ls-files", `*${esc(pattern)}*.md`]);
       if (data1) {
         data1.split("\n").forEach((name) => result.push(name));
       }
@@ -140,7 +140,7 @@ module.exports = {
   },
 
   lsblogposts: async function lsblogposts(groupname, pattern) {
-    const data = await gitExec.command(["ls-files", esc(groupname + "/" + pattern)]);
+    const data = await gitExec.command(["ls-files", esc(`${groupname}/${pattern}`)]);
     return dataToLines(data);
   },
 

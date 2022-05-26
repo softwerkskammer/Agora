@@ -32,7 +32,7 @@ async function run() {
     const yesterday = new Date(Date.now() - 86400000); // minus 1 day
     const lastNotified = result || { id: lastNotifications, moment: yesterday }; // moment here is a Date
     if (result) {
-      logger.info("Last notified: " + util.inspect(result.moment));
+      logger.info(`Last notified: ${util.inspect(result.moment)}`);
     }
     const changes = await wikiService.findPagesForDigestSince(lastNotified.moment.getTime());
     if (changes.length === 0) {
@@ -42,11 +42,11 @@ async function run() {
     await notifications.wikiChanges(changes);
     lastNotified.moment = new Date();
     await persistence.saveMongo(lastNotified);
-    logger.info("Wiki-Changes notified at: " + lastNotified.moment);
+    logger.info(`Wiki-Changes notified at: ${lastNotified.moment}`);
     return await closeAndExit();
   } catch (e) {
-    logger.error("Error when finding pages for Digest: " + e);
-    console.log("Error when finding pages for Digest: " + e); // for cron mail
+    logger.error(`Error when finding pages for Digest: ${e}`);
+    console.log(`Error when finding pages for Digest: ${e}`); // for cron mail
     return await closeAndExit();
   }
 }

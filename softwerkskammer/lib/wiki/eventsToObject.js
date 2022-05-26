@@ -43,7 +43,7 @@ function contentsToObject(contents, year) {
           start: fromUntil[0],
           end: fromUntil[1],
           url: titleAndLink[1].trim(),
-          title: titleAndLink[0].trim() + " (" + elements[1].trim() + ")",
+          title: `${titleAndLink[0].trim()} (${elements[1].trim()})`,
           color: "#999",
         };
       }
