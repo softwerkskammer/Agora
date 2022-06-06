@@ -11,11 +11,10 @@ module.exports = function (grunt) {
     "node_modules/select2/dist/js/select2.full.js",
     "node_modules/bootstrap-markdown/js/bootstrap-markdown.js",
     "node_modules/bootstrap-markdown/locale/bootstrap-markdown.de.js",
-    "node_modules/smartmenus/dist/jquery.smartmenus.js",
-    "node_modules/smartmenus/dist/addons/bootstrap-4/jquery.smartmenus.bootstrap-4.js",
     "node_modules/fullcalendar/main.js",
     "node_modules/jquery-validation/dist/jquery.validate.js",
     "node_modules/jquery-validation/dist/additional-methods.js",
+    "softwerkskammer/frontend/3rd_party_js/bootstrap5-multidropdownhack.js",
   ];
 
   // filesets for uglify
@@ -44,7 +43,6 @@ module.exports = function (grunt) {
   const filesForCss = {
     "softwerkskammer/public/stylesheets/screen.css": [
       "node_modules/fullcalendar/main.css",
-      "node_modules/smartmenus/dist/addons/bootstrap-4/jquery.smartmenus.bootstrap-4.css",
       "node_modules/@fortawesome/fontawesome-free/css/all.css",
       "node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css",
       "node_modules/datatables.net-bs5/css/dataTables.bootstrap5.css",
