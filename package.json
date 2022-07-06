@@ -45,7 +45,7 @@
     "iconv-lite": "0.6.3",
     "jqcloud2": "2.0.3",
     "jquery": "3.6.0",
-    "jquery-validation": "1.19.4",
+    "jquery-validation": "1.19.5",
     "jsonwebtoken": "8.5.1",
     "leaflet": "1.8.0",
     "luxon": "2.4.0",
