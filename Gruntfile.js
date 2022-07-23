@@ -114,6 +114,12 @@ module.exports = function (grunt) {
         flatten: true,
       },
       fontawesomeFONTS: {
+        src: "softwerkskammer/frontend/webfonts/*",
+        dest: "softwerkskammer/public/webfonts",
+        expand: true,
+        flatten: true,
+      },
+      googleFONTS: {
         src: "node_modules/@fortawesome/fontawesome-free/webfonts/*",
         dest: "softwerkskammer/public/webfonts",
         expand: true,
