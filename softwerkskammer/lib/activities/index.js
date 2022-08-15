@@ -120,7 +120,7 @@ app.get("/ical", async (req, res) => {
 });
 
 app.get("/icalForGroup/:group", async (req, res) => {
-  const activities = activitystore.upcomingActivities();
+  const activities = await activitystore.upcomingActivities();
   const groupsActivities = activities.filter((activity) => activity.assignedGroup() === req.params.group);
   sendCalendarStringNamedToResult(icalService.icalForActivities(groupsActivities), "events", res);
 });
