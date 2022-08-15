@@ -115,7 +115,7 @@ app.get("/past", async (req, res) =>
 );
 
 app.get("/ical", async (req, res) => {
-  const activities = activitystore.upcomingActivities();
+  const activities = await activitystore.upcomingActivities();
   sendCalendarStringNamedToResult(icalService.icalForActivities(activities), "events", res);
 });
 
