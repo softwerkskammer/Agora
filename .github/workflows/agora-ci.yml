@@ -27,6 +27,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
-      - run: npm install
+          cache: "yarn"
+      - run: yarn install --frozen-lockfile
       - run: grunt
