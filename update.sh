@@ -2,5 +2,5 @@
 git pull
 #npm ci
 yarn install -frozen-lockfile
-git checkout -- package-lock.json
+git checkout -- yarn.lock
 grunt deploy_production
