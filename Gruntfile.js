@@ -11,7 +11,7 @@ module.exports = function (grunt) {
     "node_modules/select2/dist/js/select2.full.js",
     "node_modules/bootstrap-markdown/js/bootstrap-markdown.js",
     "node_modules/bootstrap-markdown/locale/bootstrap-markdown.de.js",
-    "node_modules/fullcalendar/main.js",
+    "node_modules/fullcalendar/index.global.js",
     "node_modules/jquery-validation/dist/jquery.validate.js",
     "node_modules/jquery-validation/dist/additional-methods.js",
     "softwerkskammer/frontend/3rd_party_js/bootstrap5-multidropdownhack.js",
@@ -23,7 +23,7 @@ module.exports = function (grunt) {
       "node_modules/jquery-validation/dist/localization/messages_de.js",
       "node_modules/jquery-validation/dist/localization/methods_de.js",
       "node_modules/select2/dist/js/i18n/de.js",
-      "node_modules/fullcalendar/locales/de.js",
+      "node_modules/@fullcalendar/core/locales/de.global.js",
       "locales/frontend_de.js",
       "softwerkskammer/frontend/javascript/agora.js",
     ]),
@@ -34,7 +34,7 @@ module.exports = function (grunt) {
       "node_modules/jquery-validation/dist/localization/messages_en.js",
       "node_modules/jquery-validation/dist/localization/methods_en.js",
       "node_modules/select2/dist/js/i18n/en.js",
-      "node_modules/fullcalendar/locales/en-gb.js",
+      "node_modules/@fullcalendar/core/locales/en-gb.global.js",
       "locales/frontend_en.js",
       "softwerkskammer/frontend/javascript/agora.js",
     ]),
@@ -42,7 +42,6 @@ module.exports = function (grunt) {
 
   const filesForCss = {
     "softwerkskammer/public/stylesheets/screen.css": [
-      "node_modules/fullcalendar/main.css",
       "node_modules/@fortawesome/fontawesome-free/css/all.css",
       "node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css",
       "node_modules/datatables.net-bs5/css/dataTables.bootstrap5.css",
