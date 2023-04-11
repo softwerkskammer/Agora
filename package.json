@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "6.3.0",
+    "@fullcalendar/luxon2": "6.1.5",
     "@popperjs/core": "2.11.7",
     "CoolBeans": "0.0.9",
     "awesome-bootstrap-checkbox": "1.0.1",

@@ -253,6 +253,11 @@
   resolved "https://registry.yarnpkg.com/@fullcalendar/list/-/list-6.1.5.tgz#0276d495fbb2b229871ec5fb0547078531eaf756"
   integrity sha512-Z34h32ZuI0+sU6GdV2WrXnF6Z17VvsagjSBY+8/bMrMHfDoLbT76sGfoI6N0GCAr7aW9N2NgWWz8kuQw9uFAZQ==
 
+"@fullcalendar/luxon2@6.1.5":
+  version "6.1.5"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/luxon2/-/luxon2-6.1.5.tgz#69b40c79b33810cbed64151dd05aadec428cd7a6"
+  integrity sha512-CSRgXPUjJ7JOTs4+Gtzu96hjM5P2sXeufBg+b1TGXmVQHzXWV6tpepuwS3pkHbkwcYZPrlglTVPmkB+E/RgtWA==
+
 "@fullcalendar/multimonth@~6.1.5":
   version "6.1.5"
   resolved "https://registry.yarnpkg.com/@fullcalendar/multimonth/-/multimonth-6.1.5.tgz#6f63c9a0200c2edc132d7f7684e2d055deaa1d62"
