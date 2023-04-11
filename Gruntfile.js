@@ -12,6 +12,8 @@ module.exports = function (grunt) {
     "node_modules/bootstrap-markdown/js/bootstrap-markdown.js",
     "node_modules/bootstrap-markdown/locale/bootstrap-markdown.de.js",
     "node_modules/fullcalendar/index.global.js",
+    "node_modules/luxon/build/global/luxon.js",
+    "node_modules/@fullcalendar/luxon2/index.global.js",
     "node_modules/jquery-validation/dist/jquery.validate.js",
     "node_modules/jquery-validation/dist/additional-methods.js",
     "softwerkskammer/frontend/3rd_party_js/bootstrap5-multidropdownhack.js",
