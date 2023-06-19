@@ -112,7 +112,7 @@ app.post("/resign", async (req, res) => {
     return res.redirect("/members/" + encodeURIComponent(nickname));
   }
   try {
-    await groupsAndMembersService.removeMember();
+    await groupsAndMembersService.removeMember(nickname);
     const markdown =
       "**" +
       req.i18n.t("mailsender.why-resign") +
