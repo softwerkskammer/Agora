@@ -231,11 +231,21 @@ function setupUserPass(app1) {
 
 const app = misc.expressAppIn(__dirname);
 
-app.get("/logout", (req, res) => {
-  req.logout();
+app.get("/logout", (req, res, next) => {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/");
+  });
   if (req.isAuthenticated && req.isAuthenticated()) {
     logger.info("Had to log out twice. IE problem?" + (req.user ? " - User was: " + req.user.authenticationId : ""));
-    req.logout();
+    req.logout(function (err) {
+      if (err) {
+        return next(err);
+      }
+      res.redirect("/");
+    });
   }
   res.redirect("/goodbye.html");
 });
