@@ -109,6 +109,12 @@ app.get("/edit/:nickname", async (req, res, next) => {
   });
 });
 
+app.get("/edit/", async (req, res) => {
+  if (req.user && req.user.member) {
+    res.redirect("/members/edit/" + encodeURIComponent(req.user.member.nickname()));
+  }
+});
+
 app.post("/delete", async (req, res) => {
   const nickname = req.body.nickname;
   if (!res.locals.accessrights.canDeleteMemberByNickname(nickname)) {
