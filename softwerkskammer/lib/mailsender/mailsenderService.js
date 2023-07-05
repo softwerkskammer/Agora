@@ -55,10 +55,16 @@ module.exports = {
     const message = new Message();
     message.setSubject("Einladung: " + activity.title());
     message.setMarkdown(activityMarkdown(activity, language));
-    message.addToButtons({
-      text: "Zur Aktivität",
-      url: misc.toFullQualifiedUrl("activities", encodeURIComponent(activity.url())),
-    });
+    message.addToButtons([
+      {
+        text: "Zur Aktivität",
+        url: misc.toFullQualifiedUrl("activities", encodeURIComponent(activity.url())),
+      },
+      {
+        text: "Gruppe verlassen",
+        url: misc.toFullQualifiedUrl("members", "edit/"),
+      },
+    ]);
     return {
       message,
       regionalgroups,
