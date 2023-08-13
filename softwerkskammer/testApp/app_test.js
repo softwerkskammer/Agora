@@ -28,7 +28,7 @@ describe("SWK Plattform server", () => {
     expect(resp.headers["content-type"]).to.contain("text/html");
     expect(resp.text).to.contain("Softwerkskammer");
     expect(resp.text).to.contain(
-      "Die Softwerkskammer hat sich 2011 gegründet, um den Austausch Interessierter zum Thema Software Craft und Testing\nzu vereinfachen."
+      "Die Softwerkskammer hat sich 2011 gegründet, um den Austausch Interessierter zum Thema Software Craft und Testing\nzu vereinfachen.",
     );
   });
 

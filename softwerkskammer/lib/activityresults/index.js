@@ -22,7 +22,7 @@ app.post("/", async (req, res, next) => {
       id: activityResultName,
       tags,
       uploaded_by: req.user.member.id,
-    }).state
+    }).state,
   );
   res.redirect(app.path() + activityResultName);
 });
@@ -47,7 +47,7 @@ app.post("/:activityResultName/upload", async (req, res) => {
   const imageUri = await activityresultsService.addPhotoToActivityResult(
     activityResultName,
     files.image[0],
-    req.user.member.id()
+    req.user.member.id(),
   );
   res.redirect(app.path() + activityResultName + "/photo/" + imageUri + "/edit");
 });
@@ -90,7 +90,7 @@ app.post("/:activityResultName/photo/:photoId/edit", async (req, res) => {
     activityResultName,
     photoId,
     photoData,
-    res.locals.accessrights
+    res.locals.accessrights,
   );
   res.redirect(app.path() + activityResultName);
 });

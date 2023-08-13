@@ -48,6 +48,7 @@ module.exports = function (grunt) {
       "node_modules/node-syntaxhighlighter/lib/styles/shCoreDefault.css",
       "node_modules/datatables.net-bs5/css/dataTables.bootstrap5.css",
       "node_modules/select2/dist/css/select2.css",
+      "node_modules/select2-bootstrap-5-theme/dist/select2-bootstrap-5-theme.css",
       "softwerkskammer/build/stylesheets/sass/out/agora.css",
     ],
   };

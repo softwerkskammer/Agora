@@ -93,15 +93,15 @@ describe("Waitinglist Service with DB", () => {
     const activity = await getActivity(activityUrl);
     expect(
       activity.resourceNamed("Veranstaltung").waitinglistEntries()[0].registrantId(),
-      "Waiting member is still in the waitinglist"
+      "Waiting member is still in the waitinglist",
     ).to.equal("memberIdWaiting");
     expect(
       activity.resourceNamed("Veranstaltung").waitinglistEntries()[1].registrantId(),
-      "New member is stored in the waitinglist"
+      "New member is stored in the waitinglist",
     ).to.equal("memberIdNew");
     expect(
       activity.resourceNamed("Veranstaltung").registeredMembers(),
-      "First registered member is still there"
+      "First registered member is still there",
     ).to.contain("memberId1");
   });
 
@@ -117,11 +117,11 @@ describe("Waitinglist Service with DB", () => {
     const activity = await getActivity(activityUrl);
     expect(
       activity.resourceNamed("Veranstaltung").waitinglistEntries()[0].canSubscribe(),
-      "Waiting member is now allowed to subscribe"
+      "Waiting member is now allowed to subscribe",
     ).to.be(true);
     expect(
       activity.resourceNamed("Veranstaltung").registeredMembers(),
-      "First registered member is still there"
+      "First registered member is still there",
     ).to.contain("memberId1");
   });
 });

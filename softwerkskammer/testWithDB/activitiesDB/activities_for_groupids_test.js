@@ -147,7 +147,7 @@ describe("Activity application with DB - shows activities for Group-Ids -", () =
     const activities = await activitystore.activitiesForGroupIdsAndRegisteredMemberId(
       ["groupname1"],
       "memberId",
-      false
+      false,
     );
     expect(activities.length).to.equal(3);
     expect(activities[0].title()).to.equal("Current Activity 1");

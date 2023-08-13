@@ -69,7 +69,7 @@ describe("ActivityResult service", () => {
       "Hackergarten2",
       "image1.jpg",
       { title: "Photo 1" },
-      { canEditPhoto: () => true }
+      { canEditPhoto: () => true },
     );
     expect(saveStub.called).to.be(true);
     const objectToSave = saveStub.args[0][0];

@@ -73,8 +73,8 @@ function setupOpenID(app1) {
         profile: true,
         passReqToCallback: true,
       },
-      authenticationService.createUserObjectFromOpenID
-    )
+      authenticationService.createUserObjectFromOpenID,
+    ),
   );
   createProviderAuthenticationRoutes(app1, "openid");
 }
@@ -91,7 +91,7 @@ function setupGithub(app1) {
         customHeaders: { "User-Agent": "agora node server" },
         passReqToCallback: true,
       },
-      authenticationService.createUserObjectFromGithub
+      authenticationService.createUserObjectFromGithub,
     );
     strategy._oauth2.useAuthorizationHeaderforGET(true);
     passport.use(strategy);
@@ -118,7 +118,7 @@ function setupGooglePlus(app1) {
 
         passReqToCallback: true,
       },
-      authenticationService.createUserObjectFromGooglePlus
+      authenticationService.createUserObjectFromGooglePlus,
     );
     strategy.authorizationParams = function () {
       return {
@@ -138,7 +138,7 @@ function setupMagicLink(app1) {
       tokenName: "token",
       tokenProblemRedirect: "/", // 'tokenProblem.html'
     },
-    authenticationService.createUserObjectFromMagicLink
+    authenticationService.createUserObjectFromMagicLink,
   );
 
   passport.use(strategy);
@@ -150,7 +150,7 @@ function setupMagicLink(app1) {
       statusmessage
         .errorMessage(
           "Keine Mailadresse für Magic Link",
-          "Bitte gib die Mailadresse eines Softwerkskammer-Mitglieds an!"
+          "Bitte gib die Mailadresse eines Softwerkskammer-Mitglieds an!",
         )
         .putIntoSession(req, res);
       return res.redirect("/");
@@ -162,7 +162,7 @@ function setupMagicLink(app1) {
         statusmessage
           .errorMessage(
             "Kein Mitglied",
-            "Wir konnten die angegebene Mailadresse nicht finden. Bitte gib eine in der Softwerkskammer hinterlegte Mailadresse an!"
+            "Wir konnten die angegebene Mailadresse nicht finden. Bitte gib eine in der Softwerkskammer hinterlegte Mailadresse an!",
           )
           .putIntoSession(req, res);
         return res.redirect("/");
@@ -182,11 +182,11 @@ function setupMagicLink(app1) {
           statusmessage
             .successMessage(
               "Magic Link ist unterwegs",
-              "Wir haben Dir einen Magic Link geschickt. Er ist 30 Minuten lang gültig. Bitte prüfe auch Deinen Spamfolder, falls Du ihn nicht bekommst."
+              "Wir haben Dir einen Magic Link geschickt. Er ist 30 Minuten lang gültig. Bitte prüfe auch Deinen Spamfolder, falls Du ihn nicht bekommst.",
             )
             .putIntoSession(req, res);
           return res.redirect("/");
-        }
+        },
       );
     } catch (e) {
       return next(e);
@@ -200,7 +200,7 @@ const localStrategy = new LocalStrategy(
     passwordField: "password",
     passReqToCallback: true,
   },
-  authenticationService.createUserObjectFromPassword
+  authenticationService.createUserObjectFromPassword,
 );
 
 function localStrategyCallback(req, res, next) {

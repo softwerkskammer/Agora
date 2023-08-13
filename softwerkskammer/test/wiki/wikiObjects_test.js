@@ -22,14 +22,14 @@ describe("Wiki Objects", () => {
           new Metadata({ author: "metaauthor12" }),
         ],
         diff: new Diff(""),
-      })
+      }),
     );
     dirWithChangedFiles.addFile(
       new FileWithChangelist({
         file: "name0",
         changelist: [new Metadata({ author: "metaauthor2" })],
         diff: new Diff(""),
-      })
+      }),
     );
     expect(dirWithChangedFiles.sortedFiles()[0].file).is("name0");
     expect(dirWithChangedFiles.sortedFiles()[1].file).is("name1");
@@ -133,7 +133,7 @@ describe("BlogPost", () => {
     }
 
     expect(parse("# Dummy\n\n[Some Link](http://www.google.de)").teaser).is(
-      '<p><a href="http://www.google.de">Some Link</a></p>\n'
+      '<p><a href="http://www.google.de">Some Link</a></p>\n',
     );
   });
 });

@@ -279,7 +279,7 @@ describe("Groups application", () => {
         request(createApp({ id: "someMember" }))
           .post("/submit")
           .send(
-            "id=newgroup&emailPrefix=SONEW&longName=ANewGroup&color=#AABBCC&description=WeLoveIt&type=Regionalgruppe&organizers=someMember&contactingOrganizersEnabled=on"
+            "id=newgroup&emailPrefix=SONEW&longName=ANewGroup&color=#AABBCC&description=WeLoveIt&type=Regionalgruppe&organizers=someMember&contactingOrganizersEnabled=on",
           )
           .expect(302)
           .expect(/Found. Redirecting to \/groups\/newgroup/, (err) => {
@@ -297,7 +297,7 @@ describe("Groups application", () => {
                 mapY: undefined,
                 shortName: undefined,
                 contactingOrganizersEnabled: true,
-              })
+              }),
             );
             done(err);
           });

@@ -79,7 +79,7 @@ describe("Notifications", () => {
     const options = transport.sendMail.firstCall.args[0];
     expect(options.subject).to.equal("Neue Anmeldung für Aktivität");
     expect(options.html).to.contain(
-      'Für die Aktivität "Title of the Activity" () hat sich ein neuer Besucher angemeldet:'
+      'Für die Aktivität "Title of the Activity" () hat sich ein neuer Besucher angemeldet:',
     );
     expect(options.html).to.contain("firstname of bob lastname of bob (nickbob)");
     expect(options.html).to.contain("/activities/urlurl");
@@ -95,7 +95,7 @@ describe("Notifications", () => {
     let options = transport.sendMail.firstCall.args[0];
     expect(options.subject).to.equal("Neue Anmeldung für Aktivität");
     expect(options.html).to.contain(
-      'Für die Aktivität "Title of the Activity" () hat sich ein neuer Besucher angemeldet:'
+      'Für die Aktivität "Title of the Activity" () hat sich ein neuer Besucher angemeldet:',
     );
     expect(options.html).to.contain("firstname of bob lastname of bob (nickbob)");
     expect(options.html).to.contain("/activities/urlurl");
@@ -103,7 +103,7 @@ describe("Notifications", () => {
     options = transport.sendMail.secondCall.args[0];
     expect(options.subject).to.equal("Neue Anmeldung für Aktivität");
     expect(options.html).to.contain(
-      'Für die Aktivität "Another Nice Activity" () hat sich ein neuer Besucher angemeldet:'
+      'Für die Aktivität "Another Nice Activity" () hat sich ein neuer Besucher angemeldet:',
     );
     expect(options.html).to.contain("firstname of alice lastname of alice ()");
     expect(options.html).to.contain("/activities/niceurl");
@@ -151,7 +151,7 @@ describe("Notifications", () => {
     await notifications.wikiChanges(changes);
     const options = transport.sendMail.firstCall.args[0];
     expect(options.html).to.contain(
-      '<h3>Wiki "A"</h3>\n    <hr>\n    <h3>Wiki "C"</h3>\n    <hr>\n    <h3>Wiki "Z"</h3>'
+      '<h3>Wiki "A"</h3>\n    <hr>\n    <h3>Wiki "C"</h3>\n    <hr>\n    <h3>Wiki "Z"</h3>',
     );
   });
 

@@ -84,11 +84,11 @@ describe("Activities Service with DB", () => {
     const activity = await getActivity(activityUrl);
     expect(
       activity.resourceNamed("Veranstaltung").registeredMembers(),
-      "Second registered member is stored in the database"
+      "Second registered member is stored in the database",
     ).to.contain("memberId2");
     expect(
       activity.resourceNamed("Veranstaltung").registeredMembers(),
-      "First registered member is still there"
+      "First registered member is still there",
     ).to.contain("memberId1");
   });
 
@@ -99,11 +99,11 @@ describe("Activities Service with DB", () => {
     const activity = await getActivity(activityUrl);
     expect(
       activity.resourceNamed("Veranstaltung").registeredMembers(),
-      "Second removed member is no longer in the database"
+      "Second removed member is no longer in the database",
     ).to.not.contain("memberIdX");
     expect(
       activity.resourceNamed("Veranstaltung").registeredMembers(),
-      "First registered member is still there"
+      "First registered member is still there",
     ).to.contain("memberId1");
   });
 
@@ -114,15 +114,15 @@ describe("Activities Service with DB", () => {
     const activity = await getActivity(activityUrl);
     expect(
       activity.resourceNamed("Veranstaltung").waitinglistEntries()[0].registrantId(),
-      "Previous member is still in the waitinglist"
+      "Previous member is still in the waitinglist",
     ).to.equal("memberIdY");
     expect(
       activity.resourceNamed("Veranstaltung").waitinglistEntries()[1].registrantId(),
-      "Second member is stored in the waitinglist"
+      "Second member is stored in the waitinglist",
     ).to.equal("memberId2");
     expect(
       activity.resourceNamed("Veranstaltung").registeredMembers(),
-      "First registered member is still there"
+      "First registered member is still there",
     ).to.contain("memberId1");
   });
 
@@ -133,11 +133,11 @@ describe("Activities Service with DB", () => {
     const activity = await getActivity(activityUrl);
     expect(
       activity.resourceNamed("Veranstaltung").waitinglistEntries().length,
-      "Waitinglist member is no longer in the database"
+      "Waitinglist member is no longer in the database",
     ).to.equal(0);
     expect(
       activity.resourceNamed("Veranstaltung").registeredMembers(),
-      "First registered member is still there"
+      "First registered member is still there",
     ).to.contain("memberId1");
   });
 });

@@ -107,7 +107,7 @@ describe("Members application", () => {
         (err, res) => {
           expect(res.text).to.not.contain('<input id="input-file" type="file" accept="image/*" name="image"');
           done(err);
-        }
+        },
       );
   });
 
@@ -164,7 +164,7 @@ describe("Members application", () => {
     request(app)
       .post("/submit")
       .send(
-        "id=0815&&nickname=nuck&previousNickname=nuck&location=x&profession=y&reference=z&email=here@there.org&previousEmail=here@there.org"
+        "id=0815&&nickname=nuck&previousNickname=nuck&location=x&profession=y&reference=z&email=here@there.org&previousEmail=here@there.org",
       )
       .expect(200)
       .expect(/Validierungsfehler/)
@@ -180,7 +180,7 @@ describe("Members application", () => {
     request(app)
       .post("/submit")
       .send(
-        "id=0815&&nickname=nuckNew&previousNickname=nuck&lastname=x&location=x&profession=y&reference=z&email=hereNew@there.org&previousEmail=here@there.org"
+        "id=0815&&nickname=nuckNew&previousNickname=nuck&lastname=x&location=x&profession=y&reference=z&email=hereNew@there.org&previousEmail=here@there.org",
       )
       .expect(200)
       .expect(/Validierungsfehler/)

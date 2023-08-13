@@ -100,7 +100,7 @@ module.exports = {
 
   formatNumberWithCurrentLocale: function formatNumberWithCurrentLocale(res, number) {
     return new Intl.NumberFormat(res.locals.language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(
-      number || 0
+      number || 0,
     );
   },
 

@@ -27,8 +27,8 @@ MagicLinkStrategy.prototype.authenticate = function (req, options) {
       if (err.name === "TokenExpiredError") {
         return this.error(
           new Error(
-            "Das Token ist bereits abgelaufen. Bitte fordere ein neues an und benutze es innerhalb von 30 Minuten."
-          )
+            "Das Token ist bereits abgelaufen. Bitte fordere ein neues an und benutze es innerhalb von 30 Minuten.",
+          ),
         );
       }
       return this.error(err);
@@ -36,8 +36,8 @@ MagicLinkStrategy.prototype.authenticate = function (req, options) {
     if (!payload) {
       return this.error(
         new Error(
-          "Der Magic Link ist defekt. Bitte fordere einen neuen an und stelle sicher, dass Du ihn vollständig in den Browser kopierst."
-        )
+          "Der Magic Link ist defekt. Bitte fordere einen neuen an und stelle sicher, dass Du ihn vollständig in den Browser kopierst.",
+        ),
       );
     }
 

@@ -117,7 +117,7 @@ describe("Activity application", () => {
           ? member3
           : id === "memberId4"
           ? member4
-          : undefined
+          : undefined,
       );
       return members;
     });
@@ -580,7 +580,7 @@ describe("Activity application", () => {
         .expect(200)
         .expect(
           /Editoren:&nbsp;<a href="\/members\/participant1">participant1<\/a>&nbsp;<a href="\/members\/participant3">participant3<\/a>\s*<\/p>/,
-          done
+          done,
         );
     });
 

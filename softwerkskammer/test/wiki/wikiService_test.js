@@ -243,7 +243,7 @@ describe("WikiService (parseBlogPost)", () => {
 
   it("returns the Blogpost if it is valid", () => {
     expect(
-      wikiService.parseBlogPost("blog_2013-11-01LeanCoffeeTest.md", "#Lean Coffee November 2013")
+      wikiService.parseBlogPost("blog_2013-11-01LeanCoffeeTest.md", "#Lean Coffee November 2013"),
     ).to.not.be.undefined();
   });
 });

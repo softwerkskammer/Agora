@@ -23,7 +23,7 @@ async function allActivitiesByDateRange(rangeFrom, rangeTo, sortOrder) {
     {
       $and: [{ endDate: { $gt: new Date(rangeFrom) } }, { startDate: { $lt: new Date(rangeTo) } }],
     },
-    sortOrder
+    sortOrder,
   );
   return toActivityList(result);
 }
@@ -85,7 +85,7 @@ module.exports = {
       {
         $and: [{ endDate: { $gt: start } }, { assignedGroup: { $in: groupIds } }],
       },
-      { startDate: 1 }
+      { startDate: 1 },
     );
     return toActivityList(result);
   },
@@ -97,7 +97,7 @@ module.exports = {
       {
         $and: [{ endDate: { $lt: start } }, { assignedGroup: { $in: groupIds } }],
       },
-      { startDate: -1 }
+      { startDate: -1 },
     );
     return toActivityList(result);
   },
@@ -110,7 +110,7 @@ module.exports = {
           { editorIds: memberId }, // matches when the field equals the value or when the field is an array that contains the value
         ],
       },
-      { startDate: -1 }
+      { startDate: -1 },
     );
     return toActivityList(result);
   },
@@ -118,12 +118,12 @@ module.exports = {
   activitiesForGroupIdsAndRegisteredMemberId: async function activitiesForGroupIdsAndRegisteredMemberId(
     groupIds,
     memberId,
-    upcoming
+    upcoming,
   ) {
     const activities = upcoming ? await this.upcomingActivities() : await this.pastActivities();
     return activities.filter(
       (activity) =>
-        groupIds.includes(activity.assignedGroup()) || activity.veranstaltung().registeredMembers().includes(memberId)
+        groupIds.includes(activity.assignedGroup()) || activity.veranstaltung().registeredMembers().includes(memberId),
     );
   },
 

@@ -15,7 +15,7 @@ var groups_validator;
       function (value, element) {
         return this.optional(element) || /^[a-z0-9 -]+$/i.test(value);
       },
-      contentsOfPrefixForEMail
+      contentsOfPrefixForEMail,
     );
 
     $.validator.addMethod(
@@ -23,7 +23,7 @@ var groups_validator;
       function (value, element) {
         return this.optional(element) || /^[a-z0-9_-]+$/i.test(value);
       },
-      contentsOfAlphanumeric
+      contentsOfAlphanumeric,
     );
 
     groups_validator = $("#groupform").validate({

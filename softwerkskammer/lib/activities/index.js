@@ -107,11 +107,11 @@ app.get("/gdcr2018", async (req, res, next) => renderGdcrFor("2018-11-17", res, 
 app.get("/gdcr", async (req, res, next) => renderGdcrFor("2019-11-16", res, next));
 
 app.get("/upcoming", async (req, res) =>
-  activitiesForDisplay(activitystore.upcomingActivities, res, req.i18n.t("activities.upcoming"))
+  activitiesForDisplay(activitystore.upcomingActivities, res, req.i18n.t("activities.upcoming")),
 );
 
 app.get("/past", async (req, res) =>
-  activitiesForDisplay(activitystore.pastActivities, res, req.i18n.t("activities.past"))
+  activitiesForDisplay(activitystore.pastActivities, res, req.i18n.t("activities.past")),
 );
 
 app.get("/ical", async (req, res) => {
@@ -147,7 +147,7 @@ async function renderActivityCombinedWithGroups(res, activity) {
     }
     const editorNames = editors.map(editorNameOf);
     activity.participants = (activity.participants || []).filter(
-      (participant) => participant.id() !== activity.owner()
+      (participant) => participant.id() !== activity.owner(),
     );
     const participantNames = (activity.participants || []).map(editorNameOf);
 
@@ -199,7 +199,7 @@ app.post("/submit", async (req, res) => {
       const result = await validation.checkValidity(
         req.body.previousUrl.trim(),
         req.body.url.trim(),
-        R.partial(activitiesService.isValidUrl, [reservedURLs])
+        R.partial(activitiesService.isValidUrl, [reservedURLs]),
       );
       if (!result) {
         return req.i18n.t("validation.url_not_available");
@@ -225,7 +225,7 @@ app.get("/checkurl", async (req, res) => {
   const result = await misc.validate(
     req.query.url,
     req.query.previousUrl,
-    R.partial(activitiesService.isValidUrl, [reservedURLs])
+    R.partial(activitiesService.isValidUrl, [reservedURLs]),
   );
   res.end(result);
 });
@@ -298,7 +298,7 @@ async function addToWaitinglist(body, req, res) {
   const [statusTitle, statusText] = await activitiesService.addToWaitinglist(
     req.user.member.id(),
     body.url,
-    Date.now()
+    Date.now(),
   );
   if (statusTitle && statusText) {
     statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);

@@ -37,7 +37,7 @@ module.exports = {
           endTime: meetupDate.endTime,
           clonedFromMeetup: true,
           meetupRSVPCount: meetup.yes_rsvp_count,
-        })
+        }),
       ); // saveActivity
     });
     return Promise.all(all);

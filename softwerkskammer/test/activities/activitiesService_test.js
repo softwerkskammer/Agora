@@ -274,7 +274,7 @@ describe("Activities Service", () => {
       const [statusTitle, statusText] = await activitiesService.addToWaitinglist(
         "memberId",
         "activity-url",
-        Date.now()
+        Date.now(),
       );
       expect(statusTitle, "Status Title").to.not.exist();
       expect(statusText, "Status Text").to.not.exist();
@@ -298,7 +298,7 @@ describe("Activities Service", () => {
       const [statusTitle, statusText] = await activitiesService.addToWaitinglist(
         "memberId",
         "activity-url",
-        Date.now()
+        Date.now(),
       );
       expect(statusTitle, "Status Title").to.equal("activities.waitinglist_not_possible");
       expect(statusText, "Status Text").to.equal("activities.no_waitinglist");

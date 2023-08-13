@@ -167,8 +167,8 @@ describe("Activity store", () => {
             _registeredMembers: [],
             _registrationOpen: true,
           },
-          "Veranstaltung"
-        )
+          "Veranstaltung",
+        ),
       );
       expect(activity.isMultiDay()).to.be(true);
       expect(activity.location()).to.be("Right next door");

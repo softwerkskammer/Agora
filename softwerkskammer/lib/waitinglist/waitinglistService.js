@@ -12,7 +12,7 @@ module.exports = {
         const member = await memberstore.getMemberForId(waitinglistEntry.registrantId());
         waitinglistEntry.registrantNickname = member.nickname();
         return waitinglistEntry;
-      })
+      }),
     );
   },
 

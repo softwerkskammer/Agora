@@ -44,7 +44,7 @@
       checkFieldWithNegativeAjaxResponse(
         emailPrefix,
         prefixAlreadyTaken,
-        /groups\/checkemailprefix\?emailPrefix=value/
+        /groups\/checkemailprefix\?emailPrefix=value/,
       );
     });
 

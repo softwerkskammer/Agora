@@ -28,7 +28,7 @@ module.exports = {
   getGroupsWithMeetupURL: async function getGroupsWithMeetupURL() {
     const groups = await persistence.listMongoByField(
       { meetupURL: { $exists: true, $nin: ["", null, undefined] } },
-      {}
+      {},
     );
     return groups.map((each) => new Group(each));
   },

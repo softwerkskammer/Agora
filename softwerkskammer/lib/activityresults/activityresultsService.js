@@ -37,7 +37,7 @@ module.exports = {
     activityResultName,
     photoId,
     data,
-    accessrights
+    accessrights,
   ) {
     const activityResult = await load(activityResultName);
     let photo = activityResult.getPhotoById(photoId);

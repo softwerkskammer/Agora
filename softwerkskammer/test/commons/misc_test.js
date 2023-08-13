@@ -52,7 +52,7 @@ describe("toLowerCaseRegExp function", () => {
   it("escapes special regexp characters", () => {
     const result = misc.toLowerCaseRegExp("All of these should be escaped: \\ ^ $ * + ? . ( ) | { } [ ]");
     expect(result.toString()).to.equal(
-      "/^All of these should be escaped: \\\\ \\^ \\$ \\* \\+ \\? \\. \\( \\) \\| \\{ \\} \\[ \\]$/i"
+      "/^All of these should be escaped: \\\\ \\^ \\$ \\* \\+ \\? \\. \\( \\) \\| \\{ \\} \\[ \\]$/i",
     );
   });
 });

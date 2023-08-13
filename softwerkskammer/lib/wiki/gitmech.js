@@ -83,7 +83,7 @@ module.exports = {
           author: group[2],
           date: group[3],
           comment: group[4],
-        })
+        }),
       );
     }
     return metadata;

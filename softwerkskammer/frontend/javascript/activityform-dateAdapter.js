@@ -12,7 +12,7 @@
         $("#startDate").val(),
         $("#startTime").val(),
         $("#endDate").val(),
-        $("#endTime").val()
+        $("#endTime").val(),
       );
 
       $("#endDate").data().datepicker.update(endStrings.endDate);

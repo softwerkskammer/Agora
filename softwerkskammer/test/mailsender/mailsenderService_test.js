@@ -292,7 +292,7 @@ describe("MailsenderService", () => {
       const statusmessage = await mailsenderService.sendMailToInvitedGroups(
         ["GroupA", "GroupB"],
         "activityUrlForMock",
-        message
+        message,
       );
       const sentMail = singleSentEmail();
       expect(sentMail.bcc).to.contain("memberA");
@@ -319,7 +319,7 @@ describe("MailsenderService", () => {
       const statusmessage = await mailsenderService.sendMailToInvitedGroups(
         ["GroupA", "GroupB"],
         "errorProvokingUrl",
-        message
+        message,
       );
       const sentMail = singleSentEmail();
       expect(sentMail.bcc).to.contain("memberA");
@@ -347,7 +347,7 @@ describe("MailsenderService", () => {
       const statusmessage = await mailsenderService.sendMailToInvitedGroups(
         ["GroupA", "GroupB"],
         "activityUrlForMock",
-        message
+        message,
       );
       expect(sendmail.calledOnce).to.not.be(true);
       expect(statusmessage.contents().type).to.equal("alert-danger");
@@ -404,7 +404,7 @@ describe("MailsenderService", () => {
         expect(statusMessage.contents().type).to.eql("alert-danger");
         expect(statusMessage.contents().additionalArguments.type).to.eql("$t(mailsender.notification)");
         expect(statusMessage.contents().additionalArguments.err).to.eql(
-          "$t(mailsender.contact_the_organizers_disabled)"
+          "$t(mailsender.contact_the_organizers_disabled)",
         );
       });
     });
@@ -434,7 +434,7 @@ describe("MailsenderService", () => {
         expect(statusMessage.contents().type).to.eql("alert-danger");
         expect(statusMessage.contents().additionalArguments.type).to.eql("$t(mailsender.notification)");
         expect(statusMessage.contents().additionalArguments.err).to.eql(
-          "Error: Das senden der E-Mail ist fehlgeschlagen. Es liegt ein technisches Problem vor."
+          "Error: Das senden der E-Mail ist fehlgeschlagen. Es liegt ein technisches Problem vor.",
         );
       });
     });
