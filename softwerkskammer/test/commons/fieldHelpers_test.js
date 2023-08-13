@@ -53,7 +53,7 @@ describe("Replace email addresses from text", () => {
 
   it("replaces multiple email addresses", () => {
     const result = fieldHelpers.replaceMailAddresses(
-      "erna.meier@hihi.com and Hans Dampf <hans_dampf.@mymail.org>tester@system.url"
+      "erna.meier@hihi.com and Hans Dampf <hans_dampf.@mymail.org>tester@system.url",
     );
 
     expect(result).to.equal("...@... and Hans Dampf <...@...>...@...");
@@ -72,7 +72,7 @@ describe("Replace long numbers from text", () => {
 
   it("does not replace text with single brackets, slashes, plus or minus signs", () => {
     expect(fieldHelpers.replaceLongNumbers("text - text + text (text) / text")).to.equal(
-      "text - text + text (text) / text"
+      "text - text + text (text) / text",
     );
   });
 
@@ -159,11 +159,11 @@ describe("killHtmlHead", () => {
     expect(
       fieldHelpers.killHtmlHead(
         "123<head>\nbl\na</head>321 321 321 321 321 321 321 321 321 321 321 321 321 321 " +
-          "321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 "
-      )
+          "321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 ",
+      ),
     ).to.equal(
       "123321 321 321 321 321 321 321 321 321 321 321 321 321 321 " +
-        "321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 "
+        "321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 321 ",
     );
   });
 });

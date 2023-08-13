@@ -10,13 +10,13 @@ function console(options) {
       format.colorize(),
       format.timestamp(),
       format.prettyPrint(),
-      format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
+      format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`),
     );
   } else {
     consoleformat = format.combine(
       format.timestamp(),
       format.prettyPrint(),
-      format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
+      format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`),
     );
   }
 
@@ -27,7 +27,7 @@ function fileFrom(options) {
   const fileformat = format.combine(
     format.timestamp(),
     format.prettyPrint(),
-    format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`)
+    format.printf((info) => `${info.timestamp} ${info.level}: ${info.message}`),
   );
 
   return new transports.File({

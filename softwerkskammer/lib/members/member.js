@@ -18,7 +18,7 @@ class Member {
         if (object[property]) {
           this.state[property] = object[property].trim();
         }
-      }
+      },
     );
     ["notifyOnWikiChanges"].forEach((property) => {
       this.state[property] = !!object[property];
@@ -55,7 +55,7 @@ class Member {
     if (profile) {
       this.state.email = fieldHelpers.valueOrFallback(
         profile.emails && profile.emails[0] && profile.emails[0].value,
-        this.email()
+        this.email(),
       );
       const name = profile.name;
       if (name) {

@@ -158,31 +158,31 @@ describe("Validation", () => {
       expect(result({ id: "n" })).to.contain("Name muss mindestens 2 und höchstens 20 Zeichen enthalten.");
       expect(result({ id: "nn" })).to.not.contain("Name muss mindestens 2 und höchstens 20 Zeichen enthalten.");
       expect(result({ id: "12345678901234567890" })).to.not.contain(
-        "Name muss mindestens 2 und höchstens 20 Zeichen enthalten."
+        "Name muss mindestens 2 und höchstens 20 Zeichen enthalten.",
       );
       expect(result({ id: "12345678901234567890+" })).to.contain(
-        "Name muss mindestens 2 und höchstens 20 Zeichen enthalten."
+        "Name muss mindestens 2 und höchstens 20 Zeichen enthalten.",
       );
     });
 
     it("checks that id can contain chars, numbers, dash and underscore", () => {
       expect(result({ id: "abc123ABC_-" })).to.not.contain(
-        "Name darf nur Buchstaben, Zahlen, Bindestrich und Unterstrich enthalten."
+        "Name darf nur Buchstaben, Zahlen, Bindestrich und Unterstrich enthalten.",
       );
       expect(result({ id: "ä" })).to.contain(
-        "Name darf nur Buchstaben, Zahlen, Bindestrich und Unterstrich enthalten."
+        "Name darf nur Buchstaben, Zahlen, Bindestrich und Unterstrich enthalten.",
       );
       expect(result({ id: "Ä" })).to.contain(
-        "Name darf nur Buchstaben, Zahlen, Bindestrich und Unterstrich enthalten."
+        "Name darf nur Buchstaben, Zahlen, Bindestrich und Unterstrich enthalten.",
       );
       expect(result({ id: "ß" })).to.contain(
-        "Name darf nur Buchstaben, Zahlen, Bindestrich und Unterstrich enthalten."
+        "Name darf nur Buchstaben, Zahlen, Bindestrich und Unterstrich enthalten.",
       );
       expect(result({ id: "%" })).to.contain(
-        "Name darf nur Buchstaben, Zahlen, Bindestrich und Unterstrich enthalten."
+        "Name darf nur Buchstaben, Zahlen, Bindestrich und Unterstrich enthalten.",
       );
       expect(result({ id: " " })).to.contain(
-        "Name darf nur Buchstaben, Zahlen, Bindestrich und Unterstrich enthalten."
+        "Name darf nur Buchstaben, Zahlen, Bindestrich und Unterstrich enthalten.",
       );
     });
 
@@ -193,43 +193,43 @@ describe("Validation", () => {
 
     it("checks that emailPrefix is longer than 5 and shorter than 15 letters", () => {
       expect(result({ emailPrefix: null })).to.contain(
-        "Präfix für E-Mails muss mindestens 5 und höchstens 15 Zeichen enthalten."
+        "Präfix für E-Mails muss mindestens 5 und höchstens 15 Zeichen enthalten.",
       );
       expect(result({ emailPrefix: "n" })).to.contain(
-        "Präfix für E-Mails muss mindestens 5 und höchstens 15 Zeichen enthalten."
+        "Präfix für E-Mails muss mindestens 5 und höchstens 15 Zeichen enthalten.",
       );
       expect(result({ emailPrefix: "nnnnn" })).to.not.contain(
-        "Präfix für E-Mails muss mindestens 5 und höchstens 15 Zeichen enthalten."
+        "Präfix für E-Mails muss mindestens 5 und höchstens 15 Zeichen enthalten.",
       );
       expect(result({ emailPrefix: "123456789012345" })).to.not.contain(
-        "Präfix für E-Mails muss mindestens 5 und höchstens 15 Zeichen enthalten."
+        "Präfix für E-Mails muss mindestens 5 und höchstens 15 Zeichen enthalten.",
       );
       expect(result({ emailPrefix: "123456789012345+" })).to.contain(
-        "Präfix für E-Mails muss mindestens 5 und höchstens 15 Zeichen enthalten."
+        "Präfix für E-Mails muss mindestens 5 und höchstens 15 Zeichen enthalten.",
       );
     });
 
     it("checks that emailPrefix can contain chars, numbers, dash and blanks", () => {
       expect(result({ emailPrefix: "abc123ABC-" })).to.not.contain(
-        "Präfix für E-Mails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten."
+        "Präfix für E-Mails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten.",
       );
       expect(result({ emailPrefix: "ä" })).to.contain(
-        "Präfix für E-Mails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten."
+        "Präfix für E-Mails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten.",
       );
       expect(result({ emailPrefix: "Ä" })).to.contain(
-        "Präfix für E-Mails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten."
+        "Präfix für E-Mails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten.",
       );
       expect(result({ emailPrefix: "ß" })).to.contain(
-        "Präfix für E-Mails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten."
+        "Präfix für E-Mails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten.",
       );
       expect(result({ emailPrefix: "%" })).to.contain(
-        "Präfix für E-Mails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten."
+        "Präfix für E-Mails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten.",
       );
       expect(result({ emailPrefix: "_" })).to.contain(
-        "Präfix für E-Mails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten."
+        "Präfix für E-Mails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten.",
       );
       expect(result({ emailPrefix: " " })).to.not.contain(
-        "Präfix für E-Mails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten."
+        "Präfix für E-Mails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten.",
       );
     });
 

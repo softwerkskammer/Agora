@@ -67,7 +67,7 @@ module.exports = {
       completePageNameOld,
       completePageNameNew,
       `rename: "${pageNameOld}" -> "${pageNameNew}"`,
-      member.asGitAuthor()
+      member.asGitAuthor(),
     );
   },
 
@@ -154,7 +154,7 @@ module.exports = {
       result.map(async (path) => {
         const post = await Git.readFileFs(path);
         return self.parseBlogPost(path, post);
-      })
+      }),
     );
     return misc.compact(unsortedPosts).sort((a, b) => {
       return a.date() < b.date() ? 1 : -1;
@@ -175,7 +175,7 @@ module.exports = {
             file: item.name,
             changelist: metadata,
             diff: new Diff(diff),
-          })
+          }),
         );
       }
     }
@@ -202,7 +202,7 @@ module.exports = {
       currentFiles = currentFiles.map((file) => Path.basename(file, ".md"));
 
       const gitfiles = R.uniqBy((item) => item.name, metadata).filter(
-        (item) => !item.name.match(wikiObjects.BLOG_ENTRY_REGEX)
+        (item) => !item.name.match(wikiObjects.BLOG_ENTRY_REGEX),
       );
 
       gitfiles.forEach((item) => {
@@ -241,7 +241,7 @@ module.exports = {
     });
     return R.map(
       (arr) => arr.map((f) => f.page),
-      R.groupBy((f) => f.wiki, mapOfWikisToObjectLists)
+      R.groupBy((f) => f.wiki, mapOfWikisToObjectLists),
     );
   },
 };

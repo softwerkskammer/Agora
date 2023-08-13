@@ -49,7 +49,7 @@ module.exports = {
     validator
       .check(
         group.emailPrefix,
-        "Präfix für E-Mails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten."
+        "Präfix für E-Mails darf nur Zahlen, Buchstaben, Leerzeichen und Bindestriche enthalten.",
       )
       .regex(/^[a-z0-9 -]+$/i);
     validator.check(group.longName, "Titel ist ein Pflichtfeld.").notEmpty();
@@ -75,7 +75,7 @@ module.exports = {
     validator.check(activityInput.endTime, "Enduhrzeit ist ein Pflichtfeld.").notEmpty();
     validator.check(activityInput.assignedGroup, "Gruppe ist ein Pflichtfeld.").notEmpty();
     nonEmptyResourceLimits.forEach((limit) =>
-      validator.check(limit, "Die Ressourcenbeschränkungen dürfen nur aus Ziffern bestehen.").isInt()
+      validator.check(limit, "Die Ressourcenbeschränkungen dürfen nur aus Ziffern bestehen.").isInt(),
     );
 
     const start = fieldHelpers.parseToDateTimeUsingDefaultTimezone(activityInput.startDate, activityInput.startTime);

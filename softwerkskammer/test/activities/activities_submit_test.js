@@ -70,7 +70,7 @@ describe("Activity application - on submit -", () => {
     request(createApp())
       .post("/submit")
       .send(
-        "url=uhu&previousUrl=uhu&location=X&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00&resources[names]=x"
+        "url=uhu&previousUrl=uhu&location=X&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00&resources[names]=x",
       )
       .send("title=")
       .expect(200)
@@ -84,7 +84,7 @@ describe("Activity application - on submit -", () => {
     request(createApp())
       .post("/submit")
       .send(
-        "url=uhu&previousUrl=uhuPrev&location=X&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00&resources[names]=x"
+        "url=uhu&previousUrl=uhuPrev&location=X&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00&resources[names]=x",
       )
       .send("title=")
       .expect(200)
@@ -96,7 +96,7 @@ describe("Activity application - on submit -", () => {
     request(createApp())
       .post("/submit")
       .send(
-        "url=uhu&previousUrl=uhu&location=X&title=bla&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00&resources[names]=test"
+        "url=uhu&previousUrl=uhu&location=X&title=bla&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00&resources[names]=test",
       )
       .send("resources[limits]=&resources[limits]=7,5&resources[limits]=hallo")
       .expect(200)

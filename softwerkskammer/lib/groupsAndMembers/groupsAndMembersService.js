@@ -71,7 +71,7 @@ module.exports = {
     sessionUser,
     memberformData,
     accessrights,
-    notifyNewMemberRegistration
+    notifyNewMemberRegistration,
   ) {
     const persistentMember = await this.getMemberWithHisGroups(memberformData.previousNickname);
     if (persistentMember && !accessrights.canEditMember(persistentMember)) {

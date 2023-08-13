@@ -12,8 +12,8 @@ function sortCaseInsensitive(objectlist) {
   return objectlist.sort((a, b) =>
     new Intl.Collator("de").compare(
       a.lastname.toLowerCase() + " " + a.firstname.toLowerCase(),
-      b.lastname.toLowerCase() + " " + b.firstname.toLowerCase()
-    )
+      b.lastname.toLowerCase() + " " + b.firstname.toLowerCase(),
+    ),
   );
 }
 
@@ -34,7 +34,7 @@ module.exports = {
       {
         lastname: 1,
         firstname: 1,
-      }
+      },
     );
     return toMemberList(superusers);
   },
@@ -81,7 +81,7 @@ module.exports = {
       {
         interests: { $regex: "(^|\\s*,\\s*)" + misc.regexEscape(interest.trim()) + "($|\\s*,\\s*)", $options: options },
       },
-      {}
+      {},
     );
     return toMemberList(members);
   },

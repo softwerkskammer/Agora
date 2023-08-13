@@ -60,7 +60,7 @@ describe("the gitmech module", () => {
             "leider\n" +
             "2014-03-01 18:36:29 +0100\n" +
             "no comment\n" +
-            "path/file.md\n\n"
+            "path/file.md\n\n",
         );
       const metadatas = await Git.log("path", "HEAD", 1);
       expect(gitCommand.withArgs(argsForLog).calledOnce).to.be(true);
@@ -107,7 +107,7 @@ describe("the gitmech module", () => {
             "trauerleider\n" +
             "2013-12-08 12:53:42 +0100\n" +
             "no comment\n" +
-            "path/file.md\n\n"
+            "path/file.md\n\n",
         );
       const metadatas = await Git.log("path", "HEAD", 1);
       expect(gitCommand.withArgs(argsForLog).calledOnce).to.be(true);
@@ -143,7 +143,7 @@ describe("the gitmech module", () => {
             "leider\n" +
             "2014-03-01 18:36:29 +0100\n" +
             "no comment\n" +
-            "path/file.md\n\n"
+            "path/file.md\n\n",
         );
       const metadatas = await Git.log("path", "HEAD", 1);
       expect(gitCommand.withArgs(argsForLog).calledOnce).to.be(true);
@@ -315,7 +315,7 @@ describe("the gitmech module", () => {
       const chunks = await Git.grep("test");
       expect(chunks).to.have.length(4);
       expect(chunks).to.contain(
-        "global/veran.md:16:[Belgium Testing Days](http://btdconf.com/)                                                                                    | Brügge                  | 17.3. - 20.3.    "
+        "global/veran.md:16:[Belgium Testing Days](http://btdconf.com/)                                                                                    | Brügge                  | 17.3. - 20.3.    ",
       );
     });
 

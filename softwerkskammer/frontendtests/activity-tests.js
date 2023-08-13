@@ -24,7 +24,7 @@
         activity_validator,
         field,
         undefined,
-        /activities\/checkurl\?url=value/
+        /activities\/checkurl\?url=value/,
       );
     };
 
@@ -34,7 +34,7 @@
         field,
         message,
         undefined,
-        /activities\/checkurl\?url=value/
+        /activities\/checkurl\?url=value/,
       );
     };
 

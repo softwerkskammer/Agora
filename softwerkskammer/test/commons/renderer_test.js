@@ -10,49 +10,49 @@ describe("Renderer", () => {
       it("1", () => {
         const text = "a [[Foo]] b";
         expect(Renderer.render(text, "subdir")).to.equal(
-          '<p>a <a class="internal" href="/wiki/subdir/foo">Foo</a> b</p>\n'
+          '<p>a <a class="internal" href="/wiki/subdir/foo">Foo</a> b</p>\n',
         );
       });
 
       it("2", () => {
         const text = "a [[Foo]][[Foo]][[Foo]] b";
         expect(Renderer.render(text, "subdir")).to.be.equal(
-          '<p>a <a class="internal" href="/wiki/subdir/foo">Foo</a><a class="internal" href="/wiki/subdir/foo">Foo</a><a class="internal" href="/wiki/subdir/foo">Foo</a> b</p>\n'
+          '<p>a <a class="internal" href="/wiki/subdir/foo">Foo</a><a class="internal" href="/wiki/subdir/foo">Foo</a><a class="internal" href="/wiki/subdir/foo">Foo</a> b</p>\n',
         );
       });
 
       it("3", () => {
         const text = "a [[Foo Bar]] b";
         expect(Renderer.render(text, "subdir")).to.be.equal(
-          '<p>a <a class="internal" href="/wiki/subdir/foo-bar">Foo Bar</a> b</p>\n'
+          '<p>a <a class="internal" href="/wiki/subdir/foo-bar">Foo Bar</a> b</p>\n',
         );
       });
 
       it("4", () => {
         const text = "a [[Foo]][[Bar]] b";
         expect(Renderer.render(text, "subdir")).to.be.equal(
-          '<p>a <a class="internal" href="/wiki/subdir/foo">Foo</a><a class="internal" href="/wiki/subdir/bar">Bar</a> b</p>\n'
+          '<p>a <a class="internal" href="/wiki/subdir/foo">Foo</a><a class="internal" href="/wiki/subdir/bar">Bar</a> b</p>\n',
         );
       });
 
       it("5", () => {
         const text = "a [[Foo]] [[Bar]] b";
         expect(Renderer.render(text, "subdir")).to.be.equal(
-          '<p>a <a class="internal" href="/wiki/subdir/foo">Foo</a> <a class="internal" href="/wiki/subdir/bar">Bar</a> b</p>\n'
+          '<p>a <a class="internal" href="/wiki/subdir/foo">Foo</a> <a class="internal" href="/wiki/subdir/bar">Bar</a> b</p>\n',
         );
       });
 
       it("6", () => {
         const text = "a [[Il marito di Foo|Foobar]] [[Bar]] b";
         expect(Renderer.render(text, "subdir")).to.be.equal(
-          '<p>a <a class="internal" href="/wiki/subdir/foobar">Il marito di Foo</a> <a class="internal" href="/wiki/subdir/bar">Bar</a> b</p>\n'
+          '<p>a <a class="internal" href="/wiki/subdir/foobar">Il marito di Foo</a> <a class="internal" href="/wiki/subdir/bar">Bar</a> b</p>\n',
         );
       });
 
       it("7", () => {
         const text = "a [[Foo / Bar]] b";
         expect(Renderer.render(text, "subdir")).to.be.equal(
-          '<p>a <a class="internal" href="/wiki/subdir/foo---bar">Foo / Bar</a> b</p>\n'
+          '<p>a <a class="internal" href="/wiki/subdir/foo---bar">Foo / Bar</a> b</p>\n',
         );
       });
     });
@@ -90,7 +90,7 @@ describe("Renderer", () => {
       expect(Renderer.normalize("ÄÖÜ")).to.equal("aou");
       expect(Renderer.normalize("Caff<p>e</p> senza schiuma")).to.equal("caffpe-p-senza-schiuma");
       expect(Renderer.normalize("Per favore: nessun, dico; E un punto...")).to.equal(
-        "per-favore-nessun-dico-e-un-punto"
+        "per-favore-nessun-dico-e-un-punto",
       );
     });
 
@@ -152,8 +152,8 @@ describe("Renderer", () => {
       expect(
         Renderer.titleAndRenderedTail(
           "- Verwaltung des Contents erfolgt auf GitHub: https://github.com/Meet-Hub-Hannover",
-          ""
-        )
+          "",
+        ),
       ).to.eql({
         body: '<ul>\n<li>Verwaltung des Contents erfolgt auf GitHub: <a href="https://github.com/Meet-Hub-Hannover">https://github.com/Meet-Hub-Hannover</a></li>\n</ul>\n',
         title: undefined,

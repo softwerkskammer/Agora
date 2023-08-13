@@ -166,7 +166,7 @@ describe("Accessrights for Groups", () => {
   it("disallows registered members to contact the organizers when contact feature is turned off", () => {
     expect(standardMember().canContactTheOrganizers(groupWithOrganizersContactTheOrganizersTurnedOff)).to.be(false);
     expect(standardMember().canContactTheOrganizers(groupWithoutOrganizersAndContactTheOrganizersTurnedOff)).to.be(
-      false
+      false,
     );
   });
 
@@ -176,7 +176,7 @@ describe("Accessrights for Groups", () => {
 
   it("disallows registered members to contact the organizers when contact feature is turned on and there no organizers", () => {
     expect(standardMember().canContactTheOrganizers(groupWithoutOrganizersAndContactTheOrganizersTurnedOn)).to.be(
-      false
+      false,
     );
   });
 });

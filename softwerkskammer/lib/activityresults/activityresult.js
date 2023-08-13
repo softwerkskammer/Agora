@@ -88,7 +88,7 @@ class ActivityResult {
     const result = [];
     const groupedByDay = R.groupBy(
       (photo) => photo.time().set({ hours: 0, minutes: 0, seconds: 0 }).valueOf(),
-      R.sortBy((photo) => photo.time(), this.photos())
+      R.sortBy((photo) => photo.time(), this.photos()),
     );
     R.keys(groupedByDay).forEach((key) => {
       result.unshift({

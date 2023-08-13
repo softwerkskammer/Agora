@@ -41,7 +41,7 @@
         nickname,
         nicknameIsNotAvailable,
         undefined,
-        /members\/checknickname\?nickname=value/
+        /members\/checknickname\?nickname=value/,
       );
     });
 

@@ -133,7 +133,7 @@ describe("Activity result", () => {
       });
       expect(activityResult.photosByDay()).to.have.length(1);
       expect(activityResult.photosByDay()[0].day.setLocale("de").toLocaleString(DateTime.DATE_SHORT)).to.be(
-        "20.2.2014"
+        "20.2.2014",
       );
       expect(activityResult.photosByDay()[0].photosByTag).to.have.ownKeys(["tag1"]);
       expect(activityResult.photosByDay()[0].photosByTag.tag1).to.have.length(2);
@@ -162,10 +162,10 @@ describe("Activity result", () => {
       });
       expect(activityResult.photosByDay()).to.have.length(2);
       expect(activityResult.photosByDay()[0].day.setLocale("de").toLocaleString(DateTime.DATE_SHORT)).to.be(
-        "21.2.2014"
+        "21.2.2014",
       );
       expect(activityResult.photosByDay()[1].day.setLocale("de").toLocaleString(DateTime.DATE_SHORT)).to.be(
-        "20.2.2014"
+        "20.2.2014",
       );
     });
   });

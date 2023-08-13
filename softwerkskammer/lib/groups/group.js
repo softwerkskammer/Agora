@@ -82,7 +82,7 @@ class Group {
         tagToFilter +
         "[^>]*>" +
         ")",
-      "g"
+      "g",
     );
     return this.descriptionHTML().replace(matchTag, "");
   }
@@ -142,7 +142,7 @@ class Group {
   }
 
   unsubscribe(member) {
-    this.subscribedMembers = R.without(member.id(), this.subscribedMembers);
+    this.subscribedMembers = R.without([member.id()], this.subscribedMembers);
   }
 
   isMemberSubscribed(member) {

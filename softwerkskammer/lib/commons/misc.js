@@ -7,7 +7,7 @@ const mimetypes = require("mime-types");
 const imageExtensions = R.flatten(
   R.keys(mimetypes.extensions)
     .filter((type) => type.match(/^image/))
-    .map((type) => mimetypes.extensions[type])
+    .map((type) => mimetypes.extensions[type]),
 );
 
 function regexEscape(string) {
@@ -39,7 +39,7 @@ module.exports = {
     }
     callback(
       null,
-      jsobjects.map((each) => new Constructor(each))
+      jsobjects.map((each) => new Constructor(each)),
     );
   },
 

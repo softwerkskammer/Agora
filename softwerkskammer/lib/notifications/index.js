@@ -61,7 +61,7 @@ module.exports = {
       visitorID,
       "",
       "hat sich ein neuer Besucher angemeldet",
-      "Neue Anmeldung für Aktivität"
+      "Neue Anmeldung für Aktivität",
     );
   },
 
@@ -71,7 +71,7 @@ module.exports = {
       visitorID,
       "",
       "hat sich ein Besucher abgemeldet",
-      "Abmeldung für Aktivität"
+      "Abmeldung für Aktivität",
     );
   },
 
@@ -81,7 +81,7 @@ module.exports = {
       visitorID,
       "",
       "hat sich jemand auf die Warteliste eingetragen",
-      "Zugang auf Warteliste"
+      "Zugang auf Warteliste",
     );
   },
 
@@ -91,7 +91,7 @@ module.exports = {
       visitorID,
       "",
       "hat sich jemand von der Warteliste entfernt",
-      "Streichung aus Warteliste"
+      "Streichung aus Warteliste",
     );
   },
 

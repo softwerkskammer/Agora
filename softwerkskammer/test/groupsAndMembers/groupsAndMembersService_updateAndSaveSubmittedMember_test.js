@@ -36,7 +36,7 @@ describe("Groups and Members Service (updateAndSaveSubmittedMember)", () => {
           undefined,
           { previousNickname: "nick" },
           accessrights,
-          undefined
+          undefined,
         );
       } catch (err) {
         expect(err.message).to.equal("some error");
@@ -54,7 +54,7 @@ describe("Groups and Members Service (updateAndSaveSubmittedMember)", () => {
           undefined,
           { previousNickname: "nick" },
           accessrights,
-          undefined
+          undefined,
         );
         expect(true).to.be(false);
       } catch (err) {
@@ -74,7 +74,7 @@ describe("Groups and Members Service (updateAndSaveSubmittedMember)", () => {
           undefined,
           memberformData,
           accessrights,
-          undefined
+          undefined,
         );
       } catch (err) {
         expect(err.message).to.equal("some error");
@@ -98,7 +98,7 @@ describe("Groups and Members Service (updateAndSaveSubmittedMember)", () => {
         sessionUser,
         memberformData,
         accessrights,
-        () => {}
+        () => {},
       );
       expect(nickname).to.equal("nick in memberform");
       expect(sessionUser.member.id()).to.equal("member authentication id");
@@ -117,7 +117,7 @@ describe("Groups and Members Service (updateAndSaveSubmittedMember)", () => {
         undefined,
         memberformData,
         accessrights,
-        undefined
+        undefined,
       );
       expect(nickname).to.be.undefined();
     });
@@ -130,7 +130,7 @@ describe("Groups and Members Service (updateAndSaveSubmittedMember)", () => {
         sessionUser,
         memberformData,
         accessrights,
-        undefined
+        undefined,
       );
       expect(nickname).to.equal("nick in memberform");
       expect(sessionUser.member).to.equal(member);
@@ -146,7 +146,7 @@ describe("Groups and Members Service (updateAndSaveSubmittedMember)", () => {
         sessionUser,
         memberformData,
         accessrights,
-        undefined
+        undefined,
       );
       expect(nickname).to.equal("nick in memberform");
       expect(sessionUser.member).to.equal(member);
@@ -162,7 +162,7 @@ describe("Groups and Members Service (updateAndSaveSubmittedMember)", () => {
         sessionUser,
         memberformData,
         accessrights,
-        undefined
+        undefined,
       );
       expect(nickname).to.equal("nick in memberform");
       expect(sessionUser.member).to.equal(anotherMember);

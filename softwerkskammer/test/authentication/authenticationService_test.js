@@ -82,7 +82,7 @@ describe("Authentication Service", () => {
             },
           });
           done(err);
-        }
+        },
       );
     });
 

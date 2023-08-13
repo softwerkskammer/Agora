@@ -108,7 +108,7 @@ module.exports = function persistenceFunc(collectionName) {
         { id: objectId },
         {
           writeConcern: { w: 1 },
-        }
+        },
       );
     },
 
@@ -127,7 +127,7 @@ module.exports = function persistenceFunc(collectionName) {
         const newObject = await collection.findOneAndUpdate(
           { id: object.id, version: oldVersion },
           { $set: object },
-          { new: true, upsert: false }
+          { new: true, upsert: false },
         );
         if (!newObject.value) {
           // something went wrong: restore old version count

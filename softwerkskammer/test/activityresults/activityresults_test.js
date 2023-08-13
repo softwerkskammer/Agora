@@ -44,7 +44,7 @@ describe("Activityresults application", () => {
               { id: "627adb49-b7ef-4765-94b9-d094463007a6.JPG", timestamp: new Date(), tags: ["elsewhere"] },
               { id: "9afcfea0-1aa4-41c1-9f8c-6dba1e16d6c4.JPG", timestamp: new Date(), tags: ["elsewhere"] },
             ],
-          })
+          }),
       );
 
       request(createApp())
@@ -100,7 +100,7 @@ describe("Activityresults application", () => {
           id: "foo",
           name: "foobar",
           photos: [{ id: photoId, title: "mishka", uploaded_by: MEMBER_ID }],
-        })
+        }),
       );
     });
 

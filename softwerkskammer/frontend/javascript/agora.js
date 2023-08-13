@@ -120,11 +120,11 @@ function interestify() {
   "use strict";
 
   Array.from(document.querySelectorAll(".interestify")).forEach(
-    (node) => (node.innerHTML = surroundInterestsWithLinks(node.innerHTML, ""))
+    (node) => (node.innerHTML = surroundInterestsWithLinks(node.innerHTML, "")),
   );
 
   Array.from(document.querySelectorAll(".interestify-case-sensitive")).forEach(
-    (node) => (node.innerHTML = surroundInterestsWithLinks(node.innerHTML, "&casesensitive=true"))
+    (node) => (node.innerHTML = surroundInterestsWithLinks(node.innerHTML, "&casesensitive=true")),
   );
 }
 
@@ -163,7 +163,7 @@ function interestify() {
             },
             function (data) {
               e.$element.parent().find(".md-preview").html(data);
-            }
+            },
           );
           return ""; // to clearly indicate the loading...
         },
@@ -240,11 +240,11 @@ function interestify() {
 
   function createLinks() {
     Array.from(document.querySelectorAll(".urlify")).forEach(
-      (node) => (node.innerHTML = surroundWithLink(node.innerHTML))
+      (node) => (node.innerHTML = surroundWithLink(node.innerHTML)),
     );
 
     Array.from(document.querySelectorAll(".twitterify")).forEach(
-      (node) => (node.innerHTML = surroundTwitterName(node.innerHTML))
+      (node) => (node.innerHTML = surroundTwitterName(node.innerHTML)),
     );
   }
 
@@ -256,7 +256,7 @@ function interestify() {
           trigger: "hover",
           delay: { hide: 50 },
           placement: "auto",
-        })
+        }),
     );
 
     Array.from(document.querySelectorAll("[rel=tooltip-in-body]")).map(
@@ -267,11 +267,11 @@ function interestify() {
           trigger: "hover",
           delay: { hide: 50 },
           placement: "auto",
-        })
+        }),
     );
 
     Array.from(document.querySelectorAll(".tooltipify, .tooltiplabel")).map(
-      (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+      (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl),
     );
 
     Array.from(document.querySelectorAll(".tooltipify")).forEach((node) => node.classList.add("popover-highlight"));

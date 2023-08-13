@@ -27,7 +27,7 @@ async function memberSubmitted(req, res) {
     req.user,
     req.body,
     res.locals.accessrights,
-    notifyNewMemberRegistration
+    notifyNewMemberRegistration,
   );
 
   if (nickname) {
@@ -149,7 +149,7 @@ app.post("/submit", async (req, res, next) => {
       const result = await validation.checkValidity(
         req.body.previousNickname,
         req.body.nickname,
-        membersService.isValidNickname
+        membersService.isValidNickname,
       );
       if (!result) {
         return [req.i18n.t("validation.nickname_not_available")];
@@ -165,7 +165,7 @@ app.post("/submit", async (req, res, next) => {
       const result = await validation.checkValidity(
         req.body.previousEmail,
         req.body.email,
-        membersService.isValidEmail
+        membersService.isValidEmail,
       );
       if (!result) {
         return [req.i18n.t("validation.duplicate_email")];
