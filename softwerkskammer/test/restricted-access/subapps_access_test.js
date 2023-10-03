@@ -16,7 +16,7 @@ describe("Security for normal visitors does not allow to access ", () => {
   }
 
   it("GET URLs", async () => {
-    const all = [
+    [
       "/activities/new",
       "/activities/newLike/other",
       "/activities/edit/EventA",
@@ -34,12 +34,11 @@ describe("Security for normal visitors does not allow to access ", () => {
       "/members/edit/nick",
       "/members/nick",
       "/dashboard/",
-    ].map(checkGetUrlForRedirection);
-    await Promise.all(all);
+    ].forEach(async (url) => await checkGetUrlForRedirection(url));
   });
 
   it("POST URLs", async () => {
-    const all = [
+    [
       "/activities/submit",
       "/activities/subscribe",
       "/activities/addToWaitinglist",
@@ -47,7 +46,6 @@ describe("Security for normal visitors does not allow to access ", () => {
       "/groups/submit",
       "/groups/subscribe/GroupA",
       "/members/submit",
-    ].map(checkPostUrlForRedirection);
-    await Promise.all(all);
+    ].forEach(async (url) => await checkPostUrlForRedirection(url));
   });
 });
