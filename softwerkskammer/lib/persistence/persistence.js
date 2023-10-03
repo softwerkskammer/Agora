@@ -31,10 +31,7 @@ module.exports = function persistenceFunc(collectionName) {
     logInfo("Connecting to Mongo");
     try {
       logInfo("In connect callback");
-      const client = await MongoClient.connect(conf.get("mongoURL"), {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      });
+      const client = await MongoClient.connect(conf.get("mongoURL"));
       var db = client.db("swk");
       ourDB = db;
       ourClient = client;
@@ -129,13 +126,13 @@ module.exports = function persistenceFunc(collectionName) {
           { $set: object },
           { new: true, upsert: false },
         );
-        if (!newObject.value) {
+        if (!newObject) {
           // something went wrong: restore old version count
           object.version = oldVersion;
           throw new Error(CONFLICTING_VERSIONS);
         }
         //logger.info(object.constructor.name + ' found and modified: ' + JSON.stringify(object));
-        return newObject.value;
+        return newObject;
       } else {
         // object is not yet persisted
         return self.saveMongo(object);
