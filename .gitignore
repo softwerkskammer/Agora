@@ -45,3 +45,6 @@ docker/local-openid/
 docker/mongo/
 /softwerkskammer/chado-result.json
 /.idea/shelf
+/2023-12-24
+/.idea/prettier.xml
+/mongoimport_agora.sh
