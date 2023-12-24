@@ -112,12 +112,12 @@ describe("Activity application", () => {
         id === "memberId1"
           ? member1
           : id === "memberId2"
-          ? member2
-          : id === "memberId3"
-          ? member3
-          : id === "memberId4"
-          ? member4
-          : undefined,
+            ? member2
+            : id === "memberId3"
+              ? member3
+              : id === "memberId4"
+                ? member4
+                : undefined,
       );
       return members;
     });
