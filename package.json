@@ -119,8 +119,9 @@
     "sharp": "0.32.6"
   },
   "scripts": {
+    "deploy": "yarn prepare && grunt deploy_production",
     "start": "node --icu-data-dir=node_modules/full-icu start-softwerkskammer",
-    "test": "grunt tests",
+    "test": "yarn prepare && grunt",
     "prepare": "git log -1 --pretty=\"format:a.dropdown-item.nav-link(href='https://github.com/softwerkskammer/Agora/commit/%H', target='_blank')%n i.fab.fa-github.fa-fw%n | &nbsp;Version: %h\" > softwerkskammer/version.pug"
   },
   "packageManager": "yarn@4.0.2"
