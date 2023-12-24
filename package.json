@@ -14,7 +14,8 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "6.5.1",
-    "@fullcalendar/luxon2": "6.1.10",
+    "@fullcalendar/core": "6.1.10",
+    "@fullcalendar/luxon3": "6.1.10",
     "@popperjs/core": "2.11.8",
     "CoolBeans": "0.0.9",
     "awesome-bootstrap-checkbox": "1.0.1",
@@ -81,6 +82,7 @@
   },
   "devDependencies": {
     "ajv": "8.12.0",
+    "eslint": "8.56.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.1.2",
     "grunt": "1.6.1",

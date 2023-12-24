@@ -1,6 +1,6 @@
 #!/bin/sh
 git pull
 corepack enable
-yarn install --frozen-lockfile
+yarn install --immutable
 git checkout -- yarn.lock
 yarn deploy
