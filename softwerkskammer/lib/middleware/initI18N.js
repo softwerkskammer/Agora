@@ -1,6 +1,6 @@
 const i18n = require("i18next");
 const middleware = require("i18next-http-middleware");
-const Backend = require("i18next-node-fs-backend");
+const Backend = require("i18next-fs-backend");
 const intervalPlural = require("i18next-intervalplural-postprocessor");
 const pug = require("pug");
 

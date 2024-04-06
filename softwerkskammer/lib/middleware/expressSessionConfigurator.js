@@ -10,7 +10,6 @@ if (!conf.get("dontUsePersistentSessions")) {
   sessionStore = MongoStore.create({
     mongoUrl: conf.get("mongoURL"),
     touchAfter: oneHour,
-    mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
   });
 }
 
