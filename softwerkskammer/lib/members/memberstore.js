@@ -23,19 +23,13 @@ function toMemberList(result) {
 
 module.exports = {
   allMembers: async function allMembers() {
-    const members = await persistence.listMongoByField({}, { lastname: 1, firstname: 1 });
+    const members = await persistence.list("data->>'$.lastname' ASC, data->>'$.lastname' ASC");
     return toMemberList(members);
   },
 
   superUsers: async function superUsers() {
     const superusersids = conf.get("superuser");
-    const superusers = await persistence.listMongoByField(
-      { id: misc.arrayToLowerCaseRegExp(superusersids) },
-      {
-        lastname: 1,
-        firstname: 1,
-      },
-    );
+    const superusers = await persistence.listByIds(superusersids);
     return toMemberList(superusers);
   },
 
@@ -52,22 +46,25 @@ module.exports = {
   },
 
   getMember: async function getMember(nickname) {
-    const member = await persistence.getMongoByField({ nickname: misc.toLowerCaseRegExp(nickname.trim()) });
+    const member = await persistence.getByWhere(`json_extract ( data, '$.nickname' ) = '${nickname}'`);
     return member ? new Member(member) : null;
   },
 
   getMemberForId: async function getMemberForId(id) {
-    const member = await persistence.getMongoById(id);
+    const member = await persistence.getById(id);
     return member ? new Member(member) : null;
   },
 
   getMemberForAuthentication: async function getMemberForAuthentication(authenticationId) {
-    const member = await persistence.getMongoByField({ authentications: authenticationId });
+    // select data from memberstore where json_extract( data, '$.authentications' ) like '%"github:450708%';
+    const member = await persistence.getByWhere(
+      `json_extract( data, '$.authentications' ) like '%"${authenticationId}"%'`,
+    );
     return member ? new Member(member) : null;
   },
 
   getMembersForIds: async function getMembersForIds(ids) {
-    const members = await persistence.listMongoByIds(ids, {});
+    const members = await persistence.listByIds(ids, {});
     return toMemberList(members);
   },
 

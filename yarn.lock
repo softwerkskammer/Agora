@@ -847,6 +847,7 @@ __metadata:
     CoolBeans: "npm:0.0.9"
     ajv: "npm:8.12.0"
     awesome-bootstrap-checkbox: "npm:1.0.1"
+    better-sqlite3: "npm:10.0.0"
     body-parser: "npm:1.20.2"
     bootstrap: "npm:5.3.3"
     bootstrap-datepicker: "npm:1.10.0"
@@ -1325,6 +1326,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"better-sqlite3@npm:10.0.0":
+  version: 10.0.0
+  resolution: "better-sqlite3@npm:10.0.0"
+  dependencies:
+    bindings: "npm:^1.5.0"
+    node-gyp: "npm:latest"
+    prebuild-install: "npm:^7.1.1"
+  checksum: 4dd5511c85ff15be273e1114c4ce05b152a314b4ad6bfec84450925b5273bcac3f9b913b8c97a2d935218b10cb56f7ec16064463c2539844a0b300191e30b3d0
+  languageName: node
+  linkType: hard
+
 "big-integer@npm:^1.6.44":
   version: 1.6.51
   resolution: "big-integer@npm:1.6.51"
@@ -1336,6 +1348,15 @@ __metadata:
   version: 2.2.0
   resolution: "binary-extensions@npm:2.2.0"
   checksum: d73d8b897238a2d3ffa5f59c0241870043aa7471335e89ea5e1ff48edb7c2d0bb471517a3e4c5c3f4c043615caa2717b5f80a5e61e07503d51dc85cb848e665d
+  languageName: node
+  linkType: hard
+
+"bindings@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "bindings@npm:1.5.0"
+  dependencies:
+    file-uri-to-path: "npm:1.0.0"
+  checksum: 3dab2491b4bb24124252a91e656803eac24292473e56554e35bbfe3cc1875332cfa77600c3bac7564049dc95075bf6fcc63a4609920ff2d64d0fe405fcf0d4ba
   languageName: node
   linkType: hard
 
@@ -3081,6 +3102,13 @@ __metadata:
   version: 0.1.1
   resolution: "file-sync-cmp@npm:0.1.1"
   checksum: dc2b17c1c5c15b4b49c650554773523e827984818edbad62008bd73e79c334ea92fb1b7a50d1bad5ebb03a74dc91fb2ea4073f20b5ac6ed80ba70704de37ea57
+  languageName: node
+  linkType: hard
+
+"file-uri-to-path@npm:1.0.0":
+  version: 1.0.0
+  resolution: "file-uri-to-path@npm:1.0.0"
+  checksum: 3b545e3a341d322d368e880e1c204ef55f1d45cdea65f7efc6c6ce9e0c4d22d802d5629320eb779d006fe59624ac17b0e848d83cc5af7cd101f206cb704f5519
   languageName: node
   linkType: hard
 

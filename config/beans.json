@@ -45,7 +45,7 @@
     "constructorArgs": { "collectionName": "groupstore" }
   },
   "membersPersistence": {
-    "module": "./softwerkskammer/lib/persistence/persistence",
+    "module": "./softwerkskammer/lib/persistence/sqlitePersistence",
     "constructorArgs": { "collectionName": "memberstore" }
   },
   "settingsPersistence": {
