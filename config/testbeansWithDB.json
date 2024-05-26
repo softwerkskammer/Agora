@@ -6,7 +6,7 @@
     }
   },
   "membersPersistence": {
-    "module": "./softwerkskammer/lib/persistence/persistence",
+    "module": "./softwerkskammer/lib/persistence/sqlitePersistence",
     "constructorArgs": {
       "collectionName": "teststore"
     }

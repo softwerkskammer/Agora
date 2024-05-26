@@ -115,14 +115,6 @@ describe("Groups and Members Service", () => {
       sinon.restore();
     });
 
-    it("returns no group when there is no group and no mailing-list", async () => {
-      sinon.stub(memberstore, "getMembersForEMails");
-      thereIsNoGroupFor("unbekannteListe");
-
-      const group = await groupsAndMembersService.getGroupAndMembersForList("unbekannteListe");
-      expect(group).to.not.exist();
-    });
-
     it("returns no group when there is no group but a mailing-list", async () => {
       thereAreMailingListUsers(["user1@mail1.com", "user2@mail2.com"]);
       thereIsNoGroupFor("mailingListWithoutGroup");

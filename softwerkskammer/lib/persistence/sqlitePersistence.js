@@ -37,37 +37,40 @@ function execWithTry(command) {
 }
 
 module.exports = function sqlitePersistenceFunc(collectionName, extraCols = []) {
-  const columns = ["id TEXT PRIMARY KEY", "data BLOB"].concat(
-    extraCols.map((col) => {
-      if (col === "version") {
-        return `${col} INTEGER`;
-      }
-      return `${col} TEXT`;
-    }),
-  );
-  db.exec(`CREATE TABLE IF NOT EXISTS ${collectionName} ( ${columns.join(",")});`);
-  execWithTry(`CREATE INDEX idx_${collectionName}_id ON ${collectionName}(id);`);
-  if (extraCols.length > 0) {
-    const suffix = extraCols.join("_");
-    const columnsInIdx = extraCols.join(",");
-    execWithTry(`CREATE INDEX idx_${collectionName}_${suffix} ON ${collectionName}(${columnsInIdx});`);
-    extraCols.forEach((col) => {
-      execWithTry(`CREATE INDEX idx_${this.collectionName}_${col} ON ${this.collectionName}(${col});`);
-    });
+  function create() {
+    const columns = ["id TEXT PRIMARY KEY", "data BLOB"].concat(
+      extraCols.map((col) => {
+        if (col === "version") {
+          return `${col} INTEGER`;
+        }
+        return `${col} TEXT`;
+      }),
+    );
+    db.exec(`CREATE TABLE IF NOT EXISTS ${collectionName} ( ${columns.join(",")});`);
+    execWithTry(`CREATE INDEX idx_${collectionName}_id ON ${collectionName}(id);`);
+    if (extraCols.length > 0) {
+      const suffix = extraCols.join("_");
+      const columnsInIdx = extraCols.join(",");
+      execWithTry(`CREATE INDEX idx_${collectionName}_${suffix} ON ${collectionName}(${columnsInIdx});`);
+      extraCols.forEach((col) => {
+        execWithTry(`CREATE INDEX idx_${this.collectionName}_${col} ON ${this.collectionName}(${col});`);
+      });
+    }
   }
 
+  create();
   const colsForSave = ["id", "data"].concat(extraCols);
 
   const persistence = {
     list(orderBy) {
-      return this.listByField("true", orderBy);
+      return this.listByWhere("true", orderBy);
     },
 
     listByIds(list, orderBy) {
-      return this.listByField(`id IN (${list.map((each) => `${escape(each)}`).join(",")})`, orderBy);
+      return this.listByWhere(`id IN (${list.map((each) => `${escape(each)}`).join(",")})`, orderBy);
     },
 
-    listByField(where, orderBy = "id ASC") {
+    listByWhere(where, orderBy = "id ASC") {
       const query = `SELECT data FROM ${collectionName} WHERE ${where} ORDER BY ${orderBy};`;
       return db
         .prepare(query)
@@ -123,6 +126,11 @@ module.exports = function sqlitePersistenceFunc(collectionName, extraCols = []) 
 
     removeAllByIds(ids) {
       return this.removeWithQuery(`id IN (${ids.map(escape).join(",")})`);
+    },
+
+    recreateForTest() {
+      db.exec(`DROP TABLE IF EXISTS ${collectionName};`);
+      create();
     },
   };
   return persistence;

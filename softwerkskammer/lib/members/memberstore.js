@@ -2,10 +2,8 @@
 
 const conf = require("simple-configure");
 const beans = conf.get("beans");
-const R = require("ramda");
 const persistence = beans.get("membersPersistence");
 const Member = beans.get("member");
-const misc = beans.get("misc");
 const logger = require("winston").loggers.get("transactions");
 
 function sortCaseInsensitive(objectlist) {
@@ -33,18 +31,6 @@ module.exports = {
     return toMemberList(superusers);
   },
 
-  getMembersForEMails: async function getMembersForEMails(emails) {
-    if (emails.length === 0) {
-      return [];
-    }
-    async function listThem(memberChunk) {
-      const members = await persistence.listMongoByField({ email: misc.arrayToLowerCaseRegExp(memberChunk) }, {});
-      return toMemberList(members);
-    }
-
-    return R.flatten(await Promise.all(R.splitEvery(500, emails).map(listThem)));
-  },
-
   getMember: async function getMember(nickname) {
     const member = await persistence.getByWhere(`json_extract ( data, '$.nickname' ) = '${nickname}'`);
     return member ? new Member(member) : null;
@@ -64,31 +50,34 @@ module.exports = {
   },
 
   getMembersForIds: async function getMembersForIds(ids) {
-    const members = await persistence.listByIds(ids, {});
+    const members = await persistence.listByIds(ids);
     return toMemberList(members);
   },
 
   getMemberForEMail: async function getMemberForEMail(email) {
-    const member = await persistence.getMongoByField({ email: misc.toLowerCaseRegExp(email) });
+    const member = await persistence.getByWhere(`json_extract ( data, '$.email' ) like '${email}'`);
     return member ? new Member(member) : null;
   },
 
   getMembersWithInterest: async function getMembersWithInterest(interest, options) {
-    const members = await persistence.listMongoByField(
-      {
-        interests: { $regex: "(^|\\s*,\\s*)" + misc.regexEscape(interest.trim()) + "($|\\s*,\\s*)", $options: options },
-      },
-      {},
-    );
-    return toMemberList(members);
+    const members = await persistence.listByWhere(`json_extract ( data, '$.interests' ) like '%${interest}%'`);
+    const result = toMemberList(members);
+    if (options === "i") {
+      return result.filter((mem) => {
+        const interests =
+          options === "i" ? mem.interestsForSelect2().map((i) => i.toLowerCase()) : mem.interestsForSelect2();
+        return interests.includes(options === "i" ? interest.toLowerCase() : interest);
+      });
+    }
+    return result.filter((mem) => mem.interestsForSelect2().includes(interest));
   },
 
   saveMember: async function saveMember(member) {
-    return persistence.saveMongo(member.state);
+    return persistence.save(member.state);
   },
 
   removeMember: async function removeMember(member) {
-    await persistence.removeMongo(member.id());
+    await persistence.removeById(member.id());
     logger.info("Member removed:" + JSON.stringify(member));
   },
 };
