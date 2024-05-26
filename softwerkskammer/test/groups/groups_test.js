@@ -262,7 +262,7 @@ describe("Groups application", () => {
       let savedGroup;
 
       before(() => {
-        sinon.stub(groupsPersistence, "saveMongo").callsFake((group) => {
+        sinon.stub(groupsPersistence, "save").callsFake((group) => {
           savedGroup = group;
         });
       });

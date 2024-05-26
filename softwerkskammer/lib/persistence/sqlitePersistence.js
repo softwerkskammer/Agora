@@ -78,16 +78,16 @@ module.exports = function sqlitePersistenceFunc(collectionName, extraCols = []) 
         .map((each) => each && JSON.parse(each.data));
     },
 
-    getById(id) {
-      return this.getByField({ key: "id", val: id });
+    getById(id, caseInsensitive) {
+      return this.getByField({ key: "id", val: id }, caseInsensitive);
     },
 
-    getByField(where) {
-      return this.getByWhere(`${where.key} = ${escape(where.val)}`);
+    getByField(where, caseInsensitive) {
+      return this.getByWhere(`${where.key} = ${escape(where.val)}`, caseInsensitive);
     },
 
-    getByWhere(where) {
-      const query = `SELECT data FROM ${collectionName} WHERE ${where};`;
+    getByWhere(where, caseInsensitive = false) {
+      const query = `SELECT data FROM ${collectionName} WHERE ${where} ${caseInsensitive ? "COLLATE NOCASE" : ""};`;
       const result = db.prepare(query).get();
       return result ? JSON.parse(result.data) : {};
     },
