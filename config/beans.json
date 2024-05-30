@@ -37,7 +37,7 @@
     "constructorArgs": { "collectionName": "activitystore", "extraCols": "startDate,endDate,url,version" }
   },
   "activityresultsPersistence": {
-    "module": "./softwerkskammer/lib/persistence/persistence",
+    "module": "./softwerkskammer/lib/persistence/sqlitePersistence",
     "constructorArgs": { "collectionName": "activityresultstore" }
   },
   "groupsPersistence": {
@@ -49,7 +49,7 @@
     "constructorArgs": { "collectionName": "memberstore" }
   },
   "settingsPersistence": {
-    "module": "./softwerkskammer/lib/persistence/persistence",
+    "module": "./softwerkskammer/lib/persistence/sqlitePersistence",
     "constructorArgs": { "collectionName": "settingsstore" }
   },
 

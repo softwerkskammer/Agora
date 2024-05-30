@@ -17,7 +17,7 @@ const util = require("util");
 const lastNotifications = "lastWikiNotifications";
 
 async function closeAndExit() {
-  await persistence.closeMongo();
+  // await persistence.closeMongo();
   /* eslint no-process-exit: 0 */
   logger.info("Terminating the process.......");
   process.exit();
@@ -27,21 +27,21 @@ logger.info("== Wiki Changes ===================================================
 
 async function run() {
   try {
-    const result = await persistence.getMongoByField({ id: lastNotifications });
+    const result = await persistence.getById(lastNotifications);
     logger.info("No error when reading lastWikiNotifications");
     const yesterday = new Date(Date.now() - 86400000); // minus 1 day
-    const lastNotified = result || { id: lastNotifications, moment: yesterday }; // moment here is a Date
+    const lastNotified = result || { id: lastNotifications, moment: yesterday }; // moment here is a ISO String
     if (result) {
       logger.info(`Last notified: ${util.inspect(result.moment)}`);
     }
-    const changes = await wikiService.findPagesForDigestSince(lastNotified.moment.getTime());
+    const changes = await wikiService.findPagesForDigestSince(new Date(lastNotified.moment).getTime());
     if (changes.length === 0) {
       logger.info("no changes to report");
       return await closeAndExit();
     }
     await notifications.wikiChanges(changes);
     lastNotified.moment = new Date();
-    await persistence.saveMongo(lastNotified);
+    await persistence.save(lastNotified);
     logger.info(`Wiki-Changes notified at: ${lastNotified.moment}`);
     return await closeAndExit();
   } catch (e) {

@@ -16,7 +16,7 @@ describe("ActivityResult service", () => {
 
   beforeEach(() => {
     activityResult = { id: "Hackergarten2", photos: [{ id: "image1.jpg" }] };
-    getById = sinon.stub(persistence, "getMongoById").returns(activityResult);
+    getById = sinon.stub(persistence, "getById").returns(activityResult);
   });
 
   afterEach(() => {
@@ -31,7 +31,7 @@ describe("ActivityResult service", () => {
 
     it("should return an error if activity does not exist", async () => {
       getById.restore();
-      sinon.stub(persistence, "getMongoById").throws(new Error("not found"));
+      sinon.stub(persistence, "getById").throws(new Error("not found"));
 
       try {
         await service.getActivityResultByName("non-existing-id");
@@ -48,7 +48,7 @@ describe("ActivityResult service", () => {
   });
 
   it("addPhotoToActivityResult should add an image to an activityresult", async () => {
-    const saveStub = sinon.stub(persistence, "saveMongo");
+    const saveStub = sinon.stub(persistence, "save");
 
     sinon.stub(galleryService, "storeImage").callsFake((path) => {
       return path;
@@ -63,7 +63,7 @@ describe("ActivityResult service", () => {
   });
 
   it("updatePhotoOfActivityResult should change an image in an activityresult", async () => {
-    const saveStub = sinon.stub(persistence, "saveMongo");
+    const saveStub = sinon.stub(persistence, "save");
 
     await service.updatePhotoOfActivityResult(
       "Hackergarten2",

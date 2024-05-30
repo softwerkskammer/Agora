@@ -30,7 +30,7 @@ class Photo {
   }
 
   time() {
-    return DateTime.fromJSDate(this.state.timestamp);
+    return DateTime.fromISO(this.state.timestamp);
   }
 
   updateTitleTagsAndTimestamp(data) {

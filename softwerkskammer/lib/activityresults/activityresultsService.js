@@ -6,7 +6,7 @@ const galleryService = beans.get("galleryService");
 const ActivityResult = beans.get("activityresult");
 
 async function load(activityResultName) {
-  const data = await persistence.getMongoById(activityResultName);
+  const data = await persistence.getById(activityResultName);
   return data ? new ActivityResult(data) : undefined;
 }
 
@@ -25,11 +25,11 @@ module.exports = {
     const now = DateTime.local();
     activityResult.addPhoto({
       id: imageUri,
-      timestamp: (picturesDate < now ? picturesDate : now).toJSDate(),
+      timestamp: (picturesDate < now ? picturesDate : now).toISO(),
       // eslint-disable-next-line camelcase
       uploaded_by: memberId,
     });
-    await persistence.saveMongo(activityResult.state);
+    await persistence.save(activityResult.state);
     return imageUri;
   },
 
@@ -46,14 +46,14 @@ module.exports = {
     }
     if (accessrights.canEditPhoto(photo)) {
       activityResult.updatePhotoById(photoId, data);
-      return persistence.saveMongo(activityResult.state);
+      return persistence.save(activityResult.state);
     }
   },
 
   deletePhotoOfActivityResult: async function deletePhotoOfActivityResult(activityResultName, photoId) {
     const activityResult = await load(activityResultName);
     activityResult.deletePhotoById(photoId);
-    await persistence.saveMongo(activityResult.state);
+    await persistence.save(activityResult.state);
     return galleryService.deleteImage(photoId);
   },
 };

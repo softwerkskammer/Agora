@@ -158,10 +158,6 @@ module.exports = function sqlitePersistenceFunc(collectionName, extraColumns) {
       return this.removeWithQuery(`id = ${escape(id)}`);
     },
 
-    removeAllByIds(ids) {
-      return this.removeWithQuery(`id IN (${ids.map(escape).join(",")})`);
-    },
-
     recreateForTest() {
       db.exec(`DROP TABLE IF EXISTS ${collectionName};`);
       create();
