@@ -20,47 +20,45 @@ function toMemberList(result) {
 }
 
 module.exports = {
-  allMembers: async function allMembers() {
-    const members = await persistence.list("data->>'$.lastname' ASC, data->>'$.lastname' ASC");
+  allMembers: function allMembers() {
+    const members = persistence.list("data->>'$.lastname' ASC, data->>'$.lastname' ASC");
     return toMemberList(members);
   },
 
-  superUsers: async function superUsers() {
+  superUsers: function superUsers() {
     const superusersids = conf.get("superuser");
-    const superusers = await persistence.listByIds(superusersids);
+    const superusers = persistence.listByIds(superusersids);
     return toMemberList(superusers);
   },
 
-  getMember: async function getMember(nickname) {
-    const member = await persistence.getByWhere(`json_extract ( data, '$.nickname' ) = '${nickname}'`);
+  getMember: function getMember(nickname) {
+    const member = persistence.getByWhere(`json_extract ( data, '$.nickname' ) = '${nickname}'`);
     return member ? new Member(member) : null;
   },
 
-  getMemberForId: async function getMemberForId(id) {
-    const member = await persistence.getById(id);
+  getMemberForId: function getMemberForId(id) {
+    const member = persistence.getById(id);
     return member ? new Member(member) : null;
   },
 
-  getMemberForAuthentication: async function getMemberForAuthentication(authenticationId) {
+  getMemberForAuthentication: function getMemberForAuthentication(authenticationId) {
     // select data from memberstore where json_extract( data, '$.authentications' ) like '%"github:450708%';
-    const member = await persistence.getByWhere(
-      `json_extract( data, '$.authentications' ) like '%"${authenticationId}"%'`,
-    );
+    const member = persistence.getByWhere(`json_extract( data, '$.authentications' ) like '%"${authenticationId}"%'`);
     return member ? new Member(member) : null;
   },
 
-  getMembersForIds: async function getMembersForIds(ids) {
-    const members = await persistence.listByIds(ids);
+  getMembersForIds: function getMembersForIds(ids) {
+    const members = persistence.listByIds(ids);
     return toMemberList(members);
   },
 
-  getMemberForEMail: async function getMemberForEMail(email) {
-    const member = await persistence.getByWhere(`json_extract ( data, '$.email' ) like '${email}'`);
+  getMemberForEMail: function getMemberForEMail(email) {
+    const member = persistence.getByWhere(`json_extract ( data, '$.email' ) like '${email}'`);
     return member ? new Member(member) : null;
   },
 
-  getMembersWithInterest: async function getMembersWithInterest(interest, options) {
-    const members = await persistence.listByWhere(`json_extract ( data, '$.interests' ) like '%${interest}%'`);
+  getMembersWithInterest: function getMembersWithInterest(interest, options) {
+    const members = persistence.listByWhere(`json_extract ( data, '$.interests' ) like '%${interest}%'`);
     const result = toMemberList(members);
     if (options === "i") {
       return result.filter((mem) => {
@@ -72,12 +70,12 @@ module.exports = {
     return result.filter((mem) => mem.interestsForSelect2().includes(interest));
   },
 
-  saveMember: async function saveMember(member) {
+  saveMember: function saveMember(member) {
     return persistence.save(member.state);
   },
 
-  removeMember: async function removeMember(member) {
-    await persistence.removeById(member.id());
+  removeMember: function removeMember(member) {
+    persistence.removeById(member.id());
     logger.info("Member removed:" + JSON.stringify(member));
   },
 };

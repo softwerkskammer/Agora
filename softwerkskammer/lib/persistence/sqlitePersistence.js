@@ -1,12 +1,14 @@
 const conf = require("simple-configure");
 const Database = require("better-sqlite3");
 const path = require("node:path");
+const R = require("ramda");
 const loggers = require("winston").loggers;
 
 const sqlitedb = conf.get("sqlitedb");
 const db = new Database(path.join(__dirname, sqlitedb));
 const scriptLogger = loggers.get("scripts");
 scriptLogger.info(`DB = ${sqlitedb}`);
+const CONFLICTING_VERSIONS = conf.get("beans").get("constants").CONFLICTING_VERSIONS;
 
 function escape(str = "") {
   if (typeof str === "string") {
@@ -36,7 +38,8 @@ function execWithTry(command) {
   }
 }
 
-module.exports = function sqlitePersistenceFunc(collectionName, extraCols = []) {
+module.exports = function sqlitePersistenceFunc(collectionName, extraColumns) {
+  const extraCols = extraColumns ? extraColumns.split(",") : [];
   function create() {
     const columns = ["id TEXT PRIMARY KEY", "data BLOB"].concat(
       extraCols.map((col) => {
@@ -53,7 +56,7 @@ module.exports = function sqlitePersistenceFunc(collectionName, extraCols = []) 
       const columnsInIdx = extraCols.join(",");
       execWithTry(`CREATE INDEX idx_${collectionName}_${suffix} ON ${collectionName}(${columnsInIdx});`);
       extraCols.forEach((col) => {
-        execWithTry(`CREATE INDEX idx_${this.collectionName}_${col} ON ${this.collectionName}(${col});`);
+        execWithTry(`CREATE INDEX idx_${collectionName}_${col} ON ${collectionName}(${col});`);
       });
     }
   }
@@ -89,13 +92,17 @@ module.exports = function sqlitePersistenceFunc(collectionName, extraCols = []) 
     getByWhere(where, caseInsensitive = false) {
       const query = `SELECT data FROM ${collectionName} WHERE ${where} ${caseInsensitive ? "COLLATE NOCASE" : ""};`;
       const result = db.prepare(query).get();
-      return result ? JSON.parse(result.data) : {};
+      return result ? JSON.parse(result.data) : undefined;
     },
 
     createValsForSave(object) {
       return [escape(object.id), asSqliteString(object)].concat(
         extraCols.map((col) => {
-          return object[col].toJSON ? escape(object[col].toJSON()) : escape(object[col]);
+          if (object[col]) {
+            return object[col].toJSON ? escape(object[col].toJSON()) : escape(object[col]);
+          } else {
+            return "null";
+          }
         }),
       );
     },
@@ -114,6 +121,33 @@ module.exports = function sqlitePersistenceFunc(collectionName, extraCols = []) 
         return `(${vals.join(",")})`;
       });
       return db.exec(`REPLACE INTO ${collectionName} (${colsForSave.join(",")}) VALUES ${rows.join("\n,")};`);
+    },
+
+    saveWithVersion(object) {
+      if (object.id === null || object.id === undefined) {
+        throw new Error("Given object has no valid id");
+      }
+      const oldVersion = object.version || 0;
+      object.version = oldVersion + 1;
+      const existing = this.getById(object.id);
+      const existingWithVersion = this.getByWhere(`id = ${escape(object.id)} AND version = ${oldVersion}`);
+      if (existing && existingWithVersion) {
+        const vals = this.createValsForSave(object);
+        const colsVals = R.zip(colsForSave, vals)
+          .map(([col, val]) => {
+            return `${col} = ${val}`;
+          })
+          .join(", ");
+
+        return db.exec(
+          `UPDATE ${collectionName} 
+            SET ${colsVals} WHERE version = ${oldVersion} AND id = '${existing.id}';`,
+        );
+      } else if (!existing) {
+        this.save(object);
+      } else {
+        throw new Error(CONFLICTING_VERSIONS);
+      }
     },
 
     removeWithQuery(where) {

@@ -324,7 +324,7 @@ describe("Activity application", () => {
       activityWithParticipants.state.resources.Veranstaltung._waitinglist = [
         {
           _memberId: "memberId3",
-          _registrationValidUntil: new Date(Date.now() + 86400000), // 1 day
+          _registrationValidUntil: new Date(Date.now() + 86400000).toISOString(), // 1 day
         },
       ];
 

@@ -59,7 +59,7 @@ describe("Activity application with DB - on submit -", () => {
 
     sinon.stub(activitystore, "getActivity").returns(activityBeforeConcurrentAccess);
 
-    await persistence.dropMongoCollection();
+    await persistence.recreateForTest();
     // save our activity with one registrant
     await activitystore.saveActivity(activityAfterConcurrentAccess);
   });

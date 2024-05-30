@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = {
-  list: async function () {
+  list: function () {
     throw new Error("Testpersistence - function list not implemented");
   },
 
@@ -13,11 +13,11 @@ module.exports = {
     throw new Error("Testpersistence - function listMongoByIds not implemented");
   },
 
-  listByIds: async function () {
+  listByIds: function () {
     throw new Error("Testpersistence - function listByIds not implemented");
   },
 
-  listByWhere: async function () {
+  listByWhere: function () {
     throw new Error("Testpersistence - function listByWhere not implemented");
   },
 

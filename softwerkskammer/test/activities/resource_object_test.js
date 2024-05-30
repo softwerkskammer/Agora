@@ -120,7 +120,7 @@ describe("Resource", () => {
         _waitinglist: [
           {
             _memberId: "memberID",
-            _registrationValidUntil: tomorrow,
+            _registrationValidUntil: tomorrow.toISOString(),
           },
         ],
       });

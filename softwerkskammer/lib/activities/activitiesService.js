@@ -96,13 +96,13 @@ module.exports = {
 
   addVisitorTo: async function addVisitorTo(memberId, activityUrl, millis) {
     const self = this;
-    const activity = await activitystore.getActivity(activityUrl);
+    const activity = activitystore.getActivity(activityUrl);
     if (!activity) {
       return ["message.title.problem", "message.content.activities.does_not_exist"];
     }
     if (activity.addMemberId(memberId, millis)) {
       try {
-        await activitystore.saveActivity(activity);
+        activitystore.saveActivity(activity);
         const result = await notifications.visitorRegistration(activity, memberId);
         return Array.isArray(result) ? result : [];
       } catch (err1) {
@@ -118,13 +118,13 @@ module.exports = {
 
   removeVisitorFrom: async function removeVisitorFrom(memberId, activityUrl) {
     const self = this;
-    const activity = await activitystore.getActivity(activityUrl);
+    const activity = activitystore.getActivity(activityUrl);
     if (!activity) {
       return ["message.title.problem", "message.content.activities.does_not_exist"];
     }
     activity.removeMemberId(memberId);
     try {
-      await activitystore.saveActivity(activity);
+      activitystore.saveActivity(activity);
       const result = await notifications.visitorUnregistration(activity, memberId);
       return Array.isArray(result) ? result : [];
     } catch (err1) {
@@ -137,14 +137,14 @@ module.exports = {
   },
 
   addToWaitinglist: async function addToWaitinglist(memberId, activityUrl, millis) {
-    const activity = await activitystore.getActivity(activityUrl);
+    const activity = activitystore.getActivity(activityUrl);
     if (!activity) {
       return ["message.title.problem", "message.content.activities.does_not_exist"];
     }
     if (activity.hasWaitinglist()) {
       activity.addToWaitinglist(memberId, millis);
       try {
-        await activitystore.saveActivity(activity);
+        activitystore.saveActivity(activity);
         const result = await notifications.waitinglistAddition(activity, memberId);
         return Array.isArray(result) ? result : [];
       } catch (err1) {
@@ -160,13 +160,13 @@ module.exports = {
 
   removeFromWaitinglist: async function removeFromWaitinglist(memberId, activityUrl) {
     const self = this;
-    const activity = await activitystore.getActivity(activityUrl);
+    const activity = activitystore.getActivity(activityUrl);
     if (!activity) {
       return ["message.title.problem", "message.content.activities.does_not_exist"];
     }
     activity.removeFromWaitinglist(memberId);
     try {
-      await activitystore.saveActivity(activity);
+      activitystore.saveActivity(activity);
       const result = await notifications.waitinglistRemoval(activity, memberId);
       return Array.isArray(result) ? result : [];
     } catch (err1) {

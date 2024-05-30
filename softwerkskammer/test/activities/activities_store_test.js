@@ -34,10 +34,10 @@ describe("Activity store", () => {
 
   beforeEach(() => {
     sampleList = [activity1, activity2];
-    list = sinon.stub(persistence, "listMongo").returns(sampleList);
-    sinon.stub(persistence, "listMongoByField").returns(sampleList);
-    getByField = sinon.stub(persistence, "getMongoByField").returns(activity1);
-    getById = sinon.stub(persistence, "getMongoById").callsFake((id) => {
+    list = sinon.stub(persistence, "list").returns(sampleList);
+    sinon.stub(persistence, "listByWhere").returns(sampleList);
+    getByField = sinon.stub(persistence, "getByField").returns(activity1);
+    getById = sinon.stub(persistence, "getById").callsFake((id) => {
       if (id === "socrates") {
         return socrates;
       }
@@ -67,9 +67,14 @@ describe("Activity store", () => {
 
   it("calls persistence.getByField for store.getActivity and transforms the result to an Activity", async () => {
     const url = activity1.url;
-    const activity = await store.getActivity(url);
+    const activity = store.getActivity(url);
     expect(activity.title()).to.equal(activity1.title);
-    expect(getByField.calledWith({ url })).to.be(true);
+    expect(
+      getByField.calledWith({
+        key: "url",
+        val: url,
+      }),
+    ).to.be(true);
     expect(activity.descriptionHTML()).to.contain("bli");
   });
 
@@ -83,17 +88,17 @@ describe("Activity store", () => {
 
   it("returns an activity object for the given id although the persistence only returns a JS object", async () => {
     getByField.restore();
-    sinon.stub(persistence, "getMongoByField").returns({ url: "activityUrl" });
+    sinon.stub(persistence, "getByField").returns({ url: "activityUrl" });
 
-    const result = await store.getActivity("activityUrl");
+    const result = store.getActivity("activityUrl");
     expect(result.url()).to.equal("activityUrl");
   });
 
   it("returns null when id does not exist", async () => {
     getByField.restore();
-    sinon.stub(persistence, "getMongoByField");
+    sinon.stub(persistence, "getByField");
 
-    const result = await store.getActivity(1234);
+    const result = store.getActivity(1234);
     expect(result).to.be(null);
   });
 
@@ -111,9 +116,9 @@ describe("Activity store", () => {
 
   it("returns all activites although the persistence only returns JS objects", async () => {
     list.restore();
-    sinon.stub(persistence, "listMongo").returns([{ url: "activityUrl" }]);
+    sinon.stub(persistence, "list").returns([{ url: "activityUrl" }]);
 
-    const activities = await store.allActivities();
+    const activities = store.allActivities();
     expect(activities).to.have.length(1);
     expect(activities[0].url()).to.equal("activityUrl");
   });
@@ -129,10 +134,10 @@ describe("Activity store", () => {
   });
 
   it("calls persistence.remove for store.removeActivity and passes on the given callback", async () => {
-    const remove = sinon.stub(persistence, "removeMongo");
+    const remove = sinon.stub(persistence, "removeById");
     const activity = new Activity(activity1);
     activity.state.id = "I D";
-    await store.removeActivity(activity);
+    store.removeActivity(activity);
     expect(remove.calledWith("I D")).to.be(true);
   });
 
@@ -145,9 +150,9 @@ describe("Activity store", () => {
 
     it("on fetching all activities - when the isSoCraTes flag is set", async () => {
       list.restore();
-      sinon.stub(persistence, "listMongo").returns([socrates]);
+      sinon.stub(persistence, "list").returns([socrates]);
 
-      const activities = await store.allActivities();
+      const activities = store.allActivities();
       expect(activities[0]).to.be.a(SoCraTesActivity);
     });
 

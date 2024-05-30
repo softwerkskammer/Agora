@@ -7,7 +7,7 @@ const expect = require("must-dist");
 const WaitinglistEntry = beans.get("waitinglistEntry");
 
 const entryWithoutParam = new WaitinglistEntry();
-const registrationDate = new Date(2013, 1, 23, 17, 44);
+const registrationDate = new Date(2013, 1, 23, 17, 44).toISOString();
 const entryWithParam = new WaitinglistEntry({ _memberId: "12345", _registeredAt: registrationDate }, "Meine Ressource");
 
 describe("Waitinglist Entry", () => {

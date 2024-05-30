@@ -109,7 +109,7 @@ describe("Activity application with DB - shows activities for Group-Ids -", () =
 
   beforeEach(async () => {
     // if this fails, you need to start your mongo DB
-    await persistence.dropMongoCollection();
+    await persistence.recreateForTest();
     await activitystore.saveActivity(pastActivity1);
     await activitystore.saveActivity(pastActivity2);
     await activitystore.saveActivity(futureActivity1);
@@ -171,7 +171,7 @@ describe("Activity application with DB - shows activities for Group-Ids -", () =
 describe("Activity application with DB - activitiesForGroupIdsAndRegisteredMemberId without activities -", () => {
   beforeEach(async () => {
     // if this fails, you need to start your mongo DB
-    await persistence.dropMongoCollection();
+    await persistence.recreateForTest();
   });
 
   it("returns an empty list if there is no collection at all", async () => {

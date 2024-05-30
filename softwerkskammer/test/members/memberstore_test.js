@@ -21,7 +21,7 @@ describe("Members store", () => {
 
   it("calls persistence.getById for store.getMemberForId and passes on the given callback", async () => {
     const getById = sinon.stub(persistence, "getById").returns(sampleMember);
-    const member = await store.getMemberForId("id");
+    const member = store.getMemberForId("id");
     expect(member.nickname()).to.equal(sampleMember.nickname);
     expect(getById.calledWith("id")).to.be(true);
   });
@@ -29,7 +29,7 @@ describe("Members store", () => {
   it("calls persistence.listByIds for store.getMembersForIds and passes on the given callback", async () => {
     const listByIds = sinon.stub(persistence, "listByIds").returns(sampleList);
 
-    const members = await store.getMembersForIds(["id1", "id2"]);
+    const members = store.getMembersForIds(["id1", "id2"]);
     expect(members[0].nickname()).to.equal(sampleMember.nickname);
     expect(members[1].nickname()).to.equal(sampleMember2.nickname);
     expect(listByIds.calledWith(["id1", "id2"])).to.be(true);
@@ -45,7 +45,7 @@ describe("Members store", () => {
       }
       return null;
     });
-    const member = await store.getMemberForEMail("nicks mail");
+    const member = store.getMemberForEMail("nicks mail");
     expect(member.nickname()).to.equal(sampleMember.nickname);
   });
 
