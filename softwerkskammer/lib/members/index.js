@@ -17,13 +17,13 @@ const statusmessage = beans.get("statusmessage");
 const notifications = beans.get("notifications");
 const authenticationService = beans.get("authenticationService");
 
-async function memberSubmitted(req, res) {
+function memberSubmitted(req, res) {
   function notifyNewMemberRegistration(member, subscriptions) {
     // must be done here, not in Service to avoid circular deps
     notifications.newMemberRegistered(member, subscriptions);
   }
 
-  const nickname = await groupsAndMembersService.updateAndSaveSubmittedMember(
+  const nickname = groupsAndMembersService.updateAndSaveSubmittedMember(
     req.user,
     req.body,
     res.locals.accessrights,
@@ -38,8 +38,8 @@ async function memberSubmitted(req, res) {
   return res.redirect("/members");
 }
 
-async function tagsFor() {
-  const members = await memberstore.allMembers();
+function tagsFor() {
+  const members = memberstore.allMembers();
   return membersService
     .toWordList(members)
     .map((wordlist) => wordlist.text)
@@ -49,14 +49,14 @@ async function tagsFor() {
 const app = misc.expressAppIn(__dirname);
 
 app.get("/", async (req, res) => {
-  const members = await memberstore.allMembers();
+  const members = memberstore.allMembers();
   await Promise.all(members.map((m) => membersService.putAvatarIntoMemberAndSave(m)));
   res.render("index", { members, wordList: membersService.toWordList(members) });
 });
 
 app.get("/interests", async (req, res) => {
   const casesensitive = req.query.casesensitive ? "" : "i";
-  const members = await memberstore.getMembersWithInterest(req.query.interest, casesensitive);
+  const members = memberstore.getMembersWithInterest(req.query.interest, casesensitive);
   await Promise.all(members.map(membersService.putAvatarIntoMemberAndSave));
   res.render("indexForTag", {
     interest: req.query.interest,
@@ -65,35 +65,32 @@ app.get("/interests", async (req, res) => {
   });
 });
 
-app.get("/checknickname", async (req, res) => {
-  const result = await misc.validate(req.query.nickname, req.query.previousNickname, membersService.isValidNickname);
+app.get("/checknickname", (req, res) => {
+  const result = misc.validate(req.query.nickname, req.query.previousNickname, membersService.isValidNickname);
   res.end(result);
 });
 
-app.get("/checkemail", async (req, res) => {
-  const result = await misc.validate(req.query.email, req.query.previousEmail, membersService.isValidEmail);
+app.get("/checkemail", (req, res) => {
+  const result = misc.validate(req.query.email, req.query.previousEmail, membersService.isValidEmail);
   res.end(result);
 });
 
-app.get("/new", async (req, res) => {
+app.get("/new", (req, res) => {
   if (req.user.member) {
     return res.redirect("/members/");
   }
-  const [allGroups, allTags] = await Promise.all([groupstore.allGroups(), tagsFor()]);
+  const allGroups = groupstore.allGroups();
   res.render("edit", {
     member: new Member().initFromSessionUser(req.user),
     regionalgroups: groupsService.markGroupsSelected([], Group.regionalsFrom(allGroups)),
     themegroups: groupsService.markGroupsSelected([], Group.thematicsFrom(allGroups)),
-    tags: allTags,
+    tags: tagsFor(),
   });
 });
 
-app.get("/edit/:nickname", async (req, res, next) => {
-  const [allGroups, allTags, member] = await Promise.all([
-    groupstore.allGroups(),
-    tagsFor(),
-    groupsAndMembersService.getMemberWithHisGroups(req.params.nickname),
-  ]);
+app.get("/edit/:nickname", (req, res, next) => {
+  const allGroups = groupstore.allGroups();
+  const member = groupsAndMembersService.getMemberWithHisGroups(req.params.nickname);
 
   if (!member) {
     return next();
@@ -105,7 +102,7 @@ app.get("/edit/:nickname", async (req, res, next) => {
     member,
     regionalgroups: groupsService.markGroupsSelected(member.subscribedGroups, Group.regionalsFrom(allGroups)),
     themegroups: groupsService.markGroupsSelected(member.subscribedGroups, Group.thematicsFrom(allGroups)),
-    tags: allTags,
+    tags: tagsFor(),
   });
 });
 
@@ -115,13 +112,13 @@ app.get("/edit/", async (req, res) => {
   }
 });
 
-app.post("/delete", async (req, res) => {
+app.post("/delete", (req, res) => {
   const nickname = req.body.nickname;
   if (!res.locals.accessrights.canDeleteMemberByNickname(nickname)) {
     return res.redirect("/members/" + encodeURIComponent(nickname));
   }
   try {
-    await groupsAndMembersService.removeMember(nickname);
+    groupsAndMembersService.removeMember(nickname);
     statusmessage
       .successMessage("message.title.save_successful", "message.content.members.deleted")
       .putIntoSession(req);
@@ -135,18 +132,18 @@ app.post("/delete", async (req, res) => {
   }
 });
 
-app.post("/updatePassword", async (req, res) => {
-  const member = await memberstore.getMemberForId(req.body.id);
+app.post("/updatePassword", (req, res) => {
+  const member = memberstore.getMemberForId(req.body.id);
   member.updatePassword(req.body.password);
   member.addAuthentication(authenticationService.pwdAuthenticationPrefix + member.email());
-  await memberstore.saveMember(member);
+  memberstore.saveMember(member);
   res.redirect("/members/" + encodeURIComponent(member.nickname()));
 });
 
-app.post("/submit", async (req, res, next) => {
-  async function checkNick() {
+app.post("/submit", (req, res, next) => {
+  function checkNick() {
     try {
-      const result = await validation.checkValidity(
+      const result = validation.checkValidity(
         req.body.previousNickname,
         req.body.nickname,
         membersService.isValidNickname,
@@ -160,13 +157,9 @@ app.post("/submit", async (req, res, next) => {
     }
   }
 
-  async function checkMail() {
+  function checkMail() {
     try {
-      const result = await validation.checkValidity(
-        req.body.previousEmail,
-        req.body.email,
-        membersService.isValidEmail,
-      );
+      const result = validation.checkValidity(req.body.previousEmail, req.body.email, membersService.isValidEmail);
       if (!result) {
         return [req.i18n.t("validation.duplicate_email")];
       }
@@ -175,7 +168,7 @@ app.post("/submit", async (req, res, next) => {
       return [req.i18n.t("validation.duplicate_email")];
     }
   }
-  const errorMessages = await Promise.all([checkNick(), checkMail(), validation.isValidForMember(req.body)]);
+  const errorMessages = [checkNick(), checkMail(), validation.isValidForMember(req.body)];
   const realErrors = R.flatten(errorMessages).filter((message) => !!message);
   if (realErrors.length === 0) {
     return memberSubmitted(req, res, next);
@@ -220,7 +213,7 @@ app.post("/submitavatar", async (req, res) => {
 
 app.post("/deleteAvatarFor", async (req, res) => {
   const nicknameOfEditMember = req.body.nickname;
-  const member = await memberstore.getMember(nicknameOfEditMember);
+  const member = memberstore.getMember(nicknameOfEditMember);
   if (res.locals.accessrights.canEditMember(member)) {
     await membersService.deleteCustomAvatarForNickname(nicknameOfEditMember);
     return res.redirect("/members/" + encodeURIComponent(nicknameOfEditMember));
@@ -229,13 +222,13 @@ app.post("/deleteAvatarFor", async (req, res) => {
 });
 
 app.get("/:nickname", async (req, res, next) => {
-  const member = await groupsAndMembersService.getMemberWithHisGroups(req.params.nickname);
+  const member = groupsAndMembersService.getMemberWithHisGroups(req.params.nickname);
   if (!member) {
     return next();
   }
   const subscribedGroups = member.subscribedGroups;
-  const pastActivities = await activitiesService.getPastActivitiesOfMember(member);
-  const organizedOrEditedActivities = await activitiesService.getOrganizedOrEditedActivitiesOfMember(member);
+  const pastActivities = activitiesService.getPastActivitiesOfMember(member);
+  const organizedOrEditedActivities = activitiesService.getOrganizedOrEditedActivitiesOfMember(member);
   const modifiedWikiFiles = await wikiService.listFilesModifiedByMember(member.nickname());
   res.render("get", {
     member,

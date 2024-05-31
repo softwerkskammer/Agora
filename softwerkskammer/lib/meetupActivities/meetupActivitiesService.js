@@ -20,7 +20,7 @@ module.exports = {
       const meetupDate = fieldHelpers.meetupDateToActivityTimes(meetup.local_date, meetup.local_time, meetup.duration);
       const activityUrl = `meetup-${meetup.id}`;
 
-      const persistentActivity = await activitystore.getActivity(activityUrl);
+      const persistentActivity = activitystore.getActivity(activityUrl);
       const activity = persistentActivity || new Activity();
 
       return activitystore.saveActivity(
@@ -44,7 +44,7 @@ module.exports = {
   },
 
   cloneActivitiesFromMeetup: async function cloneActivitiesFromMeetup() {
-    const groups = await groupstore.getGroupsWithMeetupURL();
+    const groups = groupstore.getGroupsWithMeetupURL();
     return Promise.all(groups.map(async (group) => this.cloneActivitiesFromMeetupForGroup(group)));
   },
 };

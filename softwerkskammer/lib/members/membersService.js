@@ -53,21 +53,19 @@ async function updateImage(member) {
 }
 
 module.exports = {
-  isValidNickname: async function isValidNickname(nickname) {
+  isValidNickname: function isValidNickname(nickname) {
     if (fieldHelpers.containsSlash(nickname) || isReserved(nickname)) {
       return false;
     }
-    const b = await store.getMember(nickname);
-    return !b;
+    return !store.getMember(nickname);
   },
 
-  isValidEmail: async function isValidEmail(email) {
-    const b = await store.getMemberForEMail(email);
-    return !b;
+  isValidEmail: function isValidEmail(email) {
+    return !store.getMemberForEMail(email);
   },
 
   saveCustomAvatarForNickname: async function saveCustomAvatarForNickname(nickname, files, params) {
-    const member = await store.getMember(nickname);
+    const member = store.getMember(nickname);
     const filename = await galleryService.storeAvatar(files.image[0].path, params);
     member.setCustomAvatar(filename);
     await setCustomAvatarImageInMember(member);
@@ -75,14 +73,14 @@ module.exports = {
   },
 
   deleteCustomAvatarForNickname: async function deleteCustomAvatarForNickname(nickname) {
-    const member = await store.getMember(nickname);
+    const member = store.getMember(nickname);
     if (!member.hasCustomAvatar()) {
       return;
     }
     const avatar = member.customAvatar();
     member.deleteCustomAvatar();
-    await store.saveMember(member);
-    galleryService.deleteAvatar(avatar);
+    store.saveMember(member);
+    return galleryService.deleteAvatar(avatar);
   },
 
   putAvatarIntoMemberAndSave: async function putAvatarIntoMemberAndSave(member) {
@@ -102,7 +100,7 @@ module.exports = {
     return wordList(members, R.identity).sort((a, b) => a.text.localeCompare(b.text));
   },
 
-  findMemberForAuthentication: async function findMemberForAuthentication(user, authenticationId) {
+  findMemberForAuthentication: function findMemberForAuthentication(user, authenticationId) {
     if (!user) {
       // not currently logged in
       return store.getMemberForAuthentication(authenticationId);
@@ -110,7 +108,7 @@ module.exports = {
 
     // logged in -> we don't care about the legacy id, we only want to add a new authentication provider to our profile
     const memberOfSession = user.member;
-    const member = await store.getMemberForAuthentication(authenticationId);
+    const member = store.getMemberForAuthentication(authenticationId);
     if (member && memberOfSession.id() !== member.id()) {
       throw new Error("Unter dieser Authentifizierung existiert schon ein Mitglied.");
     }
@@ -119,13 +117,12 @@ module.exports = {
     }
     // no member found:
     memberOfSession.addAuthentication(authenticationId);
-    await store.saveMember(memberOfSession);
+    store.saveMember(memberOfSession);
     return memberOfSession;
   },
 
-  superuserEmails: async function superuserEmails() {
-    const members = await store.superUsers();
-    return members.map((member) => member.email());
+  superuserEmails: function superuserEmails() {
+    return store.superUsers().map((member) => member.email());
   },
 
   isReserved,

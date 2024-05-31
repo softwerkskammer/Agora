@@ -12,17 +12,10 @@ const fieldHelpers = beans.get("fieldHelpers");
 const CONFLICTING_VERSIONS = beans.get("constants").CONFLICTING_VERSIONS;
 
 module.exports = {
-  getActivitiesForDisplay: async function getActivitiesForDisplay(asynActivitiesFetcher) {
-    /*
-    const activities = await asynActivitiesFetcher();
-    const groups = await groupstore.allGroups();
-    const groupColors = await groupsService.allGroupColors();
-    */
-    const [activities, groups, groupColors] = await Promise.all([
-      asynActivitiesFetcher(),
-      groupstore.allGroups(),
-      groupsService.allGroupColors(),
-    ]);
+  getActivitiesForDisplay: function getActivitiesForDisplay(activitiesFetcher) {
+    const activities = activitiesFetcher();
+    const groups = groupstore.allGroups();
+    const groupColors = groupsService.allGroupColors();
 
     if (!activities) {
       return;
@@ -34,7 +27,7 @@ module.exports = {
     return activities;
   },
 
-  getUpcomingActivitiesOfMemberAndHisGroups: async function getUpcomingActivitiesOfMemberAndHisGroups(member) {
+  getUpcomingActivitiesOfMemberAndHisGroups: function getUpcomingActivitiesOfMemberAndHisGroups(member) {
     const groupIds = member.subscribedGroups.map((group) => group.id);
     const activitiesFetcher = R.partial(activitystore.activitiesForGroupIdsAndRegisteredMemberId.bind(activitystore), [
       groupIds,
@@ -45,7 +38,7 @@ module.exports = {
     return this.getActivitiesForDisplay(activitiesFetcher);
   },
 
-  getPastActivitiesOfMember: async function getPastActivitiesOfMember(member) {
+  getPastActivitiesOfMember: function getPastActivitiesOfMember(member) {
     const activitiesFetcher = R.partial(activitystore.activitiesForGroupIdsAndRegisteredMemberId.bind(activitystore), [
       [],
       member.id(),
@@ -54,19 +47,31 @@ module.exports = {
     return this.getActivitiesForDisplay(activitiesFetcher);
   },
 
-  getOrganizedOrEditedActivitiesOfMember: async function getOrganizedOrEditedActivitiesOfMember(member) {
+  getOrganizedOrEditedActivitiesOfMember: function getOrganizedOrEditedActivitiesOfMember(member) {
     const activitiesFetcher = R.partial(activitystore.organizedOrEditedActivitiesForMemberId, [member.id()]);
     return this.getActivitiesForDisplay(activitiesFetcher);
   },
 
-  getActivityWithGroupAndParticipants: async function getActivityWithGroupAndParticipants(url) {
+  getActivityWithGroupAndParticipants: function getActivityWithGroupAndParticipants(url) {
+    const activity = activitystore.getActivity(url);
+    if (!activity) {
+      return;
+    }
+    const owner = memberstore.getMemberForId(activity.owner());
+    activity.group = groupstore.getGroup(activity.assignedGroup());
+    activity.participants = memberstore.getMembersForIds(activity.allRegisteredMembers());
+    activity.ownerNickname = owner ? owner.nickname() : undefined;
+    return activity;
+  },
+
+  getActivityWithGroupAndParticipantsWithAvatars: async function getActivityWithGroupAndParticipantsWithAvatars(url) {
     async function participantsLoader(activity) {
-      const members = await memberstore.getMembersForIds(activity.allRegisteredMembers());
+      const members = memberstore.getMembersForIds(activity.allRegisteredMembers());
       await Promise.all(members.map(membersService.putAvatarIntoMemberAndSave));
       return members;
     }
 
-    const activity = await activitystore.getActivity(url);
+    const activity = activitystore.getActivity(url);
     if (!activity) {
       return;
     }
@@ -81,16 +86,15 @@ module.exports = {
     return activity;
   },
 
-  isValidUrl: async function isValidUrl(reservedURLs, url) {
+  isValidUrl: function isValidUrl(reservedURLs, url) {
     const isReserved = new RegExp(reservedURLs, "i").test(url);
     if (fieldHelpers.containsSlash(url) || isReserved) {
       return false;
     }
-    const result = await activitystore.getActivity(url);
-    return !result;
+    return !activitystore.getActivity(url);
   },
 
-  activitiesBetween: async function activitiesBetween(startMillis, endMillis) {
+  activitiesBetween: function activitiesBetween(startMillis, endMillis) {
     return activitystore.allActivitiesByDateRangeInAscendingOrder(startMillis, endMillis);
   },
 

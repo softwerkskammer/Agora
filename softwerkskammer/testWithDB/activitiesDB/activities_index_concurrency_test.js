@@ -12,9 +12,8 @@ const Activity = beans.get("activity");
 
 const createApp = require("../../testutil/testHelper")("activitiesApp", beans).createApp;
 
-async function getActivity(url) {
-  const activityState = await persistence.getMongoByField({ url });
-  return new Activity(activityState);
+function getActivity(url) {
+  return new Activity(persistence.getByField({ key: "url", val: url }));
 }
 
 describe("Activity application with DB - on submit -", () => {
@@ -22,8 +21,6 @@ describe("Activity application with DB - on submit -", () => {
   let activityAfterConcurrentAccess;
 
   beforeEach(async () => {
-    // if this fails, you need to start your mongo DB
-
     activityBeforeConcurrentAccess = new Activity({
       id: "activityId",
       title: "Title of the Activity",
@@ -76,16 +73,16 @@ describe("Activity application with DB - on submit -", () => {
       )
       .expect(302)
       .expect(/Redirecting to \/activities\/edit\/urlOfTheActivity/, async (err) => {
-        if (err) {
-          throw err;
-        }
         // check that activity did not get changed on the database
-        const activity = await getActivity("urlOfTheActivity");
+        const activity = getActivity("urlOfTheActivity");
         expect(
           activity.resourceNamed("Veranstaltung").registeredMembers(),
           "Registered member is still there",
         ).to.contain("memberId1");
         expect(activity.location(), "Old location was not overwritten").to.equal("location1");
+        if (err) {
+          throw err;
+        }
       });
   });
 });

@@ -102,7 +102,7 @@ module.exports = {
     return app;
   },
 
-  validate: async function validate(currentValue, previousValue, validator) {
+  validate: function validate(currentValue, previousValue, validator) {
     if (!currentValue) {
       return "false";
     }
@@ -117,8 +117,7 @@ module.exports = {
     }
 
     try {
-      const result = await validator(currentValue);
-      return result.toString();
+      return validator(currentValue).toString();
     } catch (e) {
       return "false";
     }

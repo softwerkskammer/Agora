@@ -14,9 +14,9 @@ const misc = beans.get("misc");
 const app = misc.expressAppIn(__dirname);
 app.locals.pretty = true;
 
-app.get("/", async (req, res) => {
+app.get("/", (req, res) => {
   // display all groups
-  const groups = await groupstore.allGroups();
+  const groups = groupstore.allGroups();
   res.render("index", { regionalgroups: Group.regionalsFrom(groups) });
 });
 

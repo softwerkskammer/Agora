@@ -9,7 +9,7 @@ const fieldHelpers = beans.get("fieldHelpers");
 
 const app = misc.expressAppIn(__dirname);
 
-app.post("/", async (req, res, next) => {
+app.post("/", (req, res, next) => {
   /* eslint camelcase: 0 */
   let activityResultName = req.body.activityResultName;
   if (!activityResultName) {
@@ -17,7 +17,7 @@ app.post("/", async (req, res, next) => {
   }
   const tags = misc.toArray(req.body.tags);
 
-  await activityresultsPersistence.save(
+  activityresultsPersistence.save(
     new ActivityResult({
       id: activityResultName,
       tags,
@@ -52,18 +52,18 @@ app.post("/:activityResultName/upload", async (req, res) => {
   res.redirect(app.path() + activityResultName + "/photo/" + imageUri + "/edit");
 });
 
-app.post("/delete", async (req, res) => {
+app.post("/delete", (req, res) => {
   const activityResultName = req.body.activityresults;
   const photoId = req.body.photo;
   if (res.locals.accessrights.canDeletePhoto()) {
-    await activityresultsService.deletePhotoOfActivityResult(activityResultName, photoId);
+    activityresultsService.deletePhotoOfActivityResult(activityResultName, photoId);
   }
   res.redirect(app.path() + activityResultName);
 });
 
-app.get("/:activityResultName/photo/:photoId/edit", async (req, res, next) => {
+app.get("/:activityResultName/photo/:photoId/edit", (req, res, next) => {
   const activityResultName = req.params.activityResultName;
-  const activityResult = await activityresultsService.getActivityResultByName(activityResultName);
+  const activityResult = activityresultsService.getActivityResultByName(activityResultName);
   if (!activityResult) {
     return next();
   }
@@ -77,7 +77,7 @@ app.get("/:activityResultName/photo/:photoId/edit", async (req, res, next) => {
   res.redirect(app.path() + activityResultName);
 });
 
-app.post("/:activityResultName/photo/:photoId/edit", async (req, res) => {
+app.post("/:activityResultName/photo/:photoId/edit", (req, res) => {
   const photoId = req.params.photoId;
   const activityResultName = req.params.activityResultName;
   const photoData = {
@@ -86,18 +86,13 @@ app.post("/:activityResultName/photo/:photoId/edit", async (req, res) => {
     timestamp: fieldHelpers.parseToDateTimeUsingDefaultTimezone(req.body.date, req.body.time).toJSDate(),
   };
 
-  await activityresultsService.updatePhotoOfActivityResult(
-    activityResultName,
-    photoId,
-    photoData,
-    res.locals.accessrights,
-  );
+  activityresultsService.updatePhotoOfActivityResult(activityResultName, photoId, photoData, res.locals.accessrights);
   res.redirect(app.path() + activityResultName);
 });
 
-app.get("/:activityResultName", async (req, res) => {
+app.get("/:activityResultName", (req, res) => {
   const activityResultName = req.params.activityResultName;
-  const activityResult = await activityresultsService.getActivityResultByName(activityResultName);
+  const activityResult = activityresultsService.getActivityResultByName(activityResultName);
   if (activityResult) {
     return res.render("get", { activityResult });
   }

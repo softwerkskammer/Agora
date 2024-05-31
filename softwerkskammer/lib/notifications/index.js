@@ -24,11 +24,9 @@ async function sendMail(emailAddresses, subject, html) {
 
 async function activityParticipation(activity, visitorID, ressourceName, content, type) {
   try {
-    const [group, owner, visitor] = await Promise.all([
-      groupsAndMembers.getGroupAndMembersForList(activity.assignedGroup()),
-      memberstore.getMemberForId(activity.owner()),
-      memberstore.getMemberForId(visitorID),
-    ]);
+    const group = groupsAndMembers.getGroupAndMembersForList(activity.assignedGroup());
+    const owner = memberstore.getMemberForId(activity.owner());
+    const visitor = memberstore.getMemberForId(visitorID);
     const organizers = (group.members || []).filter((member) => group.organizers.includes(member.id()));
     const organizersEmails = organizers.map((member) => member.email());
     if (owner) {
@@ -43,7 +41,7 @@ async function activityParticipation(activity, visitorID, ressourceName, content
       content,
       count: activity.allRegisteredMembers().length,
       totalcount: activity.allRegisteredMembers().length,
-      visitor: visitor,
+      visitor,
     };
     addPrettyAndUrlTo(renderingOptions);
     const filename = path.join(__dirname, "pug/activitytemplate.pug");
@@ -96,7 +94,7 @@ module.exports = {
   },
 
   wikiChanges: async function wikiChanges(changes) {
-    const members = await memberstore.allMembers();
+    const members = memberstore.allMembers();
     const renderingOptions = {
       directories: R.sortBy(R.prop("dir"), changes),
     };
@@ -107,7 +105,7 @@ module.exports = {
   },
 
   newMemberRegistered: async function newMemberRegistered(member, subscriptions) {
-    const members = await memberstore.allMembers();
+    const members = memberstore.allMembers();
     const renderingOptions = {
       member,
       groups: subscriptions,

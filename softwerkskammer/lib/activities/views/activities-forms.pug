@@ -51,7 +51,7 @@ mixin activityform(activity, groups, editorNames, participantNames)
             label.control-label(for='assignedGroup') #{t('groups.group')}:
             select#assignedGroup.form-control.enhance(name='assignedGroup', disabled=activity.clonedFromMeetup())
               for group in groups
-                option(value=group.id, selected = (activity.assignedGroup() != undefined && activity.assignedGroup() == group.id)) #{group.longName}
+                option(value=group.id, selected = (activity.assignedGroup() !== undefined && activity.assignedGroup() === group.id)) #{group.longName}
       .row
         .col-md-12
           #resources

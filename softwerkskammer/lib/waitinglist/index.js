@@ -5,10 +5,10 @@ const activitiesService = beans.get("activitiesService");
 const memberstore = beans.get("memberstore");
 const misc = beans.get("misc");
 
-async function accessAllowedTo(activityUrl, res) {
+function accessAllowedTo(activityUrl, res) {
   const accessrights = res.locals.accessrights;
 
-  const activity = await activitiesService.getActivityWithGroupAndParticipants(activityUrl);
+  const activity = activitiesService.getActivityWithGroupAndParticipants(activityUrl);
   const canEditActivity = !!activity && accessrights.canEditActivity(activity);
   if (!canEditActivity) {
     return;
@@ -18,38 +18,38 @@ async function accessAllowedTo(activityUrl, res) {
 
 const app = misc.expressAppIn(__dirname);
 
-app.get("/:activityUrl", async (req, res) => {
+app.get("/:activityUrl", (req, res) => {
   const activityUrl = req.params.activityUrl;
   try {
-    const activity = await accessAllowedTo(activityUrl, res);
+    const activity = accessAllowedTo(activityUrl, res);
     if (!activity) {
       return res.redirect("/activities/upcoming");
     }
-    const waitinglist = await waitinglistService.waitinglistFor(activityUrl);
+    const waitinglist = waitinglistService.waitinglistFor(activityUrl);
     res.render("waitinglistTable", { waitinglist, activity });
   } catch (e) {
     return res.redirect("/activities/upcoming");
   }
 });
 
-app.post("/add", async (req, res) => {
+app.post("/add", (req, res) => {
   const activityUrl = req.body.activityUrl;
   try {
-    const activity = await accessAllowedTo(activityUrl, res);
+    const activity = accessAllowedTo(activityUrl, res);
     if (!activity) {
       return res.redirect("/activities/upcoming");
     }
     const args = { nickname: req.body.nickname, activityUrl };
-    await waitinglistService.saveWaitinglistEntry(args);
+    waitinglistService.saveWaitinglistEntry(args);
     res.redirect("/waitinglist/" + encodeURIComponent(activityUrl));
   } catch (e) {
     return res.redirect("/activities/upcoming");
   }
 });
 
-app.post("/allowRegistration", async (req, res) => {
+app.post("/allowRegistration", (req, res) => {
   const activityUrl = req.body.activityUrl;
-  const activity = await accessAllowedTo(activityUrl, res);
+  const activity = accessAllowedTo(activityUrl, res);
   if (!activity) {
     return res.redirect("/activities/upcoming");
   }
@@ -64,22 +64,21 @@ app.post("/allowRegistration", async (req, res) => {
     result.hoursstring = req.body.registrationValidForHours;
     return result;
   });
-  const all = rows.map(waitinglistService.allowRegistrationForWaitinglistEntry);
-  await Promise.all(all);
+  rows.forEach(waitinglistService.allowRegistrationForWaitinglistEntry);
   res.redirect("/waitinglist/" + encodeURIComponent(activityUrl));
 });
 
-app.post("/remove", async (req, res, next) => {
+app.post("/remove", (req, res, next) => {
   const activityUrl = req.body.activityUrl;
-  const activity = await accessAllowedTo(activityUrl, res);
+  const activity = accessAllowedTo(activityUrl, res);
 
   if (!res.locals.accessrights.canEditActivity(activity)) {
     res.redirect("/activites/" + encodeURIComponent(req.body.activityUrl));
   }
   try {
-    const member = await memberstore.getMember(req.body.nickname);
+    const member = memberstore.getMember(req.body.nickname);
     try {
-      await activitiesService.removeFromWaitinglist(member.id(), activityUrl);
+      activitiesService.removeFromWaitinglist(member.id(), activityUrl);
     } catch (e) {
       return next(e);
     }

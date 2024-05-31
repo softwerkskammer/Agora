@@ -19,9 +19,9 @@ function checkCommonMemberFields(validator, memberInput) {
 }
 
 module.exports = {
-  checkValidity: async function checkValidity(oldValue, newValue, checkFunction) {
+  checkValidity: function checkValidity(oldValue, newValue, checkFunction) {
     if (newValue !== oldValue) {
-      return await checkFunction(newValue);
+      return checkFunction(newValue);
     }
     return true;
   },

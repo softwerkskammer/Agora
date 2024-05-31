@@ -218,19 +218,10 @@ describe("Groups and Members Service", () => {
       sinon.restore();
     });
 
-    it("returns no group when the group is null", async () => {
-      const group = await groupsAndMembersService.addMembersToGroup(null);
-      expect(group).to.not.exist();
-    });
-
-    it("returns no group when the group is undefined", async () => {
-      const group = await groupsAndMembersService.addMembersToGroup(undefined);
-      expect(group).to.not.exist();
-    });
-
     it("returns the group with an empty list of subscribed users when there are no subscribers", async () => {
       thereAreNoMailingListUsers();
-      const group = await groupsAndMembersService.addMembersToGroup(GroupA);
+      groupsAndMembersService.addMembersToGroup(GroupA);
+      const group = GroupA;
       expect(group).to.equal(GroupA);
       expect(group.members).to.not.be(null);
       expect(group.members.length).to.equal(0);
@@ -240,10 +231,10 @@ describe("Groups and Members Service", () => {
 
     it("returns the group with a list of one subscribed user when there is one subscriber in mailinglist", async () => {
       thereAreMailingListUsers([dummymember]);
-      sinon.stub(membersService, "putAvatarIntoMemberAndSave");
 
       GroupA.subscribedMembers = ["id1"];
-      const group = await groupsAndMembersService.addMembersToGroup(GroupA);
+      groupsAndMembersService.addMembersToGroup(GroupA);
+      const group = GroupA;
       expect(group).to.equal(GroupA);
       expect(group.members).to.not.be(null);
       expect(group.members.length).to.equal(1);

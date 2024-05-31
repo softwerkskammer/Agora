@@ -65,7 +65,7 @@ describe("Activity result", () => {
       activityResult.updatePhotoById("my_photo_id", {
         title: "newTitle",
         tags: ["peter", "paul"],
-        timestamp: date.toJSDate(),
+        timestamp: date.toISO(),
       });
       expect(activityResult.getPhotoById("my_photo_id").title()).to.be("newTitle");
       expect(activityResult.getPhotoById("my_photo_id").tags()).to.eql(["peter", "paul"]);
@@ -119,9 +119,9 @@ describe("Activity result", () => {
   });
 
   describe("preparation for display", () => {
-    const timestamp1 = DateTime.fromISO("2014-02-20T12:00:00Z").toJSDate();
-    const timestamp2 = DateTime.fromISO("2014-02-20T12:01:00Z").toJSDate();
-    const timestamp3 = DateTime.fromISO("2014-02-21T12:01:00Z").toJSDate();
+    const timestamp1 = "2014-02-20T12:00:00Z";
+    const timestamp2 = "2014-02-20T12:01:00Z";
+    const timestamp3 = "2014-02-21T12:01:00Z";
 
     it('creates a list of "day" objects', () => {
       const activityResult = new ActivityResult({

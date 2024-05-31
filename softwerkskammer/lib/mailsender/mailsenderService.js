@@ -41,10 +41,10 @@ module.exports = {
   activityMarkdown,
 
   dataForShowingMessageForActivity: async function (activityURL, language) {
-    const [activity, groups] = await Promise.all([
+    const [activity, groups] = [
       activitiesService.getActivityWithGroupAndParticipants(activityURL),
       groupstore.allGroups(),
-    ]);
+    ];
     if (!activity) {
       return;
     }
@@ -75,7 +75,7 @@ module.exports = {
   },
 
   dataForShowingMessageToMember: async function dataForShowingMessageToMember(nickname) {
-    const member = await memberstore.getMember(nickname);
+    const member = memberstore.getMember(nickname);
     if (!member) {
       throw new Error("Empfänger wurde nicht gefunden.");
     }
@@ -87,7 +87,7 @@ module.exports = {
   sendMailToParticipantsOf: async function sendMailToParticipantsOf(activityURL, message) {
     const type = "$t(mailsender.reminder)";
     try {
-      const activity = await activitiesService.getActivityWithGroupAndParticipants(activityURL);
+      const activity = activitiesService.getActivityWithGroupAndParticipants(activityURL);
       message.setBccToMemberAddresses(activity.participants);
       message.setIcal(icalService.activityAsICal(activity).toString());
       return sendMail(message, type);
@@ -99,16 +99,16 @@ module.exports = {
   sendMailToInvitedGroups: async function sendMailToInvitedGroups(invitedGroups, activityURL, message) {
     const type = "$t(mailsender.invitation)";
     try {
-      const groups = await groupsService.getGroups(invitedGroups);
+      const groups = groupsService.getGroups(invitedGroups);
       if (groups.length === 0) {
         return mailtransport.statusmessageForError(type, new Error("Keine der Gruppen wurde gefunden."));
       }
       try {
-        const groups1 = await Promise.all(groups.map(groupsAndMembersService.addMembersToGroup));
-        message.setBccToGroupMemberAddresses(groups1);
+        groups.forEach(groupsAndMembersService.addMembersToGroup);
+        message.setBccToGroupMemberAddresses(groups);
         let activity;
         try {
-          activity = await activitystore.getActivity(activityURL);
+          activity = activitystore.getActivity(activityURL);
         } catch (e) {
           // do nothing
         }
@@ -128,7 +128,7 @@ module.exports = {
     const type = "$t(mailsender.notification)";
 
     try {
-      const member = await memberstore.getMember(nickname);
+      const member = memberstore.getMember(nickname);
       if (!member) {
         return mailtransport.statusmessageForError(type, new Error("Empfänger wurde nicht gefunden."));
       }
@@ -141,7 +141,7 @@ module.exports = {
 
   sendMailToAllMembers: async function sendMailToAllMembers(message) {
     const type = "$t(mailsender.notification)";
-    const members = await memberstore.allMembers();
+    const members = memberstore.allMembers();
     message.setBccToMemberAddresses(members);
     return sendMail(message, type);
   },
@@ -207,7 +207,7 @@ module.exports = {
       sendCopyToSelf: true,
     };
     const message = new Message(messageData, member);
-    const superusers = await membersService.superuserEmails();
+    const superusers = membersService.superuserEmails();
     message.setTo(superusers);
     return sendMail(message, "E-Mail");
   },
@@ -215,7 +215,7 @@ module.exports = {
   sendMailToContactPersonsOfGroup: async function sendMailToContactPersonsOfGroup(groupId, message) {
     const type = "$t(mailsender.notification)";
     try {
-      const groups = await groupsService.getGroups([groupId]);
+      const groups = groupsService.getGroups([groupId]);
       if (groups.length !== 1) {
         logger.error(`${groups.length} Gruppen für Id ${groupId} gefunden. Erwarte genau eine Gruppe.`);
         const error = new Error("Das senden der E-Mail ist fehlgeschlagen. Es liegt ein technisches Problem vor.");
@@ -224,7 +224,7 @@ module.exports = {
       if (!groups[0].canTheOrganizersBeContacted()) {
         return mailtransport.statusmessageForError(type, "$t(mailsender.contact_the_organizers_disabled)");
       }
-      const organizers = await groupsAndMembersService.getOrganizersOfGroup(groupId);
+      const organizers = groupsAndMembersService.getOrganizersOfGroup(groupId);
       if (!organizers.length) {
         return mailtransport.statusmessageForError(type, "$t(mailsender.group_has_no_organizers)");
       }

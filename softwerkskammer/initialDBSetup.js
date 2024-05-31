@@ -132,26 +132,21 @@ const members = [
   },
 ];
 
-async function run() {
-  const allForGroups = groups.map(async (group) => {
+try {
+  groups.forEach((group) => {
     group.description =
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras at pellentesque leo. Suspendisse at ante in lorem faucibus aliquet volutpat ac metus. Aenean vel mauris et lacus venenatis venenatis rhoncus eu nisi. Nam imperdiet pretium ante vel hendrerit. Etiam lacinia lacinia bibendum. Ut malesuada neque sed enim accumsan, id tristique lectus gravida. Morbi lorem justo, vestibulum quis est non, pretium cursus ante. Aenean porttitor nulla eget elit rhoncus rhoncus. In vitae lacinia arcu, quis aliquet nibh. ";
-    return groupsPersistence.saveMongo(new Group(group));
+    return groupsPersistence.save(new Group(group));
   });
-  const allForMembers = members.map(async (member) => {
-    const existingMember = await membersPersistence.getMongoById(member.id);
+  members.forEach((member) => {
+    const existingMember = membersPersistence.getById(member.id);
     if (existingMember) {
       console.log('Member "' + member.nickname + '" (already existing)');
       return;
     }
-    return membersPersistence.saveMongo(new Member(member).state);
+    return membersPersistence.save(new Member(member).state);
   });
-
-  return await Promise.all(allForGroups.concat(allForMembers));
-}
-
-try {
-  run();
+  process.exit(0);
 } catch (e) {
   console.log(e);
   process.exit(1);
