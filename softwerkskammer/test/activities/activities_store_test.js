@@ -104,7 +104,7 @@ describe("Activity store", () => {
 
   it("returns undefined when persistence yields an error", () => {
     getByField.restore();
-    sinon.stub(persistence, "getMongoByField").throws(new Error("error"));
+    sinon.stub(persistence, "getByField").throws(new Error("error"));
 
     try {
       store.getActivity(1234);
