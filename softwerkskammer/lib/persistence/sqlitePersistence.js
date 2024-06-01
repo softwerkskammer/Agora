@@ -17,6 +17,7 @@ function escape(str = "") {
   if (typeof str === "number") {
     return str;
   } else {
+    // eslint-disable-next-line no-console
     console.log(str);
   }
 }
@@ -139,10 +140,14 @@ module.exports = function sqlitePersistenceFunc(collectionName, extraColumns) {
           })
           .join(", ");
 
-        return db.exec(
+        db.exec(
           `UPDATE ${collectionName} 
             SET ${colsVals} WHERE version = ${oldVersion} AND id = '${existing.id}';`,
         );
+        const updated = this.getById(object.id);
+        if (updated.version !== object.version) {
+          throw new Error(CONFLICTING_VERSIONS);
+        }
       } else if (!existing) {
         this.save(object);
       } else {

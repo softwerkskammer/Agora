@@ -5,6 +5,8 @@ mixin activityform(activity, groups, editorNames, participantNames)
     +csrf
     if (activity.id())
       +hidden('id', activity.id())
+    if (activity.version())
+      +hidden('version', activity.version())
     +hidden('previousUrl', activity.url())
     fieldset
       .row

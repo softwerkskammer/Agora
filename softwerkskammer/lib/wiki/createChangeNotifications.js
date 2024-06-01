@@ -45,6 +45,7 @@ async function run() {
     return closeAndExit();
   } catch (e) {
     logger.error(`Error when finding pages for Digest: ${e}`);
+    // eslint-disable-next-line no-console
     console.log(`Error when finding pages for Digest: ${e}`); // for cron mail
     return closeAndExit();
   }

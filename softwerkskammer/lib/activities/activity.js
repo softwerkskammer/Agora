@@ -34,6 +34,10 @@ class Activity {
     return this.state.id;
   }
 
+  version() {
+    return this.state.version;
+  }
+
   url() {
     return this.state.url ? this.state.url.trim() : undefined;
   }
@@ -79,6 +83,7 @@ class Activity {
   }
 
   fillFromUI(object, editorIds) {
+    this.state.version = object.version ? parseInt(object.version, 10) : undefined;
     this.state.url = object.url;
 
     this.state.editorIds = editorIds;
