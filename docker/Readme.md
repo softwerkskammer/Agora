@@ -1,3 +1,5 @@
+# THIS DOCUMENT AND FOLDER ARE OUTDATED
+
 # run mongo database
 
 Start mongo db with `docker-compose up local-mongo`.

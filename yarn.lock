@@ -848,13 +848,13 @@ __metadata:
     ajv: "npm:8.12.0"
     awesome-bootstrap-checkbox: "npm:1.0.1"
     better-sqlite3: "npm:10.0.0"
+    better-sqlite3-session-store: "npm:0.1.0"
     body-parser: "npm:1.20.2"
     bootstrap: "npm:5.3.3"
     bootstrap-datepicker: "npm:1.10.0"
     bootstrap-markdown: "npm:2.10.0"
     compression: "npm:1.7.4"
     connect-ensure-login: "npm:0.1.1"
-    connect-mongo: "npm:5.1.0"
     cookie-parser: "npm:1.4.6"
     csurf: "npm:1.11.0"
     datatables.net: "npm:2.0.3"
@@ -867,7 +867,6 @@ __metadata:
     express-async-errors: "npm:3.1.1"
     express-session: "npm:1.18.0"
     feed: "npm:4.2.2"
-    full-icu: "npm:1.5.0"
     fullcalendar: "npm:6.1.11"
     glob: "npm:10.3.12"
     grunt: "npm:1.6.1"
@@ -880,7 +879,6 @@ __metadata:
     grunt-eslint: "npm:24.3.0"
     grunt-karma: "npm:4.0.2"
     grunt-mocha-cli: "npm:7.0.0"
-    grunt-patcher: "npm:1.0.0"
     grunt-puglint: "npm:1.0.0"
     grunt-sass: "npm:3.1.0"
     grunt-simple-nyc: "npm:3.0.1"
@@ -1112,18 +1110,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"asn1.js@npm:^5.4.1":
-  version: 5.4.1
-  resolution: "asn1.js@npm:5.4.1"
-  dependencies:
-    bn.js: "npm:^4.0.0"
-    inherits: "npm:^2.0.1"
-    minimalistic-assert: "npm:^1.0.0"
-    safer-buffer: "npm:^2.1.0"
-  checksum: b577232fa6069cc52bb128e564002c62b2b1fe47f7137bdcd709c0b8495aa79cee0f8cc458a831b2d8675900eea0d05781b006be5e1aa4f0ae3577a73ec20324
-  languageName: node
-  linkType: hard
-
 "asn1@npm:~0.2.3":
   version: 0.2.6
   resolution: "asn1@npm:0.2.6"
@@ -1326,6 +1312,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"better-sqlite3-session-store@npm:0.1.0":
+  version: 0.1.0
+  resolution: "better-sqlite3-session-store@npm:0.1.0"
+  dependencies:
+    date-fns: "npm:2.16.1"
+  checksum: 2cbb225f8ac76fd7b76c82bee39c7076e4f99d873634b92c55282122cf8e33f42ed61986c3b1b65e30d33db0ed095f235b0fd47d80c0a201b4cfe6e34cb76382
+  languageName: node
+  linkType: hard
+
 "better-sqlite3@npm:10.0.0":
   version: 10.0.0
   resolution: "better-sqlite3@npm:10.0.0"
@@ -1368,13 +1363,6 @@ __metadata:
     inherits: "npm:^2.0.4"
     readable-stream: "npm:^3.4.0"
   checksum: 02847e1d2cb089c9dc6958add42e3cdeaf07d13f575973963335ac0fdece563a50ac770ac4c8fa06492d2dd276f6cc3b7f08c7cd9c7a7ad0f8d388b2a28def5f
-  languageName: node
-  linkType: hard
-
-"bn.js@npm:^4.0.0":
-  version: 4.12.0
-  resolution: "bn.js@npm:4.12.0"
-  checksum: 9736aaa317421b6b3ed038ff3d4491935a01419ac2d83ddcfebc5717385295fcfcf0c57311d90fe49926d0abbd7a9dbefdd8861e6129939177f7e67ebc645b21
   languageName: node
   linkType: hard
 
@@ -1916,19 +1904,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"connect-mongo@npm:5.1.0":
-  version: 5.1.0
-  resolution: "connect-mongo@npm:5.1.0"
-  dependencies:
-    debug: "npm:^4.3.1"
-    kruptein: "npm:^3.0.0"
-  peerDependencies:
-    express-session: ^1.17.1
-    mongodb: ">= 5.1.0 < 7"
-  checksum: 78f34bc09684290f7d3afde447f71793dba33159069a24d929b31dfc517d1ffd52b614dfa34c5eb00700dda5a9d87d7af7d43c2c518c1f6bb6aa3761571a8e70
-  languageName: node
-  linkType: hard
-
 "connect@npm:^3.7.0":
   version: 3.7.0
   resolution: "connect@npm:3.7.0"
@@ -2192,6 +2167,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"date-fns@npm:2.16.1":
+  version: 2.16.1
+  resolution: "date-fns@npm:2.16.1"
+  checksum: 6c07ca1b7354e6f1ccea7832a3d0c66ea5fc9c03350307b84779b72094c399816e54a5b3758f1f2383cc27087d787a642fc3b4ed5fc8515225d64d21e4c81f87
+  languageName: node
+  linkType: hard
+
 "date-format@npm:^4.0.14":
   version: 4.0.14
   resolution: "date-format@npm:4.0.14"
@@ -2395,13 +2377,6 @@ __metadata:
   version: 5.0.0
   resolution: "diff@npm:5.0.0"
   checksum: 08c5904779bbababcd31f1707657b1ad57f8a9b65e6f88d3fb501d09a965d5f8d73066898a7d3f35981f9e4101892c61d99175d421f3b759533213c253d91134
-  languageName: node
-  linkType: hard
-
-"diff@npm:^3":
-  version: 3.5.0
-  resolution: "diff@npm:3.5.0"
-  checksum: fc62d5ba9f6d1b8b5833380969037007913d4886997838c247c54ec6934f09ae5a07e17ae28b1f016018149d81df8ad89306f52eac1afa899e0bed49015a64d1
   languageName: node
   linkType: hard
 
@@ -3438,18 +3413,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"full-icu@npm:1.5.0":
-  version: 1.5.0
-  resolution: "full-icu@npm:1.5.0"
-  dependencies:
-    yauzl: "npm:^2.10.0"
-  bin:
-    full-icu: node-full-icu.js
-    node-full-icu-path: node-icu-data.js
-  checksum: c24ee8a27fa35629f5717364bb42d5275b13a165309aa358f6ae8cc215092bb7d9b43dae070a3b38100cfdef3271e27f86b676513c4247c5d0d42268abe6c3c1
-  languageName: node
-  linkType: hard
-
 "fullcalendar@npm:6.1.11":
   version: 6.1.11
   resolution: "fullcalendar@npm:6.1.11"
@@ -3841,15 +3804,6 @@ __metadata:
   dependencies:
     mocha: "npm:^8.2.0"
   checksum: d0f21d8c0c0e8bad9fc73348633de417be63442dbcac85858f73f84bb22821f3ee809cd4310e5cf7abc5211f185a11d758473a4d6d8a28a79a98efad7064a1a3
-  languageName: node
-  linkType: hard
-
-"grunt-patcher@npm:1.0.0":
-  version: 1.0.0
-  resolution: "grunt-patcher@npm:1.0.0"
-  dependencies:
-    diff: "npm:^3"
-  checksum: d93eead855bfcb9b49f0bab9e8294611ba22bb9b1c0a0ac3bc1913b3bbaaeb0d4b96eb7a7a9c8b82be6aae4a89ecd560bc6817cc91cb9787b74243d1a1c40683
   languageName: node
   linkType: hard
 
@@ -4265,7 +4219,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"inherits@npm:2, inherits@npm:2.0.4, inherits@npm:^2.0.1, inherits@npm:^2.0.3, inherits@npm:^2.0.4":
+"inherits@npm:2, inherits@npm:2.0.4, inherits@npm:^2.0.3, inherits@npm:^2.0.4":
   version: 2.0.4
   resolution: "inherits@npm:2.0.4"
   checksum: 4e531f648b29039fb7426fb94075e6545faa1eb9fe83c29f0b6d9e7263aceb4289d2d4557db0d428188eeb449cc7c5e77b0a0b2c4e248ff2a65933a0dee49ef2
@@ -5088,15 +5042,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kruptein@npm:^3.0.0":
-  version: 3.0.6
-  resolution: "kruptein@npm:3.0.6"
-  dependencies:
-    asn1.js: "npm:^5.4.1"
-  checksum: 71f0a38416a37956aaa699f1374de2e57c442d658a823216e2fd83749aab6d83a3e6608812388188e694266e738147947c496de91471bdd577a4063133f698f4
-  languageName: node
-  linkType: hard
-
 "kuler@npm:^2.0.0":
   version: 2.0.0
   resolution: "kuler@npm:2.0.0"
@@ -5535,13 +5480,6 @@ __metadata:
   version: 3.1.0
   resolution: "mimic-response@npm:3.1.0"
   checksum: 0d6f07ce6e03e9e4445bee655202153bdb8a98d67ee8dc965ac140900d7a2688343e6b4c9a72cfc9ef2f7944dfd76eef4ab2482eb7b293a68b84916bac735362
-  languageName: node
-  linkType: hard
-
-"minimalistic-assert@npm:^1.0.0":
-  version: 1.0.1
-  resolution: "minimalistic-assert@npm:1.0.1"
-  checksum: 96730e5601cd31457f81a296f521eb56036e6f69133c0b18c13fe941109d53ad23a4204d946a0d638d7f3099482a0cec8c9bb6d642604612ce43ee536be3dddd
   languageName: node
   linkType: hard
 

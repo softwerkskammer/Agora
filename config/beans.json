@@ -34,7 +34,7 @@
 
   "activitiesPersistence": {
     "module": "./softwerkskammer/lib/persistence/sqlitePersistence",
-    "constructorArgs": { "collectionName": "activitystore", "extraCols": "startDate,endDate,url,version" }
+    "constructorArgs": { "collectionName": "activitystore", "extraColumns": "startDate,endDate,url,version" }
   },
   "activityresultsPersistence": {
     "module": "./softwerkskammer/lib/persistence/sqlitePersistence",

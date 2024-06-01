@@ -1,8 +1,8 @@
 require("../../configure.js");
 
+const conf = require("simple-configure");
 const persistenceLite = require("../persistence/sqlitePersistence.js");
 const MongoClient = require("mongodb").MongoClient;
-const conf = require("simple-configure");
 
 const url = conf.get("mongoURL");
 
@@ -22,28 +22,30 @@ async function loadAll() {
 }
 
 async function migrateFromMongo() {
-  if (persistenceLite("optionenstore").getById("instance").id || !url) {
+  if (persistenceLite("memberstore").list().length > 0) {
     // eslint-disable-next-line no-console
     console.log("DB already migrated");
     return;
   }
   const collections = await loadAll();
-  collections.forEach((part) => {
-    // eslint-disable-next-line no-console
-    console.log(`Migrating: ${part.name}`);
-    const rows = part.res.map((row) => {
-      // eslint-disable-next-line no-underscore-dangle
-      delete row._id;
-      return JSON.parse(JSON.stringify(row));
+  collections
+    .filter(
+      (col) => !["announcementstore", "colorstore", "sessions", "teststore", "waitinglistStore"].includes(col.name),
+    )
+    .forEach((part) => {
+      // eslint-disable-next-line no-console
+      console.log(`Migrating: ${part.name}`);
+      const rows = part.res.map((row) => {
+        // eslint-disable-next-line no-underscore-dangle
+        delete row._id;
+        return JSON.parse(JSON.stringify(row));
+      });
+      if (part.name === "activitystore") {
+        persistenceLite(part.name, "startDate,endDate,url,version").saveAll(rows);
+      } else {
+        persistenceLite(part.name).saveAll(rows);
+      }
     });
-    if (part.name === "activitystore") {
-      persistenceLite(part.name, ["startDate", "endDate", "url", "version"]).saveAll(rows);
-    } else if (part.name === "terminstore") {
-      persistenceLite(part.name, ["startDate", "endDate"]).saveAll(rows);
-    } else {
-      persistenceLite(part.name).saveAll(rows);
-    }
-  });
 }
 
 migrateFromMongo();

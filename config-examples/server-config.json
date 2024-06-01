@@ -2,5 +2,6 @@
   "publicUrlPrefix": "http://localhost:17124",
   "secret": "secret",
   "domainname": "softwerkskammer.org",
-  "sessionkey": "softwerkskammer.org"
+  "sessionkey": "softwerkskammer.org",
+  "sqlitedb": "../../../db/database.db"
 }

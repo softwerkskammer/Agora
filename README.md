@@ -13,7 +13,7 @@ how to get Agora running on you local development machine.
 
 ## Tests
 
-Run the tests with `npm test`.
+Run the tests with `yarn test`.
 
 For running specific tests only, use either of these:
 
