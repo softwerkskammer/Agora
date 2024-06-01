@@ -83,7 +83,7 @@ class Activity {
   }
 
   fillFromUI(object, editorIds) {
-    this.state.version = object.version ? parseInt(object.version, 10) : undefined;
+    this.state.version = object.version ? parseInt(object.version, 10) : this.state.version;
     this.state.url = object.url;
 
     this.state.editorIds = editorIds;
