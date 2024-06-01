@@ -10,13 +10,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    services:
-      mongodb:
-        image: mongo
-        ports:
-          - 27017:27017
-
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js v18
