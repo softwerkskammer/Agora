@@ -39,33 +39,33 @@ describe("MembersService", () => {
       expect(membersService.isReserved("..")).to.be(true);
     });
 
-    it("accepts untrimmed versions of reserved words", async () => {
-      const result = await membersService.isValidNickname(" checknicKName ");
+    it("accepts untrimmed versions of reserved words", () => {
+      const result = membersService.isValidNickname(" checknicKName ");
       expect(result).to.be(true);
     });
 
-    it("rejects nicknames that already exist, ignoring case", async () => {
-      const result = await membersService.isValidNickname("haDa");
+    it("rejects nicknames that already exist, ignoring case", () => {
+      const result = membersService.isValidNickname("haDa");
       expect(result).to.be(false);
     });
 
-    it('rejects nicknames that contain an "/"', async () => {
-      const result = await membersService.isValidNickname("ha/ha");
+    it('rejects nicknames that contain an "/"', () => {
+      const result = membersService.isValidNickname("ha/ha");
       expect(result).to.be(false);
     });
 
-    it("accepts nicknames that do not exist", async () => {
-      const result = await membersService.isValidNickname("haha");
+    it("accepts nicknames that do not exist", () => {
+      const result = membersService.isValidNickname("haha");
       expect(result).to.be(true);
     });
 
-    it("accepts nicknames that contain other nicknames", async () => {
-      const result = await membersService.isValidNickname("Sc" + "hada" + "r");
+    it("accepts nicknames that contain other nicknames", () => {
+      const result = membersService.isValidNickname("Sc" + "hada" + "r");
       expect(result).to.be(true);
     });
 
-    it("accepts untrimmed versions of nicknames that already exist", async () => {
-      const result = await membersService.isValidNickname(" hada ");
+    it("accepts untrimmed versions of nicknames that already exist", () => {
+      const result = membersService.isValidNickname(" hada ");
       expect(result).to.be(true);
     });
 
@@ -312,21 +312,21 @@ describe("MembersService", () => {
     });
 
     describe("if nobody is logged in", () => {
-      it("returns no member if the authentication is undefined", async () => {
-        const returnedMember = await membersService.findMemberForAuthentication(null, undefined);
+      it("returns no member if the authentication is undefined", () => {
+        const returnedMember = membersService.findMemberForAuthentication(null, undefined);
         expect(returnedMember).to.not.exist();
         expect(saveMember.called).to.be(false);
       });
 
-      it("returns no member if the authentication is not known", async () => {
-        const returnedMember = await membersService.findMemberForAuthentication(null, "newAuth");
+      it("returns no member if the authentication is not known", () => {
+        const returnedMember = membersService.findMemberForAuthentication(null, "newAuth");
         expect(returnedMember).to.not.exist();
         expect(saveMember.called).to.be(false);
       });
 
-      it("returns an error if there is an error in getMemberForAuthentication", async () => {
+      it("returns an error if there is an error in getMemberForAuthentication", () => {
         try {
-          await membersService.findMemberForAuthentication(null, "errorAuth");
+          membersService.findMemberForAuthentication(null, "errorAuth");
           expect(true).to.be(false);
         } catch (e) {
           expect(saveMember.called).to.be(false);
@@ -334,31 +334,31 @@ describe("MembersService", () => {
         }
       });
 
-      it("returns a member if his authentication is known", async () => {
-        const returnedMember = await membersService.findMemberForAuthentication(null, "knownAuth");
+      it("returns a member if his authentication is known", () => {
+        const returnedMember = membersService.findMemberForAuthentication(null, "knownAuth");
         expect(returnedMember).to.be(member);
         expect(saveMember.called).to.be(false);
       });
     });
 
     describe("if the user is logged in", () => {
-      it("adds the new authentication to the sessionmember if authentication not known yet", async () => {
+      it("adds the new authentication to the sessionmember if authentication not known yet", () => {
         const differentMember = new Member();
         differentMember.state.id = "different ID";
         const user = { member: differentMember };
-        const returnedMember = await membersService.findMemberForAuthentication(user, "newAuth");
+        const returnedMember = membersService.findMemberForAuthentication(user, "newAuth");
         expect(returnedMember).to.be(differentMember);
         expect(saveMember.called).to.be(true);
         expect(saveMember.args[0][0]).is(differentMember);
         expect(differentMember.authentications()).to.contain("newAuth");
       });
 
-      it("returns an error if getMemberForAuthentication returns an error", async () => {
+      it("returns an error if getMemberForAuthentication returns an error", () => {
         const differentMember = new Member();
         differentMember.state.id = "different ID";
         const user = { member: differentMember };
         try {
-          await membersService.findMemberForAuthentication(user, "errorAuth");
+          membersService.findMemberForAuthentication(user, "errorAuth");
           expect(true).to.be(false);
         } catch (e) {
           expect(saveMember.called).to.be(false);
@@ -366,21 +366,21 @@ describe("MembersService", () => {
         }
       });
 
-      it("simply returns the found member if the authentication is already known", async () => {
+      it("simply returns the found member if the authentication is already known", () => {
         member.state.id = "ID";
         const user = { member };
-        const returnedMember = await membersService.findMemberForAuthentication(user, "authID");
+        const returnedMember = membersService.findMemberForAuthentication(user, "authID");
         expect(returnedMember).to.be(member);
         expect(saveMember.called).to.be(false);
       });
 
-      it("returns an error if the found member is not the logged in member", async () => {
+      it("returns an error if the found member is not the logged in member", () => {
         member.state.id = "ID";
         const differentMember = new Member();
         differentMember.state.id = "different ID";
         const user = { member: differentMember };
         try {
-          await membersService.findMemberForAuthentication(user, "authID");
+          membersService.findMemberForAuthentication(user, "authID");
           expect(true).to.be(false);
         } catch (e) {
           expect(saveMember.called).to.be(false);

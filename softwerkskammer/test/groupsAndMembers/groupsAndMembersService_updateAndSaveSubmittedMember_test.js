@@ -27,12 +27,12 @@ describe("Groups and Members Service (updateAndSaveSubmittedMember)", () => {
   const member = new Member({ id: "memberId", nickname: "nick nack" });
 
   describe("when some error occurs", () => {
-    it("returns an error when the member loading caused an error", async () => {
+    it("returns an error when the member loading caused an error", () => {
       sinon.stub(groupsAndMembersService, "getMemberWithHisGroups").throws(new Error("some error"));
 
       let nickname;
       try {
-        nickname = await groupsAndMembersService.updateAndSaveSubmittedMember(
+        nickname = groupsAndMembersService.updateAndSaveSubmittedMember(
           undefined,
           { previousNickname: "nick" },
           accessrights,
@@ -44,13 +44,13 @@ describe("Groups and Members Service (updateAndSaveSubmittedMember)", () => {
       }
     });
 
-    it("returns an error when the submitted member is a new member and saving the member caused an error", async () => {
+    it("returns an error when the submitted member is a new member and saving the member caused an error", () => {
       sinon.stub(groupsAndMembersService, "getMemberWithHisGroups").returns(null);
       sinon.stub(memberstore, "saveMember").throws(new Error("some error"));
 
       let nickname;
       try {
-        nickname = await groupsAndMembersService.updateAndSaveSubmittedMember(
+        nickname = groupsAndMembersService.updateAndSaveSubmittedMember(
           undefined,
           { previousNickname: "nick" },
           accessrights,
@@ -63,14 +63,14 @@ describe("Groups and Members Service (updateAndSaveSubmittedMember)", () => {
       }
     });
 
-    it("returns an error when the submitted member is an existing member and we are allowed to edit the member but saving causes an error", async () => {
+    it("returns an error when the submitted member is an existing member and we are allowed to edit the member but saving causes an error", () => {
       sinon.stub(groupsAndMembersService, "getMemberWithHisGroups").returns(member);
       accessrights.canEditMember = () => true;
       sinon.stub(memberstore, "saveMember").throws(new Error("some error"));
 
       let nickname;
       try {
-        nickname = await groupsAndMembersService.updateAndSaveSubmittedMember(
+        nickname = groupsAndMembersService.updateAndSaveSubmittedMember(
           undefined,
           memberformData,
           accessrights,
@@ -90,11 +90,11 @@ describe("Groups and Members Service (updateAndSaveSubmittedMember)", () => {
       sinon.stub(groupsService, "updateSubscriptions").callsFake(() => {});
     });
 
-    it("adds the new member to the sessionUser", async () => {
+    it("adds the new member to the sessionUser", () => {
       const sessionUser = { authenticationId: "member authentication id" };
       accessrights.canEditMember = () => true;
 
-      const nickname = await groupsAndMembersService.updateAndSaveSubmittedMember(
+      const nickname = groupsAndMembersService.updateAndSaveSubmittedMember(
         sessionUser,
         memberformData,
         accessrights,
@@ -112,8 +112,8 @@ describe("Groups and Members Service (updateAndSaveSubmittedMember)", () => {
       sinon.stub(groupsService, "updateSubscriptions").callsFake(() => {});
     });
 
-    it("returns null when we are not allowed to edit the member", async () => {
-      const nickname = await groupsAndMembersService.updateAndSaveSubmittedMember(
+    it("returns null when we are not allowed to edit the member", () => {
+      const nickname = groupsAndMembersService.updateAndSaveSubmittedMember(
         undefined,
         memberformData,
         accessrights,
@@ -122,11 +122,11 @@ describe("Groups and Members Service (updateAndSaveSubmittedMember)", () => {
       expect(nickname).to.be.undefined();
     });
 
-    it("adds the member to and removes the profile from the sessionUser when the sessionUser does not contain a member", async () => {
+    it("adds the member to and removes the profile from the sessionUser when the sessionUser does not contain a member", () => {
       const sessionUser = { profile: {} };
       accessrights.canEditMember = () => true;
 
-      const nickname = await groupsAndMembersService.updateAndSaveSubmittedMember(
+      const nickname = groupsAndMembersService.updateAndSaveSubmittedMember(
         sessionUser,
         memberformData,
         accessrights,
@@ -137,12 +137,12 @@ describe("Groups and Members Service (updateAndSaveSubmittedMember)", () => {
       expect(sessionUser.profile).to.be(undefined);
     });
 
-    it("modifies the sessionUser when the sessionUser contains a member with the same id", async () => {
+    it("modifies the sessionUser when the sessionUser contains a member with the same id", () => {
       const differentMemberWithSameId = new Member({ id: "memberId" });
       const sessionUser = { member: differentMemberWithSameId };
       accessrights.canEditMember = () => true;
 
-      const nickname = await groupsAndMembersService.updateAndSaveSubmittedMember(
+      const nickname = groupsAndMembersService.updateAndSaveSubmittedMember(
         sessionUser,
         memberformData,
         accessrights,
@@ -153,12 +153,12 @@ describe("Groups and Members Service (updateAndSaveSubmittedMember)", () => {
       expect(sessionUser.member).to.not.equal(differentMemberWithSameId);
     });
 
-    it("does not modify the sessionUser when the sessionUser contains a member with a different id", async () => {
+    it("does not modify the sessionUser when the sessionUser contains a member with a different id", () => {
       const anotherMember = new Member({ id: "anotherMemberId" });
       const sessionUser = { member: anotherMember };
       accessrights.canEditMember = () => true;
 
-      const nickname = await groupsAndMembersService.updateAndSaveSubmittedMember(
+      const nickname = groupsAndMembersService.updateAndSaveSubmittedMember(
         sessionUser,
         memberformData,
         accessrights,

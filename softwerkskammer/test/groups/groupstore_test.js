@@ -20,16 +20,16 @@ describe("Groups store", () => {
     persistence.getById.restore();
   });
 
-  it("retrieves groupnames given the intended case", async () => {
+  it("retrieves groupnames given the intended case", () => {
     const queriedId = "groupA";
-    const group = await store.getGroup(queriedId);
+    const group = store.getGroup(queriedId);
     expect(group.id).to.equal(sampleGroup.id);
     expect(getById.args[0][0]).to.equal(queriedId);
   });
 
-  it("retrieves groupnames given a different case", async () => {
+  it("retrieves groupnames given a different case", () => {
     const queriedId = "GRouPA";
-    const group = await store.getGroup(queriedId);
+    const group = store.getGroup(queriedId);
     expect(group.id).to.equal(sampleGroup.id);
     expect(getById.args[0][0]).to.equal("groupA");
   });

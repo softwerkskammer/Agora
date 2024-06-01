@@ -19,14 +19,14 @@ describe("Members store", () => {
     sinon.restore();
   });
 
-  it("calls persistence.getById for store.getMemberForId and passes on the given callback", async () => {
+  it("calls persistence.getById for store.getMemberForId and passes on the given callback", () => {
     const getById = sinon.stub(persistence, "getById").returns(sampleMember);
     const member = store.getMemberForId("id");
     expect(member.nickname()).to.equal(sampleMember.nickname);
     expect(getById.calledWith("id")).to.be(true);
   });
 
-  it("calls persistence.listByIds for store.getMembersForIds and passes on the given callback", async () => {
+  it("calls persistence.listByIds for store.getMembersForIds and passes on the given callback", () => {
     const listByIds = sinon.stub(persistence, "listByIds").returns(sampleList);
 
     const members = store.getMembersForIds(["id1", "id2"]);
@@ -35,7 +35,7 @@ describe("Members store", () => {
     expect(listByIds.calledWith(["id1", "id2"])).to.be(true);
   });
 
-  it("calls persistence.getByWhere for store.getMemberForEMail and passes on the given callback", async () => {
+  it("calls persistence.getByWhere for store.getMemberForEMail and passes on the given callback", () => {
     sinon.stub(persistence, "getByWhere").callsFake((object) => {
       if (object.indexOf("'nick2s mail'") > -1) {
         return sampleMember2;
@@ -49,24 +49,24 @@ describe("Members store", () => {
     expect(member.nickname()).to.equal(sampleMember.nickname);
   });
 
-  it("calls persistence.getByWhere with an appropriate regex", async () => {
+  it("calls persistence.getByWhere with an appropriate regex", () => {
     const getByField = sinon.stub(persistence, "getByWhere").returns(sampleMember);
-    const member = await store.getMember("nick");
+    const member = store.getMember("nick");
     expect(member.nickname()).to.equal(sampleMember.nickname);
     expect(getByField.called).to.be(true);
     const arg = getByField.args[0][0];
     expect(arg).to.equal("json_extract ( data, '$.nickname' ) = 'nick'");
   });
 
-  it("calls persistence.list for store.allMembers and passes on the given callback", async () => {
+  it("calls persistence.list for store.allMembers and passes on the given callback", () => {
     sinon.stub(persistence, "list").returns(sampleList);
-    const members = await store.allMembers();
+    const members = store.allMembers();
 
     expect(members[0].nickname()).to.equal(sampleMember.nickname);
     expect(members[1].nickname()).to.equal(sampleMember2.nickname);
   });
 
-  it("sorts case insensitive by lastname", async () => {
+  it("sorts case insensitive by lastname", () => {
     const adonis = { lastname: "Adonis", firstname: "Zaza" };
     const betti = { lastname: "Betti", firstname: "Andi" };
     const dave = { lastname: "Dave", firstname: "Dave" };
@@ -75,7 +75,7 @@ describe("Members store", () => {
 
     sinon.stub(persistence, "list").returns([adonis, betti, dave, bettiLow, adonisLow]);
 
-    const members = await store.allMembers();
+    const members = store.allMembers();
     expect(members[0].lastname()).to.equal(adonisLow.lastname);
     expect(members[1].lastname()).to.equal(adonis.lastname);
     expect(members[2].lastname()).to.equal(betti.lastname);
@@ -83,31 +83,31 @@ describe("Members store", () => {
     expect(members[4].lastname()).to.equal(dave.lastname);
   });
 
-  it("sorts by lastname - not parsing numbers", async () => {
+  it("sorts by lastname - not parsing numbers", () => {
     const tata1 = { lastname: "Tata1", firstname: "Egal" };
     const tata10 = { lastname: "Tata10", firstname: "Egal" };
     const tata2 = { lastname: "Tata2", firstname: "Egal" };
 
     sinon.stub(persistence, "list").returns([tata1, tata10, tata2]);
 
-    const members = await store.allMembers();
+    const members = store.allMembers();
     expect(members[0].lastname()).to.equal(tata1.lastname);
     expect(members[1].lastname()).to.equal(tata10.lastname);
     expect(members[2].lastname()).to.equal(tata2.lastname);
   });
 
-  it("calls persistence.save for store.saveMember and passes on the given callback", async () => {
+  it("calls persistence.save for store.saveMember and passes on the given callback", () => {
     const save = sinon.stub(persistence, "save").callsFake(() => {});
 
-    await store.saveMember(sampleMember);
+    store.saveMember(sampleMember);
     expect(save.calledWith(sampleMember.state)).to.be(true);
   });
 
-  it("calls persistence.remove for store.removeMember and passes on the given callback", async () => {
+  it("calls persistence.remove for store.removeMember and passes on the given callback", () => {
     const remove = sinon.stub(persistence, "removeById");
     const member = new Member(sampleMember);
     member.state.id = "I D";
-    await store.removeMember(member);
+    store.removeMember(member);
     expect(remove.calledWith("I D")).to.be(true);
   });
 });

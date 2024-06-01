@@ -60,8 +60,8 @@ describe("Activities Service", () => {
     sinon.restore();
   });
 
-  it("returns the queried activities and enhances them with their color and group name", async () => {
-    const activities = await activitiesService.getActivitiesForDisplay(activitystore.allActivities);
+  it("returns the queried activities and enhances them with their color and group name", () => {
+    const activities = activitiesService.getActivitiesForDisplay(activitystore.allActivities);
     expect(activities.length).to.equal(1);
     const activity = activities[0];
     expect(activity.title()).to.equal("Title of the Activity");
@@ -69,7 +69,7 @@ describe("Activities Service", () => {
     expect(activity.groupName()).to.equal("The name of the assigned Group");
   });
 
-  it("returns an activity and enhances it with its group and visitors", async () => {
+  it("returns an activity and enhances it with its group and visitors", () => {
     const member1 = new Member({
       id: "memberId1",
       nickname: "participant1",
@@ -133,7 +133,7 @@ describe("Activities Service", () => {
     expectedActivity.participants = [member1, member2];
     expectedActivity.ownerNickname = "owner";
 
-    const activity = await activitiesService.getActivityWithGroupAndParticipants("urlOfTheActivity");
+    const activity = activitiesService.getActivityWithGroupAndParticipants("urlOfTheActivity");
     expect(activity, "Activity").to.exist();
     expect(activity.group, "Group").to.equal(group);
     expect(activity.participants.length).to.equal(2);
@@ -144,19 +144,19 @@ describe("Activities Service", () => {
   });
 
   describe("checks the validity of URLs and", () => {
-    it("does not allow the URL 'edit'", async () => {
-      const result = await activitiesService.isValidUrl("edit", "^edit$");
+    it("does not allow the URL 'edit'", () => {
+      const result = activitiesService.isValidUrl("edit", "^edit$");
       expect(result).to.be(false);
     });
 
-    it("allows the untrimmed URL 'uhu'", async () => {
+    it("allows the untrimmed URL 'uhu'", () => {
       sinon.stub(activitystore, "getActivity").returns(null);
-      const result = await activitiesService.isValidUrl(" edit ", "^edit$");
+      const result = activitiesService.isValidUrl(" edit ", "^edit$");
       expect(result).to.be(true);
     });
 
-    it('does not allow a URL containing a "/"', async () => {
-      const result = await activitiesService.isValidUrl("", "^legal/egal");
+    it('does not allow a URL containing a "/"', () => {
+      const result = activitiesService.isValidUrl("", "^legal/egal");
       expect(result).to.be(false);
     });
   });

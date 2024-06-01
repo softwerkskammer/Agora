@@ -17,8 +17,7 @@ function escape(str = "") {
   if (typeof str === "number") {
     return str;
   } else {
-    // eslint-disable-next-line no-console
-    console.log(str);
+    return str + "";
   }
 }
 
@@ -109,6 +108,9 @@ module.exports = function sqlitePersistenceFunc(collectionName, extraColumns) {
     },
 
     save(object) {
+      if (object.id === null || object.id === undefined) {
+        throw new Error("Given object has no valid id");
+      }
       const vals = this.createValsForSave(object);
       return db.exec(`REPLACE INTO ${collectionName} (${colsForSave.join(",")}) VALUES (${vals.join(",")});`);
     },
@@ -146,11 +148,13 @@ module.exports = function sqlitePersistenceFunc(collectionName, extraColumns) {
         );
         const updated = this.getById(object.id);
         if (updated.version !== object.version) {
+          object.version = oldVersion;
           throw new Error(CONFLICTING_VERSIONS);
         }
       } else if (!existing) {
         this.save(object);
       } else {
+        object.version = oldVersion;
         throw new Error(CONFLICTING_VERSIONS);
       }
     },
@@ -160,6 +164,9 @@ module.exports = function sqlitePersistenceFunc(collectionName, extraColumns) {
     },
 
     removeById(id) {
+      if (id === null || id === undefined) {
+        throw new Error("Given object has no valid id");
+      }
       return this.removeWithQuery(`id = ${escape(id)}`);
     },
 

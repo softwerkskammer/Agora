@@ -24,25 +24,25 @@ describe("ActivityResult service", () => {
   });
 
   describe("the getActivityResultByName method", () => {
-    it("should return the activityResult for an id", async () => {
-      const returnedActivityResult = await service.getActivityResultByName(activityResult.id);
+    it("should return the activityResult for an id", () => {
+      const returnedActivityResult = service.getActivityResultByName(activityResult.id);
       expect(returnedActivityResult.id()).to.equal(activityResult.id);
     });
 
-    it("should return an error if activity does not exist", async () => {
+    it("should return an error if activity does not exist", () => {
       getById.restore();
       sinon.stub(persistence, "getById").throws(new Error("not found"));
 
       try {
-        await service.getActivityResultByName("non-existing-id");
+        service.getActivityResultByName("non-existing-id");
         expect(true).to.be(false);
       } catch (e) {
         expect(e).to.exist();
       }
     });
 
-    it("return an activitymodel instance", async () => {
-      const model = await service.getActivityResultByName(activityResult.id);
+    it("return an activitymodel instance", () => {
+      const model = service.getActivityResultByName(activityResult.id);
       expect(model).to.be.an.instanceOf(ActivityResult);
     });
   });
@@ -62,10 +62,10 @@ describe("ActivityResult service", () => {
     expect(imageUri).to.be("my_uri");
   });
 
-  it("updatePhotoOfActivityResult should change an image in an activityresult", async () => {
+  it("updatePhotoOfActivityResult should change an image in an activityresult", () => {
     const saveStub = sinon.stub(persistence, "save");
 
-    await service.updatePhotoOfActivityResult(
+    service.updatePhotoOfActivityResult(
       "Hackergarten2",
       "image1.jpg",
       { title: "Photo 1" },

@@ -20,7 +20,7 @@ describe("Activity application with DB - on submit -", () => {
   let activityBeforeConcurrentAccess;
   let activityAfterConcurrentAccess;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     activityBeforeConcurrentAccess = new Activity({
       id: "activityId",
       title: "Title of the Activity",
@@ -56,9 +56,9 @@ describe("Activity application with DB - on submit -", () => {
 
     sinon.stub(activitystore, "getActivity").returns(activityBeforeConcurrentAccess);
 
-    await persistence.recreateForTest();
+    persistence.recreateForTest();
     // save our activity with one registrant
-    await activitystore.saveActivity(activityAfterConcurrentAccess);
+    activitystore.saveActivity(activityAfterConcurrentAccess);
   });
 
   afterEach(() => {

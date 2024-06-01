@@ -1,5 +1,4 @@
 const beans = require("simple-configure").get("beans");
-const R = require("ramda");
 
 const persistence = beans.get("activitiesPersistence");
 const Activity = beans.get("activity");
@@ -32,10 +31,6 @@ function allActivitiesByDateRangeInAscendingOrder(rangeFrom, rangeTo) {
 
 function allActivitiesByDateRangeInDescendingOrder(rangeFrom, rangeTo) {
   return allActivitiesByDateRange(rangeFrom, rangeTo, "DESC");
-}
-
-function flattenAndSortMongoResultCollection(collection) {
-  return R.sortBy(R.prop("startDate"), R.flatten(collection[0].value));
 }
 
 module.exports = {
@@ -113,6 +108,4 @@ module.exports = {
         groupIds.includes(activity.assignedGroup()) || activity.veranstaltung().registeredMembers().includes(memberId),
     );
   },
-
-  flattenAndSortMongoResultCollection,
 };

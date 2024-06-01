@@ -81,47 +81,47 @@ describe("Activity application with DB - shows activities where a member is orga
     version: 1,
   });
 
-  beforeEach(async () => {
+  beforeEach(() => {
     // if this fails, you need to start your mongo DB
 
-    await persistence.recreateForTest();
-    await activitystore.saveActivity(futureActivityOwner1NoEditorIds);
-    await activitystore.saveActivity(futureActivityOwner2EmptyEditorIds);
-    await activitystore.saveActivity(currentActivityOwner2EditorOwner1);
-    await activitystore.saveActivity(pastActivityOwner3EditorOwner3);
+    persistence.recreateForTest();
+    activitystore.saveActivity(futureActivityOwner1NoEditorIds);
+    activitystore.saveActivity(futureActivityOwner2EmptyEditorIds);
+    activitystore.saveActivity(currentActivityOwner2EditorOwner1);
+    activitystore.saveActivity(pastActivityOwner3EditorOwner3);
   });
 
   afterEach(() => {
     sinon.restore();
   });
 
-  it("no activities for members who are neither owners nor editors", async () => {
-    const activities = await activitystore.organizedOrEditedActivitiesForMemberId("no-owner-and-no-editor");
+  it("no activities for members who are neither owners nor editors", () => {
+    const activities = activitystore.organizedOrEditedActivitiesForMemberId("no-owner-and-no-editor");
     expect(activities.length).to.equal(0);
   });
 
-  it("shows activities where owner1 is owner or editor, oldest last", async () => {
-    const activities = await activitystore.organizedOrEditedActivitiesForMemberId("owner1");
+  it("shows activities where owner1 is owner or editor, oldest last", () => {
+    const activities = activitystore.organizedOrEditedActivitiesForMemberId("owner1");
     expect(activities.length).to.equal(2);
     expect(activities[0].title()).to.equal("Future Activity 1");
     expect(activities[1].title()).to.equal("Current Activity 1");
   });
 
-  it("if a person is owner and editor, the activity only appears once", async () => {
-    const activities = await activitystore.organizedOrEditedActivitiesForMemberId("owner3");
+  it("if a person is owner and editor, the activity only appears once", () => {
+    const activities = activitystore.organizedOrEditedActivitiesForMemberId("owner3");
     expect(activities.length).to.equal(1);
     expect(activities[0].title()).to.equal("Past Activity 1");
   });
 });
 
 describe("Activity application with DB - organizedOrEditedActivitiesForMemberId without activities -", () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     // if this fails, you need to start your mongo DB
-    await persistence.recreateForTest();
+    persistence.recreateForTest();
   });
 
-  it("returns an empty list if there is no collection at all", async () => {
-    const activities = await activitystore.organizedOrEditedActivitiesForMemberId("unknownMemberId");
+  it("returns an empty list if there is no collection at all", () => {
+    const activities = activitystore.organizedOrEditedActivitiesForMemberId("unknownMemberId");
     expect(activities.length).to.equal(0);
   });
 });
