@@ -40,7 +40,8 @@ function execWithTry(command) {
 
 module.exports = function sqlitePersistenceFunc(collectionName, extraColumns) {
   const extraCols = extraColumns ? extraColumns.split(",") : [];
-  function create() {
+
+  function createForTest() {
     const columns = ["id TEXT PRIMARY KEY", "data BLOB"].concat(
       extraCols.map((col) => {
         if (col === "version") {
@@ -61,7 +62,6 @@ module.exports = function sqlitePersistenceFunc(collectionName, extraColumns) {
     }
   }
 
-  create();
   const colsForSave = ["id", "data"].concat(extraCols);
 
   const persistence = {
@@ -171,8 +171,12 @@ module.exports = function sqlitePersistenceFunc(collectionName, extraColumns) {
     },
 
     recreateForTest() {
-      db.exec(`DROP TABLE IF EXISTS ${collectionName};`);
-      create();
+      if (collectionName === "teststore") {
+        db.exec(`DROP TABLE IF EXISTS ${collectionName};`);
+        createForTest();
+      } else {
+        console.error("Trying to drop a production collection?"); // eslint-disable-line no-console
+      }
     },
   };
   return persistence;

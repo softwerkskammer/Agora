@@ -53,7 +53,6 @@
     "luxon": "3.4.4",
     "marked": "12.0.2",
     "mime-types": "2.1.35",
-    "mongodb": "6.5.0",
     "morgan": "1.10.0",
     "multiparty": "4.2.3",
     "node-syntaxhighlighter": "0.8.1",

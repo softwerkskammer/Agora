@@ -11,8 +11,6 @@
 .idea/workspace.xml
 *.iml
 
-.vagrant
-
 *.log
 
 node_modules/
@@ -21,10 +19,6 @@ config/*.json*
 !config/beans.json
 !config/testbeans.json
 !config/testbeansWithDB.json
-
-dev-goodies
-!dev-goodies/icon_WebStorm.png
-!dev-goodies/mongo snippets.txt
 
 **/build
 **/*coverage*
@@ -46,5 +40,9 @@ docker/mongo/
 /softwerkskammer/chado-result.json
 /.idea/shelf
 /2023-12-24
+/2024-06-01
 /.idea/prettier.xml
 /mongoimport_agora.sh
+/backups/
+*.gz
+db/*
