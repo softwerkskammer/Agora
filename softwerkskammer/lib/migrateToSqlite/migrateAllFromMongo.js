@@ -1,3 +1,4 @@
+/* eslint-disable no-console, no-process-exit */
 require("../../configure.js");
 
 const conf = require("simple-configure");
@@ -10,12 +11,17 @@ async function loadAll() {
   const client = await MongoClient.connect(url);
   const db = client.db();
   const collections = await db.collections();
-  const finders = collections.map(async (coll) => {
-    return {
-      name: coll.collectionName,
-      res: await db.collection(coll.collectionName).find().toArray(),
-    };
-  });
+  const finders = collections
+    .filter(
+      (col) =>
+        !["announcementstore", "colorstore", "sessions", "teststore", "waitinglistStore"].includes(col.collectionName),
+    )
+    .map(async (coll) => {
+      return {
+        name: coll.collectionName,
+        res: await db.collection(coll.collectionName).find().toArray(),
+      };
+    });
   const result = await Promise.all(finders);
   client.close();
   return result;
@@ -23,29 +29,34 @@ async function loadAll() {
 
 async function migrateFromMongo() {
   if (persistenceLite("memberstore").list().length > 0) {
-    // eslint-disable-next-line no-console
     console.log("DB already migrated");
-    return;
+    process.exit(0);
   }
   const collections = await loadAll();
-  collections
-    .filter(
-      (col) => !["announcementstore", "colorstore", "sessions", "teststore", "waitinglistStore"].includes(col.name),
-    )
-    .forEach((part) => {
-      // eslint-disable-next-line no-console
-      console.log(`Migrating: ${part.name}`);
+  try {
+    collections.forEach((part) => {
+      const rowsBefore = part.res.length;
+      console.log(`Migrating: ${part.name} with ${rowsBefore} rows.`);
       const rows = part.res.map((row) => {
-        // eslint-disable-next-line no-underscore-dangle
-        delete row._id;
+        delete row._id; // eslint-disable-line no-underscore-dangle
         return JSON.parse(JSON.stringify(row));
       });
-      if (part.name === "activitystore") {
-        persistenceLite(part.name, "startDate,endDate,url,version").saveAll(rows);
-      } else {
-        persistenceLite(part.name).saveAll(rows);
+      const table =
+        part.name === "activitystore"
+          ? persistenceLite(part.name, "startDate,endDate,url,version")
+          : persistenceLite(part.name);
+      table.saveAll(rows);
+      const rowsAfter = table.list().length;
+      console.log(`Migrated: ${part.name} to SQL with ${rowsAfter} rows.`);
+      if (rowsBefore === rowsAfter) {
+        console.log(`SUCCESSFUL for ${part.name}`);
       }
     });
+    process.exit(0);
+  } catch (err) {
+    console.log(`ERROR: ${err.message}`);
+    process.exit(1);
+  }
 }
 
 migrateFromMongo();
