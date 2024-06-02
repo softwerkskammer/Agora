@@ -14,20 +14,20 @@ class WaitinglistEntry {
 
   registrationDate() {
     return this.state._registeredAt
-      ? DateTime.fromJSDate(this.state._registeredAt).toFormat("dd.MM.yyyy HH:mm")
+      ? DateTime.fromISO(this.state._registeredAt).toFormat("dd.MM.yyyy HH:mm")
       : undefined;
   }
 
   registrationValidUntil() {
     return this.state._registrationValidUntil
-      ? DateTime.fromJSDate(this.state._registrationValidUntil).toFormat("dd.MM.yyyy HH:mm")
+      ? DateTime.fromISO(this.state._registrationValidUntil).toFormat("dd.MM.yyyy HH:mm")
       : undefined;
   }
 
   setRegistrationValidityFor(hoursString) {
     if (hoursString) {
       const validHours = parseInt(hoursString, 10);
-      this.state._registrationValidUntil = DateTime.local().plus({ hours: validHours }).toJSDate();
+      this.state._registrationValidUntil = DateTime.local().plus({ hours: validHours }).toISO();
     } else {
       delete this.state._registrationValidUntil;
     }
@@ -37,7 +37,7 @@ class WaitinglistEntry {
     if (!this.state._registrationValidUntil) {
       return false;
     }
-    return DateTime.local() < this.state._registrationValidUntil;
+    return DateTime.local() < DateTime.fromISO(this.state._registrationValidUntil);
   }
 
   // additional non-persistent information

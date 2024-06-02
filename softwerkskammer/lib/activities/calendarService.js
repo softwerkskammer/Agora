@@ -3,7 +3,7 @@ const beans = require("simple-configure").get("beans");
 const activitystore = beans.get("activitystore");
 
 module.exports = {
-  eventsBetween: async function eventsBetween(startMillis, endMillis, groupsColors) {
+  eventsBetween: function eventsBetween(startMillis, endMillis, groupsColors) {
     function asCalendarEvent(activity) {
       return {
         start: activity.startDateTime().toString(),
@@ -15,7 +15,7 @@ module.exports = {
       };
     }
 
-    const activities = await activitystore.allActivitiesByDateRangeInAscendingOrder(startMillis, endMillis);
+    const activities = activitystore.allActivitiesByDateRangeInAscendingOrder(startMillis, endMillis);
     return activities.map(asCalendarEvent);
   },
 };

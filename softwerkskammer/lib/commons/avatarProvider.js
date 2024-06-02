@@ -29,6 +29,7 @@ module.exports = {
       member.setAvatarData(data);
       return data;
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.log(e);
       throw e;
     }

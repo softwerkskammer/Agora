@@ -12,7 +12,7 @@ const membersPersistence = beans.get("membersPersistence");
 describe("Authentication Service", () => {
   describe("- where member cannot be found -", () => {
     beforeEach(() => {
-      sinon.stub(membersPersistence, "getMongoByField").returns(null);
+      sinon.stub(membersPersistence, "getByWhere").returns(null);
     });
 
     afterEach(() => {

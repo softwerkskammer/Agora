@@ -1,5 +1,4 @@
 const beans = require("simple-configure").get("beans");
-const R = require("ramda");
 
 const persistence = beans.get("activitiesPersistence");
 const Activity = beans.get("activity");
@@ -18,114 +17,95 @@ function toActivityList(jsobjects) {
   });
 }
 
-async function allActivitiesByDateRange(rangeFrom, rangeTo, sortOrder) {
-  const result = await persistence.listMongoByField(
-    {
-      $and: [{ endDate: { $gt: new Date(rangeFrom) } }, { startDate: { $lt: new Date(rangeTo) } }],
-    },
-    sortOrder,
+function allActivitiesByDateRange(rangeFromMillis, rangeToMillis, sortOrder) {
+  const result = persistence.listByWhere(
+    `startDate < '${new Date(rangeToMillis).toISOString()}' AND endDate > '${new Date(rangeFromMillis).toISOString()}'`,
+    `startDate ${sortOrder}`,
   );
   return toActivityList(result);
 }
 
-async function allActivitiesByDateRangeInAscendingOrder(rangeFrom, rangeTo) {
-  return allActivitiesByDateRange(rangeFrom, rangeTo, { startDate: 1 });
+function allActivitiesByDateRangeInAscendingOrder(rangeFrom, rangeTo) {
+  return allActivitiesByDateRange(rangeFrom, rangeTo, "ASC");
 }
 
-async function allActivitiesByDateRangeInDescendingOrder(rangeFrom, rangeTo) {
-  return allActivitiesByDateRange(rangeFrom, rangeTo, { startDate: -1 });
-}
-
-function flattenAndSortMongoResultCollection(collection) {
-  return R.sortBy(R.prop("startDate"), R.flatten(collection[0].value));
+function allActivitiesByDateRangeInDescendingOrder(rangeFrom, rangeTo) {
+  return allActivitiesByDateRange(rangeFrom, rangeTo, "DESC");
 }
 
 module.exports = {
-  allActivities: async function allActivities() {
-    const result = await persistence.listMongo({ startDate: 1 });
+  allActivities: function allActivities() {
+    const result = persistence.list("startDate ASC");
     return toActivityList(result);
   },
 
   allActivitiesByDateRangeInAscendingOrder,
 
-  upcomingActivities: async function upcomingActivities() {
+  upcomingActivities: function upcomingActivities() {
     const start = Date.now();
     const end = start + 315569260000; // 10 years as millis;
     return allActivitiesByDateRangeInAscendingOrder(start, end);
   },
 
-  pastActivities: async function pastActivities() {
+  pastActivities: function pastActivities() {
     const start = 0;
     const end = Date.now();
     return allActivitiesByDateRangeInDescendingOrder(start, end);
   },
 
-  getActivity: async function getActivity(url) {
-    const result = await persistence.getMongoByField({ url });
+  getActivity: function getActivity(url) {
+    const result = persistence.getByField({ key: "url", val: url });
     return toActivity(result);
   },
 
-  getActivityForId: async function getActivityForId(id) {
-    const result = await persistence.getMongoById(id);
+  getActivityForId: function getActivityForId(id) {
+    const result = persistence.getById(id);
     return toActivity(result);
   },
 
-  saveActivity: async function saveActivity(activity) {
-    return persistence.saveMongoWithVersion(activity.state);
+  saveActivity: function saveActivity(activity) {
+    return persistence.saveWithVersion(activity.state);
   },
 
-  removeActivity: async function removeActivity(activity) {
-    return persistence.removeMongo(activity.id());
+  removeActivity: function removeActivity(activity) {
+    return persistence.removeById(activity.id());
   },
 
-  upcomingActivitiesForGroupIds: async function upcomingActivitiesForGroupIds(groupIds) {
-    const start = new Date();
-
-    const result = await persistence.listMongoByField(
-      {
-        $and: [{ endDate: { $gt: start } }, { assignedGroup: { $in: groupIds } }],
-      },
-      { startDate: 1 },
+  upcomingActivitiesForGroupIds: function upcomingActivitiesForGroupIds(groupIds) {
+    const group = groupIds[0];
+    const result = persistence.listByWhere(
+      `endDate > '${new Date().toISOString()}' AND json_extract( data, '$.assignedGroup' ) = '${group}'`,
+      "startDate ASC",
     );
     return toActivityList(result);
   },
 
-  pastActivitiesForGroupIds: async function pastActivitiesForGroupIds(groupIds) {
-    const start = new Date();
-
-    const result = await persistence.listMongoByField(
-      {
-        $and: [{ endDate: { $lt: start } }, { assignedGroup: { $in: groupIds } }],
-      },
-      { startDate: -1 },
+  pastActivitiesForGroupIds: function pastActivitiesForGroupIds(groupIds) {
+    const group = groupIds[0];
+    const result = persistence.listByWhere(
+      `endDate < '${new Date().toISOString()}' AND json_extract( data, '$.assignedGroup' ) = '${group}'`,
+      "startDate DESC",
     );
     return toActivityList(result);
   },
 
-  organizedOrEditedActivitiesForMemberId: async function organizedOrEditedActivitiesForMemberId(memberId) {
-    const result = await persistence.listMongoByField(
-      {
-        $or: [
-          { owner: memberId },
-          { editorIds: memberId }, // matches when the field equals the value or when the field is an array that contains the value
-        ],
-      },
-      { startDate: -1 },
+  organizedOrEditedActivitiesForMemberId: function organizedOrEditedActivitiesForMemberId(memberId) {
+    const result = persistence.listByWhere(
+      `json_extract( data, '$.owner' ) = '${memberId}' OR json_extract( data, '$.editorIds' ) like '%${memberId}%'`,
+      "startDate DESC",
     );
     return toActivityList(result);
   },
 
-  activitiesForGroupIdsAndRegisteredMemberId: async function activitiesForGroupIdsAndRegisteredMemberId(
+  activitiesForGroupIdsAndRegisteredMemberId: function activitiesForGroupIdsAndRegisteredMemberId(
     groupIds,
     memberId,
     upcoming,
   ) {
-    const activities = upcoming ? await this.upcomingActivities() : await this.pastActivities();
+    const activities = upcoming ? this.upcomingActivities() : this.pastActivities();
     return activities.filter(
       (activity) =>
         groupIds.includes(activity.assignedGroup()) || activity.veranstaltung().registeredMembers().includes(memberId),
     );
   },
-
-  flattenAndSortMongoResultCollection,
 };

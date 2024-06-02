@@ -12,18 +12,15 @@ const Activity = beans.get("activity");
 
 const createApp = require("../../testutil/testHelper")("activitiesApp", beans).createApp;
 
-async function getActivity(url) {
-  const activityState = await persistence.getMongoByField({ url });
-  return new Activity(activityState);
+function getActivity(url) {
+  return new Activity(persistence.getByField({ key: "url", val: url }));
 }
 
 describe("Activity application with DB - on submit -", () => {
   let activityBeforeConcurrentAccess;
   let activityAfterConcurrentAccess;
 
-  beforeEach(async () => {
-    // if this fails, you need to start your mongo DB
-
+  beforeEach(() => {
     activityBeforeConcurrentAccess = new Activity({
       id: "activityId",
       title: "Title of the Activity",
@@ -59,9 +56,9 @@ describe("Activity application with DB - on submit -", () => {
 
     sinon.stub(activitystore, "getActivity").returns(activityBeforeConcurrentAccess);
 
-    await persistence.dropMongoCollection();
+    persistence.recreateForTest();
     // save our activity with one registrant
-    await activitystore.saveActivity(activityAfterConcurrentAccess);
+    activitystore.saveActivity(activityAfterConcurrentAccess);
   });
 
   afterEach(() => {
@@ -72,15 +69,15 @@ describe("Activity application with DB - on submit -", () => {
     request(createApp("memberId"))
       .post("/submit")
       .send(
-        "url=urlOfTheActivity&previousUrl=urlOfTheActivity&assignedGroup=alle&location=location2&title=Title 2&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00&resources[names]=Veranstaltung",
+        "url=urlOfTheActivity&previousUrl=urlOfTheActivity&assignedGroup=alle&location=location2&title=Title 2&startDate=02.07.2000&startTime=19:00&endDate=02.07.2000&endTime=21:00&resources[names]=Veranstaltung&version=2",
       )
       .expect(302)
-      .expect(/Redirecting to \/activities\/edit\/urlOfTheActivity/, async (err) => {
+      .expect(/Redirecting to \/activities\/edit\/urlOfTheActivity/, (err) => {
+        // check that activity did not get changed on the database
         if (err) {
           throw err;
         }
-        // check that activity did not get changed on the database
-        const activity = await getActivity("urlOfTheActivity");
+        const activity = getActivity("urlOfTheActivity");
         expect(
           activity.resourceNamed("Veranstaltung").registeredMembers(),
           "Registered member is still there",

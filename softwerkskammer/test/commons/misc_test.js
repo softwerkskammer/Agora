@@ -166,42 +166,42 @@ describe("differenceCaseInsensitive function", () => {
 });
 
 describe("validate function", () => {
-  it("returns true if the new value is identical to the previous value", async () => {
-    const result = await misc.validate("abc", "abc");
+  it("returns true if the new value is identical to the previous value", () => {
+    const result = misc.validate("abc", "abc");
     expect(result).to.equal("true");
   });
 
-  it("returns true if the new value is different to the previous value and the validator returns true", async () => {
-    const result = await misc.validate("def", "abc", () => true);
+  it("returns true if the new value is different to the previous value and the validator returns true", () => {
+    const result = misc.validate("def", "abc", () => true);
     expect(result).to.equal("true");
   });
 
-  it("returns false if the new value is different to the previous value and the validator returns false", async () => {
-    const result = await misc.validate("def", "abc", () => false);
+  it("returns false if the new value is different to the previous value and the validator returns false", () => {
+    const result = misc.validate("def", "abc", () => false);
     expect(result).to.equal("false");
   });
 
-  it("returns false if the new value is different to the previous value and the validator returns an error", async () => {
+  it("returns false if the new value is different to the previous value and the validator returns an error", () => {
     const validator = () => {
       throw new Error("Error!");
     };
 
-    const result = await misc.validate("def", "abc", validator);
+    const result = misc.validate("def", "abc", validator);
     expect(result).to.equal("false");
   });
 
-  it("trims the new value", async () => {
-    const result = await misc.validate(" abc ", "abc");
+  it("trims the new value", () => {
+    const result = misc.validate(" abc ", "abc");
     expect(result).to.equal("true");
   });
 
-  it("trims the previous value", async () => {
-    const result = await misc.validate("abc", " abc ");
+  it("trims the previous value", () => {
+    const result = misc.validate("abc", " abc ");
     expect(result).to.equal("true");
   });
 
-  it("returns false when the current value is null", async () => {
-    const result = await misc.validate(null, null, undefined);
+  it("returns false when the current value is null", () => {
+    const result = misc.validate(null, null, undefined);
     expect(result).to.equal("false");
   });
 });

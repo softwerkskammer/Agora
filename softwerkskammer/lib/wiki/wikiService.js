@@ -21,7 +21,7 @@ init();
 async function replaceNonExistentNicknames(metadataList) {
   async function replaceNickPotentially(metadata) {
     try {
-      const member = await memberstore.getMember(metadata.author);
+      const member = memberstore.getMember(metadata.author);
       if (!member) {
         metadata.author = null;
       }

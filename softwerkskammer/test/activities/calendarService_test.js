@@ -24,8 +24,8 @@ describe("Calendar Service", () => {
     sinon.stub(activitystore, "allActivitiesByDateRangeInAscendingOrder").returns([activity]);
   });
 
-  it("loads and converts a wellformed Activity to a calendar display event without colors given", async () => {
-    const events = await calendarService.eventsBetween(start.toMillis(), end.toMillis(), null);
+  it("loads and converts a wellformed Activity to a calendar display event without colors given", () => {
+    const events = calendarService.eventsBetween(start.toMillis(), end.toMillis(), null);
     expect(events).to.have.length(1);
     const event = events[0];
     expect("Title").to.equal(event.title);

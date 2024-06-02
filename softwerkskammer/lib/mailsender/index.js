@@ -70,10 +70,10 @@ app.get("/contactMember/:nickname", async (req, res, next) => {
   res.render("compose", result);
 });
 
-app.get("/contactMembersOfGroup/:groupname", async (req, res) => {
+app.get("/contactMembersOfGroup/:groupname", (req, res) => {
   const groupName = req.params.groupname;
   try {
-    const group = await groupstore.getGroup(groupName);
+    const group = groupstore.getGroup(groupName);
     if (!group.isMemberSubscribed(res.locals.accessrights.member()) && !res.locals.accessrights.isSuperuser()) {
       return res.redirect("/groups/" + encodeURIComponent(groupName));
     }
@@ -112,7 +112,7 @@ app.post("/resign", async (req, res) => {
     return res.redirect("/members/" + encodeURIComponent(nickname));
   }
   try {
-    await groupsAndMembersService.removeMember(nickname);
+    groupsAndMembersService.removeMember(nickname);
     const markdown =
       "**" +
       req.i18n.t("mailsender.why-resign") +

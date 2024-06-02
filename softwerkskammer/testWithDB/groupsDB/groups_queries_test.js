@@ -15,18 +15,18 @@ describe("Groups application with DB", () => {
     const group4 = new Group({ id: "withemptyurl", meetupURL: "" });
     const group5 = new Group({ id: "withurl", meetupURL: "https://my.meetup.org/group/" });
 
-    beforeEach(async () => {
+    beforeEach(() => {
       // if this fails, you need to start your mongo DB
-      await persistence.dropMongoCollection();
-      await groupstore.saveGroup(group1);
-      await groupstore.saveGroup(group2);
-      await groupstore.saveGroup(group3);
-      await groupstore.saveGroup(group4);
-      await groupstore.saveGroup(group5);
+      persistence.recreateForTest();
+      groupstore.saveGroup(group1);
+      groupstore.saveGroup(group2);
+      groupstore.saveGroup(group3);
+      groupstore.saveGroup(group4);
+      groupstore.saveGroup(group5);
     });
 
-    it("returns only the group that has a nonempty URL", async () => {
-      const groups = await groupstore.getGroupsWithMeetupURL();
+    it("returns only the group that has a nonempty URL", () => {
+      const groups = groupstore.getGroupsWithMeetupURL();
       expect(groups).to.have.length(1);
       expect(groups[0].id).to.be("withurl");
     });

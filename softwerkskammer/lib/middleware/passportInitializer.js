@@ -10,12 +10,12 @@ function serializeUser(user, done) {
   return done(null, user);
 }
 
-async function deserializeUser(user, done) {
+function deserializeUser(user, done) {
   if (user.profile) {
     return done(null, user);
   } // new user
   try {
-    const member = await memberstore.getMemberForAuthentication(user.authenticationId);
+    const member = memberstore.getMemberForAuthentication(user.authenticationId);
     done(null, { authenticationId: user.authenticationId, member });
   } catch (e) {
     done(e);

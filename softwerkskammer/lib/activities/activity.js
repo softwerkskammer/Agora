@@ -20,14 +20,22 @@ class Activity {
 
     if (!this.state.startDate) {
       this.state.startDate = new Date();
+    } else if (typeof this.state.startDate === "string") {
+      this.state.startDate = new Date(this.state.startDate);
     }
     if (!this.state.endDate) {
       this.state.endDate = new Date();
+    } else if (typeof this.state.endDate === "string") {
+      this.state.endDate = new Date(this.state.endDate);
     }
   }
 
   id() {
     return this.state.id;
+  }
+
+  version() {
+    return this.state.version;
   }
 
   url() {
@@ -75,6 +83,7 @@ class Activity {
   }
 
   fillFromUI(object, editorIds) {
+    this.state.version = object.version ? parseInt(object.version, 10) : this.state.version;
     this.state.url = object.url;
 
     this.state.editorIds = editorIds;

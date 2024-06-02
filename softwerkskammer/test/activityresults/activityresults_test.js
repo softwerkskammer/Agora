@@ -56,7 +56,7 @@ describe("Activityresults application", () => {
   describe("for creation and uploading", () => {
     it("should create a new activity result with tags", (done) => {
       let theResult;
-      sinon.stub(activityresultsPersistence, "saveMongo").callsFake((activityResult) => {
+      sinon.stub(activityresultsPersistence, "save").callsFake((activityResult) => {
         theResult = activityResult;
         return activityResult;
       });

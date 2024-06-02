@@ -5,26 +5,22 @@ const mailsenderService = beans.get("mailsenderService");
 const CONFLICTING_VERSIONS = beans.get("constants").CONFLICTING_VERSIONS;
 
 module.exports = {
-  waitinglistFor: async function waitinglistFor(activityUrl) {
-    const activity = await activitystore.getActivity(activityUrl);
-    return await Promise.all(
-      activity.allWaitinglistEntries().map(async (waitinglistEntry) => {
-        const member = await memberstore.getMemberForId(waitinglistEntry.registrantId());
-        waitinglistEntry.registrantNickname = member.nickname();
-        return waitinglistEntry;
-      }),
-    );
+  waitinglistFor: function waitinglistFor(activityUrl) {
+    const activity = activitystore.getActivity(activityUrl);
+    return activity.allWaitinglistEntries().map((waitinglistEntry) => {
+      const member = memberstore.getMemberForId(waitinglistEntry.registrantId());
+      waitinglistEntry.registrantNickname = member.nickname();
+      return waitinglistEntry;
+    });
   },
 
-  saveWaitinglistEntry: async function saveWaitinglistEntry(args) {
+  saveWaitinglistEntry: function saveWaitinglistEntry(args) {
     const self = this;
-    const [member, activity] = await Promise.all([
-      memberstore.getMember(args.nickname),
-      activitystore.getActivity(args.activityUrl),
-    ]);
+    const member = memberstore.getMember(args.nickname);
+    const activity = activitystore.getActivity(args.activityUrl);
     activity.addToWaitinglist(member.id(), Date.now());
     try {
-      await activitystore.saveActivity(activity);
+      activitystore.saveActivity(activity);
     } catch (err1) {
       if (err1 && err1.message === CONFLICTING_VERSIONS) {
         // we try again because of a racing condition during save:
@@ -34,12 +30,11 @@ module.exports = {
     }
   },
 
-  allowRegistrationForWaitinglistEntry: async function allowRegistrationForWaitinglistEntry(args) {
+  allowRegistrationForWaitinglistEntry: function allowRegistrationForWaitinglistEntry(args) {
     const self = this;
-    const [member, activity] = await Promise.all([
-      memberstore.getMember(args.nickname),
-      activitystore.getActivity(args.activityUrl),
-    ]);
+    const member = memberstore.getMember(args.nickname);
+    const activity = activitystore.getActivity(args.activityUrl);
+
     if (!member || !activity) {
       return;
     }
@@ -49,7 +44,7 @@ module.exports = {
     }
     entry.setRegistrationValidityFor(args.hoursstring);
     try {
-      await activitystore.saveActivity(activity);
+      activitystore.saveActivity(activity);
       return mailsenderService.sendRegistrationAllowed(member, activity, entry);
     } catch (err1) {
       if (err1 && err1.message === CONFLICTING_VERSIONS) {

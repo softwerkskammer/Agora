@@ -1,21 +1,19 @@
 {
   "groupsPersistence": {
-    "module": "./softwerkskammer/lib/persistence/persistence",
+    "module": "./softwerkskammer/lib/persistence/sqlitePersistence",
     "constructorArgs": {
       "collectionName": "teststore"
     }
   },
   "membersPersistence": {
-    "module": "./softwerkskammer/lib/persistence/persistence",
+    "module": "./softwerkskammer/lib/persistence/sqlitePersistence",
     "constructorArgs": {
       "collectionName": "teststore"
     }
   },
   "activitiesPersistence": {
-    "module": "./softwerkskammer/lib/persistence/persistence",
-    "constructorArgs": {
-      "collectionName": "teststore"
-    }
+    "module": "./softwerkskammer/lib/persistence/sqlitePersistence",
+    "constructorArgs": { "collectionName": "teststore", "extraColumns": "startDate,endDate,url,version" }
   },
   "mailsPersistence": { "module": "./softwerkskammer/teststubs/testpersistence" },
 

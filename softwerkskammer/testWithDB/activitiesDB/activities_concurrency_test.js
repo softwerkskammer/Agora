@@ -13,8 +13,8 @@ const Activity = beans.get("activity");
 
 const activityUrl = "urlOfTheActivity";
 
-const getActivity = async (url) => {
-  const activityState = await persistence.getMongoByField({ url });
+const getActivity = (url) => {
+  const activityState = persistence.getByField({ key: "url", val: url });
   return new Activity(activityState);
 };
 
@@ -63,9 +63,9 @@ describe("Activities Service with DB", () => {
       return activityAfterConcurrentAccess;
     });
 
-    await persistence.dropMongoCollection();
+    persistence.recreateForTest();
     // save our activity with one registrant
-    await activitystore.saveActivity(activityAfterConcurrentAccess);
+    activitystore.saveActivity(activityAfterConcurrentAccess);
 
     sinon.stub(notifications, "visitorRegistration");
     sinon.stub(notifications, "visitorUnregistration");
@@ -81,7 +81,7 @@ describe("Activities Service with DB", () => {
     // here, we save an activity with a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
     await activitiesService.addVisitorTo("memberId2", "activity-url", Date.now());
-    const activity = await getActivity(activityUrl);
+    const activity = getActivity(activityUrl);
     expect(
       activity.resourceNamed("Veranstaltung").registeredMembers(),
       "Second registered member is stored in the database",
@@ -96,7 +96,7 @@ describe("Activities Service with DB", () => {
     // here, we save an activity after removing a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first 'getActivity'.
     await activitiesService.removeVisitorFrom("memberIdX", activityUrl);
-    const activity = await getActivity(activityUrl);
+    const activity = getActivity(activityUrl);
     expect(
       activity.resourceNamed("Veranstaltung").registeredMembers(),
       "Second removed member is no longer in the database",
@@ -111,7 +111,7 @@ describe("Activities Service with DB", () => {
     // here, we save an activity with a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
     await activitiesService.addToWaitinglist("memberId2", activityUrl, Date.now());
-    const activity = await getActivity(activityUrl);
+    const activity = getActivity(activityUrl);
     expect(
       activity.resourceNamed("Veranstaltung").waitinglistEntries()[0].registrantId(),
       "Previous member is still in the waitinglist",
@@ -130,7 +130,7 @@ describe("Activities Service with DB", () => {
     // here, we save an activity after removing a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
     await activitiesService.removeFromWaitinglist("memberIdY", activityUrl);
-    const activity = await getActivity(activityUrl);
+    const activity = getActivity(activityUrl);
     expect(
       activity.resourceNamed("Veranstaltung").waitinglistEntries().length,
       "Waitinglist member is no longer in the database",

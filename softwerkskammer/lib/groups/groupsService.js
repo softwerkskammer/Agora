@@ -12,23 +12,23 @@ function isReserved(groupname) {
 
 module.exports = {
   // API geändert von email() auf member und Methode umbenannt
-  getSubscribedGroupsForMember: async function getSubscribedGroupsForMember(member) {
-    const groups = await groupstore.allGroups();
+  getSubscribedGroupsForMember: function getSubscribedGroupsForMember(member) {
+    const groups = groupstore.allGroups();
     return groups.filter((g) => g.subscribedMembers.includes(member.id()));
   },
 
-  allGroupColors: async function allGroupColors() {
-    const groups = await groupstore.allGroups();
+  allGroupColors: function allGroupColors() {
+    const groups = groupstore.allGroups();
     return (groups || []).reduce((result, group) => {
       result[group.id] = group.color;
       return result;
     }, {});
   },
 
-  isGroupValid: async function isGroupValid(group) {
+  isGroupValid: function isGroupValid(group) {
     const errors = validation.isValidGroup(group);
     try {
-      const existingGroup = await groupstore.getGroup(group.id);
+      const existingGroup = groupstore.getGroup(group.id);
       if (existingGroup) {
         return errors;
       }
@@ -36,12 +36,12 @@ module.exports = {
       errors.push("Technical error validating the group.");
     }
     const self = this;
-    const result = await self.isGroupNameAvailable(group.id);
+    const result = self.isGroupNameAvailable(group.id);
     if (!result) {
       errors.push("Dieser Gruppenname ist bereits vergeben.");
     }
     try {
-      const result1 = await self.isEmailPrefixAvailable(group.emailPrefix);
+      const result1 = self.isEmailPrefixAvailable(group.emailPrefix);
       if (!result1) {
         errors.push("Dieses Präfix ist bereits vergeben.");
       }
@@ -52,22 +52,22 @@ module.exports = {
   },
 
   // API change email() -> member and renamed
-  addMemberToGroupNamed: async function addMemberToGroupNamed(member, groupname) {
-    const group = await groupstore.getGroup(groupname);
+  addMemberToGroupNamed: function addMemberToGroupNamed(member, groupname) {
+    const group = groupstore.getGroup(groupname);
     group.subscribe(member);
     return groupstore.saveGroup(group);
   },
 
   // API change email() -> member and renamed
-  removeMemberFromGroupNamed: async function removeMemberFromGroupNamed(member, groupname) {
-    const group = await groupstore.getGroup(groupname);
+  removeMemberFromGroupNamed: function removeMemberFromGroupNamed(member, groupname) {
+    const group = groupstore.getGroup(groupname);
     group.unsubscribe(member);
     return groupstore.saveGroup(group);
   },
 
   // API change: email() -> member, oldUserMail removed
-  updateSubscriptions: async function updateSubscriptions(member, newSubscriptions) {
-    const groups = await groupstore.allGroups();
+  updateSubscriptions: function updateSubscriptions(member, newSubscriptions) {
+    const groups = groupstore.allGroups();
     const subscribedGroups = groups.filter((g) => g.subscribedMembers.includes(member.id()));
     const groupsForNewSubscriptions = groups.filter((g) => misc.toArray(newSubscriptions).includes(g.id));
 
@@ -77,31 +77,31 @@ module.exports = {
     groupsToSubscribe.forEach((g) => g.subscribe(member));
     groupsToUnsubscribe.forEach((g) => g.unsubscribe(member));
 
-    return Promise.all(groupsToSubscribe.concat(groupsToUnsubscribe).map(groupstore.saveGroup));
+    return groupsToSubscribe.concat(groupsToUnsubscribe).map(groupstore.saveGroup);
   },
 
   markGroupsSelected: function markGroupsSelected(groupsToMark, availableGroups) {
     return availableGroups.map((group) => ({ group, selected: groupsToMark.some((subG) => subG.id === group.id) }));
   },
 
-  isGroupNameAvailable: async function isGroupNameAvailable(groupname) {
+  isGroupNameAvailable: function isGroupNameAvailable(groupname) {
     const trimmedGroupname = groupname.trim();
     if (isReserved(trimmedGroupname)) {
       return false;
     }
-    const group = await groupstore.getGroup(trimmedGroupname);
+    const group = groupstore.getGroup(trimmedGroupname);
     return group === null;
   },
 
-  isEmailPrefixAvailable: async function isEmailPrefixAvailable(prefix) {
+  isEmailPrefixAvailable: function isEmailPrefixAvailable(prefix) {
     if (!prefix) {
       return false;
     }
-    const group = await groupstore.getGroupForPrefix(prefix.trim());
+    const group = groupstore.getGroupForPrefix(prefix.trim());
     return group === null;
   },
 
-  getGroups: async function getGroups(groupnames) {
+  getGroups: function getGroups(groupnames) {
     return groupstore.groupsByLists(misc.toArray(groupnames));
   },
 

@@ -27,20 +27,20 @@ function editorNameOf(member) {
   return member.displayName() + " (" + member.nickname() + ")".replace(",", "");
 }
 
-async function activitySubmitted(req, res) {
-  let activity = await activitiesService.getActivityWithGroupAndParticipants(req.body.previousUrl);
+function activitySubmitted(req, res) {
+  let activity = activitiesService.getActivityWithGroupAndParticipants(req.body.previousUrl);
   if (!activity) {
     activity = new Activity({ owner: req.user.member.id() });
   }
   const editorNames = misc.toArray(req.body.editorIds);
   // editor can be either a name in the format editorNameOf() - for participants - or just a nickname - for manually entered
   const nicknames = editorNames.map(misc.betweenBraces);
-  const members = await Promise.all(nicknames.map(memberstore.getMember));
+  const members = nicknames.map(memberstore.getMember);
   const membersForEditors = members.filter((m) => m); // only truthy members
   const editorIds = membersForEditors.map((editor) => editor.id());
   activity.fillFromUI(req.body, editorIds);
   try {
-    await activitystore.saveActivity(activity);
+    activitystore.saveActivity(activity);
     statusmessage
       .successMessage("message.title.save_successful", "message.content.activities.saved")
       .putIntoSession(req);
@@ -55,8 +55,8 @@ async function activitySubmitted(req, res) {
   }
 }
 
-async function activitiesForDisplay(activitiesFetcher, res, title) {
-  const activities = await activitiesService.getActivitiesForDisplay(activitiesFetcher);
+function activitiesForDisplay(activitiesFetcher, res, title) {
+  const activities = activitiesService.getActivitiesForDisplay(activitiesFetcher);
   res.render("index", {
     activities,
     range: title,
@@ -74,14 +74,14 @@ app.get("/", async (req, res) => {
   activitiesForDisplay(activitystore.allActivities, res, req.i18n.t("general.all"));
 });
 
-async function renderGdcrFor(gdcrDay, res) {
+function renderGdcrFor(gdcrDay, res) {
   const gdcrDate = new Date(gdcrDay);
   const gdcrActivities = R.partial(activitiesService.activitiesBetween, [
     gdcrDate.getTime(),
     gdcrDate.getTime() + 86400000,
   ]); // 1 day
 
-  const activities = await activitiesService.getActivitiesForDisplay(gdcrActivities);
+  const activities = activitiesService.getActivitiesForDisplay(gdcrActivities);
   const gdcrYear = gdcrDate.getFullYear();
   res.render("gdcr", {
     activities,
@@ -114,34 +114,33 @@ app.get("/past", async (req, res) =>
   activitiesForDisplay(activitystore.pastActivities, res, req.i18n.t("activities.past")),
 );
 
-app.get("/ical", async (req, res) => {
-  const activities = await activitystore.upcomingActivities();
+app.get("/ical", (req, res) => {
+  const activities = activitystore.upcomingActivities();
   sendCalendarStringNamedToResult(icalService.icalForActivities(activities), "events", res);
 });
 
-app.get("/icalForGroup/:group", async (req, res) => {
-  const activities = await activitystore.upcomingActivities();
+app.get("/icalForGroup/:group", (req, res) => {
+  const activities = activitystore.upcomingActivities();
   const groupsActivities = activities.filter((activity) => activity.assignedGroup() === req.params.group);
   sendCalendarStringNamedToResult(icalService.icalForActivities(groupsActivities), "events", res);
 });
 
-app.get("/ical/:url", async (req, res) => {
-  const activity = await activitystore.getActivity(req.params.url);
+app.get("/ical/:url", (req, res) => {
+  const activity = activitystore.getActivity(req.params.url);
   sendCalendarStringNamedToResult(icalService.activityAsICal(activity), activity.url(), res);
 });
 
-app.get("/eventsForSidebar", async (req, res) => {
+app.get("/eventsForSidebar", (req, res) => {
   const start = new Date(req.query.start).getTime();
   const end = new Date(req.query.end).getTime();
 
-  const groupColors = await groupsService.allGroupColors();
-  const events = await calendarService.eventsBetween(start, end, groupColors);
+  const events = calendarService.eventsBetween(start, end, groupsService.allGroupColors());
   res.end(JSON.stringify(events));
 });
 
-async function renderActivityCombinedWithGroups(res, activity) {
-  async function render(groups) {
-    const editors = await memberstore.getMembersForIds(activity.editorIds());
+function renderActivityCombinedWithGroups(res, activity) {
+  function render(groups) {
+    const editors = memberstore.getMembersForIds(activity.editorIds());
     if (!editors) {
       throw new Error();
     }
@@ -163,24 +162,24 @@ async function renderActivityCombinedWithGroups(res, activity) {
   }
 
   if (res.locals.accessrights.isSuperuser()) {
-    const allGroups = await groupstore.allGroups();
+    const allGroups = groupstore.allGroups();
     return render(allGroups);
   }
 
   // API geändert von email() auf member und Methode umbenannt
-  const subscribedGroups = await groupsService.getSubscribedGroupsForMember(res.locals.user.member);
+  const subscribedGroups = groupsService.getSubscribedGroupsForMember(res.locals.user.member);
   return render(Group.regionalsFrom(subscribedGroups).concat(Group.thematicsFrom(subscribedGroups)));
 }
 
-app.get("/new", async (req, res) => renderActivityCombinedWithGroups(res, new Activity()));
+app.get("/new", (req, res) => renderActivityCombinedWithGroups(res, new Activity()));
 
-app.get("/newLike/:url", async (req, res) => {
-  const activity = await activitystore.getActivity(req.params.url);
+app.get("/newLike/:url", (req, res) => {
+  const activity = activitystore.getActivity(req.params.url);
   renderActivityCombinedWithGroups(res, activity.resetForClone());
 });
 
 app.get("/edit/:url", async (req, res, next) => {
-  const activity = await activitiesService.getActivityWithGroupAndParticipants(req.params.url);
+  const activity = await activitiesService.getActivityWithGroupAndParticipantsWithAvatars(req.params.url);
   if (activity === null) {
     return next();
   }
@@ -193,10 +192,10 @@ app.get("/edit/:url", async (req, res, next) => {
   renderActivityCombinedWithGroups(res, activity);
 });
 
-app.post("/submit", async (req, res) => {
-  async function validate() {
+app.post("/submit", (req, res) => {
+  function validate() {
     try {
-      const result = await validation.checkValidity(
+      const result = validation.checkValidity(
         req.body.previousUrl.trim(),
         req.body.url.trim(),
         R.partial(activitiesService.isValidUrl, [reservedURLs]),
@@ -208,7 +207,7 @@ app.post("/submit", async (req, res) => {
       return req.i18n.t("validation.url_not_available");
     }
   }
-  const errorMessages = await Promise.all([validate(), validation.isValidForActivity(req.body)]);
+  const errorMessages = [validate(), validation.isValidForActivity(req.body)];
   const realErrors = R.flatten(errorMessages).filter((message) => message);
   if (realErrors.length === 0) {
     return activitySubmitted(req, res);
@@ -221,8 +220,8 @@ app.post("/clone-from-meetup", async (req, res) => {
   res.redirect("/activities");
 });
 
-app.get("/checkurl", async (req, res) => {
-  const result = await misc.validate(
+app.get("/checkurl", (req, res) => {
+  const result = misc.validate(
     req.query.url,
     req.query.previousUrl,
     R.partial(activitiesService.isValidUrl, [reservedURLs]),
@@ -231,14 +230,14 @@ app.get("/checkurl", async (req, res) => {
 });
 
 app.get("/:url", async (req, res, next) => {
-  const activity = await activitiesService.getActivityWithGroupAndParticipants(req.params.url);
+  const activity = await activitiesService.getActivityWithGroupAndParticipantsWithAvatars(req.params.url);
   if (!activity) {
     return next();
   }
   if (activity.isSoCraTes()) {
     return res.redirect(activity.fullyQualifiedUrl());
   }
-  const editors = await memberstore.getMembersForIds(activity.editorIds());
+  const editors = memberstore.getMembersForIds(activity.editorIds());
   if (!editors) {
     return next();
   }
@@ -294,12 +293,8 @@ app.post("/unsubscribe", async (req, res) => {
   res.redirect("/activities/" + encodeURIComponent(activityUrl));
 });
 
-async function addToWaitinglist(body, req, res) {
-  const [statusTitle, statusText] = await activitiesService.addToWaitinglist(
-    req.user.member.id(),
-    body.url,
-    Date.now(),
-  );
+function addToWaitinglist(body, req, res) {
+  const [statusTitle, statusText] = activitiesService.addToWaitinglist(req.user.member.id(), body.url, Date.now());
   if (statusTitle && statusText) {
     statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
   } else {
@@ -324,9 +319,9 @@ app.get("/addToWaitinglist", async (req, res, next) => {
   addToWaitinglist(body, req, res, next);
 });
 
-app.post("/removeFromWaitinglist", async (req, res) => {
+app.post("/removeFromWaitinglist", (req, res) => {
   // removeFromWaitinglist can only be called when user is already logged in
-  const [statusTitle, statusText] = await activitiesService.removeFromWaitinglist(req.user.member.id(), req.body.url);
+  const [statusTitle, statusText] = activitiesService.removeFromWaitinglist(req.user.member.id(), req.body.url);
   if (statusTitle && statusText) {
     statusmessage.errorMessage(statusTitle, statusText).putIntoSession(req);
   } else {
@@ -337,13 +332,13 @@ app.post("/removeFromWaitinglist", async (req, res) => {
   res.redirect("/activities/" + encodeURIComponent(req.body.url));
 });
 
-app.post("/delete", async (req, res) => {
+app.post("/delete", (req, res) => {
   const url = req.body.activityUrl;
-  const activity = await activitystore.getActivity(url);
+  const activity = activitystore.getActivity(url);
   if (!res.locals.accessrights.canDeleteActivity(activity)) {
     return res.redirect("/activities/" + encodeURIComponent(url));
   }
-  await activitystore.removeActivity(activity);
+  activitystore.removeActivity(activity);
   statusmessage
     .successMessage("message.title.save_successful", "message.content.activities.deleted")
     .putIntoSession(req);

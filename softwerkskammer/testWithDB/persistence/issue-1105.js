@@ -8,8 +8,8 @@ const persistence = beans.get("membersPersistence");
 
 describe("Persistence", () => {
   describe("listByFieldWithOptions()", () => {
-    it("should not throw error if list is empty", async () => {
-      await persistence.listMongoByField({ foo: "bar" }, {});
+    it("should not throw error if list is empty", () => {
+      persistence.listByWhere("id = 'bar' ");
     });
   });
 });

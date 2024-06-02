@@ -7,9 +7,9 @@ const membersService = beans.get("membersService");
 const memberstore = beans.get("memberstore");
 
 function createUserObject(req, authenticationId, profile, done) {
-  async function callback() {
+  function callback() {
     try {
-      const member = await membersService.findMemberForAuthentication(req.user, authenticationId);
+      const member = membersService.findMemberForAuthentication(req.user, authenticationId);
       if (!member) {
         return done(null, { authenticationId, profile });
       }
@@ -65,7 +65,7 @@ module.exports = {
     createUserObject(req, authenticationId, {}, done);
   },
 
-  createUserObjectFromPassword: async (req, email, password, done) => {
+  createUserObjectFromPassword: (req, email, password, done) => {
     const authenticationId = pwdAuthenticationPrefix + email;
 
     if (req.route.path === "/login") {
@@ -80,7 +80,7 @@ module.exports = {
       });
     } else if (req.route.path === "/signup") {
       try {
-        const member = await memberstore.getMemberForEMail(email);
+        const member = memberstore.getMemberForEMail(email);
         if (member) {
           logger.error(new Error('On Signup: Member with email address "' + email + '" already exists'));
           return done(null, null, "authentication.error_member_exists");

@@ -33,23 +33,23 @@
   "memberstore": { "module": "./softwerkskammer/lib/members/memberstore" },
 
   "activitiesPersistence": {
-    "module": "./softwerkskammer/lib/persistence/persistence",
-    "constructorArgs": { "collectionName": "activitystore" }
+    "module": "./softwerkskammer/lib/persistence/sqlitePersistence",
+    "constructorArgs": { "collectionName": "activitystore", "extraColumns": "startDate,endDate,url,version" }
   },
   "activityresultsPersistence": {
-    "module": "./softwerkskammer/lib/persistence/persistence",
+    "module": "./softwerkskammer/lib/persistence/sqlitePersistence",
     "constructorArgs": { "collectionName": "activityresultstore" }
   },
   "groupsPersistence": {
-    "module": "./softwerkskammer/lib/persistence/persistence",
+    "module": "./softwerkskammer/lib/persistence/sqlitePersistence",
     "constructorArgs": { "collectionName": "groupstore" }
   },
   "membersPersistence": {
-    "module": "./softwerkskammer/lib/persistence/persistence",
+    "module": "./softwerkskammer/lib/persistence/sqlitePersistence",
     "constructorArgs": { "collectionName": "memberstore" }
   },
   "settingsPersistence": {
-    "module": "./softwerkskammer/lib/persistence/persistence",
+    "module": "./softwerkskammer/lib/persistence/sqlitePersistence",
     "constructorArgs": { "collectionName": "settingsstore" }
   },
 

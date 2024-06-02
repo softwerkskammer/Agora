@@ -15,26 +15,26 @@ const statusmessage = beans.get("statusmessage");
 
 const app = misc.expressAppIn(__dirname);
 
-async function groupSubmitted(req, res) {
+function groupSubmitted(req, res) {
   const group = new Group(req.body);
-  const errors = await groupsService.isGroupValid(group);
+  const errors = groupsService.isGroupValid(group);
   if (errors.length !== 0) {
     return res.render("../../../views/errorPages/validationError", { errors });
   }
-  const existingGroup = await groupstore.getGroup(group.id);
+  const existingGroup = groupstore.getGroup(group.id);
   if (!existingGroup) {
     group.subscribe(req.user.member);
   } else {
     group.subscribedMembers = existingGroup.subscribedMembers;
   }
-  await groupstore.saveGroup(group);
+  groupstore.saveGroup(group);
   statusmessage.successMessage("message.title.save_successful", "message.content.groups.saved").putIntoSession(req);
   res.redirect(`/groups/${group.id}`);
 }
 
 // display all groups
-app.get("/", async (req, res) => {
-  const groups = await groupstore.allGroups();
+app.get("/", (req, res) => {
+  const groups = groupstore.allGroups();
   res.render("index", {
     regionalgroups: Group.regionalsFrom(groups),
     themegroups: Group.thematicsFrom(groups),
@@ -54,7 +54,7 @@ app.post("/submit", (req, res, next) => groupSubmitted(req, res, next));
 // the parameterized routes must come after the fixed ones!
 
 app.get("/edit/:groupname", async (req, res) => {
-  const group = await groupsAndMembers.getGroupAndMembersForList(req.params.groupname);
+  const group = await groupsAndMembers.getGroupAndMembersForListWithAvatar(req.params.groupname);
   if (!group) {
     throw new Error();
   }
@@ -67,24 +67,24 @@ app.get("/edit/:groupname", async (req, res) => {
 });
 
 app.post("/clone-from-meetup-for-group", async (req, res) => {
-  const group = await groupstore.getGroup(req.body.groupname);
+  const group = groupstore.getGroup(req.body.groupname);
   await meetupActivitiesService.cloneActivitiesFromMeetupForGroup(group);
   res.redirect(`/groups/${req.body.groupname}`);
 });
 
-app.get("/checkgroupname", async (req, res) => {
-  const result = await misc.validate(req.query.id, null, groupsService.isGroupNameAvailable);
+app.get("/checkgroupname", (req, res) => {
+  const result = misc.validate(req.query.id, null, groupsService.isGroupNameAvailable);
   res.end(result);
 });
 
-app.get("/checkemailprefix", async (req, res) => {
-  const result = await misc.validate(req.query.emailPrefix, null, groupsService.isEmailPrefixAvailable);
+app.get("/checkemailprefix", (req, res) => {
+  const result = misc.validate(req.query.emailPrefix, null, groupsService.isEmailPrefixAvailable);
   res.end(result);
 });
 
-app.post("/subscribe", async (req, res) => {
+app.post("/subscribe", (req, res) => {
   try {
-    await groupsService.addMemberToGroupNamed(req.user.member, req.body.groupname);
+    groupsService.addMemberToGroupNamed(req.user.member, req.body.groupname);
     statusmessage
       .successMessage("message.title.save_successful", "message.content.groups.subscribed")
       .putIntoSession(req);
@@ -96,9 +96,9 @@ app.post("/subscribe", async (req, res) => {
   res.redirect(`/groups/${req.body.groupname}`);
 });
 
-app.post("/unsubscribe", async (req, res) => {
+app.post("/unsubscribe", (req, res) => {
   try {
-    await groupsService.removeMemberFromGroupNamed(req.user.member, req.body.groupname);
+    groupsService.removeMemberFromGroupNamed(req.user.member, req.body.groupname);
     statusmessage
       .successMessage("message.title.save_successful", "message.content.groups.unsubscribed")
       .putIntoSession(req);
@@ -119,13 +119,13 @@ app.get("/:groupname", async (req, res, next) => {
     return activities;
   }
 
-  const group = await groupsAndMembers.getGroupAndMembersForList(req.params.groupname);
+  const group = await groupsAndMembers.getGroupAndMembersForListWithAvatar(req.params.groupname);
   if (!group) {
     return next();
   }
   const blogposts = await wikiService.getBlogpostsForGroup(req.params.groupname);
-  const activities = await activitystore.upcomingActivitiesForGroupIds([group.id]);
-  const pastActivities = await activitystore.pastActivitiesForGroupIds([group.id]);
+  const activities = activitystore.upcomingActivitiesForGroupIds([group.id]);
+  const pastActivities = activitystore.pastActivitiesForGroupIds([group.id]);
   const registeredUserId = req && req.user ? req.user.member.id() : undefined;
   res.render("get", {
     group,
@@ -141,7 +141,7 @@ app.get("/:groupname", async (req, res, next) => {
 });
 
 app.get("/:groupname/feed", async (req, res, next) => {
-  const group = await groupsAndMembers.getGroupAndMembersForList(req.params.groupname);
+  const group = groupsAndMembers.getGroupAndMembersForList(req.params.groupname);
   if (!group) {
     return next();
   }

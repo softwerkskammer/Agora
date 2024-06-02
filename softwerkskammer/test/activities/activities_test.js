@@ -108,7 +108,7 @@ describe("Activity application", () => {
     sinon.stub(activitystore, "upcomingActivities").returns([emptyActivity]);
     sinon.stub(activitiesService, "getActivitiesForDisplay").returns([emptyActivity]);
     sinon.stub(memberstore, "getMembersForIds").callsFake((ids) => {
-      const members = ids.map((id) =>
+      return ids.map((id) =>
         id === "memberId1"
           ? member1
           : id === "memberId2"
@@ -119,7 +119,6 @@ describe("Activity application", () => {
                 ? member4
                 : undefined,
       );
-      return members;
     });
 
     function activityToReturnFor(url) {
@@ -135,7 +134,7 @@ describe("Activity application", () => {
       return null;
     }
 
-    sinon.stub(activitiesService, "getActivityWithGroupAndParticipants").callsFake((url) => {
+    sinon.stub(activitiesService, "getActivityWithGroupAndParticipantsWithAvatars").callsFake((url) => {
       return activityToReturnFor(url);
     });
     sinon.stub(activitystore, "getActivity").callsFake((url) => {
@@ -324,7 +323,7 @@ describe("Activity application", () => {
       activityWithParticipants.state.resources.Veranstaltung._waitinglist = [
         {
           _memberId: "memberId3",
-          _registrationValidUntil: new Date(Date.now() + 86400000), // 1 day
+          _registrationValidUntil: new Date(Date.now() + 86400000).toISOString(), // 1 day
         },
       ];
 

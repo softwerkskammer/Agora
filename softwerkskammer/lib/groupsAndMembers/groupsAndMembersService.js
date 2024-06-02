@@ -7,73 +7,85 @@ const groupstore = beans.get("groupstore");
 const misc = beans.get("misc");
 const Member = beans.get("member");
 
-async function addGroupsToMember(member) {
+function addGroupsToMember(member) {
   if (!member) {
     return null;
   }
-  member.subscribedGroups = await groupsService.getSubscribedGroupsForMember(member);
+  member.subscribedGroups = groupsService.getSubscribedGroupsForMember(member);
   return member;
 }
 
 module.exports = {
-  getMemberWithHisGroups: async function getMemberWithHisGroups(nickname) {
-    const member = await memberstore.getMember(nickname);
+  getMemberWithHisGroups: function getMemberWithHisGroups(nickname) {
+    const member = memberstore.getMember(nickname);
     return addGroupsToMember(member);
   },
 
-  removeMember: async function removeMember(nickname) {
-    const member = await this.getMemberWithHisGroups(nickname);
+  removeMember: function removeMember(nickname) {
+    const member = this.getMemberWithHisGroups(nickname);
     if (!member) {
       return null;
     }
-    const unsubFunction = async (group) => {
+    const unsubFunction = (group) => {
       group.unsubscribe(member);
       return groupstore.saveGroup(group);
     };
     try {
-      await Promise.all(member.subscribedGroups.map(unsubFunction));
+      member.subscribedGroups.map(unsubFunction);
       return memberstore.removeMember(member);
     } catch (e) {
       throw new Error("hasSubscriptions");
     }
   },
 
-  getMemberWithHisGroupsByMemberId: async function getMemberWithHisGroupsByMemberId(memberID) {
-    const member = await memberstore.getMemberForId(memberID);
+  getMemberWithHisGroupsByMemberId: function getMemberWithHisGroupsByMemberId(memberID) {
+    const member = memberstore.getMemberForId(memberID);
     return addGroupsToMember(member);
   },
 
-  getOrganizersOfGroup: async function getOrganizersOfGroup(groupId) {
-    const groupIncludingMembers = await this.getGroupAndMembersForList(groupId);
+  getOrganizersOfGroup: function getOrganizersOfGroup(groupId) {
+    const groupIncludingMembers = this.getGroupAndMembersForList(groupId);
     if (!groupIncludingMembers) {
       return [];
     }
     return groupIncludingMembers.membersThatAreOrganizers(groupIncludingMembers.members);
   },
 
-  getGroupAndMembersForList: async function getGroupAndMembersForList(groupname) {
-    const group = await groupstore.getGroup(groupname);
-    await this.addMembersToGroup(group);
+  getGroupAndMembersForList: function getGroupAndMembersForList(groupname) {
+    const group = groupstore.getGroup(groupname);
+    this.addMembersToGroup(group);
     return group;
   },
 
-  addMembersToGroup: async function addMembersToGroup(group) {
+  getGroupAndMembersForListWithAvatar: async function getGroupAndMembersForListWithAvatar(groupname) {
+    const group = groupstore.getGroup(groupname);
+    await this.addMembersToGroupWithAvatar(group);
+    return group;
+  },
+
+  addMembersToGroup: function addMembersToGroup(group) {
     if (!group) {
-      return null;
+      return;
     }
-    const members = await memberstore.getMembersForIds(group.subscribedMembers);
+    group.members = memberstore.getMembersForIds(group.subscribedMembers);
+  },
+
+  addMembersToGroupWithAvatar: async function addMembersToGroupWithAvatar(group) {
+    if (!group) {
+      return;
+    }
+    const members = memberstore.getMembersForIds(group.subscribedMembers);
     await Promise.all(members.map(membersService.putAvatarIntoMemberAndSave));
     group.members = members;
-    return group;
   },
 
-  updateAndSaveSubmittedMember: async function updateAndSaveSubmittedMember(
+  updateAndSaveSubmittedMember: function updateAndSaveSubmittedMember(
     sessionUser,
     memberformData,
     accessrights,
     notifyNewMemberRegistration,
   ) {
-    const persistentMember = await this.getMemberWithHisGroups(memberformData.previousNickname);
+    const persistentMember = this.getMemberWithHisGroups(memberformData.previousNickname);
     if (persistentMember && !accessrights.canEditMember(persistentMember)) {
       return;
     }
@@ -84,7 +96,7 @@ module.exports = {
     }
     member.fillFromUI(memberformData);
 
-    await memberstore.saveMember(member);
+    memberstore.saveMember(member);
     if (!sessionUser.member || sessionUser.member.id() === member.id()) {
       sessionUser.member = member;
       delete sessionUser.profile;
@@ -95,7 +107,7 @@ module.exports = {
       // new member
       notifyNewMemberRegistration(member, subscriptions);
     }
-    await groupsService.updateSubscriptions(member, subscriptions);
+    groupsService.updateSubscriptions(member, subscriptions);
     return member.nickname();
   },
 };

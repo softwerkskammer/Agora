@@ -144,7 +144,7 @@ function setupMagicLink(app1) {
   passport.use(strategy);
   createProviderAuthenticationRoutes(app1, strategy.name);
 
-  app1.get("/magiclinkmail", async (req, res, next) => {
+  app1.get("/magiclinkmail", (req, res, next) => {
     const email = req.query.magic_link_email && req.query.magic_link_email.trim();
     if (!email) {
       statusmessage
@@ -157,7 +157,7 @@ function setupMagicLink(app1) {
     }
 
     try {
-      const member = await memberstore.getMemberForEMail(email);
+      const member = memberstore.getMemberForEMail(email);
       if (!member) {
         statusmessage
           .errorMessage(

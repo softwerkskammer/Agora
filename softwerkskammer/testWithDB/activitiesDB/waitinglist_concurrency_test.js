@@ -15,8 +15,8 @@ const Member = beans.get("member");
 
 const activityUrl = "urlOfTheActivity";
 
-async function getActivity(url) {
-  const activityState = await persistence.getMongoByField({ url });
+function getActivity(url) {
+  const activityState = persistence.getByField({ key: "url", val: url });
   return new Activity(activityState);
 }
 
@@ -25,7 +25,7 @@ describe("Waitinglist Service with DB", () => {
   let activityAfterConcurrentAccess;
   let invocation;
 
-  beforeEach(async () => {
+  beforeEach(() => {
     // if this fails, you need to start your mongo DB
     activityBeforeConcurrentAccess = new Activity({
       id: "activityId",
@@ -77,20 +77,20 @@ describe("Waitinglist Service with DB", () => {
 
     sinon.stub(mailsenderService, "sendRegistrationAllowed");
 
-    await persistence.dropMongoCollection();
+    persistence.recreateForTest();
     // save our activity with one registrant
-    await activitystore.saveActivity(activityAfterConcurrentAccess);
+    activitystore.saveActivity(activityAfterConcurrentAccess);
   });
 
   afterEach(() => {
     sinon.restore();
   });
 
-  it("saveWaitinglistEntry keeps the registrant that is in the database although it only reads an activity without registrant", async () => {
+  it("saveWaitinglistEntry keeps the registrant that is in the database although it only reads an activity without registrant", () => {
     // here, we save an activity with a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first "getActivity".
-    await waitinglistService.saveWaitinglistEntry({ nickname: "nick", activityUrl, resourcename: "Veranstaltung" });
-    const activity = await getActivity(activityUrl);
+    waitinglistService.saveWaitinglistEntry({ nickname: "nick", activityUrl, resourcename: "Veranstaltung" });
+    const activity = getActivity(activityUrl);
     expect(
       activity.resourceNamed("Veranstaltung").waitinglistEntries()[0].registrantId(),
       "Waiting member is still in the waitinglist",
@@ -105,16 +105,16 @@ describe("Waitinglist Service with DB", () => {
     ).to.contain("memberId1");
   });
 
-  it("allowRegistrationForWaitinglistEntry keeps the registrant that is in the database although it only reads an activity without registrant", async () => {
+  it("allowRegistrationForWaitinglistEntry keeps the registrant that is in the database although it only reads an activity without registrant", () => {
     // here, we save an activity after removing a member that is different from the member in the database.
     // To mimick a racing condition, we return an activity without members for the first 'getActivity'.
-    await waitinglistService.allowRegistrationForWaitinglistEntry({
+    waitinglistService.allowRegistrationForWaitinglistEntry({
       nickname: "waiting",
       activityUrl,
       resourcename: "Veranstaltung",
       hoursstring: "10",
     });
-    const activity = await getActivity(activityUrl);
+    const activity = getActivity(activityUrl);
     expect(
       activity.resourceNamed("Veranstaltung").waitinglistEntries()[0].canSubscribe(),
       "Waiting member is now allowed to subscribe",

@@ -5,8 +5,8 @@ const persistence = beans.get("activityresultsPersistence");
 const galleryService = beans.get("galleryService");
 const ActivityResult = beans.get("activityresult");
 
-async function load(activityResultName) {
-  const data = await persistence.getMongoById(activityResultName);
+function load(activityResultName) {
+  const data = persistence.getById(activityResultName);
   return data ? new ActivityResult(data) : undefined;
 }
 
@@ -16,7 +16,7 @@ module.exports = {
   addPhotoToActivityResult: async function addPhotoToActivityResult(activityResultName, image, memberId) {
     const imageUri = await galleryService.storeImage(image.path);
     const metadata = await galleryService.getMetadataForImage(imageUri);
-    const activityResult = await load(activityResultName);
+    const activityResult = load(activityResultName);
     let date = new Date();
     if (metadata && metadata.exif) {
       date = metadata.exif.DateTime || metadata.exif.DateTimeOriginal || metadata.exif.DateTimeDigitized || new Date();
@@ -25,35 +25,30 @@ module.exports = {
     const now = DateTime.local();
     activityResult.addPhoto({
       id: imageUri,
-      timestamp: (picturesDate < now ? picturesDate : now).toJSDate(),
+      timestamp: (picturesDate < now ? picturesDate : now).toISO(),
       // eslint-disable-next-line camelcase
       uploaded_by: memberId,
     });
-    await persistence.saveMongo(activityResult.state);
+    persistence.save(activityResult.state);
     return imageUri;
   },
 
-  updatePhotoOfActivityResult: async function updatePhotoOfActivityResult(
-    activityResultName,
-    photoId,
-    data,
-    accessrights,
-  ) {
-    const activityResult = await load(activityResultName);
+  updatePhotoOfActivityResult: function updatePhotoOfActivityResult(activityResultName, photoId, data, accessrights) {
+    const activityResult = load(activityResultName);
     let photo = activityResult.getPhotoById(photoId);
     if (!photo) {
       return null;
     }
     if (accessrights.canEditPhoto(photo)) {
       activityResult.updatePhotoById(photoId, data);
-      return persistence.saveMongo(activityResult.state);
+      return persistence.save(activityResult.state);
     }
   },
 
-  deletePhotoOfActivityResult: async function deletePhotoOfActivityResult(activityResultName, photoId) {
-    const activityResult = await load(activityResultName);
+  deletePhotoOfActivityResult: function deletePhotoOfActivityResult(activityResultName, photoId) {
+    const activityResult = load(activityResultName);
     activityResult.deletePhotoById(photoId);
-    await persistence.saveMongo(activityResult.state);
+    persistence.save(activityResult.state);
     return galleryService.deleteImage(photoId);
   },
 };

@@ -28,7 +28,7 @@ module.exports = {
   groupsByColumns,
 
   dataForDashboard: async function dataForDashboard(nickname) {
-    const member = await groupsAndMembersService.getMemberWithHisGroups(nickname);
+    const member = groupsAndMembersService.getMemberWithHisGroups(nickname);
     if (!member) {
       throw new Error("no member found");
     }
@@ -49,8 +49,8 @@ module.exports = {
       changesByGroup[groupid] = metadatas;
       linesPerGroup[groupid] = linesPerGroup[groupid] + basicHeightPerSection + metadatas.length;
     }
-    const functions = (member.subscribedGroups || []).map(calcLinesPerGroup);
-    await Promise.all(functions);
+
+    await Promise.all((member.subscribedGroups || []).map(calcLinesPerGroup));
     return {
       member,
       activities,
