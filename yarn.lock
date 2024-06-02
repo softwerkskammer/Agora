@@ -808,6 +808,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"adm-zip@npm:0.5.13":
+  version: 0.5.13
+  resolution: "adm-zip@npm:0.5.13"
+  checksum: d5abfcf9d45a83d1ebb39809d58a8dd4da175139e13a5e146c629ddb28ab05a19b0fde9a86b1a5db0b9e3fd1d88d55ab71b4458d30076c0605109e49ee9c95a9
+  languageName: node
+  linkType: hard
+
 "agent-base@npm:^7.0.2, agent-base@npm:^7.1.0":
   version: 7.1.0
   resolution: "agent-base@npm:7.1.0"
@@ -836,6 +843,7 @@ __metadata:
     "@fullcalendar/luxon3": "npm:6.1.13"
     "@popperjs/core": "npm:2.11.8"
     CoolBeans: "npm:0.0.9"
+    adm-zip: "npm:0.5.13"
     ajv: "npm:8.14.0"
     awesome-bootstrap-checkbox: "npm:1.0.1"
     better-sqlite3: "npm:11.0.0"

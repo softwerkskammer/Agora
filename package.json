@@ -81,6 +81,7 @@
     "winston": "3.13.0"
   },
   "devDependencies": {
+    "adm-zip": "0.5.13",
     "ajv": "8.14.0",
     "eslint": "8.57.0",
     "eslint-config-prettier": "9.1.0",
