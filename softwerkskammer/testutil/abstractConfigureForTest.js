@@ -5,7 +5,7 @@ module.exports = function (testBeansFilename) {
   const Beans = require("CoolBeans");
   require("./shutupWinston")();
 
-  // first, set the normal configuration (important e.g. for mongoDB)
+  // first, set the normal configuration
   require("../configure");
 
   // then, overwrite what needs to be changed:
@@ -13,14 +13,14 @@ module.exports = function (testBeansFilename) {
   // beans:
   const productionBeans = require("../../config/beans.json");
   const testBeans = require("../../config/" + testBeansFilename);
-  Object.assign(productionBeans, testBeans);
+  const theRealBeans = Object.assign({}, productionBeans, testBeans);
 
   conf.addProperties({
     port: "17125",
     dontUsePersistentSessions: true,
     superuser: "superuserID",
     wikipath: "..",
-    beans: new Beans(productionBeans),
+    beans: new Beans(theRealBeans),
     transport: null,
     "transport-options": null,
     "sender-address": null,
@@ -39,6 +39,7 @@ module.exports = function (testBeansFilename) {
     socratesURL: "https://socrates.com:12345",
     fullyQualifiedHomeDir: null,
     doNotSendMails: "",
+    sqlitedb: "../../../db/test-db.db",
   });
 
   return conf;
