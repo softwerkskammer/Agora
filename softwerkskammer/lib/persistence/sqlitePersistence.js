@@ -178,6 +178,29 @@ module.exports = function sqlitePersistenceFunc(collectionName, extraColumns) {
         console.error("Trying to drop a production collection?"); // eslint-disable-line no-console
       }
     },
+
+    //     initAll() {
+    //       const createTablesAndIndices = `CREATE TABLE activityresultstore ( id TEXT PRIMARY KEY,data BLOB);
+    // CREATE TABLE activitystore ( id TEXT PRIMARY KEY,data BLOB,startDate TEXT,endDate TEXT,url TEXT,version INTEGER);
+    // CREATE TABLE groupstore ( id TEXT PRIMARY KEY,data BLOB);
+    // CREATE TABLE memberstore ( id TEXT PRIMARY KEY,data BLOB);
+    // CREATE TABLE optionenstore ( id TEXT PRIMARY KEY,data BLOB);
+    // CREATE TABLE settingsstore ( id TEXT PRIMARY KEY,data BLOB);
+    // CREATE INDEX idx_activityresultstore_id ON activityresultstore(id);
+    // CREATE INDEX idx_activitystore_endDate ON activitystore(endDate);
+    // CREATE INDEX idx_activitystore_id ON activitystore(id);
+    // CREATE INDEX idx_activitystore_startDate ON activitystore(startDate);
+    // CREATE INDEX idx_activitystore_startDate_endDate_url_version ON activitystore(startDate,endDate,url,version);
+    // CREATE INDEX idx_activitystore_url ON activitystore(url);
+    // CREATE INDEX idx_activitystore_version ON activitystore(version);
+    // CREATE INDEX idx_groupstore_id ON groupstore(id);
+    // CREATE INDEX idx_memberstore_id ON memberstore(id);
+    // CREATE INDEX idx_optionenstore_id ON optionenstore(id);
+    // CREATE INDEX idx_settingsstore_id ON settingsstore(id);`;
+    //
+    //       db.exec(createTablesAndIndices);
+    //     },
   };
+
   return persistence;
 };
