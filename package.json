@@ -18,7 +18,7 @@
     "@fullcalendar/luxon3": "6.1.15",
     "@popperjs/core": "2.11.8",
     "CoolBeans": "0.0.9",
-    "better-sqlite3": "11.3.0",
+    "better-sqlite3": "11.0.0",
     "better-sqlite3-session-store": "0.1.0",
     "body-parser": "1.20.3",
     "bootstrap": "5.3.3",
@@ -114,7 +114,10 @@
     "supertest": "7.0.0"
   },
   "resolutions": {
+    "better-sqlite": "11.0.0",
     "eslint": "8.57.1",
+    "glob": "10.4.5",
+    "grunt-eslint": "24.3.0",
     "sharp": "0.32.6"
   },
   "scripts": {
