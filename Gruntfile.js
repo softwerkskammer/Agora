@@ -171,6 +171,7 @@ module.exports = function (grunt) {
     sass: {
       options: {
         implementation: sass,
+        silenceDeprecations: ["color-functions", "mixed-decls"],
       },
       dist: {
         files: {
