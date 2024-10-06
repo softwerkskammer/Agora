@@ -58,8 +58,7 @@ is to use a mail server you have access to. The configuration should look like t
 ### Running the server - Database Initialization
 
 - Open a shell in _REPO_
-- If your installation is fresh, run the db initialization script:
-  - In any case, run `node softwerkskammer/initialDBSetup`
+- If your installation is fresh, or you want to reset your database, simply copy the file `database.db` from `dev-goodies`to `db`.
 - If your installation is fresh or you changed anything:
   - Run `yarn deploy` (this creates the CSS files and other static contents and performs eslint checking)
 
