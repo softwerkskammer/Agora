@@ -113,14 +113,6 @@
     "sinon": "19.0.2",
     "supertest": "7.0.0"
   },
-  "resolutions": {
-    "better-sqlite": "11.0.0",
-    "eslint": "8.57.1",
-    "glob": "10.4.5",
-    "grunt-eslint": "24.3.0",
-    "puppeteer": "22.15.0",
-    "sharp": "0.32.6"
-  },
   "scripts": {
     "deploy": "yarn prepare && grunt deploy_production",
     "start": "node start-softwerkskammer",
