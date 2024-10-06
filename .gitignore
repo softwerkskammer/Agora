@@ -46,3 +46,4 @@ docker/mongo/
 /backups/
 *.gz
 db/*
+config from uberspace/
