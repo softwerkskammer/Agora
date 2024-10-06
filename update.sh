@@ -1,5 +1,6 @@
 #!/bin/sh
 git pull
-yarn install --immutable
+yarn workspaces focus --production
+# yarn install --immutable
 git checkout -- yarn.lock
 yarn deploy
