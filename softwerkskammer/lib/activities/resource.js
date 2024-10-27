@@ -1,3 +1,4 @@
+"use strict";
 const WaitinglistEntry = require("simple-configure").get("beans").get("waitinglistEntry");
 
 class Resource {

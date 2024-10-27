@@ -1,5 +1,6 @@
 /*eslint no-control-regex: "off"*/
 
+"use strict";
 const fieldHelpers = require("simple-configure").get("beans").get("fieldHelpers");
 
 // shamelessly taken from jquery.validate

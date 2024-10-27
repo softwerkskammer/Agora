@@ -1,3 +1,4 @@
+"use strict";
 const Fs = require("fs/promises");
 const Path = require("path");
 const R = require("ramda");

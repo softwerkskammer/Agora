@@ -1,3 +1,4 @@
+"use strict";
 const util = require("util");
 const winstonLogger = require("winston").loggers.get("nodemailer");
 

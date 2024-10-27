@@ -1,5 +1,6 @@
 /* eslint no-underscore-dangle: 0 */
 
+"use strict";
 const { DateTime } = require("luxon");
 
 class WaitinglistEntry {

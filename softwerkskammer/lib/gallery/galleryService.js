@@ -1,3 +1,4 @@
+"use strict";
 const conf = require("simple-configure");
 const sharp = require("sharp");
 const exifr = require("exifr");

@@ -1,3 +1,4 @@
+"use strict";
 function statusMessage(type, title, text, additionalArguments) {
   return {
     contents: function contents() {

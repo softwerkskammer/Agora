@@ -1,3 +1,4 @@
+"use strict";
 const beans = require("simple-configure").get("beans");
 const passport = require("passport");
 const memberstore = beans.get("memberstore");

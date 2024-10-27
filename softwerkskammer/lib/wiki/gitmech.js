@@ -1,3 +1,4 @@
+"use strict";
 const Fs = require("fs/promises");
 const conf = require("simple-configure");
 const workTree = conf.get("wikipath");

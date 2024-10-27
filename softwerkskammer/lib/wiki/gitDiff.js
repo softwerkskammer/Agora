@@ -1,3 +1,4 @@
+"use strict";
 class Diff {
   constructor(diffString) {
     this.diff = diffString;

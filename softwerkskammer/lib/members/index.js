@@ -1,3 +1,4 @@
+"use strict";
 const R = require("ramda");
 const Form = require("multiparty").Form;
 

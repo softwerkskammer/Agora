@@ -1,3 +1,4 @@
+"use strict";
 const icalendar = require("icalendar");
 
 const beans = require("simple-configure").get("beans");

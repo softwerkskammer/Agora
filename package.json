@@ -86,11 +86,11 @@
     "winston": "3.15.0"
   },
   "devDependencies": {
-    "eslint": "8.57.1",
+    "eslint": "9.13.0",
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.2.1",
     "grunt-contrib-pug": "3.0.0",
-    "grunt-eslint": "24.3.0",
+    "grunt-eslint": "25.0.0",
     "grunt-karma": "4.0.2",
     "grunt-mocha-cli": "7.0.0",
     "grunt-puglint": "1.0.0",

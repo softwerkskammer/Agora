@@ -1,3 +1,4 @@
+"use strict";
 const { DateTime } = require("luxon");
 const conf = require("simple-configure");
 const logger = require("winston").loggers.get("application");
