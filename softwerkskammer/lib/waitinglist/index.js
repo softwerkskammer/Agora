@@ -84,7 +84,7 @@ app.post("/remove", (req, res, next) => {
     }
     res.send("ok");
   } catch (e) {
-    res.send(400);
+    res.sendStatus(400);
   }
 });
 
