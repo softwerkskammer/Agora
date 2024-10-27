@@ -1,23 +1,19 @@
 "use strict";
 const prettier = require("eslint-plugin-prettier");
-const globals = require("globals");
 const eslintPluginPrettierRecommended = require("eslint-plugin-prettier/recommended");
 
 module.exports = [
   {
-    ignores: ["**/build/", "**/*coverage*/", "**/log/", "**/public/", "**/3rd_party_js/"],
+    ignores: ["**/build/", "**/*coverage*/", "**/log/", "**/public/", "**/3rd_party_js/", "node_modules", ".yarn"],
   },
   eslintPluginPrettierRecommended,
   {
+    files: ["**/*.js"],
     plugins: {
       prettier,
     },
 
     languageOptions: {
-      globals: {
-        ...globals.node,
-      },
-
       ecmaVersion: 2022,
       sourceType: "commonjs",
     },
@@ -114,30 +110,16 @@ module.exports = [
     },
   },
   {
-    files: ["softwerkskammer/frontend/javascript/**"],
-    languageOptions: {
-      globals: {
-        ...globals.jquery,
-        ...globals.browser,
-      },
-    },
+    files: ["softwerkskammer/frontend*/**"],
     rules: {
       camelcase: 0,
       strict: [2, "function"],
     },
   },
   {
-    files: ["softwerkskammer/frontendtests/**"],
-    languageOptions: {
-      globals: {
-        ...globals.jquery,
-        ...globals.browser,
-        ...globals.mocha,
-      },
-    },
+    files: ["softwerkskammer/test/**", "locales/**"],
     rules: {
       camelcase: 0,
-      strict: [2, "function"],
     },
   },
 ];

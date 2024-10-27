@@ -90,7 +90,6 @@
     "eslint-config-prettier": "9.1.0",
     "eslint-plugin-prettier": "5.2.1",
     "grunt-contrib-pug": "3.0.0",
-    "grunt-eslint": "25.0.0",
     "grunt-karma": "4.0.2",
     "grunt-mocha-cli": "7.0.0",
     "grunt-puglint": "1.0.0",
@@ -112,9 +111,10 @@
     "supertest": "7.0.0"
   },
   "scripts": {
+    "lint": "yarn eslint",
     "deploy": "yarn prepare && grunt deploy_production",
     "start": "node start-softwerkskammer",
-    "test": "yarn prepare && grunt",
+    "test": "yarn prepare && yarn lint && grunt",
     "prepare": "git log -1 --pretty=\"format:a.dropdown-item.nav-link(href='https://github.com/softwerkskammer/Agora/commit/%H', target='_blank')%n i.fab.fa-github.fa-fw%n | &nbsp;Version: %h\" > softwerkskammer/version.pug"
   },
   "packageManager": "yarn@4.5.0"

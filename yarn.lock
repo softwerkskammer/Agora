@@ -860,7 +860,6 @@ __metadata:
     grunt-contrib-cssmin: "npm:5.0.0"
     grunt-contrib-pug: "npm:3.0.0"
     grunt-contrib-uglify: "npm:5.2.2"
-    grunt-eslint: "npm:25.0.0"
     grunt-karma: "npm:4.0.2"
     grunt-mocha-cli: "npm:7.0.0"
     grunt-puglint: "npm:1.0.0"
@@ -2686,7 +2685,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:9.13.0, eslint@npm:^9.0.0":
+"eslint@npm:9.13.0":
   version: 9.13.0
   resolution: "eslint@npm:9.13.0"
   dependencies:
@@ -3696,18 +3695,6 @@ __metadata:
     uglify-js: "npm:^3.16.1"
     uri-path: "npm:^1.0.0"
   checksum: 10c0/c680ecb5334df5f5662d8bfb7bdc55ba7bd190d07467e43ab9e8bb33d152b7e86347bf07aa74951852031acf96e4ccccb2357072bc137c6ada6856b2f4e6d12b
-  languageName: node
-  linkType: hard
-
-"grunt-eslint@npm:25.0.0":
-  version: 25.0.0
-  resolution: "grunt-eslint@npm:25.0.0"
-  dependencies:
-    chalk: "npm:^4.1.2"
-    eslint: "npm:^9.0.0"
-  peerDependencies:
-    grunt: ">=1"
-  checksum: 10c0/5c1e4b720a4fed1fe1ebdcc35f1bd4678a2f2bf6ea9b99bd428229ee55d9fd2afcd810cc3cd682274791cd38ac1740072025bfe5e6255ccf7166276e2aa8c883
   languageName: node
   linkType: hard
 

@@ -1,4 +1,4 @@
-/*eslint no-unused-vars: 0, camelcase: 0*/
+"use strict";
 var endMustBeAfterBegin = "The end must be filled and must be after the begin.";
 var urlIsNotAvailable = "This URL is not available.";
 var contentsOfPrefixForEMail = "Only numbers, characters, dashes and spaces are allowed.";

@@ -1,5 +1,3 @@
-/* global toUtc */
-/*eslint no-unused-vars: 0 */
 var activityDateModel;
 (function () {
   "use strict";
