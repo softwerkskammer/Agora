@@ -1,3 +1,4 @@
+"use strict";
 const beans = require("simple-configure").get("beans");
 const renderer = beans.get("renderer");
 const wikiService = beans.get("wikiService");

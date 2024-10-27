@@ -2,7 +2,6 @@
 
 var displayedActivityStart;
 
-// eslint-disable-next-line no-unused-vars
 function toUtc(dateString, timeString) {
   "use strict";
   // expects German strings like "30.11.1987" "12:30"

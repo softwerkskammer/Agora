@@ -1,5 +1,6 @@
 /* eslint no-underscore-dangle: 0 */
 
+"use strict";
 const path = require("path");
 const fs = require("fs");
 const qrimage = require("qr-image");

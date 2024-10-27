@@ -1,3 +1,4 @@
+"use strict";
 const R = require("ramda");
 const express = require("express");
 const path = require("path");

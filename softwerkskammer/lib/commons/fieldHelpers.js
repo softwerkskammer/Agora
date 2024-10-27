@@ -1,5 +1,6 @@
 /* eslint no-underscore-dangle: 0 */
 
+"use strict";
 const { DateTime } = require("luxon");
 const conf = require("simple-configure");
 const misc = conf.get("beans").get("misc");

@@ -1,3 +1,4 @@
+"use strict";
 const conf = require("simple-configure");
 const Database = require("better-sqlite3");
 const path = require("node:path");

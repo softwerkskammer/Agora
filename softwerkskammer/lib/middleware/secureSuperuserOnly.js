@@ -1,3 +1,4 @@
+"use strict";
 const conf = require("simple-configure");
 const logger = require("winston").loggers.get("authorization");
 const securedBySuperuserURLRegex = new RegExp(conf.get("securedBySuperuserURLPattern"));

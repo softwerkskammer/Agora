@@ -1,3 +1,4 @@
+"use strict";
 const Path = require("path");
 const Fs = require("fs/promises");
 const util = require("util");

@@ -1,3 +1,4 @@
+"use strict";
 module.exports = function serverpathRemover(req, res, next) {
   res.locals.removeServerpaths = (msg) => {
     // find the path that comes before node_modules or lib:

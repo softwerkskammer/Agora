@@ -1,3 +1,4 @@
+"use strict";
 const R = require("ramda");
 const fsProm = require("fs/promises");
 const mimetypes = require("mime-types");

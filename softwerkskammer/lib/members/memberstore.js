@@ -1,5 +1,6 @@
 /* eslint no-underscore-dangle: 0 */
 
+"use strict";
 const conf = require("simple-configure");
 const beans = conf.get("beans");
 const persistence = beans.get("membersPersistence");

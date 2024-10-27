@@ -1,3 +1,4 @@
+"use strict";
 const util = require("util");
 const Strategy = require("passport-strategy");
 const jwt = require("jsonwebtoken");

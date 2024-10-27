@@ -1,3 +1,4 @@
+"use strict";
 const i18n = require("i18next");
 const middleware = require("i18next-http-middleware");
 const Backend = require("i18next-fs-backend");

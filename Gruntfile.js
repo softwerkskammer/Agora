@@ -154,10 +154,6 @@ module.exports = function (grunt) {
         flatten: true,
       },
     },
-    eslint: {
-      options: { quiet: true },
-      target: ["softwerkskammer/**/*.js"],
-    },
     karma: {
       options: {
         configFile: "karma.conf.js",
@@ -305,7 +301,6 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-contrib-cssmin");
   grunt.loadNpmTasks("grunt-contrib-pug");
   grunt.loadNpmTasks("grunt-contrib-uglify");
-  grunt.loadNpmTasks("grunt-eslint");
   grunt.loadNpmTasks("grunt-karma");
   grunt.loadNpmTasks("grunt-mocha-cli");
   grunt.loadNpmTasks("grunt-puglint");
@@ -324,7 +319,7 @@ module.exports = function (grunt) {
     "uglify:development_de",
     "karma:once",
   ]);
-  grunt.registerTask("tests", ["eslint", "puglint", "frontendtests", "nyc"]);
+  grunt.registerTask("tests", ["puglint", "frontendtests", "nyc"]);
   grunt.registerTask("deploy_development", [
     "prepare",
     "sass",

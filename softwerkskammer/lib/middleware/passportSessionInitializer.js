@@ -1,3 +1,4 @@
+"use strict";
 module.exports = function passportSessionInitializer(req, res, next) {
   /* eslint no-underscore-dangle: 0 */
   const passport = req._passport.instance;
