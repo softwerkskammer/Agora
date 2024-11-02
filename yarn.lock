@@ -918,7 +918,6 @@ __metadata:
     supertest: "npm:7.0.0"
     tinycolor2: "npm:1.6.0"
     tinygradient: "npm:1.1.5"
-    useragent: "npm:2.3.0"
     uuid: "npm:10.0.0"
     winston: "npm:3.15.0"
   languageName: unknown
@@ -5169,20 +5168,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lru-cache@npm:4.1.x, lru-cache@npm:^4.0.1":
+"lru-cache@npm:^10.0.1, lru-cache@npm:^10.2.0":
+  version: 10.2.0
+  resolution: "lru-cache@npm:10.2.0"
+  checksum: 10c0/c9847612aa2daaef102d30542a8d6d9b2c2bb36581c1bf0dc3ebf5e5f3352c772a749e604afae2e46873b930a9e9523743faac4e5b937c576ab29196774712ee
+  languageName: node
+  linkType: hard
+
+"lru-cache@npm:^4.0.1":
   version: 4.1.5
   resolution: "lru-cache@npm:4.1.5"
   dependencies:
     pseudomap: "npm:^1.0.2"
     yallist: "npm:^2.1.2"
   checksum: 10c0/1ca5306814e5add9ec63556d6fd9b24a4ecdeaef8e9cea52cbf30301e6b88c8d8ddc7cab45b59b56eb763e6c45af911585dc89925a074ab65e1502e3fe8103cf
-  languageName: node
-  linkType: hard
-
-"lru-cache@npm:^10.0.1, lru-cache@npm:^10.2.0":
-  version: 10.2.0
-  resolution: "lru-cache@npm:10.2.0"
-  checksum: 10c0/c9847612aa2daaef102d30542a8d6d9b2c2bb36581c1bf0dc3ebf5e5f3352c772a749e604afae2e46873b930a9e9523743faac4e5b937c576ab29196774712ee
   languageName: node
   linkType: hard
 
@@ -6066,7 +6065,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"os-tmpdir@npm:^1.0.0, os-tmpdir@npm:~1.0.2":
+"os-tmpdir@npm:^1.0.0":
   version: 1.0.2
   resolution: "os-tmpdir@npm:1.0.2"
   checksum: 10c0/f438450224f8e2687605a8dd318f0db694b6293c5d835ae509a69e97c8de38b6994645337e5577f5001115470414638978cc49da1cdcc25106dad8738dc69990
@@ -7024,7 +7023,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"request@npm:^2.61.0, request@npm:^2.88.0":
+"request@npm:^2.61.0":
   version: 2.88.2
   resolution: "request@npm:2.88.2"
   dependencies:
@@ -7251,15 +7250,6 @@ __metadata:
   bin:
     semver: bin/semver
   checksum: 10c0/e4cf10f86f168db772ae95d86ba65b3fd6c5967c94d97c708ccb463b778c2ee53b914cd7167620950fc07faf5a564e6efe903836639e512a1aa15fbc9667fa25
-  languageName: node
-  linkType: hard
-
-"semver@npm:5.5.x":
-  version: 5.5.1
-  resolution: "semver@npm:5.5.1"
-  bin:
-    semver: ./bin/semver
-  checksum: 10c0/ab3369637fcb09f2d709e53364086e328c261c24c9565747fd027ccb07fdf24fc655f93e67fa288c05558ad9005679d91d5b126953b4269f7b3d375362ec1c13
   languageName: node
   linkType: hard
 
@@ -8069,15 +8059,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tmp@npm:0.0.x":
-  version: 0.0.33
-  resolution: "tmp@npm:0.0.33"
-  dependencies:
-    os-tmpdir: "npm:~1.0.2"
-  checksum: 10c0/69863947b8c29cabad43fe0ce65cec5bb4b481d15d4b4b21e036b060b3edbf3bc7a5541de1bacb437bb3f7c4538f669752627fdf9b4aaf034cebd172ba373408
-  languageName: node
-  linkType: hard
-
 "tmp@npm:^0.2.1":
   version: 0.2.1
   resolution: "tmp@npm:0.2.1"
@@ -8347,16 +8328,6 @@ __metadata:
   version: 10.0.0
   resolution: "urlpattern-polyfill@npm:10.0.0"
   checksum: 10c0/43593f2a89bd54f2d5b5105ef4896ac5c5db66aef723759fbd15cd5eb1ea6cdae9d112e257eda9bbc3fb0cd90be6ac6e9689abe4ca69caa33114f42a27363531
-  languageName: node
-  linkType: hard
-
-"useragent@npm:2.3.0":
-  version: 2.3.0
-  resolution: "useragent@npm:2.3.0"
-  dependencies:
-    lru-cache: "npm:4.1.x"
-    tmp: "npm:0.0.x"
-  checksum: 10c0/cd8e2f784358f63c96a8cffd697e0ed59bafe1affc7235035bdbc2f8b94454381346bcf0c0785209038cdaf10342d164f974dad8962121389483298d0da3a6e4
   languageName: node
   linkType: hard
 
@@ -8698,13 +8669,6 @@ __metadata:
   version: 4.0.0
   resolution: "yallist@npm:4.0.0"
   checksum: 10c0/2286b5e8dbfe22204ab66e2ef5cc9bbb1e55dfc873bbe0d568aa943eb255d131890dfd5bf243637273d31119b870f49c18fcde2c6ffbb7a7a092b870dc90625a
-  languageName: node
-  linkType: hard
-
-"yamlparser@npm:0.0.x":
-  version: 0.0.2
-  resolution: "yamlparser@npm:0.0.2"
-  checksum: 10c0/5908043725abbbdf7053520dfc4d69b01ce00143f811c07d50dfdfc1adcd238b1f7b94f9d3e0a539d3fa3a645f455219fdb1158529063bc527695328c49fab1b
   languageName: node
   linkType: hard
 

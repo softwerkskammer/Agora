@@ -51,11 +51,12 @@ app.get("/versions/:subdir/:page", async (req, res, next) => {
   const pageName = req.params.page;
   const subdir = req.params.subdir;
   const completePageName = `${subdir}/${pageName}`;
-  const items = await wikiService.pageHistory(completePageName);
-  if (!items) {
-    return next();
+  try {
+    const items = await wikiService.pageHistory(completePageName);
+    res.render("history", { pageName, subdir, items });
+  } catch {
+    next(); // transform 500 to 404
   }
-  res.render("history", { pageName, subdir, items });
 });
 
 app.get("/compare/:subdir/:page/:revisions", async (req, res, next) => {
@@ -63,11 +64,12 @@ app.get("/compare/:subdir/:page/:revisions", async (req, res, next) => {
   const subdir = req.params.subdir;
   const completePageName = `${subdir}/${pageName}`;
   const revisions = req.params.revisions;
-  const diff = await wikiService.pageCompare(completePageName, revisions);
-  if (!diff) {
-    return next();
+  try {
+    const diff = await wikiService.pageCompare(completePageName, revisions);
+    res.render("compare", { pageName, subdir, lines: diff.asLines() });
+  } catch {
+    next(); // transform 500 to 404
   }
-  res.render("compare", { pageName, subdir, lines: diff.asLines() });
 });
 
 // editing pages

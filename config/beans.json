@@ -78,7 +78,6 @@
 
   "accessrights": { "module": "./softwerkskammer/lib/middleware/accessrights" },
   "addCsrfTokenToLocals": { "module": "./softwerkskammer/lib/middleware/addCsrfTokenToLocals" },
-  "detectBrowser": { "module": "./softwerkskammer/lib/middleware/detectBrowser" },
   "expressSessionConfigurator": { "module": "./softwerkskammer/lib/middleware/expressSessionConfigurator" },
   "expressViewHelper": { "module": "./softwerkskammer/lib/middleware/expressViewHelper" },
   "gitExec": { "module": "./softwerkskammer/lib/wiki/gitExec" },

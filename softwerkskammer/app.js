@@ -75,7 +75,6 @@ module.exports = {
     app.use(beans.get("initI18N"));
     app.use(beans.get("redirectRuleForNewUser"));
     app.use(beans.get("wikiSubdirs"));
-    app.use(beans.get("detectBrowser"));
     app.use(beans.get("secureAgainstClickjacking"));
     app.use(csurf());
     app.use(beans.get("addCsrfTokenToLocals"));
