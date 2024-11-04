@@ -19,7 +19,7 @@
     "@popperjs/core": "2.11.8",
     "CoolBeans": "0.0.9",
     "adm-zip": "0.5.16",
-    "better-sqlite3": "11.5.0",
+    "better-sqlite3": "11.0.0",
     "better-sqlite3-session-store": "0.1.0",
     "bootstrap": "5.3.3",
     "bootstrap-datepicker": "1.10.0",
