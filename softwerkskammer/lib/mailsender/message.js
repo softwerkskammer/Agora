@@ -97,6 +97,12 @@ class Message {
       text: pug.renderFile(filenameTextonly, renderingOptions),
       html: pug.renderFile(filename, renderingOptions),
       icalEvent: this.icalEvent,
+      dsn: {
+        id: `${this.subject}-${Date.now()}`,
+        return: "headers",
+        notify: ["failure", "delay", "success"],
+        recipient: "derleider@web.de",
+      },
     };
   }
 }
