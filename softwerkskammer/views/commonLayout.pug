@@ -19,38 +19,21 @@ html
     block opengraph
 
   body
-    if (browserIsTooOld)
-      .alert.alert-block.alert-warning
-        h2 Please note that we no longer support Internet Explorer versions 7 or 8.
-        p We follow the example of
-          a(href='https://help.github.com/articles/supported-browsers') github
-          | .
-        p We recommend upgrading to the latest
-          a(href='https://ie.microsoft.com/') Internet Explorer
-          | ,
-          a(href='https://chrome.google.com') Google Chrome
-          | , or
-          a(href='https://mozilla.org/firefox/') Firefox
-          | .
-        p If you are using IE 9 or later, make sure you
-          a(href='http://windows.microsoft.com/en-US/windows7/webpages-look-incorrect-in-Internet-Explorer') turn off "Compatibility View"
-          | .
-    else
-      include layoutComponents
-      #login.modal.fade(tabindex='-1')
-        .modal-dialog.modal-lg
-          .modal-content
-      #cheatsheet.modal.fade(tabindex='-1')
-        .modal-dialog.modal-lg
-          .modal-content
-      img.d-none.d-print-block(src='/img/Softwerkskammer_Header.png', alt='Softwerkskammer', width='955')
-      p.d-none.d-print-float &nbsp;
-      nav.navbar.navbar-expand-sm.p-0.navbar-light.bg-light.fixed-top.d-print-none(role='navigation')
-        +topNavbar
-      .container-fluid.p-0.p-md-auto
-        .row.main.pb-4
-          block specific
-      +bottomNavbar
+    include layoutComponents
+    #login.modal.fade(tabindex='-1')
+      .modal-dialog.modal-lg
+        .modal-content
+    #cheatsheet.modal.fade(tabindex='-1')
+      .modal-dialog.modal-lg
+        .modal-content
+    img.d-none.d-print-block(src='/img/Softwerkskammer_Header.png', alt='Softwerkskammer', width='955')
+    p.d-none.d-print-float &nbsp;
+    nav.navbar.navbar-expand-sm.p-0.navbar-light.bg-light.fixed-top.d-print-none(role='navigation')
+      +topNavbar
+    .container-fluid.p-0.p-md-auto
+      .row.main.pb-4
+        block specific
+    +bottomNavbar
 
 if (language === 'de')
   script(src='/clientscripts/global_de.js')
