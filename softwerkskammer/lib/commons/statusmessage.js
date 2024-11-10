@@ -38,4 +38,8 @@ module.exports = {
   successMessage: function successMessage(title, text, additionalArguments) {
     return statusMessage("alert-success", title, text, additionalArguments);
   },
+
+  isErrorMessage: function isErrorMessage(statusmessage) {
+    return statusmessage.contents().type === "alert-danger";
+  },
 };

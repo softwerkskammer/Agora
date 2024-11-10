@@ -1,6 +1,7 @@
 "use strict";
 const { DateTime } = require("luxon");
 const conf = require("simple-configure");
+const R = require("ramda");
 const logger = require("winston").loggers.get("application");
 
 const beans = conf.get("beans");
@@ -17,6 +18,7 @@ const Group = beans.get("group");
 const misc = beans.get("misc");
 
 const mailtransport = beans.get("mailtransport");
+const statusmessage = beans.get("statusmessage");
 
 async function sendMail(message, type) {
   return mailtransport.sendMail(message, type, conf.get("sender-address"), conf.get("include-footer"));
@@ -36,6 +38,41 @@ function activityMarkdown(activity, language) {
     markdown = markdown + "\n\n**Wegbeschreibung:**\n\n" + activity.direction();
   }
   return markdown;
+}
+
+function createChunkedSendingReportMessage(statusmessages, subject, sender) {
+  const anySendingError = R.any(statusmessage.isErrorMessage, statusmessages);
+  const resultMessage = new Message(
+    {
+      subject,
+      markdown: anySendingError
+        ? `Fehler: ${statusmessages.map((s) => s.contents().additionalArguments.err).join(" ")}`
+        : "E-Mails erfolgreich versendet",
+    },
+    sender,
+  );
+  resultMessage.setTo(sender.email());
+  return resultMessage;
+}
+
+function sendMailInChunks(maxMailSendingChunkSize, allMembers, message, type, sender) {
+  const splitted = R.splitEvery(maxMailSendingChunkSize, allMembers);
+
+  Promise.all(
+    splitted.map((bccs) => {
+      message.setBccToMemberAddresses(bccs);
+      return sendMail(message, type);
+    }),
+  )
+    .then((statusmessages) => {
+      const resultMessage = createChunkedSendingReportMessage(statusmessages, `Report "${message.subject}"`, sender);
+      sendMail(resultMessage, type);
+    })
+    .catch((err) => {
+      logger.error(err);
+    });
+
+  return mailtransport.statusmessageForSuccess();
 }
 
 module.exports = {
@@ -97,7 +134,7 @@ module.exports = {
     }
   },
 
-  sendMailToInvitedGroups: async function sendMailToInvitedGroups(invitedGroups, activityURL, message) {
+  sendMailToInvitedGroups: async function sendMailToInvitedGroups(invitedGroups, activityURL, message, sender) {
     const type = "$t(mailsender.invitation)";
     try {
       const groups = groupsService.getGroups(invitedGroups);
@@ -106,7 +143,8 @@ module.exports = {
       }
       try {
         groups.forEach(groupsAndMembersService.addMembersToGroup);
-        message.setBccToGroupMemberAddresses(groups);
+        const allMembers = R.flatten(misc.compact(groups).map((group) => group.members));
+
         let activity;
         try {
           activity = activitystore.getActivity(activityURL);
@@ -116,7 +154,14 @@ module.exports = {
         if (activity) {
           message.setIcal(icalService.activityAsICal(activity).toString());
         }
-        return sendMail(message, type);
+
+        let maxMailSendingChunkSize = conf.get("maxMailSendingChunkSize");
+        if (allMembers.length > maxMailSendingChunkSize) {
+          return sendMailInChunks(maxMailSendingChunkSize, allMembers, message, type, sender);
+        } else {
+          message.setBccToMemberAddresses(allMembers);
+          return sendMail(message, type);
+        }
       } catch (err1) {
         return mailtransport.statusmessageForError(type, err1);
       }

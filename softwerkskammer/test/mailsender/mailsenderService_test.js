@@ -22,13 +22,22 @@ const transport = beans.get("mailtransport").transport;
 
 let emptyActivity;
 
-const sender = new Member();
+const sender = new Member({
+  firstname: "Agora",
+  lastname: "User",
+  email: "user@agora.local",
+});
+const mailSubject = "subject";
 let message;
 let sendmail;
 
 function singleSentEmail() {
   expect(sendmail.calledOnce).to.be(true);
   return sendmail.args[0][0];
+}
+
+function allSentEmail() {
+  return sendmail.args.map((callArgs) => callArgs[0]);
 }
 
 function expectNoEmailWasSent() {
@@ -41,7 +50,7 @@ describe("MailsenderService", () => {
 
   beforeEach(() => {
     const availableGroups = [];
-    message = new Message({ subject: "subject", markdown: "mark down" }, sender);
+    message = new Message({ subject: mailSubject, markdown: "mark down" }, sender);
     emptyActivity = new Activity({
       title: "Title of the Activity",
       description: "description1",
@@ -250,13 +259,152 @@ describe("MailsenderService", () => {
         }
         return group;
       });
-      const statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message);
+      const statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message, sender);
       const sentMail = singleSentEmail();
       expect(sentMail.bcc).to.contain("memberA");
       expect(sentMail.html).to.contain("mark down");
       expect(sentMail.icalEvent).to.not.contain("BEGIN:VCALENDAR");
       expect(sentMail.icalEvent).to.not.contain("URL:http://localhost:17125/activities/urlOfTheActivity");
       expect(statusmessage.contents().type).to.equal("alert-success");
+    });
+
+    describe("sending in chunks", () => {
+      let membersAboveSingleChunkThreshhold = [
+        new Member({ email: "memberA" }),
+        new Member({ email: "memberB" }),
+        new Member({ email: "memberC" }),
+        new Member({ email: "memberD" }),
+        new Member({ email: "memberE" }),
+        new Member({ email: "memberF" }),
+      ];
+
+      it("sends in chunks to members of selected groups when above configured threshold", async () => {
+        sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
+          group.members = membersAboveSingleChunkThreshhold;
+        });
+        const statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message, sender);
+        const allSent = allSentEmail();
+        const sentMail1 = allSent[0];
+        expect(sentMail1.bcc).to.eql(["memberA", "memberB", "memberC", "memberD", "memberE"]);
+        const sentMail2 = allSent[1];
+        expect(sentMail2.bcc).to.eql(["memberF"]);
+
+        expect(statusmessage.contents().type).to.equal("alert-success");
+      });
+
+      it("sends status mail to intiator after all mails have been sent", async () => {
+        let mailsSentCount = 0;
+        let myResolve;
+        const allExpectedMailsSent = new Promise((resolve) => {
+          myResolve = resolve;
+        });
+        sendmail.reset();
+        sendmail.callsFake(() => {
+          mailsSentCount++;
+
+          if (mailsSentCount >= 3) {
+            myResolve(undefined);
+          }
+        });
+        sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
+          group.members = membersAboveSingleChunkThreshhold;
+          return group;
+        });
+
+        let statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message, sender);
+
+        expect(statusmessage.contents().type).to.equal("alert-success");
+        expect(statusmessage.contents().text).to.equal("message.content.mailsender.success");
+
+        await allExpectedMailsSent;
+        const allSent = allSentEmail();
+
+        expect(allSent).to.have.length(3);
+
+        expect(allSent[2].to).to.equal(sender.email());
+        expect(allSent[2].subject).to.contain("Report");
+        expect(allSent[2].subject).to.contain(mailSubject);
+        expect(allSent[2].html).to.contain("erfolgreich");
+      });
+
+      it("returns success regardless of mail sending result", async () => {
+        sendmail.callsFake(() => {
+          throw new Error();
+        });
+        sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
+          group.members = membersAboveSingleChunkThreshhold;
+        });
+
+        const statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message, sender);
+
+        expect(statusmessage.contents().type).to.equal("alert-success");
+      });
+
+      it("includes errors in send report mail from Error", async () => {
+        let mailsSentCount = 0;
+        let myResolve;
+        const allExpectedMailsSent = new Promise((resolve) => {
+          myResolve = resolve;
+        });
+        sendmail.reset();
+        sendmail.callsFake(() => {
+          mailsSentCount++;
+
+          if (mailsSentCount >= 3) {
+            myResolve(undefined);
+          } else {
+            throw new Error("Error: das hat nicht geklappt");
+          }
+        });
+        sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
+          group.members = membersAboveSingleChunkThreshhold;
+        });
+
+        await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message, sender);
+
+        await allExpectedMailsSent;
+
+        const sentEmails = allSentEmail();
+        expect(sentEmails).to.have.length(3);
+        expect(sentEmails[2].to).to.contain(sender.email());
+        expect(sentEmails[2].subject).to.contain("Report");
+        expect(sentEmails[2].subject).to.contain(mailSubject);
+        expect(sentEmails[2].html).to.contain("Fehler");
+        expect(sentEmails[2].html).to.contain("Error: das hat nicht geklappt");
+      });
+
+      it("includes errors in send report mail from Promise rejection", async () => {
+        let mailsSentCount = 0;
+        let myResolve;
+        const allExpectedMailsSent = new Promise((resolve) => {
+          myResolve = resolve;
+        });
+        sendmail.reset();
+        sendmail.callsFake(() => {
+          mailsSentCount++;
+
+          if (mailsSentCount >= 3) {
+            myResolve(undefined);
+          } else {
+            return Promise.reject("Promise: das hat nicht geklappt");
+          }
+        });
+        sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
+          group.members = membersAboveSingleChunkThreshhold;
+        });
+
+        await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message, sender);
+
+        await allExpectedMailsSent;
+
+        const sentEmails = allSentEmail();
+        expect(sentEmails).to.have.length(3);
+        expect(sentEmails[2].to).to.contain(sender.email());
+        expect(sentEmails[2].subject).to.contain("Report");
+        expect(sentEmails[2].subject).to.contain(mailSubject);
+        expect(sentEmails[2].html).to.contain("Fehler");
+        expect(sentEmails[2].html).to.contain("Promise: das hat nicht geklappt");
+      });
     });
   });
 
@@ -293,6 +441,7 @@ describe("MailsenderService", () => {
         ["GroupA", "GroupB"],
         "activityUrlForMock",
         message,
+        sender,
       );
       const sentMail = singleSentEmail();
       expect(sentMail.bcc).to.contain("memberA");
@@ -320,6 +469,7 @@ describe("MailsenderService", () => {
         ["GroupA", "GroupB"],
         "errorProvokingUrl",
         message,
+        sender,
       );
       const sentMail = singleSentEmail();
       expect(sentMail.bcc).to.contain("memberA");
@@ -330,13 +480,18 @@ describe("MailsenderService", () => {
     });
 
     it("does not send to members if no groups selected", async () => {
-      const statusmessage = await mailsenderService.sendMailToInvitedGroups([], "activityUrlForMock", message);
+      const statusmessage = await mailsenderService.sendMailToInvitedGroups([], "activityUrlForMock", message, sender);
       expect(sendmail.calledOnce).to.not.be(true);
       expect(statusmessage.contents().type).to.equal("alert-danger");
     });
 
     it("does not send to members if finding groups causes error", async () => {
-      const statusmessage = await mailsenderService.sendMailToInvitedGroups(null, "activityUrlForMock", message);
+      const statusmessage = await mailsenderService.sendMailToInvitedGroups(
+        null,
+        "activityUrlForMock",
+        message,
+        sender,
+      );
       expect(sendmail.calledOnce).to.not.be(true);
       expect(statusmessage.contents().type).to.equal("alert-danger");
     });
@@ -348,6 +503,7 @@ describe("MailsenderService", () => {
         ["GroupA", "GroupB"],
         "activityUrlForMock",
         message,
+        sender,
       );
       expect(sendmail.calledOnce).to.not.be(true);
       expect(statusmessage.contents().type).to.equal("alert-danger");

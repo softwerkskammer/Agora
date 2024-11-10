@@ -19,7 +19,8 @@ async function messageSubmitted(req, res) {
     return res.render("../../../views/errorPages/validationError", { errors });
   }
 
-  const message = new Message(req.body, req.user.member);
+  const sender = req.user.member;
+  const message = new Message(req.body, sender);
 
   async function doTheRightSending() {
     if (req.body.massMailing === "members") {
@@ -31,11 +32,11 @@ async function messageSubmitted(req, res) {
       return mailsenderService.sendMailToParticipantsOf(activityURL, message);
     }
     if (req.body.invitedGroups) {
-      return mailsenderService.sendMailToInvitedGroups(req.body.invitedGroups, activityURL, message);
+      return mailsenderService.sendMailToInvitedGroups(req.body.invitedGroups, activityURL, message, sender);
     }
     if (req.body.groupName) {
       message.subject = `[${req.body.emailPrefix}] ${message.subject}`;
-      return mailsenderService.sendMailToInvitedGroups([req.body.groupName], undefined, message);
+      return mailsenderService.sendMailToInvitedGroups([req.body.groupName], undefined, message, sender);
     }
     if (req.body.nickname) {
       return mailsenderService.sendMailToMember(req.body.nickname, message);

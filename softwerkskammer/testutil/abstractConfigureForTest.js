@@ -39,6 +39,7 @@ module.exports = function (testBeansFilename) {
     socratesURL: "https://socrates.com:12345",
     fullyQualifiedHomeDir: null,
     doNotSendMails: "",
+    maxMailSendingChunkSize: 5,
     sqlitedb: "../../../db/test-db.db",
   });
 
