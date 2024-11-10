@@ -24,7 +24,7 @@ async function messageSubmitted(req, res) {
 
   async function doTheRightSending() {
     if (req.body.massMailing === "members") {
-      return mailsenderService.sendMailToAllMembers(message);
+      return mailsenderService.sendMailToAllMembers(message, sender);
     }
     const activityURL = req.body.successURL.replace("/activities/", "");
     if (req.body.toParticipants) {

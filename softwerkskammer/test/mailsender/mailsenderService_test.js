@@ -667,4 +667,128 @@ describe("MailsenderService", () => {
       });
     });
   });
+
+  describe("sending to all members", () => {
+    const member1 = new Member({ email: "memberA" });
+    const member2 = new Member({ email: "memberB" });
+
+    beforeEach(() => {
+      sinon.stub(memberstore, "allMembers").callsFake(() => {
+        return [member1, member2];
+      });
+    });
+
+    it("sends in chunks to all members", async () => {
+      const statusmessage = await mailsenderService.sendMailToAllMembers(message, sender);
+      const allSent = allSentEmail();
+      const sentMail1 = allSent[0];
+      expect(sentMail1.bcc).to.eql(["memberA", "memberB"]);
+
+      expect(statusmessage.contents().type).to.equal("alert-success");
+    });
+
+    it("sends status mail to intiator after all mails have been sent", async () => {
+      let mailsSentCount = 0;
+      let myResolve;
+      const allExpectedMailsSent = new Promise((resolve) => {
+        myResolve = resolve;
+      });
+      sendmail.reset();
+      sendmail.callsFake(() => {
+        mailsSentCount++;
+
+        if (mailsSentCount >= 2) {
+          myResolve(undefined);
+        }
+      });
+
+      let statusmessage = await mailsenderService.sendMailToAllMembers(message, sender);
+
+      expect(statusmessage.contents().type).to.equal("alert-success");
+      expect(statusmessage.contents().text).to.equal("message.content.mailsender.success");
+
+      await allExpectedMailsSent;
+      const allSent = allSentEmail();
+
+      expect(allSent).to.have.length(2);
+
+      expect(allSent[1].to).to.equal(sender.email());
+      expect(allSent[1].subject).to.contain("Report");
+      expect(allSent[1].subject).to.contain(mailSubject);
+      expect(allSent[1].html).to.contain("erfolgreich");
+    });
+
+    it("returns success regardless of mail sending result", async () => {
+      sendmail.callsFake(() => {
+        throw new Error();
+      });
+
+      const statusmessage = await mailsenderService.sendMailToAllMembers(message, sender);
+
+      expect(statusmessage.contents().type).to.equal("alert-success");
+    });
+
+    it("includes errors in send report mail from Error", async () => {
+      let mailsSentCount = 0;
+      let myResolve;
+      const allExpectedMailsSent = new Promise((resolve) => {
+        myResolve = resolve;
+      });
+      sendmail.reset();
+      sendmail.callsFake(() => {
+        mailsSentCount++;
+
+        if (mailsSentCount >= 2) {
+          myResolve(undefined);
+        } else {
+          throw new Error("Error: das hat nicht geklappt");
+        }
+      });
+
+      await mailsenderService.sendMailToAllMembers(message, sender);
+
+      await allExpectedMailsSent;
+
+      const sentEmails = allSentEmail();
+      expect(sentEmails).to.have.length(2);
+      expect(sentEmails[1].to).to.contain(sender.email());
+      expect(sentEmails[1].subject).to.contain("Report");
+      expect(sentEmails[1].subject).to.contain(mailSubject);
+      expect(sentEmails[1].html).to.contain("Fehler");
+      expect(sentEmails[1].html).to.contain("Error: das hat nicht geklappt");
+    });
+
+    it("includes errors in send report mail from Promise rejection", async () => {
+      let mailsSentCount = 0;
+      let myResolve;
+      const allExpectedMailsSent = new Promise((resolve) => {
+        myResolve = resolve;
+      });
+      sendmail.reset();
+      sendmail.callsFake(() => {
+        mailsSentCount++;
+
+        if (mailsSentCount >= 2) {
+          myResolve(undefined);
+        } else {
+          return Promise.reject("Promise: das hat nicht geklappt");
+        }
+      });
+      sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
+        group.members = membersAboveSingleChunkThreshhold;
+      });
+
+      await mailsenderService.sendMailToAllMembers(message, sender);
+
+      await allExpectedMailsSent;
+
+      const sentEmails = allSentEmail();
+      expect(sentEmails).to.have.length(2);
+      expect(sentEmails[1].to).to.contain(sender.email());
+      expect(sentEmails[1].subject).to.contain("Report");
+      expect(sentEmails[1].subject).to.contain(mailSubject);
+      expect(sentEmails[1].html).to.contain("Fehler");
+      expect(sentEmails[1].html).to.contain("Promise: das hat nicht geklappt");
+    });
+  });
 });

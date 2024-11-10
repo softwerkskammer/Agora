@@ -56,10 +56,10 @@ function createChunkedSendingReportMessage(statusmessages, subject, sender) {
 }
 
 function sendMailInChunks(maxMailSendingChunkSize, allMembers, message, type, sender) {
-  const splitted = R.splitEvery(maxMailSendingChunkSize, allMembers);
+  const membersInChunks = R.splitEvery(maxMailSendingChunkSize, allMembers);
 
   Promise.all(
-    splitted.map((bccs) => {
+    membersInChunks.map((bccs) => {
       message.setBccToMemberAddresses(bccs);
       return sendMail(message, type);
     }),
@@ -185,11 +185,10 @@ module.exports = {
     }
   },
 
-  sendMailToAllMembers: async function sendMailToAllMembers(message) {
+  sendMailToAllMembers: async function sendMailToAllMembers(message, sender) {
     const type = "$t(mailsender.notification)";
     const members = memberstore.allMembers();
-    message.setBccToMemberAddresses(members);
-    return sendMail(message, type);
+    return sendMailInChunks(conf.get("maxMailSendingChunkSize"), members, message, type, sender);
   },
 
   sendMagicLinkToMember: async function sendMagicLinkToMember(member, token) {
