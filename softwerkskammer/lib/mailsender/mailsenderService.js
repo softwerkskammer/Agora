@@ -155,7 +155,7 @@ module.exports = {
           message.setIcal(icalService.activityAsICal(activity).toString());
         }
 
-        let maxMailSendingChunkSize = conf.get("maxMailSendingChunkSize");
+        const maxMailSendingChunkSize = conf.get("maxMailSendingChunkSize");
         if (allMembers.length > maxMailSendingChunkSize) {
           return sendMailInChunks(maxMailSendingChunkSize, allMembers, message, type, sender);
         } else {

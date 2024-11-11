@@ -269,7 +269,7 @@ describe("MailsenderService", () => {
     });
 
     describe("sending in chunks", () => {
-      let membersAboveSingleChunkThreshhold = [
+      const membersAboveSingleChunkThreshhold = [
         new Member({ email: "memberA" }),
         new Member({ email: "memberB" }),
         new Member({ email: "memberC" }),
@@ -311,7 +311,7 @@ describe("MailsenderService", () => {
           return group;
         });
 
-        let statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message, sender);
+        const statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message, sender);
 
         expect(statusmessage.contents().type).to.equal("alert-success");
         expect(statusmessage.contents().text).to.equal("message.content.mailsender.success");
@@ -702,7 +702,7 @@ describe("MailsenderService", () => {
         }
       });
 
-      let statusmessage = await mailsenderService.sendMailToAllMembers(message, sender);
+      const statusmessage = await mailsenderService.sendMailToAllMembers(message, sender);
 
       expect(statusmessage.contents().type).to.equal("alert-success");
       expect(statusmessage.contents().text).to.equal("message.content.mailsender.success");
