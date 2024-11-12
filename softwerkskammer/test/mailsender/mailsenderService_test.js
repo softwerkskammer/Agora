@@ -278,6 +278,44 @@ describe("MailsenderService", () => {
         new Member({ email: "memberF" }),
       ];
 
+      it("deduplicates receipients", async () => {
+        const groupB = new Group({ id: "groupB" });
+        groupsService.getGroups.callsFake((groupsname) => {
+          return [groupA, groupB];
+        });
+        sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
+          if (group === groupA) {
+            group.members = [
+              new Member({ email: "memberA" }),
+              new Member({ email: "memberB" }),
+              new Member({ email: "memberC" }),
+            ];
+          } else {
+            group.members = [
+              new Member({ email: "memberB" }),
+              new Member({ email: "memberC" }),
+              new Member({ email: "memberD" }),
+              new Member({ email: "memberE" }),
+              new Member({ email: "memberF" }),
+            ];
+          }
+        });
+        const statusmessage = await mailsenderService.sendMailToInvitedGroups(
+          ["GroupA", "GroupB"],
+          undefined,
+          message,
+          sender,
+        );
+        const allSent = allSentEmail();
+        expect(allSent).to.have.length(2);
+        const sentMail1 = allSent[0];
+        expect(sentMail1.bcc).to.eql(["memberA", "memberB", "memberC", "memberD", "memberE"]);
+        const sentMail2 = allSent[1];
+        expect(sentMail2.bcc).to.eql(["memberF"]);
+
+        expect(statusmessage.contents().type).to.equal("alert-success");
+      });
+
       it("sends in chunks to members of selected groups when above configured threshold", async () => {
         sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
           group.members = membersAboveSingleChunkThreshhold;

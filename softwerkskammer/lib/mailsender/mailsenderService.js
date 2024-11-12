@@ -56,7 +56,8 @@ function createChunkedSendingReportMessage(statusmessages, subject, sender) {
 }
 
 function sendMailInChunks(maxMailSendingChunkSize, allMembers, message, type, sender) {
-  const membersInChunks = R.splitEvery(maxMailSendingChunkSize, allMembers);
+  const deduplicatedMemebers = R.uniqBy((member) => member.email(), allMembers);
+  const membersInChunks = R.splitEvery(maxMailSendingChunkSize, deduplicatedMemebers);
 
   Promise.all(
     membersInChunks.map((bccs) => {
