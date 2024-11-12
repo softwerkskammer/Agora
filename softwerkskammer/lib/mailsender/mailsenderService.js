@@ -55,25 +55,22 @@ function createChunkedSendingReportMessage(statusmessages, subject, sender) {
   return resultMessage;
 }
 
-function sendMailInChunks(maxMailSendingChunkSize, allMembers, message, type, sender) {
+async function sendMailInChunks(maxMailSendingChunkSize, allMembers, message, type, sender) {
   const deduplicatedMemebers = R.uniqBy((member) => member.email(), allMembers);
   const membersInChunks = R.splitEvery(maxMailSendingChunkSize, deduplicatedMemebers);
 
-  Promise.all(
-    membersInChunks.map((bccs) => {
-      message.setBccToMemberAddresses(bccs);
-      return sendMail(message, type);
-    }),
-  )
-    .then((statusmessages) => {
-      const resultMessage = createChunkedSendingReportMessage(statusmessages, `Report "${message.subject}"`, sender);
-      sendMail(resultMessage, type);
-    })
-    .catch((err) => {
-      logger.error(err);
-    });
-
-  return mailtransport.statusmessageForSuccess();
+  try {
+    const statusmessages = await Promise.all(
+      membersInChunks.map((bccs) => {
+        message.setBccToMemberAddresses(bccs);
+        return sendMail(message, type);
+      }),
+    );
+    const resultMessage = createChunkedSendingReportMessage(statusmessages, `Report "${message.subject}"`, sender);
+    await sendMail(resultMessage, type);
+  } catch (err) {
+    logger.error(err);
+  }
 }
 
 module.exports = {
@@ -158,7 +155,10 @@ module.exports = {
 
         const maxMailSendingChunkSize = conf.get("maxMailSendingChunkSize");
         if (allMembers.length > maxMailSendingChunkSize) {
-          return sendMailInChunks(maxMailSendingChunkSize, allMembers, message, type, sender);
+          // noinspection ES6MissingAwait - we explicitly don't want to wait because that could cause timeouts
+          sendMailInChunks(maxMailSendingChunkSize, allMembers, message, type, sender);
+
+          return mailtransport.statusmessageForSuccess();
         } else {
           message.setBccToMemberAddresses(allMembers);
           return sendMail(message, type);
@@ -189,7 +189,11 @@ module.exports = {
   sendMailToAllMembers: async function sendMailToAllMembers(message, sender) {
     const type = "$t(mailsender.notification)";
     const members = memberstore.allMembers();
-    return sendMailInChunks(conf.get("maxMailSendingChunkSize"), members, message, type, sender);
+
+    // noinspection ES6MissingAwait - we explicitly don't want to wait because that could cause timeouts
+    sendMailInChunks(conf.get("maxMailSendingChunkSize"), members, message, type, sender);
+
+    return mailtransport.statusmessageForSuccess();
   },
 
   sendMagicLinkToMember: async function sendMagicLinkToMember(member, token) {
