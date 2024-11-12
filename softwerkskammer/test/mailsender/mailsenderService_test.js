@@ -812,9 +812,6 @@ describe("MailsenderService", () => {
           return Promise.reject("Promise: das hat nicht geklappt");
         }
       });
-      sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
-        group.members = membersAboveSingleChunkThreshhold;
-      });
 
       await mailsenderService.sendMailToAllMembers(message, sender);
 
