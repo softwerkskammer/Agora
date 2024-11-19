@@ -44,6 +44,14 @@ function expectNoEmailWasSent() {
   expect(sendmail.called).to.be.false();
 }
 
+function delay(t) {
+  return new Promise(function (resolve) {
+    setTimeout(function () {
+      resolve();
+    }, t);
+  });
+}
+
 describe("MailsenderService", () => {
   const activityURL = "acti_vi_ty";
   const nickname = "nickyNamy";
@@ -280,7 +288,7 @@ describe("MailsenderService", () => {
 
       it("deduplicates receipients", async () => {
         const groupB = new Group({ id: "groupB" });
-        groupsService.getGroups.callsFake((groupsname) => {
+        groupsService.getGroups.callsFake(() => {
           return [groupA, groupB];
         });
         sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
@@ -312,6 +320,41 @@ describe("MailsenderService", () => {
         expect(sentMail1.bcc).to.eql(["memberA", "memberB", "memberC", "memberD", "memberE"]);
         const sentMail2 = allSent[1];
         expect(sentMail2.bcc).to.eql(["memberF"]);
+
+        expect(statusmessage.contents().type).to.equal("alert-success");
+      });
+
+      it("sends mails directly when deduplicated members are below chunk threshold", async () => {
+        const groupB = new Group({ id: "groupB" });
+        groupsService.getGroups.callsFake(() => {
+          return [groupA, groupB];
+        });
+        sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
+          if (group === groupA) {
+            group.members = [
+              new Member({ email: "memberA" }),
+              new Member({ email: "memberB" }),
+              new Member({ email: "memberC" }),
+            ];
+          } else {
+            group.members = [
+              new Member({ email: "memberB" }),
+              new Member({ email: "memberC" }),
+              new Member({ email: "memberD" }),
+            ];
+          }
+        });
+        const statusmessage = await mailsenderService.sendMailToInvitedGroups(
+          ["GroupA", "GroupB"],
+          undefined,
+          message,
+          sender,
+        );
+
+        await delay(100);
+
+        const mail = singleSentEmail();
+        expect(mail.bcc).to.eql(["memberA", "memberB", "memberC", "memberD"]);
 
         expect(statusmessage.contents().type).to.equal("alert-success");
       });

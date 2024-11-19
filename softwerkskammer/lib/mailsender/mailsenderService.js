@@ -56,8 +56,7 @@ function createChunkedSendingReportMessage(statusmessages, subject, sender) {
 }
 
 async function sendMailInChunks(maxMailSendingChunkSize, allMembers, message, type, sender) {
-  const deduplicatedMemebers = R.uniqBy((member) => member.email(), allMembers);
-  const membersInChunks = R.splitEvery(maxMailSendingChunkSize, deduplicatedMemebers);
+  const membersInChunks = R.splitEvery(maxMailSendingChunkSize, allMembers);
 
   try {
     const statusmessages = await Promise.all(
@@ -141,7 +140,10 @@ module.exports = {
       }
       try {
         groups.forEach(groupsAndMembersService.addMembersToGroup);
-        const allMembers = R.flatten(misc.compact(groups).map((group) => group.members));
+        const allMembers = R.uniqBy(
+          (member) => member.email(),
+          groups.flatMap((group) => group.members),
+        );
 
         let activity;
         try {
