@@ -23,7 +23,7 @@ async function messageSubmitted(req, res) {
 
   async function doTheRightSending() {
     if (req.body.massMailing === "members") {
-      return mailsenderService.sendMailToAllMembers(message, req.user.member);
+      return mailsenderService.sendMailToAllMembers(message);
     }
     const activityURL = req.body.successURL.replace("/activities/", "");
     if (req.body.toParticipants) {
@@ -31,11 +31,11 @@ async function messageSubmitted(req, res) {
       return mailsenderService.sendMailToParticipantsOf(activityURL, message);
     }
     if (req.body.invitedGroups) {
-      return mailsenderService.sendMailToInvitedGroups(req.body.invitedGroups, activityURL, message, req.user.member);
+      return mailsenderService.sendMailToInvitedGroups(req.body.invitedGroups, activityURL, message);
     }
     if (req.body.groupName) {
       message.subject = `[${req.body.emailPrefix}] ${message.subject}`;
-      return mailsenderService.sendMailToInvitedGroups([req.body.groupName], undefined, message, req.user.member);
+      return mailsenderService.sendMailToInvitedGroups([req.body.groupName], undefined, message);
     }
     if (req.body.nickname) {
       return mailsenderService.sendMailToMember(req.body.nickname, message);

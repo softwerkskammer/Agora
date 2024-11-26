@@ -267,7 +267,7 @@ describe("MailsenderService", () => {
         }
         return group;
       });
-      const statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message, sender);
+      const statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message);
       const sentMail = singleSentEmail();
       expect(sentMail.bcc).to.contain("memberA");
       expect(sentMail.html).to.contain("mark down");
@@ -308,12 +308,7 @@ describe("MailsenderService", () => {
             ];
           }
         });
-        const statusmessage = await mailsenderService.sendMailToInvitedGroups(
-          ["GroupA", "GroupB"],
-          undefined,
-          message,
-          sender,
-        );
+        const statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA", "GroupB"], undefined, message);
         const allSent = allSentEmail();
         expect(allSent).to.have.length(2);
         const sentMail1 = allSent[0];
@@ -344,12 +339,7 @@ describe("MailsenderService", () => {
             ];
           }
         });
-        const statusmessage = await mailsenderService.sendMailToInvitedGroups(
-          ["GroupA", "GroupB"],
-          undefined,
-          message,
-          sender,
-        );
+        const statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA", "GroupB"], undefined, message);
 
         await delay(100);
 
@@ -363,7 +353,7 @@ describe("MailsenderService", () => {
         sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
           group.members = membersAboveSingleChunkThreshhold;
         });
-        const statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message, sender);
+        const statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message);
         const allSent = allSentEmail();
         const sentMail1 = allSent[0];
         expect(sentMail1.bcc).to.eql(["memberA", "memberB", "memberC", "memberD", "memberE"]);
@@ -392,7 +382,7 @@ describe("MailsenderService", () => {
           return group;
         });
 
-        const statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message, sender);
+        const statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message);
 
         expect(statusmessage.contents().type).to.equal("alert-success");
         expect(statusmessage.contents().text).to.equal("message.content.mailsender.success");
@@ -416,7 +406,7 @@ describe("MailsenderService", () => {
           group.members = membersAboveSingleChunkThreshhold;
         });
 
-        const statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message, sender);
+        const statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message);
 
         expect(statusmessage.contents().type).to.equal("alert-success");
       });
@@ -441,7 +431,7 @@ describe("MailsenderService", () => {
           group.members = membersAboveSingleChunkThreshhold;
         });
 
-        await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message, sender);
+        await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message);
 
         await allExpectedMailsSent;
 
@@ -474,7 +464,7 @@ describe("MailsenderService", () => {
           group.members = membersAboveSingleChunkThreshhold;
         });
 
-        await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message, sender);
+        await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message);
 
         await allExpectedMailsSent;
 
@@ -522,7 +512,6 @@ describe("MailsenderService", () => {
         ["GroupA", "GroupB"],
         "activityUrlForMock",
         message,
-        sender,
       );
       const sentMail = singleSentEmail();
       expect(sentMail.bcc).to.contain("memberA");
@@ -550,7 +539,6 @@ describe("MailsenderService", () => {
         ["GroupA", "GroupB"],
         "errorProvokingUrl",
         message,
-        sender,
       );
       const sentMail = singleSentEmail();
       expect(sentMail.bcc).to.contain("memberA");
@@ -561,18 +549,13 @@ describe("MailsenderService", () => {
     });
 
     it("does not send to members if no groups selected", async () => {
-      const statusmessage = await mailsenderService.sendMailToInvitedGroups([], "activityUrlForMock", message, sender);
+      const statusmessage = await mailsenderService.sendMailToInvitedGroups([], "activityUrlForMock", message);
       expect(sendmail.calledOnce).to.not.be(true);
       expect(statusmessage.contents().type).to.equal("alert-danger");
     });
 
     it("does not send to members if finding groups causes error", async () => {
-      const statusmessage = await mailsenderService.sendMailToInvitedGroups(
-        null,
-        "activityUrlForMock",
-        message,
-        sender,
-      );
+      const statusmessage = await mailsenderService.sendMailToInvitedGroups(null, "activityUrlForMock", message);
       expect(sendmail.calledOnce).to.not.be(true);
       expect(statusmessage.contents().type).to.equal("alert-danger");
     });
@@ -584,7 +567,6 @@ describe("MailsenderService", () => {
         ["GroupA", "GroupB"],
         "activityUrlForMock",
         message,
-        sender,
       );
       expect(sendmail.calledOnce).to.not.be(true);
       expect(statusmessage.contents().type).to.equal("alert-danger");
@@ -760,7 +742,7 @@ describe("MailsenderService", () => {
     });
 
     it("sends in chunks to all members", async () => {
-      const statusmessage = await mailsenderService.sendMailToAllMembers(message, sender);
+      const statusmessage = await mailsenderService.sendMailToAllMembers(message);
       const allSent = allSentEmail();
       const sentMail1 = allSent[0];
       expect(sentMail1.bcc).to.eql(["memberA", "memberB"]);
@@ -783,7 +765,7 @@ describe("MailsenderService", () => {
         }
       });
 
-      const statusmessage = await mailsenderService.sendMailToAllMembers(message, sender);
+      const statusmessage = await mailsenderService.sendMailToAllMembers(message);
 
       expect(statusmessage.contents().type).to.equal("alert-success");
       expect(statusmessage.contents().text).to.equal("message.content.mailsender.success");
@@ -804,7 +786,7 @@ describe("MailsenderService", () => {
         throw new Error();
       });
 
-      const statusmessage = await mailsenderService.sendMailToAllMembers(message, sender);
+      const statusmessage = await mailsenderService.sendMailToAllMembers(message);
 
       expect(statusmessage.contents().type).to.equal("alert-success");
     });
@@ -826,7 +808,7 @@ describe("MailsenderService", () => {
         }
       });
 
-      await mailsenderService.sendMailToAllMembers(message, sender);
+      await mailsenderService.sendMailToAllMembers(message);
 
       await allExpectedMailsSent;
 
@@ -856,7 +838,7 @@ describe("MailsenderService", () => {
         }
       });
 
-      await mailsenderService.sendMailToAllMembers(message, sender);
+      await mailsenderService.sendMailToAllMembers(message);
 
       await allExpectedMailsSent;
 
