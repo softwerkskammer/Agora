@@ -1,4 +1,7 @@
 "use strict";
+
+require("../../testutil/configureForTest");
+
 const request = require("supertest");
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");

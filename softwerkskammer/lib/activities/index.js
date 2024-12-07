@@ -203,7 +203,7 @@ app.post("/submit", (req, res) => {
       if (!result) {
         return req.i18n.t("validation.url_not_available");
       }
-    } catch (e) {
+    } catch {
       return req.i18n.t("validation.url_not_available");
     }
   }

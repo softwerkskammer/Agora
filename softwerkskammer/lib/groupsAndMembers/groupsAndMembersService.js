@@ -1,5 +1,4 @@
 "use strict";
-const conf = require("simple-configure");
 const membersService = require("../members/membersService");
 const memberstore = require("../members/memberstore");
 const groupsService = require("../groups/groupsService");
@@ -33,7 +32,7 @@ module.exports = {
     try {
       member.subscribedGroups.map(unsubFunction);
       return memberstore.removeMember(member);
-    } catch (e) {
+    } catch {
       throw new Error("hasSubscriptions");
     }
   },

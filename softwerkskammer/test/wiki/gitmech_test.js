@@ -1,5 +1,7 @@
 "use strict";
 
+require("../../testutil/configureForTest");
+
 const R = require("ramda");
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");

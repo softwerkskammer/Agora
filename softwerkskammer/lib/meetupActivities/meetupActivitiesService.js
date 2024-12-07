@@ -1,7 +1,6 @@
 "use strict";
 const superagent = require("superagent");
 
-require("simple-configure");
 const groupstore = require("../groups/groupstore");
 const activitystore = require("../activities/activitystore");
 const Activity = require("../activities/activity");

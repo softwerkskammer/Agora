@@ -11,7 +11,7 @@ async function imageDataFromGravatar(url) {
     const { headers, body } = await superagent.get(url);
     const image = `data:${headers["content-type"]};base64,${body.toString("base64")}`;
     return { image, hasNoImage: body.length < 150 };
-  } catch (e) {
+  } catch {
     return null;
   }
 }

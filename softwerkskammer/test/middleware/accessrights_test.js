@@ -1,5 +1,7 @@
 "use strict";
 
+require("../../testutil/configureForTest");
+
 const accessrights = require("../../lib/middleware/accessrights");
 const Activity = require("../../lib/activities/activity");
 const Member = require("../../lib/members/member");

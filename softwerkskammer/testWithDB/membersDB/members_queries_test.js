@@ -1,5 +1,7 @@
 "use strict";
 
+require("../../testutil/configureForTestWithDB");
+
 const expect = require("must-dist");
 
 const memberstore = require("../../lib/members/memberstore");

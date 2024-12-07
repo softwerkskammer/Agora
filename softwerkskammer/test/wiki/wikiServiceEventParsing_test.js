@@ -1,5 +1,7 @@
 "use strict";
 
+require("../../testutil/configureForTest");
+
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 const wikiService = require("../../lib/wiki/wikiService");

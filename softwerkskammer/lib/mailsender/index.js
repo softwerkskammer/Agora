@@ -83,7 +83,7 @@ app.get("/contactMembersOfGroup/:groupname", (req, res) => {
       groupName,
       emailPrefix: group.emailPrefix,
     });
-  } catch (e) {
+  } catch {
     return res.redirect("/groups/" + encodeURIComponent(groupName));
   }
 });

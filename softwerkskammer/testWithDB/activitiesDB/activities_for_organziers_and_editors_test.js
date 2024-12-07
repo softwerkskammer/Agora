@@ -1,5 +1,7 @@
 "use strict";
 
+require("../../testutil/configureForTestWithDB");
+
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 

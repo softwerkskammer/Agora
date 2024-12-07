@@ -1,4 +1,7 @@
 "use strict";
+
+require("../../testutil/configureForTest");
+
 const expect = require("must-dist");
 
 const misc = require("../../lib/commons/misc");

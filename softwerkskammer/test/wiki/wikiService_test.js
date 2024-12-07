@@ -1,4 +1,7 @@
 "use strict";
+
+require("../../testutil/configureForTest");
+
 const Fs = require("fs/promises");
 
 const sinon = require("sinon").createSandbox();

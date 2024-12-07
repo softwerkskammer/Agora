@@ -1,5 +1,7 @@
 "use strict";
 
+require("../../testutil/configureForTest");
+
 const expect = require("must-dist");
 
 const redirectIfNotSuperuser = require("../../lib/middleware/secureSuperuserOnly");

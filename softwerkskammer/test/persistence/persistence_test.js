@@ -1,5 +1,7 @@
 "use strict";
 
+require("../../configure");
+
 const { DateTime } = require("luxon");
 
 const expect = require("must-dist");

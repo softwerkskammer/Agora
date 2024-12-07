@@ -1,5 +1,7 @@
 "use strict";
 
+require("../../testutil/configureForTest");
+
 const statusmessage = require("../../lib/commons/statusmessage");
 const expect = require("must-dist");
 const i18n = require("i18next");

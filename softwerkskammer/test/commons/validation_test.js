@@ -1,4 +1,7 @@
 "use strict";
+
+require("../../testutil/configureForTest");
+
 const expect = require("must-dist");
 const i18n = require("i18next");
 

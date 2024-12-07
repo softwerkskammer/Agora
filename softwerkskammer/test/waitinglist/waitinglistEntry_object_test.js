@@ -1,6 +1,5 @@
 "use strict";
 
-require("../../testutil/configureForTest");
 const expect = require("must-dist");
 
 const WaitinglistEntry = require("../../lib/waitinglist/waitinglistEntry");

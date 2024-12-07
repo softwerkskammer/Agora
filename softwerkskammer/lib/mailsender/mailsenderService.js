@@ -109,7 +109,7 @@ module.exports = {
         let activity;
         try {
           activity = activitystore.getActivity(activityURL);
-        } catch (e) {
+        } catch {
           // do nothing
         }
         if (activity) {

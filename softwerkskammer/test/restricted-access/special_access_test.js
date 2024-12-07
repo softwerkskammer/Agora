@@ -1,5 +1,7 @@
 "use strict";
 
+require("../../testutil/configureForTest");
+
 const sinon = require("sinon");
 const expect = require("must-dist");
 

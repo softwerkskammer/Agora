@@ -23,7 +23,7 @@ async function showPage(subdir, pageName, pageVersion, req, res, next) {
       subdir,
       canEdit: pageVersion === "HEAD" && req.user,
     });
-  } catch (e) {
+  } catch {
     if (req.user) {
       return res.redirect(`/wiki/edit/${completePageName}`);
     }
@@ -91,7 +91,7 @@ app.post("/:subdir/:page", async (req, res) => {
     } else {
       statusmessage.successMessage("message.title.save_successful", "message.content.wiki.saved").putIntoSession(req);
     }
-  } catch (e) {
+  } catch {
     statusmessage.errorMessage("message.title.problem", "message.content.save_error").putIntoSession(req);
   }
   res.redirect(`/wiki/${subdir}/${pageName}`);

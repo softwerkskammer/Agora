@@ -152,7 +152,7 @@ app.post("/submit", (req, res, next) => {
         return [req.i18n.t("validation.nickname_not_available")];
       }
       return [];
-    } catch (e) {
+    } catch {
       return [req.i18n.t("validation.nickname_not_available")];
     }
   }
@@ -164,7 +164,7 @@ app.post("/submit", (req, res, next) => {
         return [req.i18n.t("validation.duplicate_email")];
       }
       return [];
-    } catch (e) {
+    } catch {
       return [req.i18n.t("validation.duplicate_email")];
     }
   }
@@ -206,7 +206,7 @@ app.post("/submitavatar", async (req, res) => {
     };
     await membersService.saveCustomAvatarForNickname(nickname, files, params);
     res.redirect("/members/" + encodeURIComponent(nickname)); // Es fehlen Prüfungen im Frontend
-  } catch (e) {
+  } catch {
     return res.redirect("/members/");
   }
 });

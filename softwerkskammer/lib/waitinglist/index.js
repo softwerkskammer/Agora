@@ -27,7 +27,7 @@ app.get("/:activityUrl", (req, res) => {
     }
     const waitinglist = waitinglistService.waitinglistFor(activityUrl);
     res.render("waitinglistTable", { waitinglist, activity });
-  } catch (e) {
+  } catch {
     return res.redirect("/activities/upcoming");
   }
 });
@@ -42,7 +42,7 @@ app.post("/add", (req, res) => {
     const args = { nickname: req.body.nickname, activityUrl };
     waitinglistService.saveWaitinglistEntry(args);
     res.redirect("/waitinglist/" + encodeURIComponent(activityUrl));
-  } catch (e) {
+  } catch {
     return res.redirect("/activities/upcoming");
   }
 });
@@ -83,7 +83,7 @@ app.post("/remove", (req, res, next) => {
       return next(e);
     }
     res.send("ok");
-  } catch (e) {
+  } catch {
     res.sendStatus(400);
   }
 });

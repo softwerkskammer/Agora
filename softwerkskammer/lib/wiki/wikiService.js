@@ -25,7 +25,7 @@ async function replaceNonExistentNicknames(metadataList) {
       if (!member) {
         metadata.author = null;
       }
-    } catch (e) {
+    } catch {
       metadata.author = null;
     }
     return metadata;
@@ -46,7 +46,7 @@ module.exports = {
       if (stats && !stats.isFile()) {
         return { content: "", metadata: ["NEW"] };
       }
-    } catch (e) {
+    } catch {
       return { content: "", metadata: ["NEW"] };
     }
     let content = "";
@@ -55,7 +55,7 @@ module.exports = {
       content = await Git.readFile(completePageName + ".md", "HEAD");
       metadata = await Git.log(completePageName + ".md", "HEAD", 1);
       return { content, metadata };
-    } catch (e) {
+    } catch {
       return { content, metadata };
     }
   },
@@ -77,7 +77,7 @@ module.exports = {
       if (stats && !stats.isDirectory()) {
         await Fs.mkdir(Git.absPath(subdir));
       }
-    } catch (e) {
+    } catch {
       await Fs.mkdir(Git.absPath(subdir));
     }
     const completePageName = `${subdir}/${pageName}.md`;
@@ -86,7 +86,7 @@ module.exports = {
     let metadata = [];
     try {
       metadata = await Git.log(completePageName, "HEAD", 1);
-    } catch (e) {
+    } catch {
       // ignore
     }
     const conflict = metadata[0] && metadata[0].fullhash !== body.metadata;
@@ -101,7 +101,7 @@ module.exports = {
     try {
       const metadata = await Git.log(completePageName + ".md", "HEAD", 30);
       return replaceNonExistentNicknames(metadata);
-    } catch (e) {
+    } catch {
       return [];
     }
   },
@@ -212,7 +212,7 @@ module.exports = {
       });
 
       return gitfiles;
-    } catch (e) {
+    } catch {
       return [];
     }
   },
@@ -221,7 +221,7 @@ module.exports = {
     try {
       const contents = await Git.readFile(`alle/europaweite-veranstaltungen-${year}.md`, "HEAD");
       return eventsToObject(contents, year);
-    } catch (e) {
+    } catch {
       return {};
     }
   },
@@ -231,7 +231,7 @@ module.exports = {
     try {
       const files = await Git.lsFilesModifiedByMember(nickname);
       reallyAnArray = !files ? [] : files;
-    } catch (e) {
+    } catch {
       // ignore
     }
     const filteredSortedUnique = R.uniq(reallyAnArray.filter((x) => x.includes("/")).sort());

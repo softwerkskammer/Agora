@@ -1,5 +1,7 @@
 "use strict";
 
+require("../../testutil/configureForTestWithDB");
+
 /**
  * Test for https://github.com/softwerkskammer/Agora/issues/1105
  */

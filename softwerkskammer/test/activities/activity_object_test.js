@@ -2,7 +2,6 @@
 
 const expect = require("must-dist");
 
-require("../../testutil/configureForTest");
 const Activity = require("../../lib/activities/activity");
 const fieldHelpers = require("../../lib/commons/fieldHelpers");
 

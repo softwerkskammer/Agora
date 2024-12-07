@@ -31,7 +31,7 @@ module.exports = {
       if (existingGroup) {
         return errors;
       }
-    } catch (e) {
+    } catch {
       errors.push("Technical error validating the group.");
     }
     const self = this;
@@ -44,7 +44,7 @@ module.exports = {
       if (!result1) {
         errors.push("Dieses Präfix ist bereits vergeben.");
       }
-    } catch (e) {
+    } catch {
       errors.push("Technical error validating email prefix.");
     }
     return errors;

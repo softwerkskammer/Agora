@@ -119,7 +119,7 @@ module.exports = {
 
     try {
       return validator(currentValue).toString();
-    } catch (e) {
+    } catch {
       return "false";
     }
   },

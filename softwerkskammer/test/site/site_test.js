@@ -1,5 +1,7 @@
 "use strict";
 
+require("../../testutil/configureForTest");
+
 const request = require("supertest");
 
 const app = require("../../testutil/testHelper")("site").createApp();
