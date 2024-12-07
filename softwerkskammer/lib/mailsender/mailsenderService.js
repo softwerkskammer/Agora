@@ -14,9 +14,9 @@ const memberstore = require("../members/memberstore");
 const activitystore = require("../activities/activitystore");
 const Message = require("./message");
 const Group = require("../groups/group");
-const misc = beans.get("misc");
+const misc = require("../commons/misc");
 
-const mailtransport = beans.get("mailtransport");
+const mailtransport = require("./mailtransport");
 
 async function sendMail(message, type) {
   return mailtransport.sendMail(message, type, conf.get("sender-address"), conf.get("include-footer"));

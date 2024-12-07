@@ -3,9 +3,6 @@
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
-const conf = require("../../testutil/configureForTest");
-const beans = conf.get("beans");
-
 const activitiesService = require("../../lib/activities/activitiesService");
 const activitystore = require("../../lib/activities/activitystore");
 const groupsService = require("../../lib/groups/groupsService");
@@ -16,7 +13,7 @@ const membersService = require("../../lib/members/membersService");
 const Activity = require("../../lib/activities/activity");
 const Member = require("../../lib/members/member");
 const Group = require("../../lib/groups/group");
-const notifications = beans.get("notifications");
+const notifications = require("../../lib/notifications");
 
 const dummyActivity = new Activity({
   title: "Title of the Activity",

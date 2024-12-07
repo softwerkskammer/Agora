@@ -4,11 +4,10 @@
 const R = require("ramda");
 const conf = require("simple-configure");
 
-const beans = conf.get("beans");
 const groupsAndMembers = require("../groupsAndMembers/groupsAndMembersService");
 const memberstore = require("../members/memberstore");
 const Member = require("../members/member");
-const sendBulkMail = beans.get("mailtransport").sendBulkMail;
+const sendBulkMail = require("../mailsender/mailtransport").sendBulkMail;
 const logger = require("winston").loggers.get("transactions");
 const pug = require("pug");
 const path = require("path");

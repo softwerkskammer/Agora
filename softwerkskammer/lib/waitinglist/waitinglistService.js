@@ -3,7 +3,7 @@ const beans = require("simple-configure").get("beans");
 const memberstore = require("../members/memberstore");
 const activitystore = require("../activities/activitystore");
 const mailsenderService = require("../mailsender/mailsenderService");
-const CONFLICTING_VERSIONS = beans.get("constants").CONFLICTING_VERSIONS;
+const CONFLICTING_VERSIONS = require("../commons/constants").CONFLICTING_VERSIONS;
 
 module.exports = {
   waitinglistFor: function waitinglistFor(activityUrl) {

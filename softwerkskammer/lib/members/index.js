@@ -2,8 +2,7 @@
 const R = require("ramda");
 const Form = require("multiparty").Form;
 
-const beans = require("simple-configure").get("beans");
-const validation = beans.get("validation");
+const validation = require("../commons/validation");
 const Member = require("./member");
 const Group = require("../groups/group");
 const membersService = require("./membersService");
@@ -13,9 +12,9 @@ const groupsAndMembersService = require("../groupsAndMembers/groupsAndMembersSer
 const groupsService = require("../groups/groupsService");
 const activitiesService = require("../activities/activitiesService");
 const wikiService = require("../wiki/wikiService");
-const misc = beans.get("misc");
+const misc = require("../commons/misc");
 const statusmessage = require("../commons/statusmessage");
-const notifications = beans.get("notifications");
+const notifications = require("../notifications");
 const authenticationService = require("../auth/authenticationService");
 
 function memberSubmitted(req, res) {

@@ -4,7 +4,6 @@ const request = require("supertest");
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
-const beans = require("../../testutil/configureForTest").get("beans");
 const Member = require("../../lib/members/member");
 const membersService = require("../../lib/members/membersService");
 const memberstore = require("../../lib/members/memberstore");
@@ -13,7 +12,7 @@ const groupsService = require("../../lib/groups/groupsService");
 const groupsAndMembersService = require("../../lib/groupsAndMembers/groupsAndMembersService");
 const wikiService = require("../../lib/wiki/wikiService");
 const activitiesService = require("../../lib/activities/activitiesService");
-const notifications = beans.get("notifications");
+const notifications = require("../../lib/notifications");
 let dummymember;
 
 const createApp = require("../../testutil/testHelper")("members").createApp;

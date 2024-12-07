@@ -3,9 +3,8 @@
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
-const beans = require("../../testutil/configureForTest").get("beans");
-const wikiSubdirs = beans.get("wikiSubdirs");
-const Git = beans.get("gitmech");
+const wikiSubdirs = require("../../lib/middleware/wikiSubdirs");
+const Git = require("../../lib/wiki/gitmech");
 const Group = require("../../lib/groups/group");
 const groupstore = require("../../lib/groups/groupstore");
 

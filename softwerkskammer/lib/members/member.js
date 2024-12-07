@@ -3,10 +3,9 @@ const { DateTime } = require("luxon");
 const R = require("ramda");
 
 const conf = require("simple-configure");
-const beans = conf.get("beans");
 const fieldHelpers = require("../commons/fieldHelpers");
 const avatarProvider = require("../commons/avatarProvider");
-const { genSalt, hashPassword } = beans.get("hashPassword");
+const { genSalt, hashPassword } = require("../commons/hashPassword");
 
 class Member {
   constructor(object) {

@@ -7,7 +7,7 @@ const beans = require("../../testutil/configureForTestWithDB").get("beans");
 const persistence = beans.get("activitiesPersistence");
 const activitystore = require("../../lib/activities/activitystore");
 const activitiesService = require("../../lib/activities/activitiesService");
-const notifications = beans.get("notifications");
+const notifications = require("../../lib/notifications");
 
 const Activity = require("../../lib/activities/activity");
 

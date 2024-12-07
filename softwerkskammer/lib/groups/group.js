@@ -1,7 +1,6 @@
 "use strict";
 const R = require("ramda");
-const beans = require("simple-configure").get("beans");
-const misc = beans.get("misc");
+const misc = require("../commons/misc");
 const Renderer = require("../commons/renderer");
 
 const themengruppe = "Themengruppe";

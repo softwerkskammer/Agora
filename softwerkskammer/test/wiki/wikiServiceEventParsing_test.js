@@ -2,9 +2,8 @@
 
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
-const beans = require("../../testutil/configureForTest").get("beans");
 const wikiService = require("../../lib/wiki/wikiService");
-const Git = beans.get("gitmech");
+const Git = require("../../lib/wiki/gitmech");
 
 describe("Wiki Service - Event Parsing", () => {
   afterEach(() => {

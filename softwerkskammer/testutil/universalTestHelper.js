@@ -7,7 +7,6 @@ module.exports = function universalTestHelper(defaultLanguage) {
   return (internalAppName, configuredBeans) => {
     const appName = internalAppName;
     const beans = configuredBeans || require("./configureForTest").get("beans");
-    const initI18N = beans.get("initI18N");
 
     return {
       createApp: (params) => {
@@ -22,7 +21,7 @@ module.exports = function universalTestHelper(defaultLanguage) {
           res.locals.removeServerpaths = (msg) => msg;
           next();
         });
-        app.use(beans.get("expressSessionConfigurator"));
+        app.use(require("../lib/middleware/expressSessionConfigurator"));
 
         if (atts.id) {
           const Member = require("../lib/members/member");
@@ -55,8 +54,8 @@ module.exports = function universalTestHelper(defaultLanguage) {
           });
         }
 
-        app.use(beans.get("expressViewHelper"));
-        app.use(initI18N);
+        app.use(require("../lib/middleware/expressViewHelper"));
+        app.use(require("../lib/middleware/initI18N"));
 
         (atts.middlewares || []).forEach((middleware) => {
           app.use(middleware);
@@ -66,8 +65,8 @@ module.exports = function universalTestHelper(defaultLanguage) {
         app.use(baseurl, require(`../lib/${appName}`));
 
         const appLogger = { error: () => undefined };
-        app.use(beans.get("handle404")(appLogger));
-        app.use(beans.get("handle500")(appLogger));
+        app.use(require("../lib/middleware/handle404")(appLogger));
+        app.use(require("../lib/middleware/handle500")(appLogger));
         return app;
       },
     };

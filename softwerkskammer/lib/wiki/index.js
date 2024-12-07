@@ -1,9 +1,8 @@
 "use strict";
-const beans = require("simple-configure").get("beans");
 const renderer = require("../commons/renderer");
 const wikiService = require("./wikiService");
 const statusmessage = require("../commons/statusmessage");
-const misc = beans.get("misc");
+const misc = require("../commons/misc");
 
 async function showPage(subdir, pageName, pageVersion, req, res, next) {
   const normalizedPageName = renderer.normalize(pageName);

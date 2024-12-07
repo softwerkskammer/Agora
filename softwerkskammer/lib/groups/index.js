@@ -1,10 +1,9 @@
 "use strict";
 const conf = require("simple-configure");
-const beans = conf.get("beans");
 const R = require("ramda");
 const Feed = require("feed").Feed;
 
-const misc = beans.get("misc");
+const misc = require("../commons/misc");
 const groupsService = require("./groupsService");
 const groupstore = require("./groupstore");
 const wikiService = require("../wiki/wikiService");

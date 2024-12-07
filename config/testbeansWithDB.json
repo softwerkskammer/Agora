@@ -15,7 +15,5 @@
     "module": "./softwerkskammer/lib/persistence/sqlitePersistence",
     "constructorArgs": { "collectionName": "teststore", "extraColumns": "startDate,endDate,url,version" }
   },
-  "mailsPersistence": { "module": "./softwerkskammer/teststubs/testpersistence" },
-
   "nodemailerTransport": { "module": "./softwerkskammer/teststubs/nodemailerTransportForTests" }
 }

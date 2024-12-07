@@ -6,11 +6,10 @@ const fs = require("fs");
 const qrimage = require("qr-image");
 
 const conf = require("simple-configure");
-const beans = conf.get("beans");
 const Renderer = require("../commons/renderer");
 const groupstore = require("../groups/groupstore");
 const Group = require("../groups/group");
-const misc = beans.get("misc");
+const misc = require("../commons/misc");
 
 const app = misc.expressAppIn(__dirname);
 app.locals.pretty = true;

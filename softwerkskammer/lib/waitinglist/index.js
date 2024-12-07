@@ -1,10 +1,9 @@
 "use strict";
-const beans = require("simple-configure").get("beans");
 
 const waitinglistService = require("../waitinglist/waitinglistService");
 const activitiesService = require("../activities/activitiesService");
 const memberstore = require("../members/memberstore");
-const misc = beans.get("misc");
+const misc = require("../commons/misc");
 
 function accessAllowedTo(activityUrl, res) {
   const accessrights = res.locals.accessrights;

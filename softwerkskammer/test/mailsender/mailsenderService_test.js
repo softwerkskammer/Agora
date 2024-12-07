@@ -2,8 +2,6 @@
 
 const expect = require("must-dist");
 const sinon = require("sinon").createSandbox();
-const conf = require("../../testutil/configureForTest");
-const beans = conf.get("beans");
 
 const memberstore = require("../../lib/members/memberstore");
 const groupstore = require("../../lib/groups/groupstore");
@@ -18,7 +16,7 @@ const Member = require("../../lib/members/member");
 const Message = require("../../lib/mailsender/message");
 const Group = require("../../lib/groups/group");
 const fieldHelpers = require("../../lib/commons/fieldHelpers");
-const transport = beans.get("mailtransport").transport;
+const transport = require("../../lib/mailsender/mailtransport").transport;
 
 let emptyActivity;
 

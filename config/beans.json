@@ -20,32 +20,5 @@
     "constructorArgs": { "collectionName": "settingsstore" }
   },
 
-  "constants": { "module": "./softwerkskammer/lib/commons/constants" },
-  "hashPassword": { "module": "./softwerkskammer/lib/commons/hashPassword" },
-  "fieldHelpers": { "module": "./softwerkskammer/lib/commons/fieldHelpers" },
-  "misc": { "module": "./softwerkskammer/lib/commons/misc" },
-  "notifications": { "module": "./softwerkskammer/lib/notifications" },
-  "validation": { "module": "./softwerkskammer/lib/commons/validation" },
-
-  "addCsrfTokenToLocals": { "module": "./softwerkskammer/lib/middleware/addCsrfTokenToLocals" },
-  "expressSessionConfigurator": { "module": "./softwerkskammer/lib/middleware/expressSessionConfigurator" },
-  "expressViewHelper": { "module": "./softwerkskammer/lib/middleware/expressViewHelper" },
-  "gitExec": { "module": "./softwerkskammer/lib/wiki/gitExec" },
-  "gitmech": { "module": "./softwerkskammer/lib/wiki/gitmech" },
-  "handle404": { "module": "./softwerkskammer/lib/middleware/handle404" },
-  "handle500": { "module": "./softwerkskammer/lib/middleware/handle500" },
-  "initI18N": {
-    "module": "./softwerkskammer/lib/middleware/initI18N",
-    "constructorArgs": { "languages": "de,en" }
-  },
-  "mailtransport": { "module": "./softwerkskammer/lib/mailsender/mailtransport" },
-  "nodemailerTransport": { "module": "./softwerkskammer/lib/mailsender/nodemailerTransport" },
-  "passportInitializer": { "module": "./softwerkskammer/lib/middleware/passportInitializer" },
-  "passportSessionInitializer": { "module": "./softwerkskammer/lib/middleware/passportSessionInitializer" },
-  "redirectRuleForNewUser": { "module": "./softwerkskammer/lib/middleware/redirectRuleForNewUser" },
-  "secureAgainstClickjacking": { "module": "./softwerkskammer/lib/middleware/secureAgainstClickjacking" },
-  "secureByLogin": { "module": "./softwerkskammer/lib/middleware/secureByLogin" },
-  "secureSuperuserOnly": { "module": "./softwerkskammer/lib/middleware/secureSuperuserOnly" },
-  "serverpathRemover": { "module": "./softwerkskammer/lib/middleware/serverpathRemover" },
-  "wikiSubdirs": { "module": "./softwerkskammer/lib/middleware/wikiSubdirs" }
+  "nodemailerTransport": { "module": "./softwerkskammer/lib/mailsender/nodemailerTransport" }
 }

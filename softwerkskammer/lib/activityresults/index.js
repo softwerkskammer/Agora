@@ -5,7 +5,7 @@ const beans = require("simple-configure").get("beans");
 const ActivityResult = require("./activityresult");
 const activityresultsPersistence = beans.get("activityresultsPersistence");
 const activityresultsService = require("./activityresultsService");
-const misc = beans.get("misc");
+const misc = require("../commons/misc");
 const fieldHelpers = require("../commons/fieldHelpers");
 
 const app = misc.expressAppIn(__dirname);

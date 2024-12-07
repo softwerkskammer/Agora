@@ -1,8 +1,7 @@
 "use strict";
-const beans = require("simple-configure").get("beans");
 
-const misc = beans.get("misc");
-const validation = beans.get("validation");
+const misc = require("../commons/misc");
+const validation = require("../commons/validation");
 const statusmessage = require("../commons/statusmessage");
 const mailsenderService = require("./mailsenderService");
 const groupsAndMembersService = require("../groupsAndMembers/groupsAndMembersService");

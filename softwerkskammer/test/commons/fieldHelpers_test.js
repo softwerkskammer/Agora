@@ -2,7 +2,7 @@
 
 const beans = require("../../testutil/configureForTest").get("beans");
 const fieldHelpers = require("../../lib/commons/fieldHelpers");
-beans.get("initI18N"); // initialize iternationalization for results
+require("../../lib/middleware/initI18N");
 const expect = require("must-dist");
 
 describe("Activity application", () => {

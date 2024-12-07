@@ -1,11 +1,9 @@
 "use strict";
 const R = require("ramda");
-const conf = require("simple-configure");
 
-const beans = conf.get("beans");
-const validation = beans.get("validation");
+const validation = require("../commons/validation");
 const groupstore = require("./groupstore");
-const misc = beans.get("misc");
+const misc = require("../commons/misc");
 
 function isReserved(groupname) {
   return new RegExp("^edit$|^new$|^checkgroupname$|^submit$|^administration$|[^\\w-]", "i").test(groupname);

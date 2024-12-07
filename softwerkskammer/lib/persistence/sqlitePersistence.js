@@ -9,7 +9,7 @@ const sqlitedb = conf.get("sqlitedb");
 const db = new Database(path.join(__dirname, sqlitedb));
 const scriptLogger = loggers.get("scripts");
 scriptLogger.info(`DB = ${sqlitedb}`);
-const CONFLICTING_VERSIONS = conf.get("beans").get("constants").CONFLICTING_VERSIONS;
+const CONFLICTING_VERSIONS = require("../commons/constants").CONFLICTING_VERSIONS;
 
 function escape(str = "") {
   if (typeof str === "string") {

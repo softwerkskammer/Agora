@@ -3,9 +3,8 @@
 const R = require("ramda");
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
-const beans = require("../../testutil/configureForTest").get("beans");
-const Git = beans.get("gitmech");
-const gitExec = beans.get("gitExec");
+const Git = require("../../lib/wiki/gitmech");
+const gitExec = require("../../lib/wiki/gitExec");
 
 describe("the gitmech module", () => {
   afterEach(() => {

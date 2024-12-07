@@ -3,9 +3,8 @@ const R = require("ramda");
 const pug = require("pug");
 const path = require("path");
 const conf = require("simple-configure");
-const beans = conf.get("beans");
 const publicUrlPrefix = conf.get("publicUrlPrefix");
-const misc = beans.get("misc");
+const misc = require("../commons/misc");
 const Renderer = require("../commons/renderer");
 
 class Message {

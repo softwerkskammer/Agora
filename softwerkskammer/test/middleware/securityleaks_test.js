@@ -5,15 +5,14 @@ const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
 const csurf = require("csurf");
-const beans = require("../../testutil/configureForTest").get("beans");
 
 const setupApp = require("../../testutil/testHelper");
 const memberstore = require("../../lib/members/memberstore");
 const groupstore = require("../../lib/groups/groupstore");
 const groupsAndMembersService = require("../../lib/groupsAndMembers/groupsAndMembersService");
 const Member = require("../../lib/members/member");
-const addCsrfTokenToLocals = beans.get("addCsrfTokenToLocals");
-const serverpathRemover = beans.get("serverpathRemover");
+const addCsrfTokenToLocals = require("../../lib/middleware/addCsrfTokenToLocals");
+const serverpathRemover = require("../../lib/middleware/serverpathRemover");
 
 describe("Security regarding", () => {
   describe("Clickjacking:", () => {
@@ -26,7 +25,9 @@ describe("Security regarding", () => {
     });
 
     it("sends an X-Frame-Options header with param DENY", (done) => {
-      const app = setupApp("members").createApp({ middlewares: [beans.get("secureAgainstClickjacking")] });
+      const app = setupApp("members").createApp({
+        middlewares: [require("../../lib/middleware/secureAgainstClickjacking")],
+      });
 
       request(app).get("/").expect("X-Frame-Options", "DENY", done);
     });
@@ -67,7 +68,7 @@ describe("Security regarding", () => {
         id: "memberId",
         middlewares: [
           require("../../lib/middleware/accessrights"),
-          beans.get("serverpathRemover"),
+          serverpathRemover,
           csurf(),
           addCsrfTokenToLocals,
         ],

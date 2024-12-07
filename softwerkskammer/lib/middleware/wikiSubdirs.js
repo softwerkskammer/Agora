@@ -1,7 +1,6 @@
 "use strict";
 const R = require("ramda");
-const beans = require("simple-configure").get("beans");
-const Git = beans.get("gitmech");
+const Git = require("../wiki/gitmech");
 const Group = require("../groups/group");
 const groupstore = require("../groups/groupstore");
 

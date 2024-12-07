@@ -2,9 +2,8 @@
 const R = require("ramda");
 
 const conf = require("simple-configure");
-const beans = conf.get("beans");
-const misc = beans.get("misc");
-const CONFLICTING_VERSIONS = beans.get("constants").CONFLICTING_VERSIONS;
+const misc = require("../commons/misc");
+const CONFLICTING_VERSIONS = require("../commons/constants").CONFLICTING_VERSIONS;
 const activitiesService = require("./activitiesService");
 const calendarService = require("../activities/calendarService");
 const icalService = require("./icalService");
@@ -16,7 +15,7 @@ const meetupActivitiesService = require("../meetupActivities/meetupActivitiesSer
 
 const Activity = require("./activity");
 const Group = require("../groups/group");
-const validation = beans.get("validation");
+const validation = require("../commons/validation");
 const statusmessage = require("../commons/statusmessage");
 const resourceRegistrationRenderer = require("./resourceRegistrationRenderer");
 

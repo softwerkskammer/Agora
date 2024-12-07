@@ -65,20 +65,20 @@ module.exports = {
       next();
     });
 
-    app.use(beans.get("expressSessionConfigurator"));
-    app.use(beans.get("passportInitializer"));
-    app.use(beans.get("passportSessionInitializer"));
-    app.use(beans.get("serverpathRemover"));
+    app.use(require("./lib/middleware/expressSessionConfigurator"));
+    app.use(require("./lib/middleware/passportInitializer"));
+    app.use(require("./lib/middleware/passportSessionInitializer"));
+    app.use(require("./lib/middleware/serverpathRemover"));
     app.use(require("./lib/middleware/accessrights"));
-    app.use(beans.get("secureByLogin"));
-    app.use(beans.get("secureSuperuserOnly"));
-    app.use(beans.get("expressViewHelper"));
-    app.use(beans.get("initI18N"));
-    app.use(beans.get("redirectRuleForNewUser"));
-    app.use(beans.get("wikiSubdirs"));
-    app.use(beans.get("secureAgainstClickjacking"));
+    app.use(require("./lib/middleware/secureByLogin"));
+    app.use(require("./lib/middleware/secureSuperuserOnly"));
+    app.use(require("./lib/middleware/expressViewHelper"));
+    app.use(require("./lib/middleware/initI18N"));
+    app.use(require("./lib/middleware/redirectRuleForNewUser"));
+    app.use(require("./lib/middleware/wikiSubdirs"));
+    app.use(require("./lib/middleware/secureAgainstClickjacking"));
     app.use(csurf());
-    app.use(beans.get("addCsrfTokenToLocals"));
+    app.use(require("./lib/middleware/addCsrfTokenToLocals"));
 
     app.use("/", require("./lib/site"));
     useApp(app, "administration");
@@ -93,8 +93,8 @@ module.exports = {
     useApp(app, "dashboard");
     useApp(app, "gallery");
 
-    app.use(beans.get("handle404")());
-    app.use(beans.get("handle500")(appLogger));
+    app.use(require("./lib/middleware/handle404")());
+    app.use(require("./lib/middleware/handle500")(appLogger));
 
     return app;
   },

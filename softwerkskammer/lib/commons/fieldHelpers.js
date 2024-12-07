@@ -2,8 +2,7 @@
 
 "use strict";
 const { DateTime } = require("luxon");
-const conf = require("simple-configure");
-const misc = conf.get("beans").get("misc");
+const misc = require("../commons/misc");
 
 module.exports = {
   isFilled: function isFilled(someValue) {
