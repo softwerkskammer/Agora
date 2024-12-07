@@ -66,12 +66,7 @@ describe("Security regarding", () => {
       // we need to load accessrights and pug support code before the csrf handling
       const app = setupApp("members").createApp({
         id: "memberId",
-        middlewares: [
-          require("../../lib/middleware/accessrights"),
-          serverpathRemover,
-          csurf(),
-          addCsrfTokenToLocals,
-        ],
+        middlewares: [require("../../lib/middleware/accessrights"), serverpathRemover, csurf(), addCsrfTokenToLocals],
       });
       request(app)
         .post("/submit")
