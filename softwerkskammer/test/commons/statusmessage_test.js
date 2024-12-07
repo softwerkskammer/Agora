@@ -1,6 +1,6 @@
 "use strict";
 
-const statusmessage = require("../../testutil/configureForTest").get("beans").get("statusmessage");
+const statusmessage = require("../../lib/commons/statusmessage");
 const expect = require("must-dist");
 const i18n = require("i18next");
 require("../../testutil/configureForTest");

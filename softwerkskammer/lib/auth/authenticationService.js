@@ -1,11 +1,8 @@
 "use strict";
-const conf = require("simple-configure");
-
 const logger = require("winston").loggers.get("authorization");
 
-const beans = conf.get("beans");
-const membersService = beans.get("membersService");
-const memberstore = beans.get("memberstore");
+const membersService = require("../members/membersService");
+const memberstore = require("../members/memberstore");
 
 function createUserObject(req, authenticationId, profile, done) {
   function callback() {

@@ -2,10 +2,9 @@
 const { DateTime } = require("luxon");
 
 const conf = require("simple-configure");
-const beans = conf.get("beans");
-const Resources = beans.get("resources");
+const Resources = require("./resources");
 const fieldHelpers = require("../commons/fieldHelpers");
-const Renderer = beans.get("renderer");
+const Renderer = require("../commons/renderer");
 
 const standardName = "Veranstaltung";
 

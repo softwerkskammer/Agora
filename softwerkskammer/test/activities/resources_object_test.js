@@ -3,9 +3,7 @@
 require("../../testutil/configureForTest");
 const expect = require("must-dist");
 
-const beans = require("simple-configure").get("beans");
-
-const Resources = beans.get("resources");
+const Resources = require("../../lib/activities/resources");
 
 describe("Resources (fillFromUI)", () => {
   describe("adding / removing children", () => {

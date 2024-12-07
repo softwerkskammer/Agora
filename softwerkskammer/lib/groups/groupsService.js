@@ -4,7 +4,7 @@ const conf = require("simple-configure");
 
 const beans = conf.get("beans");
 const validation = beans.get("validation");
-const groupstore = beans.get("groupstore");
+const groupstore = require("./groupstore");
 const misc = beans.get("misc");
 
 function isReserved(groupname) {

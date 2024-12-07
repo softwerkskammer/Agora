@@ -3,7 +3,7 @@
 const expect = require("must-dist");
 
 const beans = require("../../testutil/configureForTestWithDB").get("beans");
-const memberstore = beans.get("memberstore");
+const memberstore = require("../../lib/members/memberstore");
 const persistence = beans.get("membersPersistence");
 const Member = require("../../lib/members/member");
 

@@ -5,8 +5,8 @@ const R = require("ramda");
 const conf = require("simple-configure");
 
 const beans = conf.get("beans");
-const groupsAndMembers = beans.get("groupsAndMembersService");
-const memberstore = beans.get("memberstore");
+const groupsAndMembers = require("../groupsAndMembers/groupsAndMembersService");
+const memberstore = require("../members/memberstore");
 const Member = require("../members/member");
 const sendBulkMail = beans.get("mailtransport").sendBulkMail;
 const logger = require("winston").loggers.get("transactions");

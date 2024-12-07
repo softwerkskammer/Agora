@@ -1,7 +1,7 @@
 "use strict";
 const beans = require("simple-configure").get("beans");
 const misc = beans.get("misc");
-const dashboardService = beans.get("dashboardService");
+const dashboardService = require("./dashboardService");
 
 const app = misc.expressAppIn(__dirname);
 

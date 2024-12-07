@@ -5,7 +5,7 @@ const expect = require("must-dist");
 
 const beans = require("../../testutil/configureForTest").get("beans");
 const persistence = beans.get("groupsPersistence");
-const store = beans.get("groupstore");
+const store = require("../../lib/groups/groupstore");
 
 describe("Groups store", () => {
   const sampleGroup = { id: "groupa" };

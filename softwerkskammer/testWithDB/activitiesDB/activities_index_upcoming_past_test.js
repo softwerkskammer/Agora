@@ -5,11 +5,11 @@ const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
 const beans = require("../../testutil/configureForTestWithDB").get("beans");
-const activitystore = beans.get("activitystore");
+const activitystore = require("../../lib/activities/activitystore");
 const persistence = beans.get("activitiesPersistence");
-const Activity = beans.get("activity");
+const Activity = require("../../lib/activities/activity");
 
-const createApp = require("../../testutil/testHelper")("activitiesApp", beans).createApp;
+const createApp = require("../../testutil/testHelper")("activities", beans).createApp;
 
 describe("Activity application with DB - shows activities -", () => {
   const tomorrow = new Date(Date.now() + 86400000); // + 1 day

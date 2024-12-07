@@ -2,9 +2,8 @@
 
 const expect = require("must-dist");
 
-const beans = require("../../testutil/configureForTest").get("beans");
 const Member = require("../../lib/members/member");
-const Group = beans.get("group");
+const Group = require("../../lib/groups/group");
 
 describe("Member initial filling", () => {
   it("is correctly filled from small database record", () => {

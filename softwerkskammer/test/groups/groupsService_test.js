@@ -3,13 +3,11 @@
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
-const conf = require("../../testutil/configureForTest");
-const beans = conf.get("beans");
-const Group = beans.get("group");
+const Group = require("../../lib/groups/group");
 
 const groupsForTest = require("./groups_for_tests");
 
-const groupstore = beans.get("groupstore");
+const groupstore = require("../../lib/groups/groupstore");
 
 const groupsService = require("../../lib/groups/groupsService");
 

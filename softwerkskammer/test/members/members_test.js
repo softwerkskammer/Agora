@@ -6,17 +6,17 @@ const expect = require("must-dist");
 
 const beans = require("../../testutil/configureForTest").get("beans");
 const Member = require("../../lib/members/member");
-const membersService = beans.get("membersService");
-const memberstore = beans.get("memberstore");
-const groupstore = beans.get("groupstore");
+const membersService = require("../../lib/members/membersService");
+const memberstore = require("../../lib/members/memberstore");
+const groupstore = require("../../lib/groups/groupstore");
 const groupsService = require("../../lib/groups/groupsService");
-const groupsAndMembersService = beans.get("groupsAndMembersService");
-const wikiService = beans.get("wikiService");
-const activitiesService = beans.get("activitiesService");
+const groupsAndMembersService = require("../../lib/groupsAndMembers/groupsAndMembersService");
+const wikiService = require("../../lib/wiki/wikiService");
+const activitiesService = require("../../lib/activities/activitiesService");
 const notifications = beans.get("notifications");
 let dummymember;
 
-const createApp = require("../../testutil/testHelper")("membersApp").createApp;
+const createApp = require("../../testutil/testHelper")("members").createApp;
 const app = createApp();
 
 let allMembers;

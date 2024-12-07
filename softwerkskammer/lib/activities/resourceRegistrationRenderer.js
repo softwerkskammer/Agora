@@ -1,5 +1,5 @@
 "use strict";
-const Resource = require("simple-configure").get("beans").get("resource");
+const Resource = require("../../lib/activities/resource");
 
 class RenderingInformation {
   constructor(type, url, displayText) {

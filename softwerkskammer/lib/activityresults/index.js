@@ -2,9 +2,9 @@
 const Form = require("multiparty").Form;
 
 const beans = require("simple-configure").get("beans");
-const ActivityResult = beans.get("activityresult");
+const ActivityResult = require("./activityresult");
 const activityresultsPersistence = beans.get("activityresultsPersistence");
-const activityresultsService = beans.get("activityresultsService");
+const activityresultsService = require("./activityresultsService");
 const misc = beans.get("misc");
 const fieldHelpers = require("../commons/fieldHelpers");
 

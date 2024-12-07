@@ -6,7 +6,7 @@ const conf = require("simple-configure");
 const beans = conf.get("beans");
 const publicUrlPrefix = conf.get("publicUrlPrefix");
 const misc = beans.get("misc");
-const Renderer = beans.get("renderer");
+const Renderer = require("../commons/renderer");
 
 class Message {
   constructor(body, member) {

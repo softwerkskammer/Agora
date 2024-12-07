@@ -8,9 +8,9 @@ const csurf = require("csurf");
 const beans = require("../../testutil/configureForTest").get("beans");
 
 const setupApp = require("../../testutil/testHelper");
-const memberstore = beans.get("memberstore");
-const groupstore = beans.get("groupstore");
-const groupsAndMembersService = beans.get("groupsAndMembersService");
+const memberstore = require("../../lib/members/memberstore");
+const groupstore = require("../../lib/groups/groupstore");
+const groupsAndMembersService = require("../../lib/groupsAndMembers/groupsAndMembersService");
 const Member = require("../../lib/members/member");
 const addCsrfTokenToLocals = beans.get("addCsrfTokenToLocals");
 const serverpathRemover = beans.get("serverpathRemover");
@@ -26,7 +26,7 @@ describe("Security regarding", () => {
     });
 
     it("sends an X-Frame-Options header with param DENY", (done) => {
-      const app = setupApp("membersApp").createApp({ middlewares: [beans.get("secureAgainstClickjacking")] });
+      const app = setupApp("members").createApp({ middlewares: [beans.get("secureAgainstClickjacking")] });
 
       request(app).get("/").expect("X-Frame-Options", "DENY", done);
     });
@@ -54,7 +54,7 @@ describe("Security regarding", () => {
     });
 
     it("creates a CSRF token and adds it to the edit form", (done) => {
-      const app = setupApp("membersApp").createApp({ id: "memberId", middlewares: [csurf()] });
+      const app = setupApp("members").createApp({ id: "memberId", middlewares: [csurf()] });
 
       request(app)
         .get("/edit/hada")
@@ -63,7 +63,7 @@ describe("Security regarding", () => {
 
     it("blocks updates that do not come with a csrf token", (done) => {
       // we need to load accessrights and pug support code before the csrf handling
-      const app = setupApp("membersApp").createApp({
+      const app = setupApp("members").createApp({
         id: "memberId",
         middlewares: [
           require("../../lib/middleware/accessrights"),
@@ -104,7 +104,7 @@ describe("Security regarding", () => {
     });
 
     it("does not happen through paths in server error messages", (done) => {
-      const app = setupApp("mailsenderApp").createApp({ middlewares: [serverpathRemover] });
+      const app = setupApp("mailsender").createApp({ middlewares: [serverpathRemover] });
 
       request(app)
         .get("/contactMember/xyz")

@@ -2,9 +2,9 @@
 const beans = require("simple-configure").get("beans");
 const R = require("ramda");
 
-const wikiService = beans.get("wikiService");
-const groupsAndMembersService = beans.get("groupsAndMembersService");
-const activitiesService = beans.get("activitiesService");
+const wikiService = require("../wiki/wikiService");
+const groupsAndMembersService = require("../groupsAndMembers/groupsAndMembersService");
+const activitiesService = require("../activities/activitiesService");
 
 function groupsByColumns(groups = [], linesPerGroup) {
   const result = [[], [], []];

@@ -4,10 +4,10 @@ const fsProm = require("fs/promises");
 const mimetypes = require("mime-types");
 
 const beans = require("simple-configure").get("beans");
-const store = beans.get("memberstore");
-const avatarProvider = beans.get("avatarProvider");
+const store = require("./memberstore");
+const avatarProvider = require("../commons/avatarProvider");
 const fieldHelpers = require("../commons/fieldHelpers");
-const galleryService = beans.get("galleryService");
+const galleryService = require("../gallery/galleryService");
 const misc = beans.get("misc");
 
 function isReserved(nickname) {

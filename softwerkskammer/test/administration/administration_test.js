@@ -3,9 +3,7 @@
 const request = require("supertest");
 const sinon = require("sinon").createSandbox();
 
-const beans = require("../../testutil/configureForTest").get("beans");
-
-const memberstore = beans.get("memberstore");
+const memberstore = require("../../lib/members/memberstore");
 const Member = require("../../lib/members/member");
 const dummymember = new Member({
   id: "memberID",
@@ -17,15 +15,15 @@ const dummymember = new Member({
   authentications: [],
 });
 
-const groupstore = beans.get("groupstore");
-const membersService = beans.get("membersService");
-const Group = beans.get("group");
+const groupstore = require("../../lib/groups/groupstore");
+const membersService = require("../../lib/members/membersService");
+const Group = require("../../lib/groups/group");
 
-const activitiesService = beans.get("activitiesService");
-const Activity = beans.get("activity");
+const activitiesService = require("../../lib/activities/activitiesService");
+const Activity = require("../../lib/activities/activity");
 
 const fieldHelpers = require("../../lib/commons/fieldHelpers");
-const createApp = require("../../testutil/testHelper")("administrationApp").createApp;
+const createApp = require("../../testutil/testHelper")("administration").createApp;
 
 describe("Administration application", () => {
   /*eslint no-regex-spaces: 0 */

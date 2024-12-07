@@ -3,8 +3,8 @@ const { DateTime } = require("luxon");
 
 const beans = require("simple-configure").get("beans");
 const persistence = beans.get("activityresultsPersistence");
-const galleryService = beans.get("galleryService");
-const ActivityResult = beans.get("activityresult");
+const galleryService = require("../gallery/galleryService");
+const ActivityResult = require("./activityresult");
 
 function load(activityResultName) {
   const data = persistence.getById(activityResultName);

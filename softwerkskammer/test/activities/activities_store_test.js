@@ -6,10 +6,10 @@ const sinon = require("sinon").createSandbox();
 const beans = require("../../testutil/configureForTest").get("beans");
 const fieldHelpers = require("../../lib/commons/fieldHelpers");
 const persistence = beans.get("activitiesPersistence");
-const store = beans.get("activitystore");
-const Activity = beans.get("activity");
-const Resource = beans.get("resource");
-const SoCraTesActivity = beans.get("socratesActivity");
+const store = require("../../lib/activities/activitystore");
+const Activity = require("../../lib/activities/activity");
+const Resource = require("../../lib/activities/resource");
+const SoCraTesActivity = require("../../lib/activities/socratesActivity");
 
 describe("Activity store", () => {
   const activity1 = { title: "CodingDojo1", url: "CodingDojo1", description: "bli" };

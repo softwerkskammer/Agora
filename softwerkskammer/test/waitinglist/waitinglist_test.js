@@ -5,11 +5,11 @@ const sinon = require("sinon").createSandbox();
 
 const beans = require("../../testutil/configureForTest").get("beans");
 
-const Activity = beans.get("activity");
-const activitiesService = beans.get("activitiesService");
-const waitinglistService = beans.get("waitinglistService");
+const Activity = require("../../lib/activities/activity");
+const activitiesService = require("../../lib/activities/activitiesService");
+const waitinglistService = require("../../lib/waitinglist/waitinglistService");
 
-const app = require("../../testutil/testHelper")("waitinglistApp").createApp({ id: "superuser" });
+const app = require("../../testutil/testHelper")("waitinglist").createApp({ id: "superuser" });
 
 describe("Waitinglist application", () => {
   beforeEach(() => {

@@ -1,7 +1,7 @@
 "use strict";
 const conf = require("simple-configure");
 const beans = conf.get("beans");
-const Activity = beans.get("activity");
+const Activity = require("./activity");
 
 class SoCraTesActivity extends Activity {
   fullyQualifiedUrl() {

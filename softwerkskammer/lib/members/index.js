@@ -5,18 +5,18 @@ const Form = require("multiparty").Form;
 const beans = require("simple-configure").get("beans");
 const validation = beans.get("validation");
 const Member = require("./member");
-const Group = beans.get("group");
-const membersService = beans.get("membersService");
-const groupstore = beans.get("groupstore");
-const memberstore = beans.get("memberstore");
-const groupsAndMembersService = beans.get("groupsAndMembersService");
+const Group = require("../groups/group");
+const membersService = require("./membersService");
+const groupstore = require("../groups/groupstore");
+const memberstore = require("../members/memberstore");
+const groupsAndMembersService = require("../groupsAndMembers/groupsAndMembersService");
 const groupsService = require("../groups/groupsService");
-const activitiesService = beans.get("activitiesService");
-const wikiService = beans.get("wikiService");
+const activitiesService = require("../activities/activitiesService");
+const wikiService = require("../wiki/wikiService");
 const misc = beans.get("misc");
-const statusmessage = beans.get("statusmessage");
+const statusmessage = require("../commons/statusmessage");
 const notifications = beans.get("notifications");
-const authenticationService = beans.get("authenticationService");
+const authenticationService = require("../auth/authenticationService");
 
 function memberSubmitted(req, res) {
   function notifyNewMemberRegistration(member, subscriptions) {

@@ -4,12 +4,12 @@ const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
 const beans = require("../../testutil/configureForTest").get("beans");
-const activityresultsService = beans.get("activityresultsService");
+const activityresultsService = require("../../lib/activityresults/activityresultsService");
 const activityresultsPersistence = beans.get("activityresultsPersistence");
 
-const createApp = require("../../testutil/testHelper")("activityresultsApp").createApp;
+const createApp = require("../../testutil/testHelper")("activityresults").createApp;
 
-const ActivityResult = beans.get("activityresult");
+const ActivityResult = require("../../lib/activityresults/activityresult");
 
 const MEMBER_ID = "memberID";
 

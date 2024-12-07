@@ -6,16 +6,16 @@ const expect = require("must-dist");
 const conf = require("../../testutil/configureForTest");
 const beans = conf.get("beans");
 
-const activitiesService = beans.get("activitiesService");
-const activitystore = beans.get("activitystore");
+const activitiesService = require("../../lib/activities/activitiesService");
+const activitystore = require("../../lib/activities/activitystore");
 const groupsService = require("../../lib/groups/groupsService");
-const groupstore = beans.get("groupstore");
-const memberstore = beans.get("memberstore");
-const membersService = beans.get("membersService");
+const groupstore = require("../../lib/groups/groupstore");
+const memberstore = require("../../lib/members/memberstore");
+const membersService = require("../../lib/members/membersService");
 
-const Activity = beans.get("activity");
+const Activity = require("../../lib/activities/activity");
 const Member = require("../../lib/members/member");
-const Group = beans.get("group");
+const Group = require("../../lib/groups/group");
 const notifications = beans.get("notifications");
 
 const dummyActivity = new Activity({

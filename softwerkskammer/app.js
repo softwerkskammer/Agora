@@ -17,7 +17,7 @@ if (fs.existsSync(winstonConfigPath)) {
   require("./initWinston")(winstonConfigPath);
 }
 
-function useApp(parent, url, child) {
+function useApp(parent, url) {
   function ensureRequestedUrlEndsWithSlash(req, res, next) {
     if (!/\/$/.test(req.url)) {
       return res.redirect(req.url + "/");
@@ -25,6 +25,7 @@ function useApp(parent, url, child) {
     next();
   }
 
+  const child = require(`./lib/${url}`);
   if (child.get("env") !== "production") {
     child.locals.pretty = true;
   }
@@ -79,18 +80,18 @@ module.exports = {
     app.use(csurf());
     app.use(beans.get("addCsrfTokenToLocals"));
 
-    app.use("/", beans.get("siteApp"));
-    useApp(app, "administration", beans.get("administrationApp"));
-    useApp(app, "activities", require("./lib/activities"));
-    useApp(app, "activityresults", beans.get("activityresultsApp"));
-    useApp(app, "members", beans.get("membersApp"));
-    useApp(app, "groups", beans.get("groupsApp"));
-    useApp(app, "mailsender", beans.get("mailsenderApp"));
-    useApp(app, "auth", beans.get("authenticationApp"));
-    useApp(app, "wiki", beans.get("wikiApp"));
-    useApp(app, "waitinglist", beans.get("waitinglistApp"));
-    useApp(app, "dashboard", beans.get("dashboardApp"));
-    useApp(app, "gallery", beans.get("galleryApp"));
+    app.use("/", require("./lib/site"));
+    useApp(app, "administration");
+    useApp(app, "activities");
+    useApp(app, "activityresults");
+    useApp(app, "members");
+    useApp(app, "groups");
+    useApp(app, "mailsender");
+    useApp(app, "auth");
+    useApp(app, "wiki");
+    useApp(app, "waitinglist");
+    useApp(app, "dashboard");
+    useApp(app, "gallery");
 
     app.use(beans.get("handle404")());
     app.use(beans.get("handle500")(appLogger));

@@ -1,10 +1,9 @@
 "use strict";
 
 require("../../testutil/configureForTest");
-const beans = require("simple-configure").get("beans");
 const expect = require("must-dist");
 
-const WaitinglistEntry = beans.get("waitinglistEntry");
+const WaitinglistEntry = require("../../lib/waitinglist/waitinglistEntry");
 
 const entryWithoutParam = new WaitinglistEntry();
 const registrationDate = new Date(2013, 1, 23, 17, 44).toISOString();

@@ -7,7 +7,7 @@ const beans = require("simple-configure").get("beans");
 const fs = require("fs");
 const path = require("path");
 
-const service = beans.get("galleryService");
+const service = require("../../lib/gallery/galleryService");
 
 const sourceImage = path.join(__dirname, "/fixtures/image.jpg");
 

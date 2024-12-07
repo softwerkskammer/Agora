@@ -4,13 +4,13 @@ const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
 const beans = require("../../testutil/configureForTest").get("beans");
-const waitinglistService = beans.get("waitinglistService");
+const waitinglistService = require("../../lib/waitinglist/waitinglistService");
 
-const activitystore = beans.get("activitystore");
-const memberstore = beans.get("memberstore");
-const mailsenderService = beans.get("mailsenderService");
+const activitystore = require("../../lib/activities/activitystore");
+const memberstore = require("../../lib/members/memberstore");
+const mailsenderService = require("../../lib/mailsender/mailsenderService");
 const Member = require("../../lib/members/member");
-const Activity = beans.get("activity");
+const Activity = require("../../lib/activities/activity");
 
 let activity1;
 

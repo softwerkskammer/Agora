@@ -1,10 +1,9 @@
 "use strict";
 
-const beans = require("../../testutil/configureForTest").get("beans");
 const accessrights = require("../../lib/middleware/accessrights");
-const Activity = beans.get("activity");
+const Activity = require("../../lib/activities/activity");
 const Member = require("../../lib/members/member");
-const Group = beans.get("group");
+const Group = require("../../lib/groups/group");
 const expect = require("must-dist");
 
 function guest() {

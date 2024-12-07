@@ -1,12 +1,12 @@
 "use strict";
 const beans = require("simple-configure").get("beans");
-const membersService = beans.get("membersService");
-const memberstore = beans.get("memberstore");
-const groupstore = beans.get("groupstore");
-const activitystore = beans.get("activitystore");
-const activitiesService = beans.get("activitiesService");
+const membersService = require("../members/membersService");
+const memberstore = require("../members/memberstore");
+const groupstore = require("../groups/groupstore");
+const activitystore = require("../activities/activitystore");
+const activitiesService = require("../activities/activitiesService");
 const misc = beans.get("misc");
-const Group = beans.get("group");
+const Group = require("../groups/group");
 
 const app = misc.expressAppIn(__dirname);
 

@@ -5,7 +5,7 @@ const conf = require("simple-configure");
 
 const beans = conf.get("beans");
 const doNotSendMails = conf.get("doNotSendMails") || "";
-const statusmessage = beans.get("statusmessage");
+const statusmessage = require("../commons/statusmessage");
 const logger = require("winston").loggers.get("application");
 
 // we need to expose the core in order to stub that during automated tests

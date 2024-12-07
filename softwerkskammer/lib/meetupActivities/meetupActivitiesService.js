@@ -3,9 +3,9 @@ const superagent = require("superagent");
 
 const conf = require("simple-configure");
 const beans = conf.get("beans");
-const groupstore = beans.get("groupstore");
-const activitystore = beans.get("activitystore");
-const Activity = beans.get("activity");
+const groupstore = require("../groups/groupstore");
+const activitystore = require("../activities/activitystore");
+const Activity = require("../activities/activity");
 const fieldHelpers = require("../commons/fieldHelpers");
 
 function meetupFetchActivitiesURLFor(urlname) {

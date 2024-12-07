@@ -63,7 +63,7 @@ module.exports = function universalTestHelper(defaultLanguage) {
         });
 
         const baseurl = atts.baseurl || "/";
-        app.use(baseurl, beans.get(appName));
+        app.use(baseurl, require(`../lib/${appName}`));
 
         const appLogger = { error: () => undefined };
         app.use(beans.get("handle404")(appLogger));

@@ -5,7 +5,7 @@ const R = require("ramda");
 const conf = require("simple-configure");
 const beans = conf.get("beans");
 const fieldHelpers = require("../commons/fieldHelpers");
-const avatarProvider = beans.get("avatarProvider");
+const avatarProvider = require("../commons/avatarProvider");
 const { genSalt, hashPassword } = beans.get("hashPassword");
 
 class Member {

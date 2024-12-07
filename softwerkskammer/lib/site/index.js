@@ -7,9 +7,9 @@ const qrimage = require("qr-image");
 
 const conf = require("simple-configure");
 const beans = conf.get("beans");
-const Renderer = beans.get("renderer");
-const groupstore = beans.get("groupstore");
-const Group = beans.get("group");
+const Renderer = require("../commons/renderer");
+const groupstore = require("../groups/groupstore");
+const Group = require("../groups/group");
 const misc = beans.get("misc");
 
 const app = misc.expressAppIn(__dirname);

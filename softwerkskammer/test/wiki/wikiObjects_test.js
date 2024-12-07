@@ -2,13 +2,12 @@
 
 const { DateTime } = require("luxon");
 const expect = require("must-dist");
-const beans = require("../../testutil/configureForTest").get("beans");
-const wikiObjects = beans.get("wikiObjects");
+const wikiObjects = require("../../lib/wiki/wikiObjects");
 const FileWithChangelist = wikiObjects.FileWithChangelist;
 const DirectoryWithChangedFiles = wikiObjects.DirectoryWithChangedFiles;
 const Metadata = wikiObjects.Metadata;
 const Blogpost = wikiObjects.Blogpost;
-const Diff = beans.get("gitDiff");
+const Diff = require("../../lib/wiki/gitDiff");
 
 describe("Wiki Objects", () => {
   it("is a structure representing changes", () => {

@@ -2,7 +2,7 @@
 const expect = require("must-dist");
 
 require("../../testutil/configureForTest");
-const Renderer = require("simple-configure").get("beans").get("renderer");
+const Renderer = require("../../lib/commons/renderer");
 
 describe("Renderer", () => {
   describe("render", () => {

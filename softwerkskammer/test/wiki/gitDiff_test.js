@@ -1,9 +1,8 @@
 "use strict";
 
 const expect = require("must-dist");
-const beans = require("../../testutil/configureForTest").get("beans");
 
-const Diff = beans.get("gitDiff");
+const Diff = require("../../lib/wiki/gitDiff");
 
 describe("Git Diff", () => {
   it("formats changes", () => {

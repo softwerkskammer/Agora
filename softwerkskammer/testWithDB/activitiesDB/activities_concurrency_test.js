@@ -5,11 +5,11 @@ const sinon = require("sinon").createSandbox();
 
 const beans = require("../../testutil/configureForTestWithDB").get("beans");
 const persistence = beans.get("activitiesPersistence");
-const activitystore = beans.get("activitystore");
-const activitiesService = beans.get("activitiesService");
+const activitystore = require("../../lib/activities/activitystore");
+const activitiesService = require("../../lib/activities/activitiesService");
 const notifications = beans.get("notifications");
 
-const Activity = beans.get("activity");
+const Activity = require("../../lib/activities/activity");
 
 const activityUrl = "urlOfTheActivity";
 

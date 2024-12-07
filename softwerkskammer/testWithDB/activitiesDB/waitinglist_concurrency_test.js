@@ -5,12 +5,12 @@ const sinon = require("sinon").createSandbox();
 
 const beans = require("../../testutil/configureForTestWithDB").get("beans");
 const persistence = beans.get("activitiesPersistence");
-const activitystore = beans.get("activitystore");
-const memberstore = beans.get("memberstore");
-const mailsenderService = beans.get("mailsenderService");
-const waitinglistService = beans.get("waitinglistService");
+const activitystore = require("../../lib/activities/activitystore");
+const memberstore = require("../../lib/members/memberstore");
+const mailsenderService = require("../../lib/mailsender/mailsenderService");
+const waitinglistService = require("../../lib/waitinglist/waitinglistService");
 
-const Activity = beans.get("activity");
+const Activity = require("../../lib/activities/activity");
 const Member = require("../../lib/members/member");
 
 const activityUrl = "urlOfTheActivity";

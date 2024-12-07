@@ -9,7 +9,7 @@ const Member = require("../../lib/members/member");
 
 const dummymember = new Member({ id: "id1" });
 
-const Group = beans.get("group");
+const Group = require("../../lib/groups/group");
 
 const GroupA = new Group({
   id: "GroupA",
@@ -24,12 +24,12 @@ const GroupB = new Group({
   type: "Regionalgruppe",
 });
 
-const memberstore = beans.get("memberstore");
-const membersService = beans.get("membersService");
+const memberstore = require("../../lib/members/memberstore");
+const membersService = require("../../lib/members/membersService");
 const groupsService = require("../../lib/groups/groupsService");
-const groupstore = beans.get("groupstore");
+const groupstore = require("../../lib/groups/groupstore");
 
-const groupsAndMembersService = beans.get("groupsAndMembersService");
+const groupsAndMembersService = require("../../lib/groupsAndMembers/groupsAndMembersService");
 
 describe("Groups and Members Service", () => {
   describe("(getMemberWithHisGroups or getMemberWithHisGroupsByMemberId)", () => {

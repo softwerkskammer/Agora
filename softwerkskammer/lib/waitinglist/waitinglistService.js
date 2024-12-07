@@ -1,8 +1,8 @@
 "use strict";
 const beans = require("simple-configure").get("beans");
-const memberstore = beans.get("memberstore");
-const activitystore = beans.get("activitystore");
-const mailsenderService = beans.get("mailsenderService");
+const memberstore = require("../members/memberstore");
+const activitystore = require("../activities/activitystore");
+const mailsenderService = require("../mailsender/mailsenderService");
 const CONFLICTING_VERSIONS = beans.get("constants").CONFLICTING_VERSIONS;
 
 module.exports = {

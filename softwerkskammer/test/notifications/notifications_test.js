@@ -5,12 +5,12 @@ const expect = require("must-dist");
 
 const beans = require("../../testutil/configureForTest").get("beans");
 
-const groupsAndMembersService = beans.get("groupsAndMembersService");
-const memberstore = beans.get("memberstore");
+const groupsAndMembersService = require("../../lib/groupsAndMembers/groupsAndMembersService");
+const memberstore = require("../../lib/members/memberstore");
 
-const Activity = beans.get("activity");
+const Activity = require("../../lib/activities/activity");
 const Member = require("../../lib/members/member");
-const Group = beans.get("group");
+const Group = require("../../lib/groups/group");
 const notifications = beans.get("notifications");
 const transport = beans.get("mailtransport").transport;
 

@@ -2,12 +2,11 @@
 
 const expect = require("must-dist");
 const sinon = require("sinon").createSandbox();
-const beans = require("../../testutil/configureForTest").get("beans");
 
 const Member = require("../../lib/members/member");
-const memberstore = beans.get("memberstore");
-const membersService = beans.get("membersService");
-const avatarProvider = beans.get("avatarProvider");
+const memberstore = require("../../lib/members/memberstore");
+const membersService = require("../../lib/members/membersService");
+const avatarProvider = require("../../lib/commons/avatarProvider");
 
 describe("MembersService", () => {
   const imagePath = __dirname + "/../gallery/fixtures/image.jpg";

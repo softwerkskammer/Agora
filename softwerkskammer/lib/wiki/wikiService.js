@@ -7,11 +7,11 @@ const conf = require("simple-configure");
 const beans = conf.get("beans");
 const misc = beans.get("misc");
 const Git = beans.get("gitmech");
-const wikiObjects = beans.get("wikiObjects");
-const memberstore = beans.get("memberstore");
+const wikiObjects = require("./wikiObjects");
+const memberstore = require("../members/memberstore");
 const FileWithChangelist = wikiObjects.FileWithChangelist;
 const DirectoryWithChangedFiles = wikiObjects.DirectoryWithChangedFiles;
-const Diff = beans.get("gitDiff");
+const Diff = require("./gitDiff");
 let workTree = conf.get("wikipath");
 
 async function init() {

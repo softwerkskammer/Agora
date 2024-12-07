@@ -3,12 +3,9 @@
 const request = require("supertest");
 const sinon = require("sinon").createSandbox();
 
-const conf = require("../../testutil/configureForTest");
-const beans = conf.get("beans");
+const activitiesService = require("../../lib/activities/activitiesService");
 
-const activitiesService = beans.get("activitiesService");
-
-const createApp = require("../../testutil/testHelper")("activitiesApp").createApp;
+const createApp = require("../../testutil/testHelper")("activities").createApp;
 
 describe("Activity application - on submit -", () => {
   beforeEach(() => {});

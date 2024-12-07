@@ -2,9 +2,8 @@
 
 const expect = require("must-dist");
 
-const beans = require("../../testutil/configureForTest").get("beans");
-const Resource = beans.get("resource");
-const Activity = beans.get("activity");
+const Resource = require("../../lib/activities/resource");
+const Activity = require("../../lib/activities/activity");
 
 const tomorrow = new Date(Date.now() + 86400000); // 1 day as millis
 

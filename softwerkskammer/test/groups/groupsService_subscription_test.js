@@ -7,7 +7,7 @@ const beans = require("../../testutil/configureForTest").get("beans");
 
 const groupsForTest = require("./groups_for_tests");
 
-const groupstore = beans.get("groupstore");
+const groupstore = require("../../lib/groups/groupstore");
 const systemUnderTest = require("../../lib/groups/groupsService");
 
 const Member = require("../../lib/members/member");

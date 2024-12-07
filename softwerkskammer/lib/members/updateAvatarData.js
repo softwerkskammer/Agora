@@ -7,7 +7,7 @@ require("../../configure"); // initializing parameters
 const beans = require("simple-configure").get("beans");
 const store = beans.get("memberstore");
 
-const service = beans.get("membersService");
+const membersService = require("./membersService");
 
 async function run() {
   try {

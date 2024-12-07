@@ -6,8 +6,8 @@ const expect = require("must-dist");
 const beans = require("../../testutil/configureForTest").get("beans");
 const wikiSubdirs = beans.get("wikiSubdirs");
 const Git = beans.get("gitmech");
-const Group = beans.get("group");
-const groupstore = beans.get("groupstore");
+const Group = require("../../lib/groups/group");
+const groupstore = require("../../lib/groups/groupstore");
 
 describe("Wikisubdirs", () => {
   const allGroups = [

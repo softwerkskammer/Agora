@@ -2,7 +2,7 @@
 
 const request = require("supertest");
 
-const app = require("../../testutil/testHelper")("siteApp").createApp();
+const app = require("../../testutil/testHelper")("site").createApp();
 
 describe("The router for the site' pages", () => {
   it("redirects after switching the language", (done) => {

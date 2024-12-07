@@ -3,12 +3,10 @@
 const request = require("supertest");
 const sinon = require("sinon").createSandbox();
 
-const beans = require("../../testutil/configureForTest").get("beans");
-
 const Member = require("../../lib/members/member");
-const memberstore = beans.get("memberstore");
+const memberstore = require("../../lib/members/memberstore");
 
-const app = require("../../testutil/testHelper")("membersApp").createApp();
+const app = require("../../testutil/testHelper")("members").createApp();
 
 describe("Members application checks", () => {
   afterEach(() => {

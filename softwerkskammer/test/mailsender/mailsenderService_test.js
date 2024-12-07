@@ -5,18 +5,18 @@ const sinon = require("sinon").createSandbox();
 const conf = require("../../testutil/configureForTest");
 const beans = conf.get("beans");
 
-const memberstore = beans.get("memberstore");
-const groupstore = beans.get("groupstore");
+const memberstore = require("../../lib/members/memberstore");
+const groupstore = require("../../lib/groups/groupstore");
 const groupsService = require("../../lib/groups/groupsService");
-const groupsAndMembersService = beans.get("groupsAndMembersService");
-const activitiesService = beans.get("activitiesService");
-const activitystore = beans.get("activitystore");
+const groupsAndMembersService = require("../../lib/groupsAndMembers/groupsAndMembersService");
+const activitiesService = require("../../lib/activities/activitiesService");
+const activitystore = require("../../lib/activities/activitystore");
 
-const mailsenderService = beans.get("mailsenderService");
-const Activity = beans.get("activity");
+const mailsenderService = require("../../lib/mailsender/mailsenderService");
+const Activity = require("../../lib/activities/activity");
 const Member = require("../../lib/members/member");
-const Message = beans.get("message");
-const Group = beans.get("group");
+const Message = require("../../lib/mailsender/message");
+const Group = require("../../lib/groups/group");
 const fieldHelpers = require("../../lib/commons/fieldHelpers");
 const transport = beans.get("mailtransport").transport;
 

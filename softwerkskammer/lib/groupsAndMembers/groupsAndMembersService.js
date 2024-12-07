@@ -1,10 +1,10 @@
 "use strict";
 const conf = require("simple-configure");
 const beans = conf.get("beans");
-const membersService = beans.get("membersService");
-const memberstore = beans.get("memberstore");
+const membersService = require("../members/membersService");
+const memberstore = require("../members/memberstore");
 const groupsService = require("../groups/groupsService");
-const groupstore = beans.get("groupstore");
+const groupstore = require("../groups/groupstore");
 const misc = beans.get("misc");
 const Member = require("../members/member");
 

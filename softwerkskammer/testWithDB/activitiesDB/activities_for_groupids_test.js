@@ -4,9 +4,9 @@ const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
 const beans = require("../../testutil/configureForTestWithDB").get("beans");
-const activitystore = beans.get("activitystore");
+const activitystore = require("../../lib/activities/activitystore");
 const persistence = beans.get("activitiesPersistence");
-const Activity = beans.get("activity");
+const Activity = require("../../lib/activities/activity");
 
 describe("Activity application with DB - shows activities for Group-Ids -", () => {
   const tomorrowEarly = new Date(Date.now() + 86400000); // + 1 day

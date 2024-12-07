@@ -5,7 +5,7 @@ const workTree = conf.get("wikipath");
 const beans = conf.get("beans");
 const misc = beans.get("misc");
 const gitExec = beans.get("gitExec");
-const wikiObjects = beans.get("wikiObjects");
+const wikiObjects = require("./wikiObjects");
 const Metadata = wikiObjects.Metadata;
 
 function dataToLines(data) {

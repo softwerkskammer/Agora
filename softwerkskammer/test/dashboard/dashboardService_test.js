@@ -1,15 +1,13 @@
 "use strict";
 
-const beans = require("../../testutil/configureForTest").get("beans");
-
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
-const wikiService = beans.get("wikiService");
-const groupsAndMembersService = beans.get("groupsAndMembersService");
-const activitiesService = beans.get("activitiesService");
+const wikiService = require("../../lib/wiki/wikiService");
+const groupsAndMembersService = require("../../lib/groupsAndMembers/groupsAndMembersService");
+const activitiesService = require("../../lib/activities/activitiesService");
 
-const dashboardService = beans.get("dashboardService");
+const dashboardService = require("../../lib/dashboard/dashboardService");
 
 describe("Dashboard Service", () => {
   const NOT_FOUND = "notfound";

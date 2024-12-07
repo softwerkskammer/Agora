@@ -11,7 +11,7 @@ const logger = winston.loggers.get("scripts");
 const beans = require("simple-configure").get("beans");
 // open persistence AFTER logger is created
 const persistence = beans.get("settingsPersistence");
-const wikiService = beans.get("wikiService");
+const wikiService = require("../wiki/wikiService");
 const notifications = beans.get("notifications");
 const util = require("util");
 

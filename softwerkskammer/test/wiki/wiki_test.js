@@ -4,10 +4,9 @@ const request = require("supertest");
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
-const beans = require("../../testutil/configureForTest").get("beans");
-const wikiService = beans.get("wikiService");
+const wikiService = require("../../lib/wiki/wikiService");
 
-const createApp = require("../../testutil/testHelper")("wikiApp").createApp;
+const createApp = require("../../testutil/testHelper")("wiki").createApp;
 
 describe("Wiki application", () => {
   let pageShow;

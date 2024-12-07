@@ -1,8 +1,6 @@
 "use strict";
 
-const conf = require("../../testutil/configureForTest");
-const beans = conf.get("beans");
-const Group = beans.get("group");
+const Group = require("../../lib/groups/group");
 
 module.exports = function createTestGroups() {
   return {

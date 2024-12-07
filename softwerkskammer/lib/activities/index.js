@@ -5,20 +5,20 @@ const conf = require("simple-configure");
 const beans = conf.get("beans");
 const misc = beans.get("misc");
 const CONFLICTING_VERSIONS = beans.get("constants").CONFLICTING_VERSIONS;
-const activitiesService = beans.get("activitiesService");
-const calendarService = beans.get("calendarService");
-const icalService = beans.get("icalService");
-const groupstore = beans.get("groupstore");
+const activitiesService = require("./activitiesService");
+const calendarService = require("../activities/calendarService");
+const icalService = require("./icalService");
+const groupstore = require("../groups/groupstore");
 const groupsService = require("../groups/groupsService");
-const activitystore = beans.get("activitystore");
-const memberstore = beans.get("memberstore");
-const meetupActivitiesService = beans.get("meetupActivitiesService");
+const activitystore = require("./activitystore");
+const memberstore = require("../members/memberstore");
+const meetupActivitiesService = require("../meetupActivities/meetupActivitiesService");
 
-const Activity = beans.get("activity");
-const Group = beans.get("group");
+const Activity = require("./activity");
+const Group = require("../groups/group");
 const validation = beans.get("validation");
-const statusmessage = beans.get("statusmessage");
-const resourceRegistrationRenderer = beans.get("resourceRegistrationRenderer");
+const statusmessage = require("../commons/statusmessage");
+const resourceRegistrationRenderer = require("./resourceRegistrationRenderer");
 
 const reservedURLs = conf.get("reservedActivityURLs");
 
