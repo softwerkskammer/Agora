@@ -1,7 +1,7 @@
 "use strict";
 
 const beans = require("../../testutil/configureForTest").get("beans");
-const fieldHelpers = beans.get("fieldHelpers");
+const fieldHelpers = require("../../lib/commons/fieldHelpers");
 beans.get("initI18N"); // initialize iternationalization for results
 const expect = require("must-dist");
 

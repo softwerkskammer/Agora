@@ -5,7 +5,7 @@ const R = require("ramda");
 const Feed = require("feed").Feed;
 
 const misc = beans.get("misc");
-const groupsService = beans.get("groupsService");
+const groupsService = require("./groupsService");
 const groupstore = beans.get("groupstore");
 const wikiService = beans.get("wikiService");
 const Group = beans.get("group");

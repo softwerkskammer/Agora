@@ -6,7 +6,7 @@ const sinon = require("sinon").createSandbox();
 const beans = require("../../testutil/configureForTest").get("beans");
 
 const memberstore = beans.get("memberstore");
-const Member = beans.get("member");
+const Member = require("../../lib/members/member");
 const dummymember = new Member({
   id: "memberID",
   nickname: "hada",
@@ -24,7 +24,7 @@ const Group = beans.get("group");
 const activitiesService = beans.get("activitiesService");
 const Activity = beans.get("activity");
 
-const fieldHelpers = beans.get("fieldHelpers");
+const fieldHelpers = require("../../lib/commons/fieldHelpers");
 const createApp = require("../../testutil/testHelper")("administrationApp").createApp;
 
 describe("Administration application", () => {

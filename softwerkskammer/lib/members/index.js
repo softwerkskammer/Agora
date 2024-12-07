@@ -4,13 +4,13 @@ const Form = require("multiparty").Form;
 
 const beans = require("simple-configure").get("beans");
 const validation = beans.get("validation");
-const Member = beans.get("member");
+const Member = require("./member");
 const Group = beans.get("group");
 const membersService = beans.get("membersService");
 const groupstore = beans.get("groupstore");
 const memberstore = beans.get("memberstore");
 const groupsAndMembersService = beans.get("groupsAndMembersService");
-const groupsService = beans.get("groupsService");
+const groupsService = require("../groups/groupsService");
 const activitiesService = beans.get("activitiesService");
 const wikiService = beans.get("wikiService");
 const misc = beans.get("misc");

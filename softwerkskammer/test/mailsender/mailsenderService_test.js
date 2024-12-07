@@ -7,17 +7,17 @@ const beans = conf.get("beans");
 
 const memberstore = beans.get("memberstore");
 const groupstore = beans.get("groupstore");
-const groupsService = beans.get("groupsService");
+const groupsService = require("../../lib/groups/groupsService");
 const groupsAndMembersService = beans.get("groupsAndMembersService");
 const activitiesService = beans.get("activitiesService");
 const activitystore = beans.get("activitystore");
 
 const mailsenderService = beans.get("mailsenderService");
 const Activity = beans.get("activity");
-const Member = beans.get("member");
+const Member = require("../../lib/members/member");
 const Message = beans.get("message");
 const Group = beans.get("group");
-const fieldHelpers = beans.get("fieldHelpers");
+const fieldHelpers = require("../../lib/commons/fieldHelpers");
 const transport = beans.get("mailtransport").transport;
 
 let emptyActivity;

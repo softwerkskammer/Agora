@@ -4,12 +4,12 @@ const R = require("ramda");
 const beans = require("simple-configure").get("beans");
 
 const activitystore = beans.get("activitystore");
-const groupsService = beans.get("groupsService");
+const groupsService = require("../groups/groupsService");
 const groupstore = beans.get("groupstore");
 const membersService = beans.get("membersService");
 const memberstore = beans.get("memberstore");
 const notifications = beans.get("notifications");
-const fieldHelpers = beans.get("fieldHelpers");
+const fieldHelpers = require("../commons/fieldHelpers");
 const CONFLICTING_VERSIONS = beans.get("constants").CONFLICTING_VERSIONS;
 
 module.exports = {

@@ -6,7 +6,7 @@ const ActivityResult = beans.get("activityresult");
 const activityresultsPersistence = beans.get("activityresultsPersistence");
 const activityresultsService = beans.get("activityresultsService");
 const misc = beans.get("misc");
-const fieldHelpers = beans.get("fieldHelpers");
+const fieldHelpers = require("../commons/fieldHelpers");
 
 const app = misc.expressAppIn(__dirname);
 

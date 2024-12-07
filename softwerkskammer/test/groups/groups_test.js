@@ -7,13 +7,13 @@ const sinon = require("sinon").createSandbox();
 const beans = require("../../testutil/configureForTest").get("beans");
 const membersService = beans.get("membersService");
 const memberstore = beans.get("memberstore");
-const Member = beans.get("member");
+const Member = require("../../lib/members/member");
 const groupsPersistence = beans.get("groupsPersistence");
 const groupstore = beans.get("groupstore");
 const activitystore = beans.get("activitystore");
 const Group = beans.get("group");
 const Activity = beans.get("activity");
-const fieldHelpers = beans.get("fieldHelpers");
+const fieldHelpers = require("../../lib/commons/fieldHelpers");
 const wikiObjects = beans.get("wikiObjects");
 const wikiService = beans.get("wikiService");
 

@@ -1,7 +1,7 @@
 "use strict";
 const beans = require("simple-configure").get("beans");
 const misc = beans.get("misc");
-const fieldHelpers = beans.get("fieldHelpers");
+const fieldHelpers = require("../commons/fieldHelpers");
 
 // DO NOT FORGET TO KEEP THIS FILE IN SYNC WITH /public/clientscripts/check-memberform.js
 // AND /public/clientscripts/check-groupform.js

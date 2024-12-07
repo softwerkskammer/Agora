@@ -11,7 +11,7 @@ const setupApp = require("../../testutil/testHelper");
 const memberstore = beans.get("memberstore");
 const groupstore = beans.get("groupstore");
 const groupsAndMembersService = beans.get("groupsAndMembersService");
-const Member = beans.get("member");
+const Member = require("../../lib/members/member");
 const addCsrfTokenToLocals = beans.get("addCsrfTokenToLocals");
 const serverpathRemover = beans.get("serverpathRemover");
 
@@ -65,9 +65,13 @@ describe("Security regarding", () => {
       // we need to load accessrights and pug support code before the csrf handling
       const app = setupApp("membersApp").createApp({
         id: "memberId",
-        middlewares: [beans.get("accessrights"), beans.get("serverpathRemover"), csurf(), addCsrfTokenToLocals],
+        middlewares: [
+          require("../../lib/middleware/accessrights"),
+          beans.get("serverpathRemover"),
+          csurf(),
+          addCsrfTokenToLocals,
+        ],
       });
-
       request(app)
         .post("/submit")
         .send(

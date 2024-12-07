@@ -5,7 +5,7 @@ const beans = require("../../testutil/configureForTest").get("beans");
 
 const expect = require("must-dist");
 
-const Member = beans.get("member");
+const Member = require("../../lib/members/member");
 
 const dummymember = new Member({ id: "id1" });
 
@@ -26,7 +26,7 @@ const GroupB = new Group({
 
 const memberstore = beans.get("memberstore");
 const membersService = beans.get("membersService");
-const groupsService = beans.get("groupsService");
+const groupsService = require("../../lib/groups/groupsService");
 const groupstore = beans.get("groupstore");
 
 const groupsAndMembersService = beans.get("groupsAndMembersService");

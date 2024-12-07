@@ -5,7 +5,7 @@ const sinon = require("sinon").createSandbox();
 
 const beans = require("../../testutil/configureForTest").get("beans");
 
-const Member = beans.get("member");
+const Member = require("../../lib/members/member");
 const memberstore = beans.get("memberstore");
 
 const app = require("../../testutil/testHelper")("membersApp").createApp();

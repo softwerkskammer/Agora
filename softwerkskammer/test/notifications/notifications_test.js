@@ -9,7 +9,7 @@ const groupsAndMembersService = beans.get("groupsAndMembersService");
 const memberstore = beans.get("memberstore");
 
 const Activity = beans.get("activity");
-const Member = beans.get("member");
+const Member = require("../../lib/members/member");
 const Group = beans.get("group");
 const notifications = beans.get("notifications");
 const transport = beans.get("mailtransport").transport;

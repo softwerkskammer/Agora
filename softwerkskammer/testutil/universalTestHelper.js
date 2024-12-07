@@ -25,7 +25,7 @@ module.exports = function universalTestHelper(defaultLanguage) {
         app.use(beans.get("expressSessionConfigurator"));
 
         if (atts.id) {
-          const Member = beans.get("member");
+          const Member = require("../lib/members/member");
           app.use(userStub({ member: new Member({ id: atts.id }) }));
         }
         if (atts.member) {
@@ -40,7 +40,7 @@ module.exports = function universalTestHelper(defaultLanguage) {
             next();
           });
         }
-        app.use(beans.get("accessrights"));
+        app.use(require("../lib/middleware/accessrights"));
         (atts.secureByMiddlewares || []).forEach((middleware) => {
           app.use(middleware);
         });

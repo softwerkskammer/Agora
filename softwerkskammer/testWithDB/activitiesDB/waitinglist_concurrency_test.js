@@ -11,7 +11,7 @@ const mailsenderService = beans.get("mailsenderService");
 const waitinglistService = beans.get("waitinglistService");
 
 const Activity = beans.get("activity");
-const Member = beans.get("member");
+const Member = require("../../lib/members/member");
 
 const activityUrl = "urlOfTheActivity";
 

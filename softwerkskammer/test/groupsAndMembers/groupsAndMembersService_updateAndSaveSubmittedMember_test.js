@@ -4,10 +4,10 @@ const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
 const beans = require("../../testutil/configureForTest").get("beans");
-const Member = beans.get("member");
+const Member = require("../../lib/members/member");
 const memberstore = beans.get("memberstore");
 const groupsAndMembersService = beans.get("groupsAndMembersService");
-const groupsService = beans.get("groupsService");
+const groupsService = require("../../lib/groups/groupsService");
 
 describe("Groups and Members Service (updateAndSaveSubmittedMember)", () => {
   let accessrights;

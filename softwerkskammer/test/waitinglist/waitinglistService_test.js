@@ -9,7 +9,7 @@ const waitinglistService = beans.get("waitinglistService");
 const activitystore = beans.get("activitystore");
 const memberstore = beans.get("memberstore");
 const mailsenderService = beans.get("mailsenderService");
-const Member = beans.get("member");
+const Member = require("../../lib/members/member");
 const Activity = beans.get("activity");
 
 let activity1;

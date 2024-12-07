@@ -201,7 +201,7 @@ describe("The persistence store", () => {
   });
 
   describe("for Member", () => {
-    const Member = beans.get("member");
+    const Member = require("../../lib/members/member");
     const toPersist = new Member().initFromSessionUser({ authenticationId: "toPersist" }).state;
 
     async function storeSampleData() {

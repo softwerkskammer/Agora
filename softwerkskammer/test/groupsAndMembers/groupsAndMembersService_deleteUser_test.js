@@ -4,7 +4,7 @@ const expect = require("must-dist");
 const sinon = require("sinon").createSandbox();
 const beans = require("../../testutil/configureForTest").get("beans");
 
-const Member = beans.get("member");
+const Member = require("../../lib/members/member");
 
 const dummymember = new Member({ id: "nick" });
 
@@ -26,7 +26,7 @@ const GroupB = new Group({
 });
 
 const memberstore = beans.get("memberstore");
-const groupsService = beans.get("groupsService");
+const groupsService = require("../../lib/groups/groupsService");
 const groupstore = beans.get("groupstore");
 
 const groupsAndMembersService = beans.get("groupsAndMembersService");

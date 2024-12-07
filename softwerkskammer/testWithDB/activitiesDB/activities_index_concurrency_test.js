@@ -5,7 +5,7 @@ const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
 const beans = require("../../testutil/configureForTestWithDB").get("beans");
-const fieldHelpers = beans.get("fieldHelpers");
+const fieldHelpers = require("../../lib/commons/fieldHelpers");
 const activitystore = beans.get("activitystore");
 const persistence = beans.get("activitiesPersistence");
 const Activity = beans.get("activity");

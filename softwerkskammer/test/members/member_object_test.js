@@ -3,7 +3,7 @@
 const expect = require("must-dist");
 
 const beans = require("../../testutil/configureForTest").get("beans");
-const Member = beans.get("member");
+const Member = require("../../lib/members/member");
 const Group = beans.get("group");
 
 describe("Member initial filling", () => {

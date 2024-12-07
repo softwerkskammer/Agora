@@ -5,7 +5,7 @@ const expect = require("must-dist");
 const beans = require("../../testutil/configureForTestWithDB").get("beans");
 const memberstore = beans.get("memberstore");
 const persistence = beans.get("membersPersistence");
-const Member = beans.get("member");
+const Member = require("../../lib/members/member");
 
 describe("Members application with DB", () => {
   describe("getMembersWithInterest", () => {

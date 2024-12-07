@@ -68,7 +68,7 @@ module.exports = {
     app.use(beans.get("passportInitializer"));
     app.use(beans.get("passportSessionInitializer"));
     app.use(beans.get("serverpathRemover"));
-    app.use(beans.get("accessrights"));
+    app.use(require("./lib/middleware/accessrights"));
     app.use(beans.get("secureByLogin"));
     app.use(beans.get("secureSuperuserOnly"));
     app.use(beans.get("expressViewHelper"));
@@ -81,7 +81,7 @@ module.exports = {
 
     app.use("/", beans.get("siteApp"));
     useApp(app, "administration", beans.get("administrationApp"));
-    useApp(app, "activities", beans.get("activitiesApp"));
+    useApp(app, "activities", require("./lib/activities"));
     useApp(app, "activityresults", beans.get("activityresultsApp"));
     useApp(app, "members", beans.get("membersApp"));
     useApp(app, "groups", beans.get("groupsApp"));

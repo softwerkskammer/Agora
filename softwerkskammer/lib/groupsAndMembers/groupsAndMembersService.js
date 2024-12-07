@@ -3,10 +3,10 @@ const conf = require("simple-configure");
 const beans = conf.get("beans");
 const membersService = beans.get("membersService");
 const memberstore = beans.get("memberstore");
-const groupsService = beans.get("groupsService");
+const groupsService = require("../groups/groupsService");
 const groupstore = beans.get("groupstore");
 const misc = beans.get("misc");
-const Member = beans.get("member");
+const Member = require("../members/member");
 
 function addGroupsToMember(member) {
   if (!member) {

@@ -4,7 +4,7 @@
 const conf = require("simple-configure");
 const beans = conf.get("beans");
 const persistence = beans.get("membersPersistence");
-const Member = beans.get("member");
+const Member = require("./member");
 const logger = require("winston").loggers.get("transactions");
 
 function sortCaseInsensitive(objectlist) {

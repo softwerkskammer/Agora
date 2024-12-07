@@ -6,7 +6,7 @@ const mimetypes = require("mime-types");
 const beans = require("simple-configure").get("beans");
 const store = beans.get("memberstore");
 const avatarProvider = beans.get("avatarProvider");
-const fieldHelpers = beans.get("fieldHelpers");
+const fieldHelpers = require("../commons/fieldHelpers");
 const galleryService = beans.get("galleryService");
 const misc = beans.get("misc");
 

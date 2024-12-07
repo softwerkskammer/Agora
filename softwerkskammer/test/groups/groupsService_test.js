@@ -11,9 +11,9 @@ const groupsForTest = require("./groups_for_tests");
 
 const groupstore = beans.get("groupstore");
 
-const groupsService = beans.get("groupsService");
+const groupsService = require("../../lib/groups/groupsService");
 
-const Member = beans.get("member");
+const Member = require("../../lib/members/member");
 const testMember = new Member({ id: "testmember" });
 
 describe("Groups Service (getSubscribedGroupsForMember)", () => {

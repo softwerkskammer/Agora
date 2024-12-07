@@ -5,11 +5,11 @@ const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
 const beans = require("../../testutil/configureForTest").get("beans");
-const Member = beans.get("member");
+const Member = require("../../lib/members/member");
 const membersService = beans.get("membersService");
 const memberstore = beans.get("memberstore");
 const groupstore = beans.get("groupstore");
-const groupsService = beans.get("groupsService");
+const groupsService = require("../../lib/groups/groupsService");
 const groupsAndMembersService = beans.get("groupsAndMembersService");
 const wikiService = beans.get("wikiService");
 const activitiesService = beans.get("activitiesService");

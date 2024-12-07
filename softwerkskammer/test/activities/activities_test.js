@@ -7,15 +7,15 @@ const expect = require("must-dist");
 const createApp = require("../../testutil/testHelper")("activitiesApp").createApp;
 
 const beans = require("../../testutil/configureForTest").get("beans");
-const fieldHelpers = beans.get("fieldHelpers");
+const fieldHelpers = require("../../lib/commons/fieldHelpers");
 const activitystore = beans.get("activitystore");
 const groupstore = beans.get("groupstore");
 const Activity = beans.get("activity");
-const Member = beans.get("member");
+const Member = require("../../lib/members/member");
 const Group = beans.get("group");
 
 const activitiesService = beans.get("activitiesService");
-const groupsService = beans.get("groupsService");
+const groupsService = require("../../lib/groups/groupsService");
 const memberstore = beans.get("memberstore");
 
 const member1 = new Member({

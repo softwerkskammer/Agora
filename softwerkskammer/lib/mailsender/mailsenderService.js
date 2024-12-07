@@ -4,7 +4,7 @@ const conf = require("simple-configure");
 const logger = require("winston").loggers.get("application");
 
 const beans = conf.get("beans");
-const groupsService = beans.get("groupsService");
+const groupsService = require("../groups/groupsService");
 const groupsAndMembersService = beans.get("groupsAndMembersService");
 const activitiesService = beans.get("activitiesService");
 const membersService = beans.get("membersService");

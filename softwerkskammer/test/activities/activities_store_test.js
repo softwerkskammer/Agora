@@ -4,7 +4,7 @@ const expect = require("must-dist");
 const sinon = require("sinon").createSandbox();
 
 const beans = require("../../testutil/configureForTest").get("beans");
-const fieldHelpers = beans.get("fieldHelpers");
+const fieldHelpers = require("../../lib/commons/fieldHelpers");
 const persistence = beans.get("activitiesPersistence");
 const store = beans.get("activitystore");
 const Activity = beans.get("activity");

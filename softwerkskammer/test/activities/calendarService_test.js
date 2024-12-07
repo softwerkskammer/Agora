@@ -6,7 +6,7 @@ const sinon = require("sinon").createSandbox();
 const beans = require("../../testutil/configureForTest").get("beans");
 
 const calendarService = beans.get("calendarService");
-const fieldHelpers = beans.get("fieldHelpers");
+const fieldHelpers = require("../../lib/commons/fieldHelpers");
 const Activity = beans.get("activity");
 const activitystore = beans.get("activitystore");
 

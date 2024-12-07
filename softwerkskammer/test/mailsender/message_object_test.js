@@ -7,7 +7,7 @@ const beans = conf.get("beans");
 const publicUrlPrefix = conf.get("publicUrlPrefix");
 const expect = require("must-dist");
 const Message = beans.get("message");
-const Member = beans.get("member");
+const Member = require("../../lib/members/member");
 
 const includeFooter = false;
 

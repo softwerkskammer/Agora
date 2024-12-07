@@ -2,7 +2,7 @@
 
 const beans = require("../../testutil/configureForTest").get("beans");
 const Group = beans.get("group");
-const Member = beans.get("member");
+const Member = require("../../lib/members/member");
 const expect = require("must-dist");
 
 describe("Group object", () => {
