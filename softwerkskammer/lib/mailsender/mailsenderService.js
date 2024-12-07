@@ -3,7 +3,6 @@ const { DateTime } = require("luxon");
 const conf = require("simple-configure");
 const logger = require("winston").loggers.get("application");
 
-const beans = conf.get("beans");
 const groupsService = require("../groups/groupsService");
 const groupsAndMembersService = require("../groupsAndMembers/groupsAndMembersService");
 const activitiesService = require("../activities/activitiesService");

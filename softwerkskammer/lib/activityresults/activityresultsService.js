@@ -1,8 +1,8 @@
 "use strict";
 const { DateTime } = require("luxon");
 
-const beans = require("simple-configure").get("beans");
-const persistence = beans.get("activityresultsPersistence");
+const persistence = require("./activityresultsPersistence");
+
 const galleryService = require("../gallery/galleryService");
 const ActivityResult = require("./activityresult");
 

@@ -1,6 +1,4 @@
 "use strict";
-const beans = require("simple-configure").get("beans");
-
 const activitystore = require("./activitystore");
 
 module.exports = {

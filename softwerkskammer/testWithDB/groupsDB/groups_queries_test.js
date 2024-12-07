@@ -2,9 +2,8 @@
 
 const expect = require("must-dist");
 
-const beans = require("../../testutil/configureForTestWithDB").get("beans");
 const groupstore = require("../../lib/groups/groupstore");
-const persistence = beans.get("groupsPersistence");
+const persistence = require("../../lib/groups/groupsPersistence");
 const Group = require("../../lib/groups/group");
 
 describe("Groups application with DB", () => {

@@ -1,7 +1,5 @@
 "use strict";
 
-require("../../testutil/configureForTest");
-
 const conf = require("simple-configure");
 const publicUrlPrefix = conf.get("publicUrlPrefix");
 const expect = require("must-dist");

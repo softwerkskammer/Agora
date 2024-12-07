@@ -1,14 +1,15 @@
 "use strict";
 
+require("../../testutil/configureForTest");
+
 const request = require("supertest");
 const expect = require("must-dist");
 const sinon = require("sinon").createSandbox();
 
-const beans = require("../../testutil/configureForTest").get("beans");
 const membersService = require("../../lib/members/membersService");
 const memberstore = require("../../lib/members/memberstore");
 const Member = require("../../lib/members/member");
-const groupsPersistence = beans.get("groupsPersistence");
+const groupsPersistence = require("../../lib/groups/groupsPersistence");
 const groupstore = require("../../lib/groups/groupstore");
 const activitystore = require("../../lib/activities/activitystore");
 const Group = require("../../lib/groups/group");
@@ -66,7 +67,10 @@ describe("Groups application", () => {
       return null;
     });
 
-    sinon.stub(groupstore, "allGroups").returns([GroupA]);
+    //sinon.stub(groupstore, "allGroups").returns([GroupA]);
+    sinon.stub(groupstore, "allGroups").callsFake(() => {
+      return [GroupA];
+    });
 
     sinon.stub(wikiService, "getBlogpostsForGroup").callsFake(() => blogposts);
 
@@ -87,6 +91,9 @@ describe("Groups application", () => {
         .get("/")
         .expect(200)
         .expect("Content-Type", /text\/html/)
+        .expect(function (res) {
+          expect(res.text).to.not.contain("Veranstate");
+        })
         .expect(/Gruppen/)
         .expect(/Gruppe A/, done);
     });

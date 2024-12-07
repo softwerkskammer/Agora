@@ -3,7 +3,6 @@
 const { DateTime } = require("luxon");
 
 const expect = require("must-dist");
-const beans = require("./../../testutil/configureForTest").get("beans");
 const CONFLICTING_VERSIONS = require("../../lib/commons/constants").CONFLICTING_VERSIONS;
 const persistence = require("../../lib/persistence/sqlitePersistence")("teststore", "version");
 

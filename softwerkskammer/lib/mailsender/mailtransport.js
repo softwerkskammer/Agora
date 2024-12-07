@@ -3,13 +3,12 @@ const R = require("ramda");
 
 const conf = require("simple-configure");
 
-const beans = conf.get("beans");
 const doNotSendMails = conf.get("doNotSendMails") || "";
 const statusmessage = require("../commons/statusmessage");
 const logger = require("winston").loggers.get("application");
 
 // we need to expose the core in order to stub that during automated tests
-const transport = beans.get("nodemailerTransport");
+const transport = require("./nodemailerTransport");
 
 function statusmessageForError(type, err) {
   return statusmessage.errorMessage("message.title.email_problem", "message.content.mailsender.error_reason", {

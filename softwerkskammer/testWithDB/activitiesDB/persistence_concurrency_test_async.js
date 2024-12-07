@@ -2,8 +2,7 @@
 
 const expect = require("must-dist");
 
-const beans = require("../../testutil/configureForTestWithDB").get("beans");
-const persistence = beans.get("activitiesPersistence");
+const persistence = require("../../lib/activities/activitiesPersistence");
 
 const CONFLICTING_VERSIONS = require("../../lib/commons/constants").CONFLICTING_VERSIONS;
 

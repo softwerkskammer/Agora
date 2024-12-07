@@ -3,8 +3,7 @@
 const sinon = require("sinon");
 const expect = require("must-dist");
 
-const beans = require("../../testutil/configureForTest").get("beans");
-const persistence = beans.get("groupsPersistence");
+const persistence = require("../../lib/groups/groupsPersistence");
 const store = require("../../lib/groups/groupstore");
 
 describe("Groups store", () => {

@@ -1,5 +1,4 @@
 "use strict";
-const beans = require("simple-configure").get("beans");
 const memberstore = require("../members/memberstore");
 const activitystore = require("../activities/activitystore");
 const mailsenderService = require("../mailsender/mailsenderService");

@@ -1,12 +1,12 @@
 "use strict";
 
+require("../../testutil/configureForTest");
+
 const expect = require("must-dist");
 const sinon = require("sinon").createSandbox();
 
-const beans = require("../../testutil/configureForTest").get("beans");
-
 const galleryService = require("../../lib/gallery/galleryService");
-const persistence = beans.get("activityresultsPersistence");
+const persistence = require("../../lib/activityresults/activityresultsPersistence");
 const service = require("../../lib/activityresults/activityresultsService");
 const ActivityResult = require("../../lib/activityresults/activityresult");
 

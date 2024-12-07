@@ -1,7 +1,7 @@
 "use strict";
 
 const expect = require("must-dist");
-require("../../testutil/configureForTest").get("beans");
+require("../../testutil/configureForTest");
 const eventsToObject = require("../../lib/wiki/eventsToObject");
 
 describe("Wiki EventsToObject", () => {

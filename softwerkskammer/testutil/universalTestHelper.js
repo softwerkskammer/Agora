@@ -4,9 +4,8 @@ const express = require("express");
 const userStub = require("./userStub");
 
 module.exports = function universalTestHelper(defaultLanguage) {
-  return (internalAppName, configuredBeans) => {
+  return (internalAppName) => {
     const appName = internalAppName;
-    const beans = configuredBeans || require("./configureForTest").get("beans");
 
     return {
       createApp: (params) => {

@@ -3,8 +3,6 @@
 const request = require("supertest");
 const sinon = require("sinon").createSandbox();
 
-const beans = require("../../testutil/configureForTest").get("beans");
-
 const Activity = require("../../lib/activities/activity");
 const activitiesService = require("../../lib/activities/activitiesService");
 const waitinglistService = require("../../lib/waitinglist/waitinglistService");

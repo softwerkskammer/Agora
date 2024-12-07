@@ -1,6 +1,5 @@
 "use strict";
 
-const beans = require("../../testutil/configureForTest").get("beans");
 const fieldHelpers = require("../../lib/commons/fieldHelpers");
 require("../../lib/middleware/initI18N");
 const expect = require("must-dist");

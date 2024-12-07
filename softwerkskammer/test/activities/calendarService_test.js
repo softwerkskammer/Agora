@@ -3,8 +3,6 @@
 const expect = require("must-dist");
 const sinon = require("sinon").createSandbox();
 
-const beans = require("../../testutil/configureForTest").get("beans");
-
 const calendarService = require("../../lib/activities/calendarService");
 const fieldHelpers = require("../../lib/commons/fieldHelpers");
 const Activity = require("../../lib/activities/activity");

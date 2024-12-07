@@ -35,7 +35,6 @@ function useApp(parent, url) {
 }
 
 const conf = require("simple-configure");
-const beans = conf.get("beans");
 
 // initialize winston and two concrete loggers
 const winston = require("winston");

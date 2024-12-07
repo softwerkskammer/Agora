@@ -3,7 +3,6 @@
 const sinon = require("sinon").createSandbox();
 
 const expect = require("must-dist");
-const beans = require("../../testutil/configureForTest").get("beans");
 
 const groupsForTest = require("./groups_for_tests");
 

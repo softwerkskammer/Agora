@@ -1,10 +1,11 @@
 "use strict";
 
+require("../../testutil/configureForTestWithDB");
+
 const expect = require("must-dist");
 const sinon = require("sinon").createSandbox();
 
-const beans = require("../../testutil/configureForTestWithDB").get("beans");
-const persistence = beans.get("activitiesPersistence");
+const persistence = require("../../lib/activities/activitiesPersistence");
 const activitystore = require("../../lib/activities/activitystore");
 const activitiesService = require("../../lib/activities/activitiesService");
 const notifications = require("../../lib/notifications");

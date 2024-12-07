@@ -4,13 +4,13 @@ const request = require("supertest");
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
-const beans = require("../../testutil/configureForTestWithDB").get("beans");
+require("../../testutil/configureForTestWithDB");
 const fieldHelpers = require("../../lib/commons/fieldHelpers");
 const activitystore = require("../../lib/activities/activitystore");
-const persistence = beans.get("activitiesPersistence");
+const persistence = require("../../lib/activities/activitiesPersistence");
 const Activity = require("../../lib/activities/activity");
 
-const createApp = require("../../testutil/testHelper")("activities", beans).createApp;
+const createApp = require("../../testutil/testHelper")("activities").createApp;
 
 function getActivity(url) {
   return new Activity(persistence.getByField({ key: "url", val: url }));

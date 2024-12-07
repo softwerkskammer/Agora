@@ -1,0 +1,13 @@
+remove dontUsePersistentSessions
+
+not used:
+transport
+githubClientID: null,
+    publicPaymentKey: null,
+    secretPaymentKey: null,
+    paymentBic: "paymentBic",
+    paymentIban: "paymentIban",
+    paymentReceiver: "paymentReceiver",
+
+
+socratesActivity.js?

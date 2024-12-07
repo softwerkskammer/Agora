@@ -4,8 +4,7 @@ const expect = require("must-dist");
 
 const sinon = require("sinon").createSandbox();
 
-const beans = require("../../testutil/configureForTest").get("beans");
-const persistence = beans.get("membersPersistence");
+const persistence = require("../../lib/members/membersPersistence");
 const store = require("../../lib/members/memberstore");
 const Member = require("../../lib/members/member");
 

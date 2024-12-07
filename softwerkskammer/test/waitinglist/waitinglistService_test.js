@@ -3,9 +3,7 @@
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
-const beans = require("../../testutil/configureForTest").get("beans");
 const waitinglistService = require("../../lib/waitinglist/waitinglistService");
-
 const activitystore = require("../../lib/activities/activitystore");
 const memberstore = require("../../lib/members/memberstore");
 const mailsenderService = require("../../lib/mailsender/mailsenderService");

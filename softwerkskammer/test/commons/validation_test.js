@@ -2,7 +2,6 @@
 const expect = require("must-dist");
 const i18n = require("i18next");
 
-require("../../testutil/configureForTest");
 const validation = require("../../lib/commons/validation");
 require("../../lib/middleware/initI18N");
 

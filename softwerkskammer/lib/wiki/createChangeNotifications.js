@@ -8,9 +8,9 @@ require("../../initWinston")(winstonConfigPath);
 const winston = require("winston");
 const logger = winston.loggers.get("scripts");
 
-const beans = require("simple-configure").get("beans");
 // open persistence AFTER logger is created
-const persistence = beans.get("settingsPersistence");
+const persistence = require("../persistence/sqlitePersistence")("settingsstore");
+
 const wikiService = require("../wiki/wikiService");
 const notifications = require("../notifications");
 const util = require("util");

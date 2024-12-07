@@ -1,13 +1,11 @@
-/* eslint no-process-exit: 0 */
-/* eslint no-console: 0 */
+/* eslint-disable */
 
 "use strict";
 require("../../configure"); // initializing parameters
 
-const beans = require("simple-configure").get("beans");
-const store = beans.get("memberstore");
-
-const membersService = require("./membersService");
+require("simple-configure");
+const store = require("./memberstore");
+const service = require("./membersService");
 
 async function run() {
   try {

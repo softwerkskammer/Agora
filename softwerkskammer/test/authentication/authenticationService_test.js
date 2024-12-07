@@ -3,12 +3,9 @@
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
-const conf = require("../../testutil/configureForTest");
-const beans = conf.get("beans");
-
+require("../../testutil/configureForTest");
 const authenticationService = require("../../lib/auth/authenticationService");
-const membersPersistence = beans.get("membersPersistence");
-
+const membersPersistence = require("../../lib/members/membersPersistence");
 describe("Authentication Service", () => {
   describe("- where member cannot be found -", () => {
     beforeEach(() => {

@@ -1,5 +1,4 @@
 "use strict";
-const beans = require("simple-configure").get("beans");
 const logger = require("winston").loggers.get("application");
 
 const Resource = require("./resource");

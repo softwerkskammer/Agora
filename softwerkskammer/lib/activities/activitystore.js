@@ -1,7 +1,5 @@
 "use strict";
-const beans = require("simple-configure").get("beans");
-
-const persistence = beans.get("activitiesPersistence");
+const persistence = require("./activitiesPersistence");
 const Activity = require("./activity");
 const SoCraTesActivity = require("./socratesActivity");
 

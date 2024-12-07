@@ -1,9 +1,7 @@
 "use strict";
 
-require("../../testutil/configureForTest");
 const expect = require("must-dist");
 
-const beans = require("simple-configure").get("beans");
 const Activity = require("../../lib/activities/activity");
 const icalService = require("../../lib/activities/icalService");
 

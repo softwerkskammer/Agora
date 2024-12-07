@@ -3,7 +3,6 @@
 
 const conf = require("../../testutil/configureForTest");
 const expect = require("must-dist");
-const beans = require("simple-configure").get("beans");
 const fs = require("fs");
 const path = require("path");
 

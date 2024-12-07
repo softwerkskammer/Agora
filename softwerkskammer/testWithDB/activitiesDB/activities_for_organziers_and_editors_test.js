@@ -3,9 +3,8 @@
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
-const beans = require("../../testutil/configureForTestWithDB").get("beans");
 const activitystore = require("../../lib/activities/activitystore");
-const persistence = beans.get("activitiesPersistence");
+const persistence = require("../../lib/activities/activitiesPersistence");
 const Activity = require("../../lib/activities/activity");
 
 describe("Activity application with DB - shows activities where a member is organizer or editor -", () => {
