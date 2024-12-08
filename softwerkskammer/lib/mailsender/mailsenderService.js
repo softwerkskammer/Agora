@@ -39,19 +39,15 @@ function activityMarkdown(activity, language) {
   return markdown;
 }
 
-function createChunkedSendingReportMessage(statusmessages, subject, sender) {
+function createChunkedSendingReportMessage(statusmessages, subject, message) {
   const anySendingError = R.any(statusmessage.isErrorMessage, statusmessages);
-  const resultMessage = new Message(
-    {
-      subject,
-      markdown: anySendingError
-        ? `Fehler: ${statusmessages.map((s) => s.contents().additionalArguments.err).join(" ")}`
-        : "E-Mails erfolgreich versendet",
-    },
-    sender,
-  );
-  resultMessage.setTo(sender.email());
-  return resultMessage;
+  return message.cloneWithBody({
+    subject,
+    markdown: anySendingError
+      ? `Fehler: ${statusmessages.map((s) => s.contents().additionalArguments.err).join(" ")}`
+      : "E-Mails erfolgreich versendet",
+    sendCopyToSelf: true,
+  });
 }
 
 async function sendMailInChunks(maxMailSendingChunkSize, allMembers, message, type) {
@@ -64,11 +60,7 @@ async function sendMailInChunks(maxMailSendingChunkSize, allMembers, message, ty
         return sendMail(message, type);
       }),
     );
-    const resultMessage = createChunkedSendingReportMessage(
-      statusmessages,
-      `Report "${message.subject}"`,
-      message.sender,
-    );
+    const resultMessage = createChunkedSendingReportMessage(statusmessages, `Report "${message.subject}"`, message);
     await sendMail(resultMessage, type);
   } catch (err) {
     logger.error(err);
@@ -163,7 +155,7 @@ module.exports = {
           // noinspection ES6MissingAwait - we explicitly don't want to wait because that could cause timeouts
           sendMailInChunks(maxMailSendingChunkSize, allMembers, message, type);
 
-          return mailtransport.statusmessageForSuccess();
+          return mailtransport.statusmessageForSuccess(type);
         } else {
           message.setBccToMemberAddresses(allMembers);
           return sendMail(message, type);
@@ -198,7 +190,7 @@ module.exports = {
     // noinspection ES6MissingAwait - we explicitly don't want to wait because that could cause timeouts
     sendMailInChunks(conf.get("maxMailSendingChunkSize"), members, message, type);
 
-    return mailtransport.statusmessageForSuccess();
+    return mailtransport.statusmessageForSuccess(type);
   },
 
   sendMagicLinkToMember: async function sendMagicLinkToMember(member, token) {

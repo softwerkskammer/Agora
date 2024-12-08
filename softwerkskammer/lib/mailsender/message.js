@@ -13,7 +13,6 @@ class Message {
     if (body && member) {
       this.setSubject(body.subject);
       this.setMarkdown(body.markdown);
-      this.sender = member;
       this.senderName = member.displayName();
       this.senderAddress = member.email();
       this.buttons = body.buttons ? JSON.parse(body.buttons) : [];
@@ -22,6 +21,14 @@ class Message {
       }
     }
     return this;
+  }
+
+  cloneWithBody(body) {
+    const fakeMember = {
+      displayName: () => this.senderName,
+      email: () => this.senderAddress,
+    };
+    return new Message(body, fakeMember);
   }
 
   setTo(toAddresses) {
