@@ -1,6 +1,6 @@
 "use strict";
 
-require("../../testutil/configureForTestWithDB");
+require("../../testutil/configureForTest");
 
 /**
  * Test for https://github.com/softwerkskammer/Agora/issues/1105

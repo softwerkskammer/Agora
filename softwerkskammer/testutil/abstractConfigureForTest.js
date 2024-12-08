@@ -1,6 +1,6 @@
 "use strict";
 
-module.exports = function (kindOfTest) {
+module.exports = function () {
   const conf = require("simple-configure");
   require("./shutupWinston")();
 
@@ -27,7 +27,7 @@ module.exports = function (kindOfTest) {
     superuser: "superuserID",
     "transport-options": null,
     wikipath: "..",
-    TESTMODE: kindOfTest,
+    TESTMODE: true,
   });
 
   return conf;

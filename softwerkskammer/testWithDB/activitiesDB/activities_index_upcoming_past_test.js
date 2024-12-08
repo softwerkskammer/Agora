@@ -4,7 +4,7 @@ const request = require("supertest");
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
-require("../../testutil/configureForTestWithDB");
+require("../../testutil/configureForTest");
 const activitystore = require("../../lib/activities/activitystore");
 const persistence = require("../../lib/activities/activitiesPersistence");
 const Activity = require("../../lib/activities/activity");

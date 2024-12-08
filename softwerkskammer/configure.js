@@ -36,6 +36,7 @@ function createConfiguration() {
     sessionkey: "softwerkskammer.org",
     socratesURL: "http://socrates-conference.de",
     sqlitedb: "../../../db/automatic.db",
+    TESTMODE: false,
   });
 
   // then, add properties from config files:

@@ -2,7 +2,7 @@
 const conf = require("simple-configure");
 const TESTMODE = conf.get("TESTMODE");
 const transportOptions = conf.get("transport-options");
-if (transportOptions?.debug === true) {
+if (transportOptions?.debug) {
   transportOptions.logger = require("./nodemailer-logger").getLogger();
 }
 module.exports = TESTMODE

@@ -1,6 +1,6 @@
 "use strict";
 
-require("../../testutil/configureForTestWithDB");
+require("../../testutil/configureForTest");
 
 const expect = require("must-dist");
 

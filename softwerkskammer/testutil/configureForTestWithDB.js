@@ -1,2 +1,2 @@
 "use strict";
-module.exports = require("./abstractConfigureForTest")("testWithDB");
+module.exports = require("./abstractConfigureForTest")();

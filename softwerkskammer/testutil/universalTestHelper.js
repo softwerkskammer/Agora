@@ -2,6 +2,7 @@
 
 const express = require("express");
 const userStub = require("./userStub");
+const initI18N = require("../lib/middleware/initI18N");
 
 module.exports = function universalTestHelper(defaultLanguage) {
   return (internalAppName) => {
@@ -54,7 +55,7 @@ module.exports = function universalTestHelper(defaultLanguage) {
         }
 
         app.use(require("../lib/middleware/expressViewHelper"));
-        app.use(require("../lib/middleware/initI18N"));
+        app.use(initI18N);
 
         (atts.middlewares || []).forEach((middleware) => {
           app.use(middleware);

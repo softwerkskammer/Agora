@@ -42,7 +42,7 @@ function execWithTry(command) {
 }
 
 function sqlitePersistenceFunc(collectionNameInput, extraColumns) {
-  const collectionName = TESTMODE === "testWithDB" ? "teststore" : collectionNameInput;
+  const collectionName = TESTMODE ? "teststore" : collectionNameInput;
   const extraCols = extraColumns ? extraColumns.split(",") : [];
 
   function createForTest() {
@@ -212,5 +212,9 @@ function sqlitePersistenceFunc(collectionNameInput, extraColumns) {
 
   return persistence;
 }
+process.on("SIGINT", () => {
+  console.log("SHUTDOWN ON SIGINT (db)"); // eslint-disable-line no-console
+  db.close();
+});
 
-module.exports = TESTMODE === "test" ? require("./noOpPersistence") : sqlitePersistenceFunc;
+module.exports = sqlitePersistenceFunc;
