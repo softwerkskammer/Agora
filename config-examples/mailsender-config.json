@@ -10,5 +10,6 @@
   "sender-name": "Softwerkskammer Benachrichtigungen",
   "sender-address": "info@my-domain.org",
   "include-footer": false,
-  "doNotSendMails": "insert email address here for local development as replacement for receivers"
+  "doNotSendMails": "insert email address here for local development as replacement for receivers",
+  "maxMailSendingChunkSize": 3
 }

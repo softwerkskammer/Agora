@@ -22,7 +22,12 @@ const transport = require("../../lib/mailsender/mailtransport").transport;
 
 let emptyActivity;
 
-const sender = new Member();
+const sender = new Member({
+  firstname: "Agora",
+  lastname: "User",
+  email: "user@agora.local",
+});
+const mailSubject = "subject";
 let message;
 let sendmail;
 
@@ -31,8 +36,20 @@ function singleSentEmail() {
   return sendmail.args[0][0];
 }
 
+function allSentEmails() {
+  return sendmail.args.map((callArgs) => callArgs[0]);
+}
+
 function expectNoEmailWasSent() {
   expect(sendmail.called).to.be.false();
+}
+
+function delay(t) {
+  return new Promise(function (resolve) {
+    setTimeout(function () {
+      resolve();
+    }, t);
+  });
 }
 
 describe("MailsenderService", () => {
@@ -41,7 +58,7 @@ describe("MailsenderService", () => {
 
   beforeEach(() => {
     const availableGroups = [];
-    message = new Message({ subject: "subject", markdown: "mark down" }, sender);
+    message = new Message({ subject: mailSubject, markdown: "mark down" }, sender);
     emptyActivity = new Activity({
       title: "Title of the Activity",
       description: "description1",
@@ -257,6 +274,208 @@ describe("MailsenderService", () => {
       expect(sentMail.icalEvent).to.not.contain("BEGIN:VCALENDAR");
       expect(sentMail.icalEvent).to.not.contain("URL:http://localhost:17125/activities/urlOfTheActivity");
       expect(statusmessage.contents().type).to.equal("alert-success");
+    });
+
+    describe("sending in chunks", () => {
+      const membersAboveSingleChunkThreshhold = [
+        new Member({ email: "memberA" }),
+        new Member({ email: "memberB" }),
+        new Member({ email: "memberC" }),
+        new Member({ email: "memberD" }),
+        new Member({ email: "memberE" }),
+        new Member({ email: "memberF" }),
+      ];
+
+      it("deduplicates receipients", async () => {
+        const groupB = new Group({ id: "groupB" });
+        groupsService.getGroups.callsFake(() => {
+          return [groupA, groupB];
+        });
+        sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
+          if (group === groupA) {
+            group.members = [
+              new Member({ email: "memberA" }),
+              new Member({ email: "memberB" }),
+              new Member({ email: "memberC" }),
+            ];
+          } else {
+            group.members = [
+              new Member({ email: "memberB" }),
+              new Member({ email: "memberC" }),
+              new Member({ email: "memberD" }),
+              new Member({ email: "memberE" }),
+              new Member({ email: "memberF" }),
+            ];
+          }
+        });
+        const statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA", "GroupB"], undefined, message);
+        const allSent = allSentEmails();
+        expect(allSent).to.have.length(2);
+        const sentMail1 = allSent[0];
+        expect(sentMail1.bcc).to.eql(["memberA", "memberB", "memberC", "memberD", "memberE"]);
+        const sentMail2 = allSent[1];
+        expect(sentMail2.bcc).to.eql(["memberF"]);
+
+        expect(statusmessage.contents().type).to.equal("alert-success");
+      });
+
+      it("sends mails directly when deduplicated members are below chunk threshold", async () => {
+        const groupB = new Group({ id: "groupB" });
+        groupsService.getGroups.callsFake(() => {
+          return [groupA, groupB];
+        });
+        sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
+          if (group === groupA) {
+            group.members = [
+              new Member({ email: "memberA" }),
+              new Member({ email: "memberB" }),
+              new Member({ email: "memberC" }),
+            ];
+          } else {
+            group.members = [
+              new Member({ email: "memberB" }),
+              new Member({ email: "memberC" }),
+              new Member({ email: "memberD" }),
+            ];
+          }
+        });
+        const statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA", "GroupB"], undefined, message);
+
+        await delay(100);
+
+        const mail = singleSentEmail();
+        expect(mail.bcc).to.eql(["memberA", "memberB", "memberC", "memberD"]);
+
+        expect(statusmessage.contents().type).to.equal("alert-success");
+      });
+
+      it("sends in chunks to members of selected groups when above configured threshold", async () => {
+        sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
+          group.members = membersAboveSingleChunkThreshhold;
+        });
+        const statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message);
+        const allSent = allSentEmails();
+        const sentMail1 = allSent[0];
+        expect(sentMail1.bcc).to.eql(["memberA", "memberB", "memberC", "memberD", "memberE"]);
+        const sentMail2 = allSent[1];
+        expect(sentMail2.bcc).to.eql(["memberF"]);
+
+        expect(statusmessage.contents().type).to.equal("alert-success");
+      });
+
+      it("sends status mail to intiator after all mails have been sent", async () => {
+        let mailsSentCount = 0;
+        let myResolve;
+        const allExpectedMailsSent = new Promise((resolve) => {
+          myResolve = resolve;
+        });
+        sendmail.reset();
+        sendmail.callsFake(() => {
+          mailsSentCount++;
+
+          if (mailsSentCount >= 3) {
+            myResolve(undefined);
+          }
+        });
+        sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
+          group.members = membersAboveSingleChunkThreshhold;
+          return group;
+        });
+
+        const statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message);
+
+        expect(statusmessage.contents().type).to.equal("alert-success");
+        expect(statusmessage.contents().text).to.equal("message.content.mailsender.success");
+
+        await allExpectedMailsSent;
+        const allSent = allSentEmails();
+
+        expect(allSent).to.have.length(3);
+
+        expect(allSent[2].to).to.equal(sender.email());
+        expect(allSent[2].subject).to.contain("Report");
+        expect(allSent[2].subject).to.contain(mailSubject);
+        expect(allSent[2].html).to.contain("erfolgreich");
+      });
+
+      it("returns success regardless of mail sending result", async () => {
+        sendmail.callsFake(() => {
+          throw new Error();
+        });
+        sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
+          group.members = membersAboveSingleChunkThreshhold;
+        });
+
+        const statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message);
+
+        expect(statusmessage.contents().type).to.equal("alert-success");
+      });
+
+      it("includes errors in send report mail from Error", async () => {
+        let mailsSentCount = 0;
+        let myResolve;
+        const allExpectedMailsSent = new Promise((resolve) => {
+          myResolve = resolve;
+        });
+        sendmail.reset();
+        sendmail.callsFake(() => {
+          mailsSentCount++;
+
+          if (mailsSentCount >= 3) {
+            myResolve(undefined);
+          } else {
+            throw new Error("Error: das hat nicht geklappt");
+          }
+        });
+        sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
+          group.members = membersAboveSingleChunkThreshhold;
+        });
+
+        await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message);
+
+        await allExpectedMailsSent;
+
+        const sentEmails = allSentEmails();
+        expect(sentEmails).to.have.length(3);
+        expect(sentEmails[2].to).to.contain(sender.email());
+        expect(sentEmails[2].subject).to.contain("Report");
+        expect(sentEmails[2].subject).to.contain(mailSubject);
+        expect(sentEmails[2].html).to.contain("Fehler");
+        expect(sentEmails[2].html).to.contain("Error: das hat nicht geklappt");
+      });
+
+      it("includes errors in send report mail from Promise rejection", async () => {
+        let mailsSentCount = 0;
+        let myResolve;
+        const allExpectedMailsSent = new Promise((resolve) => {
+          myResolve = resolve;
+        });
+        sendmail.reset();
+        sendmail.callsFake(() => {
+          mailsSentCount++;
+
+          if (mailsSentCount >= 3) {
+            myResolve(undefined);
+          } else {
+            return Promise.reject("Promise: das hat nicht geklappt");
+          }
+        });
+        sinon.stub(groupsAndMembersService, "addMembersToGroup").callsFake((group) => {
+          group.members = membersAboveSingleChunkThreshhold;
+        });
+
+        await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message);
+
+        await allExpectedMailsSent;
+
+        const sentEmails = allSentEmails();
+        expect(sentEmails).to.have.length(3);
+        expect(sentEmails[2].to).to.contain(sender.email());
+        expect(sentEmails[2].subject).to.contain("Report");
+        expect(sentEmails[2].subject).to.contain(mailSubject);
+        expect(sentEmails[2].html).to.contain("Fehler");
+        expect(sentEmails[2].html).to.contain("Promise: das hat nicht geklappt");
+      });
     });
   });
 
@@ -509,6 +728,127 @@ describe("MailsenderService", () => {
         const statusMessage = await mailsenderService.sendMailToContactPersonsOfGroup(groupId, message);
         expect(statusMessage.contents().type).to.eql("alert-success");
       });
+    });
+  });
+
+  describe("sending to all members", () => {
+    const member1 = new Member({ email: "memberA" });
+    const member2 = new Member({ email: "memberB" });
+
+    beforeEach(() => {
+      sinon.stub(memberstore, "allMembers").callsFake(() => {
+        return [member1, member2];
+      });
+    });
+
+    it("sends in chunks to all members", async () => {
+      const statusmessage = await mailsenderService.sendMailToAllMembers(message);
+      const allSent = allSentEmails();
+      const sentMail1 = allSent[0];
+      expect(sentMail1.bcc).to.eql(["memberA", "memberB"]);
+
+      expect(statusmessage.contents().type).to.equal("alert-success");
+    });
+
+    it("sends status mail to intiator after all mails have been sent", async () => {
+      let mailsSentCount = 0;
+      let myResolve;
+      const allExpectedMailsSent = new Promise((resolve) => {
+        myResolve = resolve;
+      });
+      sendmail.reset();
+      sendmail.callsFake(() => {
+        mailsSentCount++;
+
+        if (mailsSentCount >= 2) {
+          myResolve(undefined);
+        }
+      });
+
+      const statusmessage = await mailsenderService.sendMailToAllMembers(message);
+
+      expect(statusmessage.contents().type).to.equal("alert-success");
+      expect(statusmessage.contents().text).to.equal("message.content.mailsender.success");
+
+      await allExpectedMailsSent;
+      const allSent = allSentEmails();
+
+      expect(allSent).to.have.length(2);
+
+      expect(allSent[1].to).to.equal(sender.email());
+      expect(allSent[1].subject).to.contain("Report");
+      expect(allSent[1].subject).to.contain(mailSubject);
+      expect(allSent[1].html).to.contain("erfolgreich");
+    });
+
+    it("returns success regardless of mail sending result", async () => {
+      sendmail.callsFake(() => {
+        throw new Error();
+      });
+
+      const statusmessage = await mailsenderService.sendMailToAllMembers(message);
+
+      expect(statusmessage.contents().type).to.equal("alert-success");
+    });
+
+    it("includes errors in send report mail from Error", async () => {
+      let mailsSentCount = 0;
+      let myResolve;
+      const allExpectedMailsSent = new Promise((resolve) => {
+        myResolve = resolve;
+      });
+      sendmail.reset();
+      sendmail.callsFake(() => {
+        mailsSentCount++;
+
+        if (mailsSentCount >= 2) {
+          myResolve(undefined);
+        } else {
+          throw new Error("Error: das hat nicht geklappt");
+        }
+      });
+
+      await mailsenderService.sendMailToAllMembers(message);
+
+      await allExpectedMailsSent;
+
+      const sentEmails = allSentEmails();
+      expect(sentEmails).to.have.length(2);
+      expect(sentEmails[1].to).to.contain(sender.email());
+      expect(sentEmails[1].subject).to.contain("Report");
+      expect(sentEmails[1].subject).to.contain(mailSubject);
+      expect(sentEmails[1].html).to.contain("Fehler");
+      expect(sentEmails[1].html).to.contain("Error: das hat nicht geklappt");
+    });
+
+    it("includes errors in send report mail from Promise rejection", async () => {
+      let mailsSentCount = 0;
+      let myResolve;
+      const allExpectedMailsSent = new Promise((resolve) => {
+        myResolve = resolve;
+      });
+      sendmail.reset();
+      sendmail.callsFake(() => {
+        mailsSentCount++;
+
+        if (mailsSentCount >= 2) {
+          myResolve(undefined);
+        } else {
+          return Promise.reject("Promise: das hat nicht geklappt");
+        }
+      });
+
+      await mailsenderService.sendMailToAllMembers(message);
+
+      await allExpectedMailsSent;
+
+      const sentEmails = allSentEmails();
+      expect(sentEmails).to.have.length(2);
+      expect(sentEmails[1].to).to.contain(sender.email());
+      expect(sentEmails[1].subject).to.contain("Report");
+      expect(sentEmails[1].subject).to.contain(mailSubject);
+      expect(sentEmails[1].html).to.contain("Fehler");
+      expect(sentEmails[1].html).to.contain("Promise: das hat nicht geklappt");
     });
   });
 });

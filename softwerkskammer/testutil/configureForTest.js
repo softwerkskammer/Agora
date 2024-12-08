@@ -13,6 +13,7 @@ conf.addProperties({
   githubClientID: null,
   githubClientSecret: null,
   imageDirectory: null,
+  maxMailSendingChunkSize: 5,
   port: "17125",
   "sender-address": null,
   publicUrlPrefix: "http://localhost:17125",

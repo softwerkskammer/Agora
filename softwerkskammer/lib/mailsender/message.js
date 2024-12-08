@@ -23,6 +23,14 @@ class Message {
     return this;
   }
 
+  cloneWithBody(body) {
+    const fakeMember = {
+      displayName: () => this.senderName,
+      email: () => this.senderAddress,
+    };
+    return new Message(body, fakeMember);
+  }
+
   setTo(toAddresses) {
     this.to = toAddresses;
   }

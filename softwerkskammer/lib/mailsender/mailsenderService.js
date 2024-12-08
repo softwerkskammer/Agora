@@ -1,6 +1,7 @@
 "use strict";
 const { DateTime } = require("luxon");
 const conf = require("simple-configure");
+const R = require("ramda");
 const logger = require("winston").loggers.get("application");
 
 const groupsService = require("../groups/groupsService");
@@ -16,6 +17,7 @@ const Group = require("../groups/group");
 const misc = require("../commons/misc");
 
 const mailtransport = require("./mailtransport");
+const statusmessage = require("../commons/statusmessage");
 
 async function sendMail(message, type) {
   return mailtransport.sendMail(message, type, conf.get("sender-address"), conf.get("include-footer"));
@@ -37,10 +39,40 @@ function activityMarkdown(activity, language) {
   return markdown;
 }
 
+function createChunkedSendingReportMessage(statusmessages, subject, message) {
+  const isError = R.any(statusmessage.isErrorMessage, statusmessages);
+  const markdown = isError
+    ? `Fehler: ${statusmessages.map((s) => s.contents().additionalArguments.err).join(" ")}`
+    : "E-Mails erfolgreich versendet";
+
+  return message.cloneWithBody({
+    subject: `${isError ? "ERROR" : "SUCCESS"} ${subject}`,
+    markdown,
+    sendCopyToSelf: true,
+  });
+}
+
+async function sendMailInChunks(maxMailSendingChunkSize, allMembers, message, type) {
+  const membersInChunks = R.splitEvery(maxMailSendingChunkSize, allMembers);
+
+  try {
+    const statusmessages = await Promise.all(
+      membersInChunks.map((bccs) => {
+        message.setBccToMemberAddresses(bccs);
+        return sendMail(message, type);
+      }),
+    );
+    const resultMessage = createChunkedSendingReportMessage(statusmessages, `Report "${message.subject}"`, message);
+    await sendMail(resultMessage, type);
+  } catch (err) {
+    logger.error(err);
+  }
+}
+
 module.exports = {
   activityMarkdown,
 
-  dataForShowingMessageForActivity: async function (activityURL, language) {
+  dataForShowingMessageForActivity: async function dataForShowingMessageForActivity(activityURL, language) {
     const [activity, groups] = [
       activitiesService.getActivityWithGroupAndParticipants(activityURL),
       groupstore.allGroups(),
@@ -105,7 +137,11 @@ module.exports = {
       }
       try {
         groups.forEach(groupsAndMembersService.addMembersToGroup);
-        message.setBccToGroupMemberAddresses(groups);
+        const allMembers = R.uniqBy(
+          (member) => member.email(),
+          groups.flatMap((group) => group.members),
+        );
+
         let activity;
         try {
           activity = activitystore.getActivity(activityURL);
@@ -115,7 +151,17 @@ module.exports = {
         if (activity) {
           message.setIcal(icalService.activityAsICal(activity).toString());
         }
-        return sendMail(message, type);
+
+        const maxMailSendingChunkSize = conf.get("maxMailSendingChunkSize");
+        if (allMembers.length > maxMailSendingChunkSize) {
+          // noinspection ES6MissingAwait - we explicitly don't want to wait because that could cause timeouts
+          sendMailInChunks(maxMailSendingChunkSize, allMembers, message, type);
+
+          return mailtransport.statusmessageForSuccess(type);
+        } else {
+          message.setBccToMemberAddresses(allMembers);
+          return sendMail(message, type);
+        }
       } catch (err1) {
         return mailtransport.statusmessageForError(type, err1);
       }
@@ -142,8 +188,11 @@ module.exports = {
   sendMailToAllMembers: async function sendMailToAllMembers(message) {
     const type = "$t(mailsender.notification)";
     const members = memberstore.allMembers();
-    message.setBccToMemberAddresses(members);
-    return sendMail(message, type);
+
+    // noinspection ES6MissingAwait - we explicitly don't want to wait because that could cause timeouts
+    sendMailInChunks(conf.get("maxMailSendingChunkSize"), members, message, type);
+
+    return mailtransport.statusmessageForSuccess(type);
   },
 
   sendMagicLinkToMember: async function sendMagicLinkToMember(member, token) {
