@@ -1,9 +1,7 @@
 "use strict";
-const beans = require("simple-configure").get("beans");
-
-const persistence = beans.get("activitiesPersistence");
-const Activity = beans.get("activity");
-const SoCraTesActivity = beans.get("socratesActivity");
+const persistence = require("./activitiesPersistence");
+const Activity = require("./activity");
+const SoCraTesActivity = require("./socratesActivity");
 
 function toActivity(jsobject) {
   if (jsobject && jsobject.isSoCraTes) {

@@ -2,10 +2,9 @@
 const Fs = require("fs/promises");
 const conf = require("simple-configure");
 const workTree = conf.get("wikipath");
-const beans = conf.get("beans");
-const misc = beans.get("misc");
-const gitExec = beans.get("gitExec");
-const wikiObjects = beans.get("wikiObjects");
+const misc = require("../commons/misc");
+const gitExec = require("./gitExec");
+const wikiObjects = require("./wikiObjects");
 const Metadata = wikiObjects.Metadata;
 
 function dataToLines(data) {

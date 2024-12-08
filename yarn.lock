@@ -861,13 +861,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"CoolBeans@npm:0.0.9":
-  version: 0.0.9
-  resolution: "CoolBeans@npm:0.0.9"
-  checksum: 10c0/54b3e4d55e7594f64997f788aac67ffa1addfe8f09f4430bb0c3505e26eb0fbd4dd46f21d8fa86badb6e91c5a243eaf6381f4ab7dfb8fa08491a60d4597604b8
-  languageName: node
-  linkType: hard
-
 "abbrev@npm:1":
   version: 1.1.1
   resolution: "abbrev@npm:1.1.1"
@@ -972,7 +965,6 @@ __metadata:
     "@fullcalendar/core": "npm:6.1.15"
     "@fullcalendar/luxon3": "npm:6.1.15"
     "@popperjs/core": "npm:2.11.8"
-    CoolBeans: "npm:0.0.9"
     adm-zip: "npm:0.5.16"
     better-sqlite3: "npm:11.0.0"
     better-sqlite3-session-store: "npm:0.1.0"

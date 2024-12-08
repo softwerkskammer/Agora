@@ -1,12 +1,23 @@
 "use strict";
+const eslint = require("@eslint/js");
+const globals = require("globals");
 const prettier = require("eslint-plugin-prettier");
 const eslintPluginPrettierRecommended = require("eslint-plugin-prettier/recommended");
 
 module.exports = [
+  eslint.configs.recommended,
   {
     ignores: ["**/build/", "**/*coverage*/", "**/log/", "**/public/", "**/3rd_party_js/", "node_modules", ".yarn"],
   },
   eslintPluginPrettierRecommended,
+  {
+    languageOptions: {
+      globals: {
+        ...globals.mocha,
+        ...globals.node,
+      },
+    },
+  },
   {
     files: ["**/*.js"],
     plugins: {
@@ -110,10 +121,12 @@ module.exports = [
     },
   },
   {
-    files: ["softwerkskammer/frontend*/**"],
+    files: ["softwerkskammer/frontend*/**", "locales/frontend*"],
     rules: {
       camelcase: 0,
-      strict: [2, "function"],
+      strict: 0,
+      "no-unused-vars": 0,
+      "no-undef": 0,
     },
   },
   {

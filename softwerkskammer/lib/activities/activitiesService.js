@@ -1,16 +1,14 @@
 "use strict";
 const R = require("ramda");
 
-const beans = require("simple-configure").get("beans");
-
-const activitystore = beans.get("activitystore");
-const groupsService = beans.get("groupsService");
-const groupstore = beans.get("groupstore");
-const membersService = beans.get("membersService");
-const memberstore = beans.get("memberstore");
-const notifications = beans.get("notifications");
-const fieldHelpers = beans.get("fieldHelpers");
-const CONFLICTING_VERSIONS = beans.get("constants").CONFLICTING_VERSIONS;
+const activitystore = require("./activitystore");
+const groupsService = require("../groups/groupsService");
+const groupstore = require("../groups/groupstore");
+const membersService = require("../members/membersService");
+const memberstore = require("../members/memberstore");
+const notifications = require("../notifications");
+const fieldHelpers = require("../commons/fieldHelpers");
+const CONFLICTING_VERSIONS = require("../commons/constants").CONFLICTING_VERSIONS;
 
 module.exports = {
   getActivitiesForDisplay: function getActivitiesForDisplay(activitiesFetcher) {

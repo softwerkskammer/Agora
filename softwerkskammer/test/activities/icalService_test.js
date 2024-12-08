@@ -1,11 +1,11 @@
 "use strict";
 
 require("../../testutil/configureForTest");
+
 const expect = require("must-dist");
 
-const beans = require("simple-configure").get("beans");
-const Activity = beans.get("activity");
-const icalService = beans.get("icalService");
+const Activity = require("../../lib/activities/activity");
+const icalService = require("../../lib/activities/icalService");
 
 describe("ICalendar", () => {
   const activity = new Activity().fillFromUI({

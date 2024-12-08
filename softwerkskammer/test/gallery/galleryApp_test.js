@@ -1,11 +1,13 @@
 "use strict";
+
+require("../../testutil/configureForTest");
+
 const request = require("supertest");
 const sinon = require("sinon").createSandbox();
 
-const beans = require("../../testutil/configureForTest").get("beans");
-const galleryService = beans.get("galleryService");
+const galleryService = require("../../lib/gallery/galleryService");
 
-const app = require("../../testutil/testHelper")("galleryApp").createApp();
+const app = require("../../testutil/testHelper")("gallery").createApp();
 
 const OK = 200;
 

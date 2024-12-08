@@ -1,8 +1,7 @@
 "use strict";
-const beans = require("simple-configure").get("beans");
+const persistence = require("./groupsPersistence");
 
-const persistence = beans.get("groupsPersistence");
-const Group = beans.get("group");
+const Group = require("./group");
 
 module.exports = {
   allGroups: function allGroups() {

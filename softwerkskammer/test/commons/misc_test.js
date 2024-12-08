@@ -1,8 +1,10 @@
 "use strict";
+
+require("../../testutil/configureForTest");
+
 const expect = require("must-dist");
 
-const beans = require("../../testutil/configureForTest").get("beans");
-const misc = beans.get("misc");
+const misc = require("../../lib/commons/misc");
 
 describe("toArray function", () => {
   it("transforms null to an empty array", () => {

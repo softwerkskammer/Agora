@@ -2,8 +2,7 @@
 
 const expect = require("must-dist");
 
-const beans = require("../../testutil/configureForTest").get("beans");
-const serverpathRemover = beans.get("serverpathRemover");
+const serverpathRemover = require("../../lib/middleware/serverpathRemover");
 
 describe("serverpathRemover removes any paths", () => {
   let removeServerpaths;

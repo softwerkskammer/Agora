@@ -1,22 +1,21 @@
 "use strict";
 
+require("../../testutil/configureForTest");
+
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
-const conf = require("../../testutil/configureForTest");
-const beans = conf.get("beans");
+const activitiesService = require("../../lib/activities/activitiesService");
+const activitystore = require("../../lib/activities/activitystore");
+const groupsService = require("../../lib/groups/groupsService");
+const groupstore = require("../../lib/groups/groupstore");
+const memberstore = require("../../lib/members/memberstore");
+const membersService = require("../../lib/members/membersService");
 
-const activitiesService = beans.get("activitiesService");
-const activitystore = beans.get("activitystore");
-const groupsService = beans.get("groupsService");
-const groupstore = beans.get("groupstore");
-const memberstore = beans.get("memberstore");
-const membersService = beans.get("membersService");
-
-const Activity = beans.get("activity");
-const Member = beans.get("member");
-const Group = beans.get("group");
-const notifications = beans.get("notifications");
+const Activity = require("../../lib/activities/activity");
+const Member = require("../../lib/members/member");
+const Group = require("../../lib/groups/group");
+const notifications = require("../../lib/notifications");
 
 const dummyActivity = new Activity({
   title: "Title of the Activity",

@@ -1,7 +1,6 @@
 "use strict";
-const beans = require("simple-configure").get("beans");
 const passport = require("passport");
-const memberstore = beans.get("memberstore");
+const memberstore = require("../members/memberstore");
 
 function serializeUser(user, done) {
   if (user.profile) {

@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Activityresults" type="mocha-javascript-test-runner" singleton="false">
-    <node-interpreter>$usr-local-bin$/node</node-interpreter>
+    <node-interpreter>project</node-interpreter>
     <node-options>--icu-data-dir=node_modules/full-icu</node-options>
     <mocha-package>$PROJECT_DIR$/node_modules/mocha</mocha-package>
     <working-directory>$PROJECT_DIR$</working-directory>

@@ -1,7 +1,5 @@
 "use strict";
-const beans = require("simple-configure").get("beans");
-
-const activitystore = beans.get("activitystore");
+const activitystore = require("./activitystore");
 
 module.exports = {
   eventsBetween: function eventsBetween(startMillis, endMillis, groupsColors) {

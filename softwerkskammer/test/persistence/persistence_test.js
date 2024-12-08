@@ -1,10 +1,11 @@
 "use strict";
 
+require("../../configure");
+
 const { DateTime } = require("luxon");
 
 const expect = require("must-dist");
-const beans = require("./../../testutil/configureForTest").get("beans");
-const CONFLICTING_VERSIONS = beans.get("constants").CONFLICTING_VERSIONS;
+const CONFLICTING_VERSIONS = require("../../lib/commons/constants").CONFLICTING_VERSIONS;
 const persistence = require("../../lib/persistence/sqlitePersistence")("teststore", "version");
 
 async function clearStore() {
@@ -201,7 +202,7 @@ describe("The persistence store", () => {
   });
 
   describe("for Member", () => {
-    const Member = beans.get("member");
+    const Member = require("../../lib/members/member");
     const toPersist = new Member().initFromSessionUser({ authenticationId: "toPersist" }).state;
 
     async function storeSampleData() {

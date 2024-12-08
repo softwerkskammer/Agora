@@ -3,20 +3,19 @@ const { DateTime } = require("luxon");
 const conf = require("simple-configure");
 const logger = require("winston").loggers.get("application");
 
-const beans = conf.get("beans");
-const groupsService = beans.get("groupsService");
-const groupsAndMembersService = beans.get("groupsAndMembersService");
-const activitiesService = beans.get("activitiesService");
-const membersService = beans.get("membersService");
-const icalService = beans.get("icalService");
-const groupstore = beans.get("groupstore");
-const memberstore = beans.get("memberstore");
-const activitystore = beans.get("activitystore");
-const Message = beans.get("message");
-const Group = beans.get("group");
-const misc = beans.get("misc");
+const groupsService = require("../groups/groupsService");
+const groupsAndMembersService = require("../groupsAndMembers/groupsAndMembersService");
+const activitiesService = require("../activities/activitiesService");
+const membersService = require("../members/membersService");
+const icalService = require("../activities/icalService");
+const groupstore = require("../groups/groupstore");
+const memberstore = require("../members/memberstore");
+const activitystore = require("../activities/activitystore");
+const Message = require("./message");
+const Group = require("../groups/group");
+const misc = require("../commons/misc");
 
-const mailtransport = beans.get("mailtransport");
+const mailtransport = require("./mailtransport");
 
 async function sendMail(message, type) {
   return mailtransport.sendMail(message, type, conf.get("sender-address"), conf.get("include-footer"));
@@ -110,7 +109,7 @@ module.exports = {
         let activity;
         try {
           activity = activitystore.getActivity(activityURL);
-        } catch (e) {
+        } catch {
           // do nothing
         }
         if (activity) {

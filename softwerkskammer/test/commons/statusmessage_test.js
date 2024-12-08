@@ -1,11 +1,11 @@
 "use strict";
 
-const statusmessage = require("../../testutil/configureForTest").get("beans").get("statusmessage");
+require("../../testutil/configureForTest");
+
+const statusmessage = require("../../lib/commons/statusmessage");
 const expect = require("must-dist");
 const i18n = require("i18next");
-require("../../testutil/configureForTest");
-const beans = require("simple-configure").get("beans");
-beans.get("initI18N");
+require("../../lib/middleware/initI18N");
 
 describe("Statusmessage", () => {
   it('has type "danger" when created as error', () => {

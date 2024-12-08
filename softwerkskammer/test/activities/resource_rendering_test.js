@@ -3,10 +3,9 @@
 const expect = require("must-dist");
 const sinon = require("sinon").createSandbox();
 
-const beans = require("../../testutil/configureForTest").get("beans");
-const Resource = beans.get("resource");
-const resourceRegistrationRenderer = beans.get("resourceRegistrationRenderer");
-const Activity = beans.get("activity");
+const Resource = require("../../lib/activities/resource");
+const resourceRegistrationRenderer = require("../../lib/activities/resourceRegistrationRenderer");
+const Activity = require("../../lib/activities/activity");
 
 describe("ResourceRegistrationRenderer", () => {
   const resource = new Resource({});

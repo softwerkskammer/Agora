@@ -1,9 +1,0 @@
-{
-  "groupsPersistence": { "module": "./softwerkskammer/teststubs/testpersistence" },
-  "membersPersistence": { "module": "./softwerkskammer/teststubs/testpersistence" },
-  "activitiesPersistence": { "module": "./softwerkskammer/teststubs/testpersistence" },
-  "activityresultsPersistence": { "module": "./softwerkskammer/teststubs/testpersistence" },
-  "mailsPersistence": { "module": "./softwerkskammer/teststubs/testpersistence" },
-
-  "nodemailerTransport": { "module": "./softwerkskammer/teststubs/nodemailerTransportForTests" }
-}

@@ -1,9 +1,8 @@
 "use strict";
 const R = require("ramda");
-const beans = require("simple-configure").get("beans");
-const Git = beans.get("gitmech");
-const Group = beans.get("group");
-const groupstore = beans.get("groupstore");
+const Git = require("../wiki/gitmech");
+const Group = require("../groups/group");
+const groupstore = require("../groups/groupstore");
 
 module.exports = async function subdirs(req, res, next) {
   const [gitdirs, groups] = await Promise.all([Git.lsdirs(), groupstore.allGroups()]);

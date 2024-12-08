@@ -1,10 +1,11 @@
 "use strict";
 
+require("../../testutil/configureForTest");
+
 /**
  * Test for https://github.com/softwerkskammer/Agora/issues/1105
  */
-const beans = require("../../testutil/configureForTestWithDB").get("beans");
-const persistence = beans.get("membersPersistence");
+const persistence = require("../../lib/members/membersPersistence");
 
 describe("Persistence", () => {
   describe("listByFieldWithOptions()", () => {

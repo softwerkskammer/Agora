@@ -2,23 +2,22 @@
 const R = require("ramda");
 
 const conf = require("simple-configure");
-const beans = conf.get("beans");
-const misc = beans.get("misc");
-const CONFLICTING_VERSIONS = beans.get("constants").CONFLICTING_VERSIONS;
-const activitiesService = beans.get("activitiesService");
-const calendarService = beans.get("calendarService");
-const icalService = beans.get("icalService");
-const groupstore = beans.get("groupstore");
-const groupsService = beans.get("groupsService");
-const activitystore = beans.get("activitystore");
-const memberstore = beans.get("memberstore");
-const meetupActivitiesService = beans.get("meetupActivitiesService");
+const misc = require("../commons/misc");
+const CONFLICTING_VERSIONS = require("../commons/constants").CONFLICTING_VERSIONS;
+const activitiesService = require("./activitiesService");
+const calendarService = require("../activities/calendarService");
+const icalService = require("./icalService");
+const groupstore = require("../groups/groupstore");
+const groupsService = require("../groups/groupsService");
+const activitystore = require("./activitystore");
+const memberstore = require("../members/memberstore");
+const meetupActivitiesService = require("../meetupActivities/meetupActivitiesService");
 
-const Activity = beans.get("activity");
-const Group = beans.get("group");
-const validation = beans.get("validation");
-const statusmessage = beans.get("statusmessage");
-const resourceRegistrationRenderer = beans.get("resourceRegistrationRenderer");
+const Activity = require("./activity");
+const Group = require("../groups/group");
+const validation = require("../commons/validation");
+const statusmessage = require("../commons/statusmessage");
+const resourceRegistrationRenderer = require("./resourceRegistrationRenderer");
 
 const reservedURLs = conf.get("reservedActivityURLs");
 
@@ -204,7 +203,7 @@ app.post("/submit", (req, res) => {
       if (!result) {
         return req.i18n.t("validation.url_not_available");
       }
-    } catch (e) {
+    } catch {
       return req.i18n.t("validation.url_not_available");
     }
   }

@@ -2,9 +2,8 @@
 
 const expect = require("must-dist");
 
-const beans = require("../../testutil/configureForTest").get("beans");
-const Activity = beans.get("activity");
-const fieldHelpers = beans.get("fieldHelpers");
+const Activity = require("../../lib/activities/activity");
+const fieldHelpers = require("../../lib/commons/fieldHelpers");
 
 // TODO Activity.fillFromUI with null/undefined in startDate, startTime, endDate, endTime
 

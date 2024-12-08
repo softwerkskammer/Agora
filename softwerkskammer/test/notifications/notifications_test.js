@@ -1,18 +1,18 @@
 "use strict";
 
+require("../../testutil/configureForTest");
+
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
-const beans = require("../../testutil/configureForTest").get("beans");
+const groupsAndMembersService = require("../../lib/groupsAndMembers/groupsAndMembersService");
+const memberstore = require("../../lib/members/memberstore");
 
-const groupsAndMembersService = beans.get("groupsAndMembersService");
-const memberstore = beans.get("memberstore");
-
-const Activity = beans.get("activity");
-const Member = beans.get("member");
-const Group = beans.get("group");
-const notifications = beans.get("notifications");
-const transport = beans.get("mailtransport").transport;
+const Activity = require("../../lib/activities/activity");
+const Member = require("../../lib/members/member");
+const Group = require("../../lib/groups/group");
+const notifications = require("../../lib/notifications");
+const transport = require("../../lib/mailsender/mailtransport").transport;
 
 let activity;
 let activity2;

@@ -3,7 +3,7 @@
 const { DateTime } = require("luxon");
 const expect = require("must-dist");
 
-const ActivityResult = require("../../testutil/configureForTest").get("beans").get("activityresult");
+const ActivityResult = require("../../lib/activityresults/activityresult");
 
 describe("Activity result", () => {
   it("should have an id", () => {

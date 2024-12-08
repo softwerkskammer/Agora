@@ -3,8 +3,7 @@ const expect = require("must-dist");
 const httpRequest = require("superagent");
 const sinon = require("sinon").createSandbox();
 const conf = require("../testutil/configureForTest");
-const beans = conf.get("beans");
-const groupstore = beans.get("groupstore");
+const groupstore = require("../lib/groups/groupstore");
 
 const baseUri = `http://localhost:${parseInt(conf.get("port"), 10)}`;
 

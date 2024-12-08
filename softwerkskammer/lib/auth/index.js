@@ -9,12 +9,11 @@ const LocalStrategy = require("passport-local").Strategy;
 const logger = require("winston").loggers.get("authorization");
 
 const conf = require("simple-configure");
-const beans = conf.get("beans");
-const authenticationService = beans.get("authenticationService");
-const mailsenderService = beans.get("mailsenderService");
-const memberstore = beans.get("memberstore");
-const statusmessage = beans.get("statusmessage");
-const misc = beans.get("misc");
+const authenticationService = require("./authenticationService");
+const mailsenderService = require("../mailsender/mailsenderService");
+const memberstore = require("../members/memberstore");
+const statusmessage = require("../commons/statusmessage");
+const misc = require("../commons/misc");
 
 const urlPrefix = conf.get("publicUrlPrefix");
 

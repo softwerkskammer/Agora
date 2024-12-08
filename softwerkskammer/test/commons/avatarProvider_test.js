@@ -2,9 +2,8 @@
 
 const expect = require("must-dist");
 
-const beans = require("../../testutil/configureForTest").get("beans");
-const Member = beans.get("member");
-const avatarProvider = beans.get("avatarProvider");
+const Member = require("../../lib/members/member");
+const avatarProvider = require("../../lib/commons/avatarProvider");
 
 describe("AvatarProvider", () => {
   it('loads the gravatar of "leider" from gravatar', async () => {

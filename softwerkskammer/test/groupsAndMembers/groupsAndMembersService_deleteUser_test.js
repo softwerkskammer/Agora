@@ -1,14 +1,15 @@
 "use strict";
 
+require("../../testutil/configureForTest");
+
 const expect = require("must-dist");
 const sinon = require("sinon").createSandbox();
-const beans = require("../../testutil/configureForTest").get("beans");
 
-const Member = beans.get("member");
+const Member = require("../../lib/members/member");
 
 const dummymember = new Member({ id: "nick" });
 
-const Group = beans.get("group");
+const Group = require("../../lib/groups/group");
 
 const GroupA = new Group({
   id: "GroupA",
@@ -25,11 +26,11 @@ const GroupB = new Group({
   subscribedMembers: ["nick"],
 });
 
-const memberstore = beans.get("memberstore");
-const groupsService = beans.get("groupsService");
-const groupstore = beans.get("groupstore");
+const memberstore = require("../../lib/members/memberstore");
+const groupsService = require("../../lib/groups/groupsService");
+const groupstore = require("../../lib/groups/groupstore");
 
-const groupsAndMembersService = beans.get("groupsAndMembersService");
+const groupsAndMembersService = require("../../lib/groupsAndMembers/groupsAndMembersService");
 
 describe("Groups and Members Service (member deletion)", () => {
   let removeMemberSpy;

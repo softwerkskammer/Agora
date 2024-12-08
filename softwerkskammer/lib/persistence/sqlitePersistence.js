@@ -9,7 +9,9 @@ const sqlitedb = conf.get("sqlitedb");
 const db = new Database(path.join(__dirname, sqlitedb));
 const scriptLogger = loggers.get("scripts");
 scriptLogger.info(`DB = ${sqlitedb}`);
-const CONFLICTING_VERSIONS = conf.get("beans").get("constants").CONFLICTING_VERSIONS;
+const CONFLICTING_VERSIONS = require("../commons/constants").CONFLICTING_VERSIONS;
+
+const TESTMODE = conf.get("TESTMODE");
 
 function escape(str = "") {
   if (typeof str === "string") {
@@ -39,10 +41,15 @@ function execWithTry(command) {
   }
 }
 
-module.exports = function sqlitePersistenceFunc(collectionName, extraColumns) {
+function sqlitePersistenceFunc(collectionNameInput, extraColumns) {
+  const collectionName = TESTMODE ? "teststore" : collectionNameInput;
   const extraCols = extraColumns ? extraColumns.split(",") : [];
 
   function createForTest() {
+    if (collectionName !== "teststore") {
+      console.error("Trying to drop a production collection?"); // eslint-disable-line no-console
+      return;
+    }
     const columns = ["id TEXT PRIMARY KEY", "data BLOB"].concat(
       extraCols.map((col) => {
         if (col === "version") {
@@ -204,4 +211,10 @@ module.exports = function sqlitePersistenceFunc(collectionName, extraColumns) {
   };
 
   return persistence;
-};
+}
+process.on("SIGINT", () => {
+  console.log("SHUTDOWN ON SIGINT (db)"); // eslint-disable-line no-console
+  db.close();
+});
+
+module.exports = sqlitePersistenceFunc;

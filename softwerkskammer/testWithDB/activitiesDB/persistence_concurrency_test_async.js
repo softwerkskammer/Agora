@@ -1,11 +1,12 @@
 "use strict";
 
+require("../../testutil/configureForTest");
+
 const expect = require("must-dist");
 
-const beans = require("../../testutil/configureForTestWithDB").get("beans");
-const persistence = beans.get("activitiesPersistence");
+const persistence = require("../../lib/activities/activitiesPersistence");
 
-const CONFLICTING_VERSIONS = beans.get("constants").CONFLICTING_VERSIONS;
+const CONFLICTING_VERSIONS = require("../../lib/commons/constants").CONFLICTING_VERSIONS;
 
 function getEntry() {
   return persistence.getByField({ key: "url", val: "url" });

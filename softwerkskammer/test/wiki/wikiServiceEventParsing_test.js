@@ -1,10 +1,11 @@
 "use strict";
 
+require("../../testutil/configureForTest");
+
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
-const beans = require("../../testutil/configureForTest").get("beans");
-const wikiService = beans.get("wikiService");
-const Git = beans.get("gitmech");
+const wikiService = require("../../lib/wiki/wikiService");
+const Git = require("../../lib/wiki/gitmech");
 
 describe("Wiki Service - Event Parsing", () => {
   afterEach(() => {
