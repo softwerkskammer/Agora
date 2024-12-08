@@ -36,7 +36,7 @@ function singleSentEmail() {
   return sendmail.args[0][0];
 }
 
-function allSentEmail() {
+function allSentEmails() {
   return sendmail.args.map((callArgs) => callArgs[0]);
 }
 
@@ -309,7 +309,7 @@ describe("MailsenderService", () => {
           }
         });
         const statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA", "GroupB"], undefined, message);
-        const allSent = allSentEmail();
+        const allSent = allSentEmails();
         expect(allSent).to.have.length(2);
         const sentMail1 = allSent[0];
         expect(sentMail1.bcc).to.eql(["memberA", "memberB", "memberC", "memberD", "memberE"]);
@@ -354,7 +354,7 @@ describe("MailsenderService", () => {
           group.members = membersAboveSingleChunkThreshhold;
         });
         const statusmessage = await mailsenderService.sendMailToInvitedGroups(["GroupA"], undefined, message);
-        const allSent = allSentEmail();
+        const allSent = allSentEmails();
         const sentMail1 = allSent[0];
         expect(sentMail1.bcc).to.eql(["memberA", "memberB", "memberC", "memberD", "memberE"]);
         const sentMail2 = allSent[1];
@@ -388,7 +388,7 @@ describe("MailsenderService", () => {
         expect(statusmessage.contents().text).to.equal("message.content.mailsender.success");
 
         await allExpectedMailsSent;
-        const allSent = allSentEmail();
+        const allSent = allSentEmails();
 
         expect(allSent).to.have.length(3);
 
@@ -435,7 +435,7 @@ describe("MailsenderService", () => {
 
         await allExpectedMailsSent;
 
-        const sentEmails = allSentEmail();
+        const sentEmails = allSentEmails();
         expect(sentEmails).to.have.length(3);
         expect(sentEmails[2].to).to.contain(sender.email());
         expect(sentEmails[2].subject).to.contain("Report");
@@ -468,7 +468,7 @@ describe("MailsenderService", () => {
 
         await allExpectedMailsSent;
 
-        const sentEmails = allSentEmail();
+        const sentEmails = allSentEmails();
         expect(sentEmails).to.have.length(3);
         expect(sentEmails[2].to).to.contain(sender.email());
         expect(sentEmails[2].subject).to.contain("Report");
@@ -743,7 +743,7 @@ describe("MailsenderService", () => {
 
     it("sends in chunks to all members", async () => {
       const statusmessage = await mailsenderService.sendMailToAllMembers(message);
-      const allSent = allSentEmail();
+      const allSent = allSentEmails();
       const sentMail1 = allSent[0];
       expect(sentMail1.bcc).to.eql(["memberA", "memberB"]);
 
@@ -771,7 +771,7 @@ describe("MailsenderService", () => {
       expect(statusmessage.contents().text).to.equal("message.content.mailsender.success");
 
       await allExpectedMailsSent;
-      const allSent = allSentEmail();
+      const allSent = allSentEmails();
 
       expect(allSent).to.have.length(2);
 
@@ -812,7 +812,7 @@ describe("MailsenderService", () => {
 
       await allExpectedMailsSent;
 
-      const sentEmails = allSentEmail();
+      const sentEmails = allSentEmails();
       expect(sentEmails).to.have.length(2);
       expect(sentEmails[1].to).to.contain(sender.email());
       expect(sentEmails[1].subject).to.contain("Report");
@@ -842,7 +842,7 @@ describe("MailsenderService", () => {
 
       await allExpectedMailsSent;
 
-      const sentEmails = allSentEmail();
+      const sentEmails = allSentEmails();
       expect(sentEmails).to.have.length(2);
       expect(sentEmails[1].to).to.contain(sender.email());
       expect(sentEmails[1].subject).to.contain("Report");

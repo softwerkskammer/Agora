@@ -40,12 +40,14 @@ function activityMarkdown(activity, language) {
 }
 
 function createChunkedSendingReportMessage(statusmessages, subject, message) {
-  const anySendingError = R.any(statusmessage.isErrorMessage, statusmessages);
+  const isError = R.any(statusmessage.isErrorMessage, statusmessages);
+  const markdown = isError
+    ? `Fehler: ${statusmessages.map((s) => s.contents().additionalArguments.err).join(" ")}`
+    : "E-Mails erfolgreich versendet";
+
   return message.cloneWithBody({
-    subject,
-    markdown: anySendingError
-      ? `Fehler: ${statusmessages.map((s) => s.contents().additionalArguments.err).join(" ")}`
-      : "E-Mails erfolgreich versendet",
+    subject: `${isError ? "ERROR" : "SUCCESS"} ${subject}`,
+    markdown,
     sendCopyToSelf: true,
   });
 }
@@ -70,7 +72,7 @@ async function sendMailInChunks(maxMailSendingChunkSize, allMembers, message, ty
 module.exports = {
   activityMarkdown,
 
-  dataForShowingMessageForActivity: async function (activityURL, language) {
+  dataForShowingMessageForActivity: async function dataForShowingMessageForActivity(activityURL, language) {
     const [activity, groups] = [
       activitiesService.getActivityWithGroupAndParticipants(activityURL),
       groupstore.allGroups(),
