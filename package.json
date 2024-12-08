@@ -17,7 +17,6 @@
     "@fullcalendar/core": "6.1.15",
     "@fullcalendar/luxon3": "6.1.15",
     "@popperjs/core": "2.11.8",
-    "CoolBeans": "0.0.9",
     "adm-zip": "0.5.16",
     "better-sqlite3": "11.0.0",
     "better-sqlite3-session-store": "0.1.0",
@@ -116,5 +115,5 @@
     "test": "yarn prepare && yarn lint && grunt",
     "prepare": "git log -1 --pretty=\"format:a.dropdown-item.nav-link(href='https://github.com/softwerkskammer/Agora/commit/%H', target='_blank')%n i.fab.fa-github.fa-fw%n | &nbsp;Version: %h\" > softwerkskammer/version.pug"
   },
-  "packageManager": "yarn@4.5.0"
+  "packageManager": "yarn@4.5.3"
 }

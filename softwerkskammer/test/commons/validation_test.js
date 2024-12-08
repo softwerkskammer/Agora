@@ -1,11 +1,12 @@
 "use strict";
+
+require("../../testutil/configureForTest");
+
 const expect = require("must-dist");
 const i18n = require("i18next");
 
-require("../../testutil/configureForTest");
-const beans = require("simple-configure").get("beans");
-const validation = beans.get("validation");
-beans.get("initI18N");
+const validation = require("../../lib/commons/validation");
+require("../../lib/middleware/initI18N");
 
 function translateMessages(messages) {
   return messages.map((message) => i18n.t(message));

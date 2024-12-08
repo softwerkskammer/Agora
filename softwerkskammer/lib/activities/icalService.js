@@ -1,8 +1,7 @@
 "use strict";
 const icalendar = require("icalendar");
 
-const beans = require("simple-configure").get("beans");
-const misc = beans.get("misc");
+const misc = require("../commons/misc");
 
 function activityAsICal(activity) {
   const event = new icalendar.VEvent(activity.url());

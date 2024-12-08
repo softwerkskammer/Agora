@@ -1,14 +1,14 @@
 "use strict";
 
+require("../../testutil/configureForTest");
+
 const expect = require("must-dist");
 const sinon = require("sinon").createSandbox();
 
-const beans = require("../../testutil/configureForTest").get("beans");
-
-const calendarService = beans.get("calendarService");
-const fieldHelpers = beans.get("fieldHelpers");
-const Activity = beans.get("activity");
-const activitystore = beans.get("activitystore");
+const calendarService = require("../../lib/activities/calendarService");
+const fieldHelpers = require("../../lib/commons/fieldHelpers");
+const Activity = require("../../lib/activities/activity");
+const activitystore = require("../../lib/activities/activitystore");
 
 describe("Calendar Service", () => {
   const start = fieldHelpers.parseToDateTimeUsingDefaultTimezone("01.04.2013");

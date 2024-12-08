@@ -1,10 +1,9 @@
 "use strict";
-const beans = require("simple-configure").get("beans");
 
-const waitinglistService = beans.get("waitinglistService");
-const activitiesService = beans.get("activitiesService");
-const memberstore = beans.get("memberstore");
-const misc = beans.get("misc");
+const waitinglistService = require("../waitinglist/waitinglistService");
+const activitiesService = require("../activities/activitiesService");
+const memberstore = require("../members/memberstore");
+const misc = require("../commons/misc");
 
 function accessAllowedTo(activityUrl, res) {
   const accessrights = res.locals.accessrights;
@@ -28,7 +27,7 @@ app.get("/:activityUrl", (req, res) => {
     }
     const waitinglist = waitinglistService.waitinglistFor(activityUrl);
     res.render("waitinglistTable", { waitinglist, activity });
-  } catch (e) {
+  } catch {
     return res.redirect("/activities/upcoming");
   }
 });
@@ -43,7 +42,7 @@ app.post("/add", (req, res) => {
     const args = { nickname: req.body.nickname, activityUrl };
     waitinglistService.saveWaitinglistEntry(args);
     res.redirect("/waitinglist/" + encodeURIComponent(activityUrl));
-  } catch (e) {
+  } catch {
     return res.redirect("/activities/upcoming");
   }
 });
@@ -84,7 +83,7 @@ app.post("/remove", (req, res, next) => {
       return next(e);
     }
     res.send("ok");
-  } catch (e) {
+  } catch {
     res.sendStatus(400);
   }
 });

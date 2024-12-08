@@ -1,18 +1,17 @@
 "use strict";
 const conf = require("simple-configure");
-const beans = conf.get("beans");
 const R = require("ramda");
 const Feed = require("feed").Feed;
 
-const misc = beans.get("misc");
-const groupsService = beans.get("groupsService");
-const groupstore = beans.get("groupstore");
-const wikiService = beans.get("wikiService");
-const Group = beans.get("group");
-const groupsAndMembers = beans.get("groupsAndMembersService");
-const meetupActivitiesService = beans.get("meetupActivitiesService");
-const activitystore = beans.get("activitystore");
-const statusmessage = beans.get("statusmessage");
+const misc = require("../commons/misc");
+const groupsService = require("./groupsService");
+const groupstore = require("./groupstore");
+const wikiService = require("../wiki/wikiService");
+const Group = require("./group");
+const groupsAndMembers = require("../groupsAndMembers/groupsAndMembersService");
+const meetupActivitiesService = require("../meetupActivities/meetupActivitiesService");
+const activitystore = require("../activities/activitystore");
+const statusmessage = require("../commons/statusmessage");
 
 const app = misc.expressAppIn(__dirname);
 

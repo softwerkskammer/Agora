@@ -16,9 +16,6 @@
 node_modules/
 
 config/*.json*
-!config/beans.json
-!config/testbeans.json
-!config/testbeansWithDB.json
 
 **/build
 **/*coverage*

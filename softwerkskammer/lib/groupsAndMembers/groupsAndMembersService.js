@@ -1,12 +1,10 @@
 "use strict";
-const conf = require("simple-configure");
-const beans = conf.get("beans");
-const membersService = beans.get("membersService");
-const memberstore = beans.get("memberstore");
-const groupsService = beans.get("groupsService");
-const groupstore = beans.get("groupstore");
-const misc = beans.get("misc");
-const Member = beans.get("member");
+const membersService = require("../members/membersService");
+const memberstore = require("../members/memberstore");
+const groupsService = require("../groups/groupsService");
+const groupstore = require("../groups/groupstore");
+const misc = require("../commons/misc");
+const Member = require("../members/member");
 
 function addGroupsToMember(member) {
   if (!member) {
@@ -34,7 +32,7 @@ module.exports = {
     try {
       member.subscribedGroups.map(unsubFunction);
       return memberstore.removeMember(member);
-    } catch (e) {
+    } catch {
       throw new Error("hasSubscriptions");
     }
   },

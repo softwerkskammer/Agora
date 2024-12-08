@@ -2,7 +2,7 @@
 
 const expect = require("must-dist");
 
-const Activity = require("../../testutil/configureForTest").get("beans").get("activity");
+const Activity = require("../../lib/activities/activity");
 
 function checkResourceNames(activity, resourceName1, resourceName2) {
   if (resourceName2) {

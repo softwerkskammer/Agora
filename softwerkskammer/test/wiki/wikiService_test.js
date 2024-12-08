@@ -1,14 +1,16 @@
 "use strict";
+
+require("../../testutil/configureForTest");
+
 const Fs = require("fs/promises");
 
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
-const beans = require("../../testutil/configureForTest").get("beans");
-const wikiService = beans.get("wikiService");
-const memberstore = beans.get("memberstore");
+const wikiService = require("../../lib/wiki/wikiService");
+const memberstore = require("../../lib/members/memberstore");
 const { DateTime } = require("luxon");
 const { Metadata } = require("../../lib/wiki/wikiObjects");
-const Git = beans.get("gitmech");
+const Git = require("../../lib/wiki/gitmech");
 
 describe("Wiki Service", () => {
   const content = "Hallo, ich bin der Dateiinhalt";

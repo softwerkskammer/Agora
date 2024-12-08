@@ -1,19 +1,22 @@
 "use strict";
 
 process.chdir(__dirname);
-const Beans = require("CoolBeans");
 const conf = require("simple-configure");
 const path = require("path");
 
 function createConfiguration() {
   const configdir = path.join(__dirname, "/../config/");
 
-  // first, set the default values
+  // first, set the default values (alphabetically)
   conf.addProperties({
     adminListName: "admins",
+    emaildomainname: "localhost",
+    magicLinkSecret: "Locally? What do you expect?",
     port: "17124",
-    sqlitedb: "../../../db/automatic.db",
     publicUrlPrefix: "http://localhost:17124",
+    reservedActivityURLs:
+      "^socrates-|^gdcr$|^upcoming$|^past$|^ical$|^eventsForSidebar$|^new$|^newLike$|^edit$|^submit$|^checkurl$|^subscribe$|^unsubscribe$|^addToWaitinglist$|^removeFromWaitinglist$|\\+",
+    secret: "secret",
     securedByLoginURLPattern:
       "/activityresults|" +
       "/gallery|" +
@@ -30,14 +33,10 @@ function createConfiguration() {
       "/payment|" +
       "dashboard",
     securedBySuperuserURLPattern: "^/administration/",
-    secret: "secret",
     sessionkey: "softwerkskammer.org",
-    beans: new Beans(configdir + "beans.json"),
-    emaildomainname: "localhost",
     socratesURL: "http://socrates-conference.de",
-    reservedActivityURLs:
-      "^socrates-|^gdcr$|^upcoming$|^past$|^ical$|^eventsForSidebar$|^new$|^newLike$|^edit$|^submit$|^checkurl$|^subscribe$|^unsubscribe$|^addToWaitinglist$|^removeFromWaitinglist$|\\+",
-    magicLinkSecret: "Locally? What do you expect?",
+    sqlitedb: "../../../db/automatic.db",
+    TESTMODE: false,
   });
 
   // then, add properties from config files:

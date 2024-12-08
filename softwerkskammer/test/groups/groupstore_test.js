@@ -1,11 +1,12 @@
 "use strict";
 
+require("../../testutil/configureForTest");
+
 const sinon = require("sinon");
 const expect = require("must-dist");
 
-const beans = require("../../testutil/configureForTest").get("beans");
-const persistence = beans.get("groupsPersistence");
-const store = beans.get("groupstore");
+const persistence = require("../../lib/groups/groupsPersistence");
+const store = require("../../lib/groups/groupstore");
 
 describe("Groups store", () => {
   const sampleGroup = { id: "groupa" };

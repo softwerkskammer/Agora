@@ -1,13 +1,14 @@
 "use strict";
 
+require("../../testutil/configureForTest");
+
 const expect = require("must-dist");
 
 const sinon = require("sinon").createSandbox();
 
-const beans = require("../../testutil/configureForTest").get("beans");
-const persistence = beans.get("membersPersistence");
-const store = beans.get("memberstore");
-const Member = beans.get("member");
+const persistence = require("../../lib/members/membersPersistence");
+const store = require("../../lib/members/memberstore");
+const Member = require("../../lib/members/member");
 
 describe("Members store", () => {
   const sampleMember = { nickname: "nick", email: "nicks mail", firstname: "first", lastname: "a" };

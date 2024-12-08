@@ -1,15 +1,17 @@
 "use strict";
+
+require("../../testutil/configureForTest");
+
 const request = require("supertest");
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
-const beans = require("../../testutil/configureForTest").get("beans");
-const activityresultsService = beans.get("activityresultsService");
-const activityresultsPersistence = beans.get("activityresultsPersistence");
+const activityresultsService = require("../../lib/activityresults/activityresultsService");
+const activityresultsPersistence = require("../../lib/activityresults/activityresultsPersistence");
 
-const createApp = require("../../testutil/testHelper")("activityresultsApp").createApp;
+const createApp = require("../../testutil/testHelper")("activityresults").createApp;
 
-const ActivityResult = beans.get("activityresult");
+const ActivityResult = require("../../lib/activityresults/activityresult");
 
 const MEMBER_ID = "memberID";
 

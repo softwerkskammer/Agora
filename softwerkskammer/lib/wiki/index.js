@@ -1,9 +1,8 @@
 "use strict";
-const beans = require("simple-configure").get("beans");
-const renderer = beans.get("renderer");
-const wikiService = beans.get("wikiService");
-const statusmessage = beans.get("statusmessage");
-const misc = beans.get("misc");
+const renderer = require("../commons/renderer");
+const wikiService = require("./wikiService");
+const statusmessage = require("../commons/statusmessage");
+const misc = require("../commons/misc");
 
 async function showPage(subdir, pageName, pageVersion, req, res, next) {
   const normalizedPageName = renderer.normalize(pageName);
@@ -24,7 +23,7 @@ async function showPage(subdir, pageName, pageVersion, req, res, next) {
       subdir,
       canEdit: pageVersion === "HEAD" && req.user,
     });
-  } catch (e) {
+  } catch {
     if (req.user) {
       return res.redirect(`/wiki/edit/${completePageName}`);
     }
@@ -92,7 +91,7 @@ app.post("/:subdir/:page", async (req, res) => {
     } else {
       statusmessage.successMessage("message.title.save_successful", "message.content.wiki.saved").putIntoSession(req);
     }
-  } catch (e) {
+  } catch {
     statusmessage.errorMessage("message.title.problem", "message.content.save_error").putIntoSession(req);
   }
   res.redirect(`/wiki/${subdir}/${pageName}`);

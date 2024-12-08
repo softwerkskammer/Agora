@@ -1,8 +1,7 @@
 "use strict";
 
 const conf = require("../../testutil/configureForTest");
-const beans = conf.get("beans");
-const expressSessionConfigurator = beans.get("expressSessionConfigurator");
+const expressSessionConfigurator = require("../../lib/middleware/expressSessionConfigurator");
 const MemoryStore = require("express-session").MemoryStore;
 const expect = require("must-dist");
 

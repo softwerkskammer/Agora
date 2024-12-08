@@ -1,8 +1,7 @@
 "use strict";
-const beans = require("simple-configure").get("beans");
 const logger = require("winston").loggers.get("application");
 
-const Resource = beans.get("resource");
+const Resource = require("./resource");
 
 const standardName = "Veranstaltung";
 

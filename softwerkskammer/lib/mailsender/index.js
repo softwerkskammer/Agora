@@ -1,13 +1,12 @@
 "use strict";
-const beans = require("simple-configure").get("beans");
 
-const misc = beans.get("misc");
-const validation = beans.get("validation");
-const statusmessage = beans.get("statusmessage");
-const mailsenderService = beans.get("mailsenderService");
-const groupsAndMembersService = beans.get("groupsAndMembersService");
-const groupstore = beans.get("groupstore");
-const Message = beans.get("message");
+const misc = require("../commons/misc");
+const validation = require("../commons/validation");
+const statusmessage = require("../commons/statusmessage");
+const mailsenderService = require("./mailsenderService");
+const groupsAndMembersService = require("../groupsAndMembers/groupsAndMembersService");
+const groupstore = require("../groups/groupstore");
+const Message = require("./message");
 
 async function messageSubmitted(req, res) {
   if (req.body && req.body.massMailing && !res.locals.accessrights.isSuperuser()) {
@@ -84,7 +83,7 @@ app.get("/contactMembersOfGroup/:groupname", (req, res) => {
       groupName,
       emailPrefix: group.emailPrefix,
     });
-  } catch (e) {
+  } catch {
     return res.redirect("/groups/" + encodeURIComponent(groupName));
   }
 });

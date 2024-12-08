@@ -1,19 +1,19 @@
 "use strict";
 
+require("../../testutil/configureForTest");
+
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
-const conf = require("../../testutil/configureForTest");
-const beans = conf.get("beans");
-const Group = beans.get("group");
+const Group = require("../../lib/groups/group");
 
 const groupsForTest = require("./groups_for_tests");
 
-const groupstore = beans.get("groupstore");
+const groupstore = require("../../lib/groups/groupstore");
 
-const groupsService = beans.get("groupsService");
+const groupsService = require("../../lib/groups/groupsService");
 
-const Member = beans.get("member");
+const Member = require("../../lib/members/member");
 const testMember = new Member({ id: "testmember" });
 
 describe("Groups Service (getSubscribedGroupsForMember)", () => {

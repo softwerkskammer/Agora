@@ -2,8 +2,7 @@
 const R = require("ramda");
 const { DateTime } = require("luxon");
 
-const beans = require("simple-configure").get("beans");
-const misc = beans.get("misc");
+const misc = require("../commons/misc");
 
 class Photo {
   constructor(data) {

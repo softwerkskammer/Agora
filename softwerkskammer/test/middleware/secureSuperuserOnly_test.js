@@ -1,8 +1,10 @@
 "use strict";
 
+require("../../testutil/configureForTest");
+
 const expect = require("must-dist");
 
-const redirectIfNotSuperuser = require("../../testutil/configureForTest").get("beans").get("secureSuperuserOnly");
+const redirectIfNotSuperuser = require("../../lib/middleware/secureSuperuserOnly");
 
 describe("redirectIfNotSuperuser", () => {
   it("happpens when a normal user wants to access administraton pages", (done) => {

@@ -4,14 +4,13 @@ const Path = require("path");
 const R = require("ramda");
 const eventsToObject = require("./eventsToObject");
 const conf = require("simple-configure");
-const beans = conf.get("beans");
-const misc = beans.get("misc");
-const Git = beans.get("gitmech");
-const wikiObjects = beans.get("wikiObjects");
-const memberstore = beans.get("memberstore");
+const misc = require("../commons/misc");
+const Git = require("./gitmech");
+const wikiObjects = require("./wikiObjects");
+const memberstore = require("../members/memberstore");
 const FileWithChangelist = wikiObjects.FileWithChangelist;
 const DirectoryWithChangedFiles = wikiObjects.DirectoryWithChangedFiles;
-const Diff = beans.get("gitDiff");
+const Diff = require("./gitDiff");
 let workTree = conf.get("wikipath");
 
 async function init() {
@@ -26,7 +25,7 @@ async function replaceNonExistentNicknames(metadataList) {
       if (!member) {
         metadata.author = null;
       }
-    } catch (e) {
+    } catch {
       metadata.author = null;
     }
     return metadata;
@@ -47,7 +46,7 @@ module.exports = {
       if (stats && !stats.isFile()) {
         return { content: "", metadata: ["NEW"] };
       }
-    } catch (e) {
+    } catch {
       return { content: "", metadata: ["NEW"] };
     }
     let content = "";
@@ -56,7 +55,7 @@ module.exports = {
       content = await Git.readFile(completePageName + ".md", "HEAD");
       metadata = await Git.log(completePageName + ".md", "HEAD", 1);
       return { content, metadata };
-    } catch (e) {
+    } catch {
       return { content, metadata };
     }
   },
@@ -78,7 +77,7 @@ module.exports = {
       if (stats && !stats.isDirectory()) {
         await Fs.mkdir(Git.absPath(subdir));
       }
-    } catch (e) {
+    } catch {
       await Fs.mkdir(Git.absPath(subdir));
     }
     const completePageName = `${subdir}/${pageName}.md`;
@@ -87,7 +86,7 @@ module.exports = {
     let metadata = [];
     try {
       metadata = await Git.log(completePageName, "HEAD", 1);
-    } catch (e) {
+    } catch {
       // ignore
     }
     const conflict = metadata[0] && metadata[0].fullhash !== body.metadata;
@@ -102,7 +101,7 @@ module.exports = {
     try {
       const metadata = await Git.log(completePageName + ".md", "HEAD", 30);
       return replaceNonExistentNicknames(metadata);
-    } catch (e) {
+    } catch {
       return [];
     }
   },
@@ -213,7 +212,7 @@ module.exports = {
       });
 
       return gitfiles;
-    } catch (e) {
+    } catch {
       return [];
     }
   },
@@ -222,7 +221,7 @@ module.exports = {
     try {
       const contents = await Git.readFile(`alle/europaweite-veranstaltungen-${year}.md`, "HEAD");
       return eventsToObject(contents, year);
-    } catch (e) {
+    } catch {
       return {};
     }
   },
@@ -232,7 +231,7 @@ module.exports = {
     try {
       const files = await Git.lsFilesModifiedByMember(nickname);
       reallyAnArray = !files ? [] : files;
-    } catch (e) {
+    } catch {
       // ignore
     }
     const filteredSortedUnique = R.uniq(reallyAnArray.filter((x) => x.includes("/")).sort());

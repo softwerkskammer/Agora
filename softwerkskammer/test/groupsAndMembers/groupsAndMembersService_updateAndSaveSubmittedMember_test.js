@@ -1,13 +1,14 @@
 "use strict";
 
+require("../../testutil/configureForTest");
+
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
-const beans = require("../../testutil/configureForTest").get("beans");
-const Member = beans.get("member");
-const memberstore = beans.get("memberstore");
-const groupsAndMembersService = beans.get("groupsAndMembersService");
-const groupsService = beans.get("groupsService");
+const Member = require("../../lib/members/member");
+const memberstore = require("../../lib/members/memberstore");
+const groupsAndMembersService = require("../../lib/groupsAndMembers/groupsAndMembersService");
+const groupsService = require("../../lib/groups/groupsService");
 
 describe("Groups and Members Service (updateAndSaveSubmittedMember)", () => {
   let accessrights;

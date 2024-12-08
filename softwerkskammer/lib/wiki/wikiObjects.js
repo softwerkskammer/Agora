@@ -3,8 +3,7 @@ const { DateTime } = require("luxon");
 const R = require("ramda");
 const path = require("path");
 
-const beans = require("simple-configure").get("beans");
-const Renderer = beans.get("renderer");
+const Renderer = require("../commons/renderer");
 
 const BLOG_ENTRY_REGEX = /blog_(\d{4}-\d{1,2}-\d{1,2})/;
 

@@ -1,12 +1,11 @@
 "use strict";
 const Form = require("multiparty").Form;
 
-const beans = require("simple-configure").get("beans");
-const ActivityResult = beans.get("activityresult");
-const activityresultsPersistence = beans.get("activityresultsPersistence");
-const activityresultsService = beans.get("activityresultsService");
-const misc = beans.get("misc");
-const fieldHelpers = beans.get("fieldHelpers");
+const ActivityResult = require("./activityresult");
+const activityresultsPersistence = require("./activityresultsPersistence");
+const activityresultsService = require("./activityresultsService");
+const misc = require("../commons/misc");
+const fieldHelpers = require("../commons/fieldHelpers");
 
 const app = misc.expressAppIn(__dirname);
 

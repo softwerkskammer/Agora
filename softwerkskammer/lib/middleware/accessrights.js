@@ -1,6 +1,6 @@
 "use strict";
 const { DateTime } = require("luxon");
-const Member = require("simple-configure").get("beans").get("member");
+const Member = require("../members/member");
 
 module.exports = function accessrights(req, res, next) {
   res.locals.accessrights = {

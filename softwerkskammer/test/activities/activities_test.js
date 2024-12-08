@@ -1,22 +1,23 @@
 "use strict";
 
+require("../../testutil/configureForTest");
+
 const request = require("supertest");
 const sinon = require("sinon").createSandbox();
 const expect = require("must-dist");
 
-const createApp = require("../../testutil/testHelper")("activitiesApp").createApp;
+const createApp = require("../../testutil/testHelper")("activities").createApp;
 
-const beans = require("../../testutil/configureForTest").get("beans");
-const fieldHelpers = beans.get("fieldHelpers");
-const activitystore = beans.get("activitystore");
-const groupstore = beans.get("groupstore");
-const Activity = beans.get("activity");
-const Member = beans.get("member");
-const Group = beans.get("group");
+const fieldHelpers = require("../../lib/commons/fieldHelpers");
+const activitystore = require("../../lib/activities/activitystore");
+const groupstore = require("../../lib/groups/groupstore");
+const Activity = require("../../lib/activities/activity");
+const Member = require("../../lib/members/member");
+const Group = require("../../lib/groups/group");
 
-const activitiesService = beans.get("activitiesService");
-const groupsService = beans.get("groupsService");
-const memberstore = beans.get("memberstore");
+const activitiesService = require("../../lib/activities/activitiesService");
+const groupsService = require("../../lib/groups/groupsService");
+const memberstore = require("../../lib/members/memberstore");
 
 const member1 = new Member({
   id: "memberId1",

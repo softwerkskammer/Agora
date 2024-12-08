@@ -7,7 +7,7 @@ const path = require("path");
 const fs = require("fs");
 const fsProm = require("fs/promises");
 const glob = require("glob");
-const misc = conf.get("beans").get("misc");
+const misc = require("../commons/misc");
 
 const widths = { mini: 16, thumb: 400 };
 

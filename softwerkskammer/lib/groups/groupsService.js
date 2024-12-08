@@ -1,11 +1,9 @@
 "use strict";
 const R = require("ramda");
-const conf = require("simple-configure");
 
-const beans = conf.get("beans");
-const validation = beans.get("validation");
-const groupstore = beans.get("groupstore");
-const misc = beans.get("misc");
+const validation = require("../commons/validation");
+const groupstore = require("./groupstore");
+const misc = require("../commons/misc");
 
 function isReserved(groupname) {
   return new RegExp("^edit$|^new$|^checkgroupname$|^submit$|^administration$|[^\\w-]", "i").test(groupname);
@@ -33,7 +31,7 @@ module.exports = {
       if (existingGroup) {
         return errors;
       }
-    } catch (e) {
+    } catch {
       errors.push("Technical error validating the group.");
     }
     const self = this;
@@ -46,7 +44,7 @@ module.exports = {
       if (!result1) {
         errors.push("Dieses Präfix ist bereits vergeben.");
       }
-    } catch (e) {
+    } catch {
       errors.push("Technical error validating email prefix.");
     }
     return errors;

@@ -1,13 +1,14 @@
 "use strict";
 
+require("../../testutil/configureForTest");
+
 const sinon = require("sinon");
 const expect = require("must-dist");
 
-const beans = require("../../testutil/configureForTest").get("beans");
-const redirectRuleForNewUser = beans.get("redirectRuleForNewUser");
-const secureSuperuserOnly = beans.get("secureSuperuserOnly");
-const accessrights = beans.get("accessrights");
-const Member = beans.get("member");
+const redirectRuleForNewUser = require("../../lib/middleware/redirectRuleForNewUser");
+const secureSuperuserOnly = require("../../lib/middleware/secureSuperuserOnly");
+const accessrights = require("../../lib/middleware/accessrights");
+const Member = require("../../lib/members/member");
 
 describe("redirection to registration page for authenticated but not yet registered users", () => {
   function checkFor(urlAndRedirect) {

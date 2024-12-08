@@ -3,12 +3,11 @@ const R = require("ramda");
 const fsProm = require("fs/promises");
 const mimetypes = require("mime-types");
 
-const beans = require("simple-configure").get("beans");
-const store = beans.get("memberstore");
-const avatarProvider = beans.get("avatarProvider");
-const fieldHelpers = beans.get("fieldHelpers");
-const galleryService = beans.get("galleryService");
-const misc = beans.get("misc");
+const store = require("./memberstore");
+const avatarProvider = require("../commons/avatarProvider");
+const fieldHelpers = require("../commons/fieldHelpers");
+const galleryService = require("../gallery/galleryService");
+const misc = require("../commons/misc");
 
 function isReserved(nickname) {
   return new RegExp("^edit$|^new$|^checknickname$|^submit$|^administration$|^[.][.]$|^[.]$|\\+", "i").test(nickname);
