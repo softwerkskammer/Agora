@@ -94,9 +94,10 @@ mixin topNavbar()
 
   .navbar-collapse.collapse.collapse-top.align-self-end
     ul.nav.navbar-nav
-      li.nav-item(data-agoranav='dashboard'): a.nav-link(href='/dashboard')
-        i.fa-solid.fa-table-list.fa-fw
-        span.d-sm-none.d-md-inline &nbsp;#{t('dashboard.dashboard')}
+      if (accessrights.isRegistered())
+        li.nav-item(data-agoranav='dashboard'): a.nav-link(href='/dashboard')
+          i.fa-solid.fa-table-list.fa-fw
+          span.d-sm-none.d-md-inline &nbsp;#{t('dashboard.dashboard')}
       li.nav-item(data-agoranav='activities'): a.nav-link(href='/activities/upcoming')
         i.fa-solid.fa-calendar-days.fa-fw
         span.d-sm-none.d-md-inline &nbsp;#{t('activities.activities')}
